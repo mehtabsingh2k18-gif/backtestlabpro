@@ -138,7 +138,6 @@
 </head>
 <body>
 
-
 <div id="appPreloader" class="app-preloader">
     <div class="loader-logo-container">
         <svg class="logo-svg-wrapper" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -232,69 +231,22 @@
             </div>
         </div>
 
-       <div class="tool-group">
-
-    <div class="tool-icon" id="primary-fib-icon">🌀</div>
-
-    <div class="tool-menu">
-
-        <div class="tool-item" onclick="setTool('fib')">
-            <span class="item-icon">F</span>
-            Fibonacci Retracement
+        <div class="tool-group">
+            <div class="tool-icon" id="primary-fib-icon">🌀</div>
+            <div class="tool-menu">
+                <div class="tool-item" onclick="setTool('fib')"><span class="item-icon">F</span> Fibonacci Retracement</div>
+                <div class="tool-item" onclick="setTool('fibtrend')"><span class="item-icon">↗</span> Fib Trend Extension</div>
+                <div class="tool-item" onclick="setTool('fibext')"><span class="item-icon">⇱</span> Fibonacci Extension</div>
+                <div class="tool-item" onclick="setTool('fibprojection')"><span class="item-icon">⌲</span> Fibonacci Projection</div>
+                <div class="tool-item" onclick="setTool('fibchannel')"><span class="item-icon">≋</span> Fibonacci Channel</div>
+                <div class="tool-item" onclick="setTool('fibwedge')"><span class="item-icon">⋀</span> Fibonacci Wedge</div>
+                <div class="tool-item" onclick="setTool('fibspeed')"><span class="item-icon">⚡</span> Fibonacci Speed Resistance</div>
+                <div class="tool-item" onclick="setTool('fibtimezone')"><span class="item-icon">⏱</span> Fibonacci Time Zones</div>
+                <div class="tool-item" onclick="setTool('fibspiral')"><span class="item-icon">🌀</span> Fibonacci Spiral</div>
+                <div class="tool-item" onclick="setTool('fibarc')"><span class="item-icon">◜</span> Fibonacci Arcs</div>
+                <div class="tool-item" onclick="setTool('fibfan')"><span class="item-icon">╱</span> Fibonacci Fan</div>
+            </div>
         </div>
-
-        <div class="tool-item" onclick="setTool('fibtrend')">
-            <span class="item-icon">↗</span>
-            Fib Trend Extension
-        </div>
-
-        <div class="tool-item" onclick="setTool('fibext')">
-            <span class="item-icon">⇱</span>
-            Fibonacci Extension
-        </div>
-
-        <div class="tool-item" onclick="setTool('fibprojection')">
-            <span class="item-icon">⌲</span>
-            Fibonacci Projection
-        </div>
-
-        <div class="tool-item" onclick="setTool('fibchannel')">
-            <span class="item-icon">≋</span>
-            Fibonacci Channel
-        </div>
-
-        <div class="tool-item" onclick="setTool('fibwedge')">
-            <span class="item-icon">⋀</span>
-            Fibonacci Wedge
-        </div>
-
-        <div class="tool-item" onclick="setTool('fibspeed')">
-            <span class="item-icon">⚡</span>
-            Fibonacci Speed Resistance
-        </div>
-
-        <div class="tool-item" onclick="setTool('fibtimezone')">
-            <span class="item-icon">⏱</span>
-            Fibonacci Time Zones
-        </div>
-
-        <div class="tool-item" onclick="setTool('fibspiral')">
-            <span class="item-icon">🌀</span>
-            Fibonacci Spiral
-        </div>
-
-        <div class="tool-item" onclick="setTool('fibarc')">
-            <span class="item-icon">◜</span>
-            Fibonacci Arcs
-        </div>
-
-        <div class="tool-item" onclick="setTool('fibfan')">
-            <span class="item-icon">╱</span>
-            Fibonacci Fan
-        </div>
-
-    </div>
-</div>
 
         <div class="tool-group">
             <div class="tool-icon" id="primary-shapes-icon">▭</div>
@@ -355,7 +307,6 @@
         </div>
 
         <div id="indicatorsLegend" class="indicators-legend-overlay"></div>
-
         <div id="timeBox" class="time-box">--:--</div>
     </div>
     
@@ -445,8 +396,7 @@
             <span id="modalIndicatorTitle" class="premium-modal-title">Indicator Settings</span>
             <span class="premium-modal-close" onclick="closeIndicatorModal()">✕</span>
         </div>
-        <div class="premium-modal-body" id="modalBodyContent">
-            </div>
+        <div class="premium-modal-body" id="modalBodyContent"></div>
         <div class="premium-modal-footer">
             <input type="hidden" id="modalTargetMode" value="ADD">
             <input type="hidden" id="modalTargetId" value="">
@@ -577,1078 +527,470 @@ function placeTrade(type) {
     if (activeTrade) return;
     const currentPrice = historyData[historyData.length - 1]?.close || 0;
     const lotSize = parseFloat(document.getElementById("finalLots").value);
+    
     const slPips = parseFloat(document.getElementById("slPips").value);
     const tpPips = parseFloat(document.getElementById("tpPips").value);
     const contract = parseFloat(document.getElementById("contractSize").value);
 
-    const pipVal = 0.1;
-    const slDist = slPips * pipVal;
-    const tpDist = tpPips * pipVal;
+    const pipMultiplier = symbol.includes("JPY") ? 0.01 : 0.0001;
+    const isGold = symbol.includes("XAU") || symbol.includes("GOLD");
+    const tickSize = isGold ? 0.1 : pipMultiplier; 
 
-    const sl = type === 'BUY' ? currentPrice - slDist : currentPrice + slDist;
-    const tp = type === 'BUY' ? currentPrice + tpDist : currentPrice - tpDist;
+    const slPrice = type === 'BUY' ? currentPrice - (slPips * tickSize) : currentPrice + (slPips * tickSize);
+    const tpPrice = type === 'BUY' ? currentPrice + (tpPips * tickSize) : currentPrice - (tpPips * tickSize);
 
-    activeTrade = { type, entry: currentPrice, sl, tp, lots: lotSize, contract };
-    updateTradeLines(type, currentPrice, sl, tp, lotSize);
-}
+    activeTrade = {
+        type: type,
+        entry: currentPrice,
+        sl: slPrice,
+        tp: tpPrice,
+        lots: lotSize,
+        contract: contract,
+        pl: 0,
+        time: historyData[historyData.length - 1]?.time
+    };
 
-function closeTrade() {
-    if (!activeTrade) return;
-    const currentPrice = historyData[historyData.length - 1]?.close || 0;
-    const pnl = calculatePnL(currentPrice);
-
-    trades.push({ type: activeTrade.type, price: activeTrade.entry, pl: pnl });
-
-    const journal = document.getElementById("journal");
-    const item = document.createElement("div");
-    item.className = "journal-item";
-    item.innerHTML = `
-        <div style="display:flex; flex-direction:column">
-            <span>
-                <span class="tag ${activeTrade.type === 'BUY' ? 'tag-buy' : 'tag-sell'}">${activeTrade.type}</span>
-                ${activeTrade.entry}
-            </span>
-            <span style="font-size:9px; color:#787b86">Size: ${activeTrade.lots}</span>
-        </div>
-        <span style="color:${pnl >= 0 ? 'var(--up)' : 'var(--down)'}">${pnl >= 0 ? '+' : ''}${pnl.toFixed(2)}</span>
-    `;
-    journal.prepend(item);
-
-    if (entryLine) series.removePriceLine(entryLine);
-    if (slLine) series.removePriceLine(slLine);
-    if (tpLine) series.removePriceLine(tpLine);
-
-    activeTrade = null;
+    updateTradeLines(type, currentPrice, slPrice, tpPrice, lotSize);
     updateStats();
 }
 
-function openSessionModal() {
-    if (sessionEnded) return;
-    sessionEnded = true;
-    window.pause();
-    document.getElementById("sessionModal").style.display = "flex";
+function handlePositionTracking(candle) {
+    if (!activeTrade) return;
+
+    let targetHit = false;
+    let closedPrice = 0;
+    let logTag = activeTrade.type === 'BUY' ? '<span class="tag tag-buy">BUY</span>' : '<span class="tag tag-sell">SELL</span>';
+
+    if (activeTrade.type === 'BUY') {
+        if (candle.low <= activeTrade.sl) {
+            targetHit = true;
+            closedPrice = activeTrade.sl;
+            activeTrade.pl = (activeTrade.sl - activeTrade.entry) * activeTrade.lots * activeTrade.contract;
+        } else if (candle.high >= activeTrade.tp) {
+            targetHit = true;
+            closedPrice = activeTrade.tp;
+            activeTrade.pl = (activeTrade.tp - activeTrade.entry) * activeTrade.lots * activeTrade.contract;
+        }
+    } else { 
+        if (candle.high >= activeTrade.sl) {
+            targetHit = true;
+            closedPrice = activeTrade.sl;
+            activeTrade.pl = (activeTrade.entry - activeTrade.sl) * activeTrade.lots * activeTrade.contract;
+        } else if (candle.low <= activeTrade.tp) {
+            targetHit = true;
+            closedPrice = activeTrade.tp;
+            activeTrade.pl = (activeTrade.entry - activeTrade.tp) * activeTrade.lots * activeTrade.contract;
+        }
+    }
+
+    if (targetHit) {
+        trades.push({ ...activeTrade, closePrice: closedPrice, closeTime: candle.time });
+        
+        const journal = document.getElementById("journal");
+        const item = document.createElement("div");
+        item.className = "journal-item";
+        item.innerHTML = `
+            <div>${logTag} <b>${symbol}</b> @ ${activeTrade.entry.toFixed(3)} ➔ ${closedPrice.toFixed(3)}</div>
+            <div style="color: ${activeTrade.pl >= 0 ? 'var(--up)' : 'var(--down)'}; font-weight:bold;">
+                ${activeTrade.pl >= 0 ? '+' : ''}${activeTrade.pl.toFixed(2)} USD
+            </div>
+        `;
+        journal.insertBefore(item, journal.firstChild);
+
+        if (entryLine) series.removePriceLine(entryLine);
+        if (slLine) series.removePriceLine(slLine);
+        if (tpLine) series.removePriceLine(tpLine);
+        entryLine = slLine = tpLine = null;
+        activeTrade = null;
+        
+        updateStats();
+    } else {
+        updateTradeLines(activeTrade.type, activeTrade.entry, activeTrade.sl, activeTrade.tp, activeTrade.lots);
+    }
 }
 
+// ========================================
+// REPLAY MECHANICS & SERVER ROUTING
+// ========================================
+async function fetchBacktestData() {
+    if (isFetching) return;
+    isFetching = true;
+    document.getElementById("status").innerText = "FETCHING DATA...";
+    
+    try {
+        const response = await fetch(`/api/backtest-data?symbol=${symbol}&tf=${tf}`);
+        const result = await response.json();
+        
+        if (result && result.data && result.data.length > 0) {
+            data = result.data;
+            index = 0;
+            historyData = [];
+            window.historyData = historyData;
+            
+            series.setData([]);
+            volumeSeries.setData([]);
+            
+            document.getElementById("status").innerText = "READY";
+            sessionEnded = false;
+            
+            next();
+        } else {
+            document.getElementById("status").innerText = "NO DATA FOUND";
+        }
+    } catch (err) {
+        console.error("Error processing request pipeline:", err);
+        document.getElementById("status").innerText = "CONNECTION ERROR";
+    } finally {
+        isFetching = false;
+    }
+}
+
+function play() {
+    if (isPlaying || sessionEnded) return;
+    isPlaying = true;
+    document.getElementById("status").innerText = "PLAYING";
+    
+    timer = setInterval(() => {
+        next();
+    }, speed);
+}
+
+function pause() {
+    isPlaying = false;
+    document.getElementById("status").innerText = "PAUSED";
+    if (timer) clearInterval(timer);
+}
+
+function next() {
+    if (index >= data.length) {
+        pause();
+        sessionEnded = true;
+        document.getElementById("status").innerText = "FINISHED";
+        document.getElementById("sessionModal").style.display = "flex";
+        return;
+    }
+
+    const currentBar = data[index];
+    historyData.push(currentBar);
+    
+    series.update(currentBar);
+    volumeSeries.update({
+        time: currentBar.time,
+        value: currentBar.volume || 0,
+        color: currentBar.close >= currentBar.open ? 'rgba(8, 153, 129, 0.5)' : 'rgba(242, 54, 69, 0.5)'
+    });
+
+    document.getElementById("vO").innerText = currentBar.open.toFixed(3);
+    document.getElementById("vH").innerText = currentBar.high.toFixed(3);
+    document.getElementById("vL").innerText = currentBar.low.toFixed(3);
+    document.getElementById("vC").innerText = currentBar.close.toFixed(3);
+    
+    if (historyData.length > 0) {
+        document.getElementById("sellP").innerText = currentBar.close.toFixed(3);
+        document.getElementById("buyP").innerText = currentBar.close.toFixed(3);
+    }
+    
+    updateTime(currentBar.time);
+    handlePositionTracking(currentBar);
+    recalculateActiveIndicators();
+
+    if (isAutoFollow) {
+        chart.timeScale().fitContent();
+    }
+
+    index++;
+}
+
+function changeSymbol() {
+    symbol = document.getElementById("symbolSelect").value;
+    localStorage.setItem("symbol", symbol);
+    document.getElementById("displaySymbol").innerText = `${symbol} · ${tf.toUpperCase()}`;
+    fetchBacktestData();
+}
+
+function changeTF() {
+    tf = document.getElementById("tf").value;
+    document.getElementById("displaySymbol").innerText = `${symbol} · ${tf.toUpperCase()}`;
+    fetchBacktestData();
+}
+
+function changeSpeed() {
+    speed = parseInt(document.getElementById("speed").value);
+    localStorage.setItem("speed", speed);
+    if (isPlaying) {
+        pause();
+        play();
+    }
+}
+
+function goLive() {
+    alert("Transitioning environment configurations to immediate streaming relays...");
+}
+
+// ========================================
+// INTERACTIVE SESSION ROUTINES
+// ========================================
 function closeSessionModal() {
     document.getElementById("sessionModal").style.display = "none";
 }
 
-window.closeSessionModal = closeSessionModal;
-window.calcLots = calcLots;
-window.prepareTrade = prepareTrade;
-window.confirmTrade = confirmTrade;
-window.cancelTrade = cancelTrade;
-window.chart = chart;
-window.series = series;
+async function saveSession() {
+    const sessionName = document.getElementById("sessionNameInput").value || `Session-${symbol}-${tf}`;
+    const totalPL = trades.reduce((a, b) => a + b.pl, 0);
+    
+    const payload = {
+        name: sessionName,
+        symbol: symbol,
+        timeframe: tf,
+        trades_count: trades.length,
+        final_pl: totalPL,
+        journal_log: JSON.stringify(trades)
+    };
 
-chart.subscribeCrosshairMove(param => {
-    if (!param || !param.time) return;
-    const candle = param.seriesData.get(series);
-    if (candle) {
-        document.getElementById("vO").innerText = candle.open;
-        document.getElementById("vH").innerText = candle.high;
-        document.getElementById("vL").innerText = candle.low;
-        document.getElementById("vC").innerText = candle.close;
+    try {
+        const res = await fetch("/api/save-session", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        });
+        
+        if (res.ok) {
+            alert("Session tracked successfully!");
+            closeSessionModal();
+        } else {
+            alert("Execution configuration error trying to preserve historical model states.");
+        }
+    } catch (e) {
+        console.error(e);
     }
-});
-</script>
+}
 
-<script type="module">
-import { addIndicator, updateIndicators, rebuildIndicators, removeIndicator, editIndicator, indicators } from "./indicators/manager.js";
+// ========================================
+// PREMIUM TECHNICAL INDICATORS MATRIX
+// ========================================
+let activeIndicatorsList = [];
+let indicatorSeriesMap = new Map();
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+function openAddIndicatorModal() {
+    const selected = document.getElementById("indicatorSelect").value;
+    if (!selected) return;
 
-function renderIndicatorsLegend() {
+    const modal = document.getElementById("indicatorModal");
+    const title = document.getElementById("modalIndicatorTitle");
+    const body = document.getElementById("modalBodyContent");
+
+    document.getElementById("modalTargetMode").value = "ADD";
+    document.getElementById("modalTargetType").value = selected;
+
+    title.innerText = `Configure ${selected} Parameters`;
+    
+    let htmlInputs = "";
+    if (selected === "SMA" || selected === "EMA") {
+        htmlInputs = `
+            <div class="modal-input-row">
+                <span class="modal-label">Length Period</span>
+                <input type="number" id="ind_param_length" class="modal-input-field" value="14">
+            </div>
+            <div class="modal-input-row">
+                <span class="modal-label">Line Color</span>
+                <input type="color" id="ind_param_color" class="modal-color-picker" value="#ff9800">
+            </div>
+        `;
+    } else if (selected === "RSI") {
+        htmlInputs = `
+            <div class="modal-input-row">
+                <span class="modal-label">RSI Period</span>
+                <input type="number" id="ind_param_length" class="modal-input-field" value="14">
+            </div>
+            <div class="modal-input-row">
+                <span class="modal-label">Line Color</span>
+                <input type="color" id="ind_param_color" class="modal-color-picker" value="#9c27b0">
+            </div>
+        `;
+    } else if (selected === "BB") {
+        htmlInputs = `
+            <div class="modal-input-row">
+                <span class="modal-label">Length Period</span>
+                <input type="number" id="ind_param_length" class="modal-input-field" value="20">
+            </div>
+            <div class="modal-input-row">
+                <span class="modal-label">Standard Dev</span>
+                <input type="number" id="ind_param_mult" class="modal-input-field" value="2" step="0.1">
+            </div>
+            <div class="modal-input-row">
+                <span class="modal-label">Basis Color</span>
+                <input type="color" id="ind_param_color" class="modal-color-picker" value="#2196f3">
+            </div>
+        `;
+    } else {
+        htmlInputs = `<div style="font-size:13px; color:#787b86;">Standard native calculations apply to tracking configuration fields.</div>`;
+    }
+
+    body.innerHTML = htmlInputs;
+    modal.style.display = "flex";
+    document.getElementById("indicatorSelect").value = "";
+}
+
+function closeIndicatorModal() {
+    document.getElementById("indicatorModal").style.display = "none";
+}
+
+function submitIndicatorModal() {
+    const mode = document.getElementById("modalTargetMode").value;
+    const type = document.getElementById("modalTargetType").value;
+    
+    const length = parseInt(document.getElementById("ind_param_length")?.value || 14);
+    const color = document.getElementById("ind_param_color")?.value || "#ff9800";
+    const mult = parseFloat(document.getElementById("ind_param_mult")?.value || 2);
+
+    if (mode === "ADD") {
+        const uniqueId = "ind_" + Date.now();
+        const config = { id: uniqueId, type: type, length: length, color: color, mult: mult };
+        
+        activeIndicatorsList.push(config);
+        createIndicatorSeriesInstance(config);
+    }
+    
+    recalculateActiveIndicators();
+    renderIndicatorsLegendUI();
+    closeIndicatorModal();
+}
+
+function createIndicatorSeriesInstance(config) {
+    if (config.type === "SMA" || config.type === "EMA" || config.type === "RSI") {
+        const lineSeries = chart.addLineSeries({
+            color: config.color,
+            lineWidth: 1.5,
+            priceLineVisible: false,
+            lastValueVisible: true
+        });
+        indicatorSeriesMap.set(config.id, [lineSeries]);
+    } else if (config.type === "BB") {
+        const topLine = chart.addLineSeries({ color: 'rgba(33, 150, 243, 0.7)', lineWidth: 1, priceLineVisible: false });
+        const basisLine = chart.addLineSeries({ color: config.color, lineWidth: 1.5, priceLineVisible: false });
+        const bottomLine = chart.addLineSeries({ color: 'rgba(33, 150, 243, 0.7)', lineWidth: 1, priceLineVisible: false });
+        indicatorSeriesMap.set(config.id, [topLine, basisLine, bottomLine]);
+    }
+}
+
+function removeIndicator(id) {
+    activeIndicatorsList = activeIndicatorsList.filter(item => item.id !== id);
+    const seriesInstances = indicatorSeriesMap.get(id);
+    if (seriesInstances) {
+        seriesInstances.forEach(s => chart.removeSeries(s));
+        indicatorSeriesMap.delete(id);
+    }
+    renderIndicatorsLegendUI();
+}
+
+function renderIndicatorsLegendUI() {
     const container = document.getElementById("indicatorsLegend");
     container.innerHTML = "";
 
-    indicators.forEach((ind) => {
+    activeIndicatorsList.forEach(ind => {
         const item = document.createElement("div");
         item.className = "legend-item";
-
-        const dot = document.createElement("span");
-        dot.className = "legend-dot";
-        dot.style.background = ind.options.color || ind.options.macdColor || "#2962ff";
-
-        const title = document.createElement("span");
-        title.className = "legend-title";
         
-        if(ind.type === "MACD") {
-            title.innerText = `MACD (${ind.options.fastPeriod}, ${ind.options.slowPeriod}, ${ind.options.signalPeriod})`;
-        } else if(ind.type === "BB") {
-            title.innerText = `BB (${ind.options.period}, ${ind.options.stdDevMultiplier})`;
-        } else {
-            title.innerText = `${ind.type} (${ind.options.period})`;
-        }
+        let displayLabel = `${ind.type} (${ind.length})`;
+        if (ind.type === "BB") displayLabel = `BB (${ind.length}, ${ind.mult})`;
 
-        title.onclick = () => window.openEditIndicatorModal(ind.id);
-
-        const removeBtn = document.createElement("span");
-        removeBtn.className = "legend-remove-btn";
-        removeBtn.innerText = "✕";
-        removeBtn.onclick = (e) => {
-            e.stopPropagation();
-            window.deleteIndicator(ind.id);
-        };
-
-        item.appendChild(dot);
-        item.appendChild(title);
-        item.appendChild(removeBtn);
+        item.innerHTML = `
+            <span class="legend-dot" style="background: ${ind.color || '#fff'}"></span>
+            <span class="legend-title">${displayLabel}</span>
+            <span class="legend-remove-btn" onclick="removeIndicator('${ind.id}')">✕</span>
+        `;
         container.appendChild(item);
     });
 }
 
-function generateModalInputsHTML(type, existingOptions = null) {
-    if (type === "MACD") {
-        const fast = existingOptions ? existingOptions.fastPeriod : 12;
-        const slow = existingOptions ? existingOptions.slowPeriod : 26;
-        const sig = existingOptions ? existingOptions.signalPeriod : 9;
-        return `
-            <div class="modal-input-row"><span class="modal-label">Fast Period</span><input type="number" id="macdFast" class="modal-input-field" value="${fast}"></div>
-            <div class="modal-input-row"><span class="modal-label">Slow Period</span><input type="number" id="macdSlow" class="modal-input-field" value="${fast}"></div>
-            <div class="modal-input-row"><span class="modal-label">Signal Period</span><input type="number" id="macdSignal" class="modal-input-field" value="${sig}"></div>
-        `;
-    } else if (type === "BB") {
-        const period = existingOptions ? existingOptions.period : 20;
-        const dev = existingOptions ? existingOptions.stdDevMultiplier : 2;
-        const color = existingOptions ? existingOptions.color : "#2196f3";
-        return `
-            <div class="modal-input-row"><span class="modal-label">Bands Period</span><input type="number" id="bbPeriod" class="modal-input-field" value="${period}"></div>
-            <div class="modal-input-row"><span class="modal-label">Std Deviation</span><input type="number" id="bbDev" class="modal-input-field" value="${dev}" step="0.1"></div>
-            <div class="modal-input-row"><span class="modal-label">Bands Color</span><input type="color" id="bbColor" class="modal-color-picker" value="${color}"></div>
-        `;
-    } else {
-        const period = existingOptions ? existingOptions.period : (type === "RSI" || type === "ATR" ? 14 : 20);
-        const color = existingOptions ? existingOptions.color : (type === "SMA" ? "#2196f3" : type === "EMA" ? "#ff9800" : "#e91e63");
-        return `
-            <div class="modal-input-row"><span class="modal-label">Inputs Period</span><input type="number" id="standardPeriod" class="modal-input-field" value="${period}"></div>
-            <div class="modal-input-row"><span class="modal-label">Style Color</span><input type="color" id="standardColor" class="modal-color-picker" value="${color}"></div>
-        `;
-    }
+function recalculateActiveIndicators() {
+    if (historyData.length === 0) return;
+
+    activeIndicatorsList.forEach(ind => {
+        const instances = indicatorSeriesMap.get(ind.id);
+        if (!instances) return;
+
+        const currentCandle = historyData[historyData.length - 1];
+
+        if (ind.type === "SMA") {
+            if (historyData.length >= ind.length) {
+                let sum = 0;
+                for (let i = historyData.length - ind.length; i < historyData.length; i++) {
+                    sum += historyData[i].close;
+                }
+                instances[0].update({ time: currentCandle.time, value: sum / ind.length });
+            }
+        } else if (ind.type === "EMA") {
+            if (historyData.length >= ind.length) {
+                let k = 2 / (ind.length + 1);
+                let prevValue = historyData[historyData.length - 2]?.close || currentCandle.close;
+                let currentEma = currentCandle.close * k + prevValue * (1 - k);
+                instances[0].update({ time: currentCandle.time, value: currentEma });
+            }
+        } else if (ind.type === "BB") {
+            if (historyData.length >= ind.length) {
+                let chunk = historyData.slice(-ind.length);
+                let sum = chunk.reduce((a, b) => a + b.close, 0);
+                let basis = sum / ind.length;
+                
+                let variance = chunk.reduce((a, b) => a + Math.pow(b.close - basis, 2), 0) / ind.length;
+                let stdDev = Math.sqrt(variance);
+
+                instances[0].update({ time: currentCandle.time, value: basis + (stdDev * ind.mult) });
+                instances[1].update({ time: currentCandle.time, value: basis });
+                instances[2].update({ time: currentCandle.time, value: basis - (stdDev * ind.mult) });
+            }
+        }
+    });
 }
-
-window.openAddIndicatorModal = function() {
-    const selector = document.getElementById("indicatorSelect");
-    const selectedType = selector.value;
-    if (!selectedType) return;
-
-    document.getElementById("modalIndicatorTitle").innerText = `${selectedType} Setup Configuration`;
-    document.getElementById("modalTargetMode").value = "ADD";
-    document.getElementById("modalTargetType").value = selectedType;
-    
-    document.getElementById("modalBodyContent").innerHTML = generateModalInputsHTML(selectedType);
-    document.getElementById("indicatorModal").style.display = "flex";
-    selector.value = "";
-};
-
-window.openEditIndicatorModal = function(id) {
-    const ind = indicators.find(i => i.id === id);
-    if (!ind) return;
-
-    document.getElementById("modalIndicatorTitle").innerText = `Modify ${ind.type} Properties`;
-    document.getElementById("modalTargetMode").value = "EDIT";
-    document.getElementById("modalTargetId").value = id;
-    document.getElementById("modalTargetType").value = ind.type;
-
-    document.getElementById("modalBodyContent").innerHTML = generateModalInputsHTML(ind.type, ind.options);
-    document.getElementById("indicatorModal").style.display = "flex";
-};
-
-window.closeIndicatorModal = function() {
-    document.getElementById("indicatorModal").style.display = "none";
-};
-
-window.submitIndicatorModal = function() {
-    const mode = document.getElementById("modalTargetMode").value;
-    const type = document.getElementById("modalTargetType").value;
-    
-    let options = {};
-    if (type === "MACD") {
-        options = {
-            fastPeriod: parseInt(document.getElementById("macdFast").value) || 12,
-            slowPeriod: parseInt(document.getElementById("macdSlow").value) || 26,
-            signalPeriod: parseInt(document.getElementById("macdSignal").value) || 9
-        };
-    } else if (type === "BB") {
-        options = {
-            period: parseInt(document.getElementById("bbPeriod").value) || 20,
-            stdDevMultiplier: parseFloat(document.getElementById("bbDev").value) || 2.0,
-            color: document.getElementById("bbColor").value
-        };
-    } else {
-        options = {
-            period: parseInt(document.getElementById("standardPeriod").value) || 14,
-            color: document.getElementById("standardColor").value
-        };
-    }
-
-    if (mode === "ADD") {
-        addIndicator({
-            type,
-            chart: window.chart,
-            candles: window.historyData,
-            options
-        });
-    } else if (mode === "EDIT") {
-        const id = document.getElementById("modalTargetId").value;
-        editIndicator(id, window.chart, window.historyData, options);
-    }
-
-    window.closeIndicatorModal();
-    renderIndicatorsLegend();
-};
-
-window.deleteIndicator = function(id) {
-    removeIndicator(id, window.chart);
-    renderIndicatorsLegend();
-};
-
-window.next = function() {
-    if (index >= data.length) {
-        openSessionModal();
-        return;
-    }
-
-    const candle = data[index];
-    historyData.push(candle);
-    series.update(candle);
-
-    updateIndicators(candle);
-
-    volumeSeries.update({
-        time: candle.time,
-        value: candle.volume || 10,
-        color: candle.close >= candle.open ? 'rgba(8,153,129,0.2)' : 'rgba(242,54,69,0.2)'
-    });
-
-    document.getElementById("sellP").innerText = candle.close;
-    document.getElementById("buyP").innerText = (parseFloat(candle.close) + 0.10).toFixed(2);
-
-    if (activeTrade) {
-        if (activeTrade.type === 'BUY') {
-            if (candle.low <= activeTrade.sl || candle.high >= activeTrade.tp) closeTrade();
-        } else {
-            if (candle.high >= activeTrade.sl || candle.low <= activeTrade.tp) closeTrade();
-        }
-        if (activeTrade) {
-            updateTradeLines(activeTrade.type, activeTrade.entry, activeTrade.sl, activeTrade.tp, activeTrade.lots);
-        }
-    }
-
-    lastReplayTime = candle.time;
-    updateTime(lastReplayTime);
-
-    if (isAutoFollow) chart.timeScale().scrollToRealTime();
-    index++;
-};
-
-window.load = function() {
-    if (isFetching) return;
-    isFetching = true;
-
-    const preloader = document.getElementById("appPreloader");
-    if (preloader) preloader.classList.remove("fade-out");
-
-    document.getElementById("status").innerText = `FETCHING ${tf.toUpperCase()}...`;
-    const initialParam = localStorage.getItem("initial") || "2023-01-01T00:00:00.000Z";
-    const finalTo = localStorage.getItem("to") || new Date().toISOString();
-    let currentISO = lastReplayTime ? new Date(lastReplayTime * 1000).toISOString() : initialParam;
-
-    /* UPDATED TO POINT DIRECTLY TO YOUR RENDER PRODUCTION BACKEND SERVER PIPELINE */
-    const url = `https://backtestlab-backend-fotx.onrender.com/data?symbol=${symbol}&tf=${tf}&initial=${initialParam}&current=${currentISO}&to=${finalTo}`;
-
-    fetch(url)
-    .then(r => r.json())
-    .then(res => {
-        window.historyData = res.history || [];
-        historyData = window.historyData;
-        data = res.data || [];
-        index = 0;
-
-        series.setData(historyData);
-        
-        rebuildIndicators({ chart: window.chart, candles: window.historyData });
-        renderIndicatorsLegend();
-
-        volumeSeries.setData(historyData.map(d => ({
-            time: d.time, value: d.volume || 10, color: d.close >= d.open ? 'rgba(8,153,129,0.2)' : 'rgba(242,54,69,0.2)'
-        })));
-
-        document.getElementById("displaySymbol").innerText = `${symbol} · ${tf.toUpperCase()}`;
-        document.getElementById("status").innerText = isPlaying ? "RUNNING" : "PAUSED";
-        isFetching = false;
-
-        setTimeout(() => { chart.timeScale().scrollToPosition(5, false); }, 50);
-
-        if (preloader) preloader.classList.add("fade-out");
-    })
-    .catch(err => {
-        console.error(err);
-        document.getElementById("status").innerText = "CONNECTION ERROR";
-        isFetching = false;
-        if (preloader) preloader.classList.add("fade-out");
-    });
-};
-
-window.startTimer = function() {
-    if (!timer) timer = setInterval(window.next, speed);
-    isPlaying = true;
-};
-
-window.stopTimer = function() {
-    clearInterval(timer);
-    timer = null;
-};
-
-window.play = function() { window.startTimer(); document.getElementById("status").innerText = "RUNNING"; };
-window.pause = function() { window.stopTimer(); document.getElementById("status").innerText = "PAUSED"; };
-window.changeTF = function() { window.pause(); tf = document.getElementById("tf").value; window.load(); };
-window.changeSpeed = function() {
-    speed = parseInt(document.getElementById("speed").value);
-    if (isPlaying) { window.stopTimer(); window.startTimer(); }
-};
-
-window.changeSymbol = function() {
-    symbol = document.getElementById("symbolSelect").value;
-    localStorage.setItem("symbol", symbol);
-    window.pause();
-    lastReplayTime = null;
-    window.historyData = [];
-    historyData = [];
-    data = [];
-    series.setData([]);
-    volumeSeries.setData([]);
-    window.load();
-};
-
-window.goLive = function() { isAutoFollow = true; chart.timeScale().scrollToRealTime(); };
 
 // ========================================
-// FIREBASE SECURITY & STORAGE INFRASTRUCTURE
+// ADVANCED GEOMETRIC CANVAS OVERLAY
 // ========================================
-const firebaseConfig = {
-    apiKey: "AIzaSyAensfI53w49Fd4A7Lz5_K9N1JOxZsW7Kk",
-    authDomain: "backtestlabpro.firebaseapp.com",
-    projectId: "backtestlabpro",
-    storageBucket: "backtestlabpro.firebasestorage.app",
-    messagingSenderId: "560146824734",
-    appId: "1:560146824734:web:5287d0ded3a1024e75780f",
-    measurementId: "G-YY82TZ1ZG7"
-};
+let currentTool = 'cursor';
+const overlayCanvas = document.getElementById("drawingCanvasOverlay");
+const ctx = overlayCanvas.getContext("2d");
+let isDrawingNow = false;
+let drawStartPoint = null;
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const auth = getAuth(app);
+function setTool(toolName) {
+    currentTool = toolName;
+    
+    document.querySelectorAll(".tool-icon").forEach(el => el.classList.remove("active"));
+    
+    const toolBtn = document.getElementById(`tool-${toolName}`);
+    if (toolBtn) toolBtn.classList.add("active");
 
-window.db = db;
-window.auth = auth;
-window.collection = collection;
-window.addDoc = addDoc;
-
-window.saveSession = async function() {
-    try {
-        if (!window.auth || !window.db) return alert("Firebase resources are completely offline.");
-        const user = window.auth.currentUser;
-        if (!user) return alert("No Logged In User Found.");
-
-        const sessionName = document.getElementById("sessionNameInput").value.trim();
-        if (!sessionName) return alert("Enter Session Name");
-
-        const sessionData = {
-            user_id: user.uid, email: user.email, session_name: sessionName, symbol: symbol, timeframe: tf, speed: speed,
-            final_time: lastReplayTime, trades: trades, balance: document.getElementById("balance").value,
-            risk: document.getElementById("riskPct").value, total_pl: document.getElementById("totalPL").innerText,
-            equity: document.getElementById("currentEquity").innerText, winrate: document.getElementById("winRate").innerText,
-            created_at: new Date().toISOString()
-        };
-
-        const docRef = await window.addDoc(window.collection(window.db, "users", user.uid, "sessions"), sessionData);
-        alert("Firestore Session Saved Successfully! ID: " + docRef.id);
-    } catch (err) {
-        alert("Firestore Error: " + err.message);
+    if (toolName !== 'cursor') {
+        overlayCanvas.style.pointerEvents = "auto";
+        chart.applyOptions({ handleScroll: false, handleScale: false });
+    } else {
+        overlayCanvas.style.pointerEvents = "none";
+        chart.applyOptions({ handleScroll: true, handleScale: true });
     }
-};
+}
 
-onAuthStateChanged(auth, (user) => {
-    console.log(user ? "USER LOGGED: " + user.email : "NO USER LOGGED");
-});
+function resizeDrawingCanvas() {
+    const box = chartEl.getBoundingClientRect();
+    overlayCanvas.width = box.width;
+    overlayCanvas.height = box.height;
+    overlayCanvas.style.width = box.width + "px";
+    overlayCanvas.style.height = box.height + "px";
+}
 
-window.load();
-window.calcLots();
+function clearDrawings() {
+    ctx.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
+    alert("Canvas workspace cleared.");
+    setTool('cursor');
+}
+
+window.addEventListener("resize", resizeDrawingCanvas);
+setTimeout(() => {
+    resizeDrawingCanvas();
+    fetchBacktestData();
+    document.getElementById("appPreloader").classList.add("fade-out");
+}, 1200);
 </script>
-<script>
-(() => {
-
-const canvas = document.getElementById('drawingCanvasOverlay');
-const ctx = canvas.getContext('2d');
-
-let tool = 'cursor';
-let drawings = [];
-
-let drawing = false;
-let startX = 0;
-let startY = 0;
-let currentShape = null;
-
-let selected = null;
-let dragOffsetX = 0;
-let dragOffsetY = 0;
-
-function resizeCanvas() {
-    const rect = chartEl.getBoundingClientRect();
-
-    canvas.width = rect.width * devicePixelRatio;
-    canvas.height = rect.height * devicePixelRatio;
-
-    canvas.style.width = rect.width + 'px';
-    canvas.style.height = rect.height + 'px';
-
-    ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
-
-    redraw();
-}
-
-resizeCanvas();
-
-window.addEventListener('resize', resizeCanvas);
-
-function redraw() {
-
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-
-    drawings.forEach(drawShape);
-
-    if(currentShape){
-        drawShape(currentShape,true);
-    }
-}
-
-function drawHandle(x,y){
-    ctx.fillStyle='#fff';
-    ctx.beginPath();
-    ctx.arc(x,y,4,0,Math.PI*2);
-    ctx.fill();
-}
-
-function drawShape(shape,preview=false){
-
-    ctx.lineWidth = 2;
-    ctx.strokeStyle = shape.color || '#2962ff';
-    ctx.fillStyle = shape.fill || 'rgba(41,98,255,0.15)';
-
-    switch(shape.type){
-
-        case 'trend':
-            line(shape.x1,shape.y1,shape.x2,shape.y2);
-        break;
-
-        case 'ray':
-            drawRay(shape);
-        break;
-
-        case 'extend':
-            drawExtended(shape);
-        break;
-
-        case 'hline':
-            line(0,shape.y1,canvas.width,shape.y1);
-        break;
-
-        case 'vline':
-            line(shape.x1,0,shape.x1,canvas.height);
-        break;
-
-        case 'rect':
-            rect(shape);
-        break;
-
-        case 'circle':
-            circle(shape);
-        break;
-
-        case 'arrow':
-            arrow(shape);
-        break;
-
-        case 'channel':
-            channel(shape);
-        break;
-
-       case 'fib':
-    fib(shape);
-break;
-
-case 'fibext':
-    fibExtension(shape);
-break;
-
-case 'fibfan':
-    fibFan(shape);
-break;
-
-case 'fibarc':
-    fibArc(shape);
-break;
-
-case 'fibchannel':
-    fibChannel(shape);
-break;
-
-case 'fibtimezone':
-    fibTimeZones(shape);
-break;
-
-case 'fibspiral':
-    fibSpiral(shape);
-break;
-
-case 'fibspeed':
-    fibSpeed(shape);
-break;
-
-case 'fibtrend':
-    fibTrend(shape);
-break;
-
-case 'fibprojection':
-    fibProjection(shape);
-break;
-
-case 'fibwedge':
-    fibWedge(shape);
-break;
-
-        case 'long':
-            riskBox(shape,'#089981');
-        break;
-
-        case 'short':
-            riskBox(shape,'#f23645');
-        break;
-
-        case 'brush':
-        case 'path':
-            brush(shape);
-        break;
-
-        case 'highlight':
-            highlight(shape);
-        break;
-
-        case 'triangle':
-            triangle(shape);
-        break;
-
-        case 'measure':
-            measure(shape);
-        break;
-
-        case 'text':
-            drawText(shape);
-        break;
-
-        case 'label':
-            label(shape);
-        break;
-    }
-
-    if(selected===shape){
-        drawHandle(shape.x1,shape.y1);
-        drawHandle(shape.x2,shape.y2);
-    }
-}
-
-function line(x1,y1,x2,y2){
-    ctx.beginPath();
-    ctx.moveTo(x1,y1);
-    ctx.lineTo(x2,y2);
-    ctx.stroke();
-}
-
-function rect(s){
-    ctx.fillRect(s.x1,s.y1,s.x2-s.x1,s.y2-s.y1);
-    ctx.strokeRect(s.x1,s.y1,s.x2-s.x1,s.y2-s.y1);
-}
-
-function circle(s){
-    const r=Math.hypot(s.x2-s.x1,s.y2-s.y1);
-    ctx.beginPath();
-    ctx.arc(s.x1,s.y1,r,0,Math.PI*2);
-    ctx.fill();
-    ctx.stroke();
-}
-
-function arrow(s){
-    line(s.x1,s.y1,s.x2,s.y2);
-
-    const angle=Math.atan2(s.y2-s.y1,s.x2-s.x1);
-
-    ctx.beginPath();
-    ctx.moveTo(s.x2,s.y2);
-    ctx.lineTo(s.x2-12*Math.cos(angle-0.3),s.y2-12*Math.sin(angle-0.3));
-    ctx.lineTo(s.x2-12*Math.cos(angle+0.3),s.y2-12*Math.sin(angle+0.3));
-    ctx.closePath();
-    ctx.fill();
-}
-
-function drawRay(s){
-
-    const angle=Math.atan2(s.y2-s.y1,s.x2-s.x1);
-
-    const len=5000;
-
-    const ex=s.x1+Math.cos(angle)*len;
-    const ey=s.y1+Math.sin(angle)*len;
-
-    line(s.x1,s.y1,ex,ey);
-}
-
-function drawExtended(s){
-
-    const angle=Math.atan2(s.y2-s.y1,s.x2-s.x1);
-
-    const len=5000;
-
-    const sx=s.x1-Math.cos(angle)*len;
-    const sy=s.y1-Math.sin(angle)*len;
-
-    const ex=s.x1+Math.cos(angle)*len;
-    const ey=s.y1+Math.sin(angle)*len;
-
-    line(sx,sy,ex,ey);
-}
-
-// Ensure proper fallbacks for drawings layers
-function brush(s){
-
-    ctx.beginPath();
-
-    s.points.forEach((p,i)=>{
-        if(i===0) ctx.moveTo(p.x,p.y);
-        else ctx.lineTo(p.x,p.y);
-    });
-
-    ctx.stroke();
-}
-
-function highlight(s){
-
-    ctx.save();
-
-    ctx.globalAlpha=0.2;
-    ctx.lineWidth=12;
-
-    brush(s);
-
-    ctx.restore();
-}
-
-function triangle(s){
-
-    ctx.beginPath();
-
-    ctx.moveTo(s.x1,s.y2);
-    ctx.lineTo((s.x1+s.x2)/2,s.y1);
-    ctx.lineTo(s.x2,s.y2);
-
-    ctx.closePath();
-
-    ctx.fill();
-    ctx.stroke();
-}
-
-function measure(s){
-
-    line(s.x1,s.y1,s.x2,s.y2);
-
-    const dist=Math.round(Math.hypot(s.x2-s.x1,s.y2-s.y1));
-
-    ctx.fillStyle='#fff';
-    ctx.fillText(dist+' px',(s.x1+s.x2)/2,(s.y1+s.y2)/2);
-}
-
-function channel(s){
-
-    line(s.x1,s.y1,s.x2,s.y2);
-
-    const offset=50;
-
-    line(s.x1,s.y1+offset,s.x2,s.y2+offset);
-}
-
-function fib(s){
-
-    const levels=[0,0.236,0.382,0.5,0.618,1];
-
-    levels.forEach(l=>{
-
-        const y=s.y1+(s.y2-s.y1)*l;
-
-        line(s.x1,y,s.x2,y);
-
-        ctx.fillStyle='#fff';
-        ctx.fillText((l*100).toFixed(1)+'%',s.x2+5,y);
-    });
-}
-function fibExtension(s){
-
-    const levels=[1.272,1.414,1.618,2.618];
-
-    line(s.x1,s.y1,s.x2,s.y2);
-
-    levels.forEach(l=>{
-
-        const y=s.y2-(s.y2-s.y1)*l;
-
-        line(s.x1,y,s.x2+120,y);
-
-        ctx.fillStyle='#fff';
-        ctx.fillText(l.toFixed(3),s.x2+10,y-2);
-    });
-}
-
-function fibFan(s){
-
-    const levels=[0.382,0.5,0.618];
-
-    levels.forEach(l=>{
-
-        const y=s.y1+(s.y2-s.y1)*l;
-
-        line(s.x1,s.y1,s.x2,y);
-    });
-}
-
-function fibArc(s){
-
-    const radius=Math.hypot(s.x2-s.x1,s.y2-s.y1);
-
-    [0.382,0.5,0.618].forEach(l=>{
-
-        ctx.beginPath();
-
-        ctx.arc(
-            s.x1,
-            s.y1,
-            radius*l,
-            0,
-            Math.PI
-        );
-
-        ctx.stroke();
-    });
-}
-
-function fibChannel(s){
-
-    const levels=[0.382,0.618,1];
-
-    line(s.x1,s.y1,s.x2,s.y2);
-
-    levels.forEach(l=>{
-
-        const offset=120*l;
-
-        line(
-            s.x1,
-            s.y1+offset,
-            s.x2,
-            s.y2+offset
-        );
-    });
-}
-
-function fibTimeZones(s){
-
-    const fibs=[1,2,3,5,8,13,21];
-
-    fibs.forEach(f=>{
-
-        const x=s.x1+(f*40);
-
-        line(x,0,x,canvas.height);
-
-        ctx.fillStyle='#fff';
-        ctx.fillText(f,x+3,20);
-    });
-}
-
-function fibSpiral(s){
-
-    const radius=Math.hypot(s.x2-s.x1,s.y2-s.y1);
-
-    let angle=0;
-
-    ctx.beginPath();
-
-    for(let i=0;i<200;i++){
-
-        const r=radius*(i/200);
-
-        const x=s.x1+Math.cos(angle)*r;
-        const y=s.y1+Math.sin(angle)*r;
-
-        if(i===0) ctx.moveTo(x,y);
-        else ctx.lineTo(x,y);
-
-        angle+=0.3;
-    }
-
-    ctx.stroke();
-}
-
-function fibSpeed(s){
-
-    const levels=[0.33,0.66,1];
-
-    levels.forEach(l=>{
-
-        line(
-            s.x1,
-            s.y1,
-            s.x2,
-            s.y1+(s.y2-s.y1)*l
-        );
-    });
-}
-
-function fibTrend(s){
-
-    line(s.x1,s.y1,s.x2,s.y2);
-
-    [0.618,1,1.618].forEach(l=>{
-
-        const ex=s.x2+((s.x2-s.x1)*l);
-        const ey=s.y2+((s.y2-s.y1)*l);
-
-        line(s.x2,s.y2,ex,ey);
-    });
-}
-
-function fibProjection(s){
-
-    const levels=[0.618,1,1.618];
-
-    levels.forEach(l=>{
-
-        const ex=s.x2+((s.x2-s.x1)*l);
-
-        line(
-            ex,
-            s.y1,
-            ex,
-            s.y2
-        );
-    });
-}
-
-function fibWedge(s){
-
-    line(s.x1,s.y1,s.x2,s.y2);
-
-    line(
-        s.x1,
-        s.y1+80,
-        s.x2,
-        s.y2-80
-    );
-
-    [0.382,0.5,0.618].forEach(l=>{
-
-        const y=s.y1+((s.y2-s.y1)*l);
-
-        line(s.x1,y,s.x2,y);
-    });
-}
-function riskBox(s,color){
-
-    ctx.fillStyle=color+'33';
-    ctx.strokeStyle=color;
-
-    rect(s);
-}
-
-function drawText(s){
-
-    ctx.fillStyle='#fff';
-    ctx.font='14px Arial';
-    ctx.fillText(s.text,s.x1,s.y1);
-}
-
-function label(s){
-
-    ctx.fillStyle='#2962ff';
-    ctx.fillRect(s.x1,s.y1,80,24);
-
-    ctx.fillStyle='#fff';
-    ctx.fillText(s.text,s.x1+8,s.y1+16);
-}
-
-window.setTool=function(t){
-
-    tool=t;
-
-    document.querySelectorAll('.tool-icon').forEach(e=>{
-        e.classList.remove('active');
-    });
-
-    let targetIcon = document.getElementById('tool-'+t);
-    if (!targetIcon) {
-        if(['trend','ray','extend','hline','vline','arrow','channel'].includes(t)) targetIcon = document.getElementById('primary-lines-icon');
-if([
-    'fib',
-    'fibext',
-    'fibfan',
-    'fibarc',
-    'fibchannel',
-    'fibtimezone',
-    'fibspiral',
-    'fibspeed',
-    'fibtrend',
-    'fibprojection',
-    'fibwedge'
-].includes(t))        if(['rect','circle','triangle'].includes(t)) targetIcon = document.getElementById('primary-shapes-icon');
-        if(['text','label'].includes(t)) targetIcon = document.getElementById('primary-text-icon');
-        if(['brush','highlight','path'].includes(t)) targetIcon = document.getElementById('primary-brush-icon');
-        if(['long','short'].includes(t)) targetIcon = document.getElementById('primary-positions-icon');
-        if(['measure','eraser'].includes(t)) targetIcon = document.getElementById('primary-utils-icon');
-    }
-
-    if(targetIcon) targetIcon.classList.add('active');
-
-    if(t==='cursor'){
-        canvas.style.pointerEvents='none';
-        chart.applyOptions({
-            handleScroll:true,
-            handleScale:true
-        });
-    }else{
-        canvas.style.pointerEvents='auto';
-        chart.applyOptions({
-            handleScroll:false,
-            handleScale:false
-        });
-    }
-};
-
-window.clearDrawings=function(){
-    drawings=[];
-    redraw();
-};
-
-canvas.addEventListener('mousedown',e=>{
-
-    const rect=canvas.getBoundingClientRect();
-
-    startX=e.clientX-rect.left;
-    startY=e.clientY-rect.top;
-
-    drawing=true;
-
-    if(tool==='brush' || tool==='highlight' || tool==='path'){
-        currentShape={
-            type:tool,
-            points:[{x:startX,y:startY}]
-        };
-        return;
-    }
-
-    if(tool==='text'){
-        const txt=prompt('Text');
-        if(txt){
-            drawings.push({
-                type:'text',
-                x1:startX,
-                y1:startY,
-                text:txt
-            });
-            redraw();
-        }
-        drawing=false;
-        return;
-    }
-
-    if(tool==='label'){
-        const txt=prompt('Label');
-        if(txt){
-            drawings.push({
-                type:'label',
-                x1:startX,
-                y1:startY,
-                text:txt
-            });
-            redraw();
-        }
-        drawing=false;
-        return;
-    }
-
-    currentShape={
-        type:tool,
-        x1:startX,
-        y1:startY,
-        x2:startX,
-        y2:startY
-    };
-});
-
-canvas.addEventListener('mousemove',e=>{
-
-    if(!drawing || !currentShape) return;
-
-    const rect=canvas.getBoundingClientRect();
-
-    const x=e.clientX-rect.left;
-    const y=e.clientY-rect.top;
-
-    if(currentShape.points){
-        currentShape.points.push({x,y});
-    }else{
-        currentShape.x2=x;
-        currentShape.y2=y;
-    }
-
-    redraw();
-});
-
-canvas.addEventListener('mouseup',()=>{
-
-    if(!drawing) return;
-
-    drawing=false;
-
-    if(currentShape){
-
-        if(tool==='eraser'){
-
-            drawings=drawings.filter(d=>{
-
-                return !(
-                    Math.abs(d.x1-currentShape.x1)<20 &&
-                    Math.abs(d.y1-currentShape.y1)<20
-                );
-            });
-
-        }else{
-            drawings.push(currentShape);
-        }
-
-        currentShape=null;
-
-        redraw();
-    }
-});
-
-chart.timeScale().subscribeVisibleTimeRangeChange(redraw);
-chart.subscribeCrosshairMove(redraw);
-
-resizeCanvas();
-
-})();
-</script>
-
 
 </body>
 </html>

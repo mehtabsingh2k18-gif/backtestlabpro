@@ -12,455 +12,278 @@
         /* Premium Brand Preloader Overlay CSS */
         .app-preloader { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #0b0e14; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 999999; transition: opacity 0.4s ease, visibility 0.4s ease; }
         .app-preloader.fade-out { opacity: 0; visibility: hidden; pointer-events: none; }
+        .spinner-box { display: flex; justify-content: center; align-items: center; background: transparent; }
+        .configure-border-1 { width: 115px; height: 115px; padding: 3px; position: absolute; display: flex; justify-content: center; align-items: center; background: #fb5b53; background: linear-gradient(0deg, rgba(251,91,83,0.1) 33%, rgba(41,98,255,1) 100%); animation: configure-xclockwise 2.3s ease-in-out infinite; border-radius: 50%; }
+        .configure-border-2 { width: 115px; height: 115px; padding: 3px; left: -115px; display: flex; justify-content: center; align-items: center; background: #089981; background: linear-gradient(0deg, rgba(8,153,129,0.1) 33%, rgba(8,153,129,1) 100%); animation: configure-clockwise 3s ease-in-out infinite; border-radius: 50%; }
+        .configure-core { width: 100%; height: 100%; background-color: #0b0e14; border-radius: 50%; }
+        .preloader-text { margin-top: 35px; font-size: 11px; font-weight: 600; letter-spacing: 3px; color: #848e9c; text-transform: uppercase; animation: pulse 2s infinite; }
+        @keyframes configure-clockwise { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes configure-xclockwise { 0% { transform: rotate(45deg); } 100% { transform: rotate(-315deg); } }
+        @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
+
+        /* Navigation Bar */
+        header { background: var(--panel); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; height: 48px; min-height: 48px; box-sizing: border-box; }
+        .brand { font-size: 16px; font-weight: bold; color: #fff; display: flex; align-items: center; gap: 8px; }
+        .brand span { color: var(--accent); }
+        .controls { display: flex; align-items: center; gap: 12px; }
         
-        /* CSS Reconstructed Vector Emblem representation of your brand logo */
-        .loader-logo-container { display: flex; flex-direction: column; align-items: center; gap: 20px; animation: brandPulse 1.2s ease-in-out infinite; }
-        .logo-svg-wrapper { width: 120px; height: 120px; }
-        .loader-text { color: #ffffff; font-size: 18px; font-weight: 600; letter-spacing: 0.5px; font-family: sans-serif; }
-        .loader-text span { color: var(--accent); }
-        .loader-subtext { color: #787b86; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; margin-top: -10px; }
-
-        @keyframes brandPulse {
-            0% { transform: scale(0.98); opacity: 0.4; filter: drop-shadow(0 0 0px rgba(41, 98, 255, 0)); }
-            50% { transform: scale(1.02); opacity: 1.0; filter: drop-shadow(0 0 15px rgba(41, 98, 255, 0.3)); }
-            100% { transform: scale(0.98); opacity: 0.4; filter: drop-shadow(0 0 0px rgba(41, 98, 255, 0)); }
-        }
-
-        .topbar { height: 48px; background: var(--panel); display: flex; align-items: center; padding: 0 12px; border-bottom: 1px solid var(--border); gap: 10px; z-index: 30; }
-        .group { display: flex; background: #1e222d; border-radius: 4px; padding: 2px; }
-        button, select { background: transparent; border: none; color: var(--text); padding: 6px 12px; cursor: pointer; font-size: 13px; }
-        button:hover { background: #2a2e39; border-radius: 3px; }
+        select, input, button { background: #1e222d; border: 1px solid var(--border); color: var(--text); padding: 5px 10px; border-radius: 4px; font-size: 13px; outline: none; font-family: inherit; }
+        select:focus, input:focus { border-color: var(--accent); }
+        button { cursor: pointer; font-weight: 500; transition: background 0.2s; }
+        button:hover { background: #2a2e39; }
+        .btn-primary { background: var(--accent); color: #fff; border: none; }
+        .btn-primary:hover { background: #1e4bd8; }
         
-        .main-container { display: flex; flex: 1; width: 100vw; overflow: hidden; position: relative; }
+        .status-badge { font-size: 11px; font-weight: bold; padding: 3px 8px; border-radius: 3px; background: #2a2e39; letter-spacing: 0.5px; }
+        .status-running { color: var(--up); background: rgba(8,153,129,0.1); }
+        .status-paused { color: #ff9800; background: rgba(255,152,0,0.1); }
+
+        /* Workspace Layout */
+        .workspace { display: flex; flex: 1; overflow: hidden; position: relative; }
+        .chart-container { flex: 1; position: relative; background: var(--bg); }
+        #chart { width: 100%; height: 100%; }
         
-        /* FIXED OVERFLOW CLIPPING FOR SIDEBAR */
-        .left-sidebar { width: 58px; background: var(--panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; padding-top: 10px; gap: 14px; overflow-y: visible; overflow-x: visible; z-index: 500; position: relative; }
+        /* Interactive Layer Canvas */
+        #drawingCanvasOverlay { position: absolute; top: 0; left: 0; pointer-events: auto; z-index: 10; width: 100%; height: 100%; }
+        .canvas-drawing-mode { cursor: crosshair !important; }
+        .canvas-eraser-mode { cursor: cell !important; }
+
+        /* Left Toolbar Layout */
+        .left-toolbar { width: 45px; background: var(--panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; padding: 10px 0; gap: 10px; z-index: 20; box-sizing: border-box; }
+        .tool-btn { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 4px; color: #848e9c; background: transparent; border: none; font-size: 16px; cursor: pointer; transition: all 0.2s; }
+        .tool-btn:hover { background: #2a2e39; color: #fff; }
+        .tool-btn.active { background: rgba(41,98,255,0.15); color: var(--accent); border: 1px solid var(--accent); }
+        .tool-separator { width: 20px; height: 1px; background: var(--border); margin: 5px 0; }
+
+        /* Indicators Widget Layer */
+        .indicators-legend { position: absolute; top: 15px; left: 60px; z-index: 15; background: rgba(19,23,34,0.75); backdrop-filter: blur(4px); padding: 8px 12px; border-radius: 6px; border: 1px solid rgba(42,46,57,0.6); display: flex; flex-direction: column; gap: 4px; pointer-events: auto; max-width: 300px; }
+        .indicator-item { display: flex; align-items: center; justify-content: space-between; font-size: 11px; color: #b2b5be; gap: 15px; }
+        .indicator-name { font-weight: 500; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; }
+        .indicator-actions { display: flex; gap: 6px; align-items: center; }
+        .ind-action-btn { background: transparent; border: none; padding: 0; color: #848e9c; cursor: pointer; font-size: 11px; }
+        .ind-action-btn:hover { color: #fff; }
+
+        /* Right Trading Panel */
+        .panel { width: 300px; min-width: 300px; background: var(--panel); border-left: 1px solid var(--border); display: flex; flex-direction: column; z-index: 20; box-sizing: border-box; }
+        .tabs { display: flex; border-bottom: 1px solid var(--border); background: #0b0e14; }
+        .tab { flex: 1; padding: 12px; text-align: center; font-size: 13px; font-weight: 600; cursor: pointer; color: #848e9c; border-bottom: 2px solid transparent; }
+        .tab.active { color: #fff; border-bottom-color: var(--accent); background: var(--panel); }
         
-        .tool-group { position: relative; width: 100%; display: flex; justify-content: center; }
+        .panel-content { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 20px; box-sizing: border-box; }
+        .panel-section { display: flex; flex-direction: column; gap: 8px; }
+        .panel-section label { font-size: 11px; color: #848e9c; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
         
-        .tool-icon { color: #787b86; cursor: pointer; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; border-radius: 6px; font-size: 18px; transition: 0.15s; user-select: none; background: transparent; }
-        .tool-icon:hover { background: #2a2e39; color: #fff; }
-        .tool-icon.active { background: var(--accent); color: #fff; }
-
-        /* Categorized Flyout Menus - Adjusted left to match alignment and ensured high z-index stacking */
-        .tool-menu { position: absolute; left: 48px; top: 0; background: #1c2030; border: 1px solid #363a45; border-radius: 8px; min-width: 200px; display: none; flex-direction: column; overflow: hidden; box-shadow: 5px 10px 30px rgba(0,0,0,0.55); z-index: 99999; }
-        .tool-group:hover .tool-menu { display: flex; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         
-        .tool-item { padding: 10px 14px; font-size: 13px; color: #d1d4dc; cursor: pointer; transition: 0.12s; white-space: nowrap; display: flex; align-items: center; gap: 10px; }
-        .tool-item:hover { background: var(--accent); color: white; }
-        .tool-item .item-icon { width: 18px; display: inline-block; text-align: center; }
-
-        #chart { flex: 1; height: calc(100vh - 50px); position: relative; background: var(--bg); cursor: crosshair; }
-        .right-sidebar { width: 340px; background: var(--panel); border-left: 1px solid var(--border); display: flex; flex-direction: column; z-index: 25; overflow-y: auto; }
-        .sidebar-header { padding: 12px; font-size: 11px; font-weight: bold; color: #787b86; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid var(--border); background: #1a1e2a; display: flex; justify-content: space-between; }
+        .input-wrapper { position: relative; display: flex; align-items: center; }
+        .input-wrapper input { width: 100%; box-sizing: border-box; padding-right: 40px; height: 34px; }
+        .input-wrapper .unit { position: absolute; right: 10px; font-size: 11px; color: #5d6673; font-weight: bold; pointer-events: none; }
         
-        .risk-box { padding: 15px; border-bottom: 1px solid var(--border); background: #131722; }
-        .input-row { display: flex; gap: 10px; margin-bottom: 10px; }
-        .input-group { flex: 1; display: flex; flex-direction: column; }
-        .input-group label { font-size: 10px; color: #787b86; margin-bottom: 4px; }
-        .input-group input { background: #1e222d; border: 1px solid #363a45; color: white; padding: 6px; border-radius: 3px; font-size: 12px; outline: none; }
-        .input-group input:focus { border-color: var(--accent); }
-        .lot-display { background: rgba(41, 98, 255, 0.1); border: 1px dashed var(--accent); padding: 10px; border-radius: 4px; text-align: center; margin-top: 5px; margin-bottom: 15px; }
-        .lot-val { font-size: 18px; font-weight: bold; color: var(--accent); }
-
-        #tradeDrawer { display: none; background: #1e222d; padding: 15px; border-top: 1px solid var(--accent); margin-top: 10px; border-radius: 4px; }
-        .confirm-btn { width: 100%; padding: 10px; background: var(--accent); color: white; border-radius: 4px; font-weight: bold; margin-top: 10px; border: none; cursor: pointer; }
-
-        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); border-bottom: 1px solid var(--border); }
-        .stat-card { background: var(--panel); padding: 12px; display: flex; flex-direction: column; }
-        .stat-label { font-size: 10px; color: #787b86; margin-bottom: 3px; }
-        .stat-value { font-size: 16px; font-weight: bold; font-family: monospace; }
-
-        #journal { flex: 1; overflow-y: auto; background: var(--bg); }
-        .journal-item { padding: 10px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; font-size: 12px; }
-        .tag { padding: 2px 4px; border-radius: 3px; font-size: 10px; font-weight: bold; margin-right: 5px; }
-        .tag-buy { background: var(--up); color: white; }
-        .tag-sell { background: var(--down); color: white; }
-
-        .tv-overlay { position: absolute; z-index: 10; pointer-events: none; }
-        .symbol-info { top: 10px; left: 10px; display: flex; flex-direction: column; }
-        .symbol-title { font-size: 16px; font-weight: bold; color: #fff; }
-        .symbol-values { font-size: 12px; font-family: monospace; margin-top: 4px; }
-        .val-label { color: #787b86; margin-right: 2px; }
+        /* Execution Buttons */
+        .btn-buy { background: var(--up); color: #fff; border: none; height: 40px; font-size: 14px; font-weight: bold; border-radius: 4px; }
+        .btn-buy:hover { background: #067d69; }
+        .btn-sell { background: var(--down); color: #fff; border: none; height: 40px; font-size: 14px; font-weight: bold; border-radius: 4px; }
+        .btn-sell:hover { background: #c82d39; }
         
-        .execution-btns-sidebar { display: flex; gap: 10px; margin-top: 10px; }
-        .exec-btn { flex: 1; padding: 10px; display: flex; flex-direction: column; align-items: center; border-radius: 4px; cursor: pointer; border: 1px solid transparent; transition: opacity 0.2s; }
-        .exec-btn:active { opacity: 0.7; }
-        .sell { background: rgba(242, 54, 69, 0.1); border-color: var(--down); color: var(--down); }
-        .buy { background: rgba(8, 153, 129, 0.1); border-color: var(--up); color: var(--up); }
-        .btn-price { font-weight: bold; font-size: 14px; }
-        .btn-label { font-size: 10px; font-weight: bold; margin-top: 2px; }
+        /* Stats Dashboard Grid */
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+        .stat-box { background: #161a25; padding: 12px; display: flex; flex-direction: column; gap: 4px; }
+        .stat-label { font-size: 10px; color: #848e9c; font-weight: 600; text-transform: uppercase; }
+        .stat-value { font-size: 16px; font-weight: bold; color: #fff; font-family: monospace; }
+        .stat-value.positive { color: var(--up); }
+        .stat-value.negative { color: var(--down); }
 
-        .time-box { position: absolute; bottom: 30px; right: 20px; background: #131722; padding: 5px 10px; border: 1px solid #363a45; border-radius: 4px; font-family: monospace; z-index: 10; pointer-events: none; }
-        #status { margin-left: auto; font-size: 11px; color: #787b86; font-weight: bold; padding-right: 15px;}
-
-        .indicators-legend-overlay { position: absolute; top: 60px; left: 10px; display: flex; flex-direction: column; gap: 6px; z-index: 20; pointer-events: auto; }
-        .legend-item { display: inline-flex; align-items: center; background: rgba(19, 23, 34, 0.85); border: 1px solid var(--border); border-radius: 4px; padding: 4px 8px; font-size: 12px; gap: 6px; color: #d1d4dc; }
-        .legend-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
-        .legend-title { font-weight: 500; cursor: pointer; }
-        .legend-title:hover { color: #fff; text-decoration: underline; }
-        .legend-remove-btn { color: #787b86; cursor: pointer; font-weight: bold; margin-left: 4px; font-size: 11px; display: flex; align-items: center; justify-content: center; width: 14px; height: 14px; border-radius: 2px; }
-        .legend-remove-btn:hover { background: rgba(242, 54, 69, 0.2); color: var(--down); }
-
-        .premium-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); z-index: 9999; align-items: center; justify-content: center; }
-        .premium-modal-content { background: #1c2030; border: 1px solid #363a45; border-radius: 6px; width: 350px; padding: 0; box-shadow: 0 16px 40px rgba(0,0,0,0.5); overflow: hidden; animation: modalFadeIn 0.15s ease-out; }
-        .premium-modal-header { background: #131722; padding: 14px 18px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-        .premium-modal-title { font-size: 14px; font-weight: 600; color: #ffffff; letter-spacing: 0.3px; }
-        .premium-modal-close { color: #787b86; cursor: pointer; font-size: 16px; font-weight: bold; }
-        .premium-modal-close:hover { color: #ffffff; }
-        .premium-modal-body { padding: 18px; display: flex; flex-direction: column; gap: 14px; }
-        .modal-input-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
-        .modal-label { font-size: 13px; color: #b2b5be; }
-        .modal-input-field { width: 80px; background: #2a2e39; border: 1px solid #434651; color: white; padding: 6px 8px; border-radius: 4px; font-size: 13px; text-align: left; outline: none; }
-        .modal-input-field:focus { border-color: var(--accent); }
-        .modal-color-picker { width: 32px; height: 32px; padding: 0; border: 1px solid #434651; background: transparent; border-radius: 4px; cursor: pointer; outline: none; vertical-align: middle; }
-        .premium-modal-footer { background: #131722; padding: 12px 18px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 8px; }
-        .premium-btn { padding: 8px 16px; font-size: 13px; border-radius: 4px; font-weight: 500; border: none; cursor: pointer; }
-        .premium-btn-secondary { background: transparent; color: #b2b5be; }
-        .premium-btn-secondary:hover { background: #2a2e39; color: #fff; }
-        .premium-btn-primary { background: var(--accent); color: white; }
-        .premium-btn-primary:hover { background: #1e53e5; }
-
-        @keyframes modalFadeIn {
-            from { opacity: 0; transform: scale(0.96); }
-            to { opacity: 1; transform: scale(1); }
-        }
-
-        /* --- DRAWING LAYER STYLING OVERLAYS --- */
-        #drawingCanvasOverlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            z-index: 15;
-            pointer-events: none;
-        }
+        /* Premium Modals */
+        .premium-modal-backdrop { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(4,6,10,0.8); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 99999; opacity: 0; visibility: hidden; transition: all 0.25s ease; }
+        .premium-modal-backdrop.active { opacity: 1; visibility: visible; }
+        .premium-modal-window { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; width: 420px; max-width: 90%; box-shadow: 0 20px 40px rgba(0,0,0,0.5); display: flex; flex-direction: column; overflow: hidden; transform: scale(0.95); transition: all 0.25s ease; }
+        .premium-modal-backdrop.active .premium-modal-window { transform: scale(1); }
+        .premium-modal-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; background: #181c27; }
+        .premium-modal-header h3 { margin: 0; font-size: 15px; font-weight: 600; color: #fff; }
+        .premium-modal-close-btn { background: transparent; border: none; color: #848e9c; font-size: 18px; cursor: pointer; padding: 0; }
+        .premium-modal-close-btn:hover { color: #fff; }
+        .premium-modal-body { padding: 20px; display: flex; flex-direction: column; gap: 16px; max-height: 70vh; overflow-y: auto; }
+        .premium-modal-footer { padding: 14px 20px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 10px; background: #181c27; }
+        .premium-btn { font-weight: 600; padding: 8px 16px; border-radius: 6px; font-size: 13px; }
+        .premium-btn-secondary { background: #2a3040; border: 1px solid #363c4e; color: #d1d4dc; }
+        .premium-btn-secondary:hover { background: #32384a; color: #fff; }
+        .premium-btn-primary { background: var(--accent); border: none; color: #fff; }
+        .premium-btn-primary:hover { background: #1e4bd8; }
+        
+        .field-group { display: flex; flex-direction: column; gap: 6px; }
+        .field-group label { font-size: 11px; color: #848e9c; font-weight: 600; text-transform: uppercase; }
+        .field-group input, .field-group select { height: 36px; box-sizing: border-box; background: #1c2030; border: 1px solid #2d3245; }
+        
+        .positions-list, .history-list { display: flex; flex-direction: column; gap: 8px; font-size: 12px; }
+        .position-card { background: #181c27; border: 1px solid var(--border); border-radius: 4px; padding: 10px; display: flex; flex-direction: column; gap: 6px; }
+        .card-header { display: flex; justify-content: space-between; font-weight: bold; }
+        .card-row { display: flex; justify-content: space-between; color: #848e9c; font-size: 11px; }
+        .badge-buy { color: var(--up); }
+        .badge-sell { color: var(--down); }
+        
+        .time-box { font-family: monospace; font-size: 13px; font-weight: bold; color: var(--accent); background: #1e222d; padding: 5px 12px; border-radius: 4px; border: 1px solid var(--border); min-width: 140px; text-align: center; }
+        .speed-control-container { display: flex; align-items: center; gap: 6px; background: #1e222d; border: 1px solid var(--border); padding: 4px 8px; border-radius: 4px; }
+        .speed-control-container span { font-size: 11px; font-weight: 600; color: #848e9c; }
+        .speed-select { background: transparent; border: none; padding: 0; height: auto; font-weight: bold; color: #fff; cursor: pointer; }
     </style>
 </head>
 <body>
 
-
-<div id="appPreloader" class="app-preloader">
-    <div class="loader-logo-container">
-        <svg class="logo-svg-wrapper" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M38 25H62M43 25V42L22 73C20 76 22 80 26 80H74C78 80 80 76 78 73L57 42V25" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-            <rect x="34" y="56" width="3" height="12" fill="#2962ff"/>
-            <path d="M35.5 52V72" stroke="#2962ff" stroke-width="1.5" stroke-linecap="round"/>
-            
-            <rect x="44" y="48" width="3" height="14" fill="#2962ff"/>
-            <path d="M45.5 42V66" stroke="#2962ff" stroke-width="1.5" stroke-linecap="round"/>
-            
-            <rect x="54" y="42" width="3" height="16" fill="#089981"/>
-            <path d="M55.5 36V62" stroke="#089981" stroke-width="1.5" stroke-linecap="round"/>
-            
-            <rect x="64" y="34" width="3" height="14" fill="#089981"/>
-            <path d="M65.5 28V52" stroke="#089981" stroke-width="1.5" stroke-linecap="round"/>
-            <circle cx="50" cy="72" r="10" fill="#0b0e14" stroke="#089981" stroke-width="2.5"/>
-            <polygon points="48,68 55,72 48,76" fill="#089981"/>
-        </svg>
-        <div class="loader-text">BacktestLab <span>Pro</span></div>
-        <div class="loader-subtext">Test · Replay · Trade Better</div>
-    </div>
-</div>
-
-<div class="topbar">
-    <div class="group">
-        <select id="symbolSelect" onchange="changeSymbol()">
-            <option value="XAUUSD">GOLD (XAUUSD)</option>
-            <option value="EURUSD">EURUSD</option>
-            <option value="GBPUSD">GBPUSD</option>
-        </select>
-    </div>
-
-    <div class="group">
-        <button onclick="play()">PLAY</button>
-        <button onclick="pause()">PAUSE</button>
-        <button onclick="next()">STEP</button>
-    </div>
-    
-    <div class="group">
-        <select id="tf" onchange="changeTF()">
-            <option value="m1">1m</option>
-            <option value="m5">5m</option>
-            <option value="m15">15m</option>
-            <option value="h1">1h</option>
-            <option value="h4" selected>4h</option>
-            <option value="d1">1d</option>
-        </select>
-    </div>
-    
-    <div class="group">
-        <select id="speed" onchange="changeSpeed()">
-            <option value="1000">1x</option>
-            <option value="500" selected>2x</option>
-            <option value="100">10x</option>
-            <option value="30">Max</option>
-        </select>
-    </div>
-
-    <div class="group">
-        <select id="indicatorSelect" onchange="openAddIndicatorModal()">
-            <option value="" disabled selected>+ Indicators</option>
-            <option value="SMA">SMA (Simple Moving Avg)</option>
-            <option value="EMA">EMA (Exponential Moving Avg)</option>
-            <option value="RSI">RSI (Relative Strength Index)</option>
-            <option value="MACD">MACD (Convergence/Divergence)</option>
-            <option value="BB">BB (Bollinger Bands)</option>
-            <option value="ATR">ATR (Average True Range)</option>
-        </select>
-    </div>
-
-    <button onclick="goLive()" style="color: var(--accent)">GO LIVE</button>
-    <div id="status">READY</div>
-</div>
-
-<div class="main-container">
-    <div class="left-sidebar">
-        <div class="tool-group">
-            <div class="tool-icon active" id="tool-cursor" onclick="setTool('cursor')">↖</div>
+    <div class="app-preloader" id="appPreloader">
+        <div class="spinner-box">
+            <div class="configure-border-1">
+                <div class="configure-core"></div>
+            </div>
+            <div class="configure-border-2">
+                <div class="configure-core"></div>
+            </div>
         </div>
+        <div class="preloader-text" id="preloaderText">INITIALIZING SIMULATION ENGINE...</div>
+    </div>
+
+    <header>
+        <div class="brand">PURE<span>BACKTEST</span> <div class="status-badge" id="status">CONNECTING</div></div>
         
-        <div class="tool-group">
-            <div class="tool-icon" id="primary-lines-icon">／</div>
-            <div class="tool-menu">
-                <div class="tool-item" onclick="setTool('trend')"><span class="item-icon">／</span> Trend Line</div>
-                <div class="tool-item" onclick="setTool('ray')"><span class="item-icon">⟍</span> Ray Line</div>
-                <div class="tool-item" onclick="setTool('extend')"><span class="item-icon">⟋</span> Extended Line</div>
-                <div class="tool-item" onclick="setTool('hline')"><span class="item-icon">H</span> Horizontal Line</div>
-                <div class="tool-item" onclick="setTool('vline')"><span class="item-icon">V</span> Vertical Line</div>
-                <div class="tool-item" onclick="setTool('arrow')"><span class="item-icon">➜</span> Arrow Line</div>
-                <div class="tool-item" onclick="setTool('channel')"><span class="item-icon">≋</span> Parallel Channel</div>
+        <div class="controls">
+            <select id="symbol" onchange="changeSymbol()">
+                <option value="XAUUSD">XAUUSD (Gold)</option>
+                <option value="EURUSD">EURUSD</option>
+                <option value="GBPUSD">GBPUSD</option>
+                <option value="USDCAD">USDCAD</option>
+                <option value="USDJPY">USDJPY</option>
+                <option value="XAGUSD">XAGUSD (Silver)</option>
+            </select>
+            
+            <select id="tf" onchange="changeTF()">
+                <option value="m1">1m</option>
+                <option value="m5">5m</option>
+                <option value="m15">15m</option>
+                <option value="h1">1h</option>
+                <option value="h4" selected>4h</option>
+                <option value="d1">1d</option>
+            </select>
+            
+            <button onclick="step()">Step ➡️</button>
+            <button class="btn-primary" onclick="play()">Play ▶️</button>
+            <button onclick="pause()">Pause ⏸️</button>
+            
+            <div class="speed-control-container">
+                <span>SPEED:</span>
+                <select id="speed" class="speed-select" onchange="changeSpeed()">
+                    <option value="1000">1s</option>
+                    <option value="500" selected>0.5s</option>
+                    <option value="200">0.2s</option>
+                    <option value="100">0.1s</option>
+                    <option value="50">Realtime</option>
+                </select>
             </div>
+
+            <div class="time-box" id="timeBox">LOADING STREAM CLOCK...</div>
         </div>
 
-       <div class="tool-group">
+        <div>
+            <button onclick="openIndicatorModal()" style="border-color: #363c4e; background: #1c2030;">+ Add Indicator</button>
+        </div>
+    </header>
 
-    <div class="tool-icon" id="primary-fib-icon">🌀</div>
-
-    <div class="tool-menu">
-
-        <div class="tool-item" onclick="setTool('fib')">
-            <span class="item-icon">F</span>
-            Fibonacci Retracement
+    <div class="workspace">
+        
+        <div class="left-toolbar">
+            <button class="tool-btn active" id="tool-cursor" onclick="setTool('cursor')" title="Cursor Crosshair">↖️</button>
+            <div class="tool-separator"></div>
+            <button class="tool-btn" id="tool-line" onclick="setTool('line')" title="Trendline Vector">➖</button>
+            <button class="tool-btn" id="tool-ray" onclick="setTool('ray')" title="Horizontal Ray Projection">➡️</button>
+            <button class="tool-btn" id="tool-rect" onclick="setTool('rect')" title="Rectangle Block Zone">⬜</button>
+            <button class="tool-btn" id="tool-arrow" onclick="setTool('arrow')" title="Directional Arrow">↗️</button>
+            <button class="tool-btn" id="tool-label" onclick="setTool('label')" title="Text Annotation Layer">🔤</button>
+            <div class="tool-separator"></div>
+            <button class="tool-btn" id="tool-eraser" onclick="setTool('eraser')" title="Object Eraser Node">🧹</button>
+            <button class="tool-btn" style="color: #f23645;" onclick="clearAllDrawings()" title="Clear Canvas Layer">🗑️</button>
         </div>
 
-        <div class="tool-item" onclick="setTool('fibtrend')">
-            <span class="item-icon">↗</span>
-            Fib Trend Extension
+        <div class="chart-container">
+            <canvas id="drawingCanvasOverlay"></canvas>
+            <div class="indicators-legend" id="indicatorsLegend"></div>
+            <div id="chart"></div>
         </div>
 
-        <div class="tool-item" onclick="setTool('fibext')">
-            <span class="item-icon">⇱</span>
-            Fibonacci Extension
-        </div>
-
-        <div class="tool-item" onclick="setTool('fibprojection')">
-            <span class="item-icon">⌲</span>
-            Fibonacci Projection
-        </div>
-
-        <div class="tool-item" onclick="setTool('fibchannel')">
-            <span class="item-icon">≋</span>
-            Fibonacci Channel
-        </div>
-
-        <div class="tool-item" onclick="setTool('fibwedge')">
-            <span class="item-icon">⋀</span>
-            Fibonacci Wedge
-        </div>
-
-        <div class="tool-item" onclick="setTool('fibspeed')">
-            <span class="item-icon">⚡</span>
-            Fibonacci Speed Resistance
-        </div>
-
-        <div class="tool-item" onclick="setTool('fibtimezone')">
-            <span class="item-icon">⏱</span>
-            Fibonacci Time Zones
-        </div>
-
-        <div class="tool-item" onclick="setTool('fibspiral')">
-            <span class="item-icon">🌀</span>
-            Fibonacci Spiral
-        </div>
-
-        <div class="tool-item" onclick="setTool('fibarc')">
-            <span class="item-icon">◜</span>
-            Fibonacci Arcs
-        </div>
-
-        <div class="tool-item" onclick="setTool('fibfan')">
-            <span class="item-icon">╱</span>
-            Fibonacci Fan
-        </div>
-
-    </div>
-</div>
-
-        <div class="tool-group">
-            <div class="tool-icon" id="primary-shapes-icon">▭</div>
-            <div class="tool-menu">
-                <div class="tool-item" onclick="setTool('rect')"><span class="item-icon">▭</span> Rectangle</div>
-                <div class="tool-item" onclick="setTool('circle')"><span class="item-icon">◯</span> Circle</div>
-                <div class="tool-item" onclick="setTool('triangle')"><span class="item-icon">△</span> Triangle</div>
-            </div>
-        </div>
-
-        <div class="tool-group">
-            <div class="tool-icon" id="primary-text-icon">T</div>
-            <div class="tool-menu">
-                <div class="tool-item" onclick="setTool('text')"><span class="item-icon">T</span> Text Annotation</div>
-                <div class="tool-item" onclick="setTool('label')"><span class="item-icon">🏷</span> Pricing Label</div>
-            </div>
-        </div>
-
-        <div class="tool-group">
-            <div class="tool-icon" id="primary-brush-icon">✎</div>
-            <div class="tool-menu">
-                <div class="tool-item" onclick="setTool('brush')"><span class="item-icon">✎</span> Standard Brush</div>
-                <div class="tool-item" onclick="setTool('highlight')"><span class="item-icon">🖍</span> Marker Highlighter</div>
-                <div class="tool-item" onclick="setTool('path')"><span class="item-icon">⌇</span> Multi-point Path</div>
-            </div>
-        </div>
-
-        <div class="tool-group">
-            <div class="tool-icon" id="primary-positions-icon">🟢</div>
-            <div class="tool-menu">
-                <div class="tool-item" onclick="setTool('long')"><span class="item-icon">🟢</span> Long Position</div>
-                <div class="tool-item" onclick="setTool('short')"><span class="item-icon">🔴</span> Short Position</div>
-            </div>
-        </div>
-
-        <div class="tool-group">
-            <div class="tool-icon" id="primary-utils-icon">📏</div>
-            <div class="tool-menu">
-                <div class="tool-item" onclick="setTool('measure')"><span class="item-icon">📏</span> Measure Ruler</div>
-                <div class="tool-item" onclick="setTool('eraser')"><span class="item-icon">⌫</span> Precision Eraser</div>
-                <div class="tool-item" onclick="clearDrawings()"><span class="item-icon">🗑</span> Wipe All Clear</div>
-            </div>
-        </div>
-    </div>
-    
-    <div id="chartRoot" style="flex:1; position:relative; overflow:hidden;">
-        <div id="chart" style="width:100%; height:100%; position:absolute; top:0; left:0;"></div>
-        <canvas id="drawingCanvasOverlay"></canvas>
-
-        <div class="tv-overlay symbol-info">
-            <div class="symbol-title" id="displaySymbol">XAUUSD · 4H</div>
-            <div class="symbol-values" id="fullOhlc">
-                <span class="val-label">O</span><span id="vO">-</span>
-                <span class="val-label">H</span><span id="vH">-</span>
-                <span class="val-label">L</span><span id="vL">-</span>
-                <span class="val-label">C</span><span id="vC">-</span>
-            </div>
-        </div>
-
-        <div id="indicatorsLegend" class="indicators-legend-overlay"></div>
-
-        <div id="timeBox" class="time-box">--:--</div>
-    </div>
-    
-    <div class="right-sidebar">
-        <div class="sidebar-header">Risk Calculator</div>
-        <div class="risk-box">
-            <div class="input-row">
-                <div class="input-group">
-                    <label>Balance ($)</label>
-                    <input type="number" id="balance" value="10000" oninput="calcLots()">
-                </div>
-                <div class="input-group">
-                    <label>Risk (%)</label>
-                    <input type="number" id="riskPct" value="2" oninput="calcLots()">
-                </div>
+        <div class="panel">
+            <div class="tabs">
+                <div class="tab active" id="tab-trade" onclick="setTab('trade')">Execution</div>
+                <div class="tab" id="tab-positions" onclick="setTab('positions')">Open (0)</div>
+                <div class="tab" id="tab-history" onclick="setTab('history')">History</div>
             </div>
             
-            <div class="lot-display">
-                <div style="font-size: 10px; color: #787b86;">RECOMMENDED LOTS</div>
-                <div class="lot-val" id="calcLotResult">0.40</div>
-            </div>
-
-            <div class="execution-btns-sidebar">
-                <div class="exec-btn sell" onclick="prepareTrade('SELL')">
-                    <span class="btn-price" id="sellP">-</span>
-                    <span class="btn-label">SELL</span>
+            <div class="panel-content" id="panelContent">
                 </div>
-                <div class="exec-btn buy" onclick="prepareTrade('BUY')">
-                    <span class="btn-price" id="buyP">-</span>
-                    <span class="btn-label">BUY</span>
-                </div>
-            </div>
-
-            <div id="tradeDrawer">
-                <div style="font-size: 11px; font-weight: bold; margin-bottom: 10px; color: var(--accent)" id="drawerTitle">NEW BUY ORDER</div>
-                <div class="input-row">
-                    <div class="input-group">
-                        <label>SL (Pips)</label>
-                        <input type="number" id="slPips" value="50" oninput="calcLots()">
-                    </div>
-                    <div class="input-group">
-                        <label>TP (Pips)</label>
-                        <input type="number" id="tpPips" value="100">
-                    </div>
-                </div>
-                <div class="input-row">
-                    <div class="input-group">
-                        <label>Trade Lots</label>
-                        <input type="number" id="finalLots" step="0.01" value="0.40">
-                    </div>
-                    <div class="input-group">
-                        <label>Contract Size</label>
-                        <input type="number" id="contractSize" value="100" oninput="calcLots()">
-                    </div>
-                </div>
-                <button class="confirm-btn" onclick="confirmTrade()">CONFIRM TRADE</button>
-                <button onclick="cancelTrade()" style="width:100%; font-size:10px; margin-top:5px; color:#787b86">CANCEL</button>
-            </div>
-        </div>
-
-        <div class="stats-grid">
-            <div class="stat-card"><span class="stat-label">EQUITY</span><span class="stat-value" id="currentEquity">$10,000</span></div>
-            <div class="stat-card"><span class="stat-label">PROFIT/LOSS</span><span class="stat-value" id="totalPL">$0.00</span></div>
-            <div class="stat-card"><span class="stat-label">TRADES</span><span class="stat-value" id="tradeCount">0</span></div>
-            <div class="stat-card"><span class="stat-label">WIN RATE</span><span class="stat-value" id="winRate">0%</span></div>
-        </div>
-
-        <div id="journal"></div>
-    </div>
-</div>
-
-<div id="sessionModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:99999; align-items:center; justify-content:center;">
-    <div style="width:400px; background:#131722; border:1px solid #2a2e39; border-radius:8px; padding:20px; box-sizing:border-box;">
-        <div style="font-size:18px; font-weight:bold; margin-bottom:15px; color:white;">Save Backtest Session</div>
-        <div style="font-size:12px; color:#787b86; margin-bottom:15px;">Replay reached final session date.</div>
-        <input id="sessionNameInput" type="text" placeholder="Enter Session Name" style="width:100%; background:#1e222d; border:1px solid #363a45; color:white; padding:10px; border-radius:4px; box-sizing:border-box; margin-bottom:15px;">
-        <div style="display:flex; gap:10px;">
-            <button onclick="saveSession()" style="flex:1; background:#2962ff; color:white; border:none; padding:10px; border-radius:4px; cursor:pointer;">SAVE SESSION</button>
-            <button onclick="closeSessionModal()" style="flex:1; background:#2a2e39; color:white; border:none; padding:10px; border-radius:4px; cursor:pointer;">CANCEL</button>
         </div>
     </div>
-</div>
 
-<div id="indicatorModal" class="premium-modal">
-    <div class="premium-modal-content">
-        <div class="premium-modal-header">
-            <span id="modalIndicatorTitle" class="premium-modal-title">Indicator Settings</span>
-            <span class="premium-modal-close" onclick="closeIndicatorModal()">✕</span>
-        </div>
-        <div class="premium-modal-body" id="modalBodyContent">
+    <div class="premium-modal-backdrop" id="indicatorModal">
+        <div class="premium-modal-window">
+            <div class="premium-modal-header">
+                <h3 id="indicatorModalTitle">Configure Technical Indicator Overlay</h3>
+                <button class="premium-modal-close-btn" onclick="closeIndicatorModal()">&times;</button>
             </div>
-        <div class="premium-modal-footer">
-            <input type="hidden" id="modalTargetMode" value="ADD">
-            <input type="hidden" id="modalTargetId" value="">
-            <input type="hidden" id="modalTargetType" value="">
-            <button class="premium-btn premium-btn-secondary" onclick="closeIndicatorModal()">Cancel</button>
-            <button class="premium-btn premium-btn-primary" onclick="submitIndicatorModal()">Apply</button>
+            <div class="premium-modal-body" id="indicatorModalBody">
+                </div>
+            <div class="premium-modal-footer">
+                <input type="hidden" id="modalTargetMode" value="ADD">
+                <input type="hidden" id="modalTargetId" value="">
+                <input type="hidden" id="modalTargetType" value="">
+                <button class="premium-btn premium-btn-secondary" onclick="closeIndicatorModal()">Cancel</button>
+                <button class="premium-btn premium-btn-primary" onclick="submitIndicatorModal()">Apply</button>
+            </div>
         </div>
     </div>
-</div>
 
-<script>
-// ========================================
-// CORE BACKTEST STATE ENGINE
-// ========================================
+    <div class="premium-modal-backdrop" id="sessionModal">
+        <div class="premium-modal-window" style="width: 380px;">
+            <div class="premium-modal-header">
+                <h3>💾 Save Simulation Session</h3>
+                <button class="premium-modal-close-btn" onclick="closeSessionModal()">&times;</button>
+            </div>
+            <div class="premium-modal-body">
+                <div class="field-group">
+                    <label>Session Identity Name</label>
+                    <input type="text" id="sessionNameInput" placeholder="e.g., H4 Trend Replay Test Strategy">
+                </div>
+                <p style="font-size: 11px; color: #848e9c; margin: 0; line-height: 1.4;">Saving your session syncs your account analytics balance logs directly into Firestore cloud system endpoints.</p>
+            </div>
+            <div class="premium-modal-footer">
+                <button class="premium-btn premium-btn-secondary" onclick="closeSessionModal()">Discard</button>
+                <button class="premium-btn premium-btn-primary" onclick="saveSession()">Confirm Save</button>
+            </div>
+        </div>
+    </div>
+
+<script type="module">
+// ============================================================================
+// FIREBASE LIFECYCLE ROUTER HANDLER INITIALIZATION
+// ============================================================================
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyAs7O11_g7EcljE6W7-K0wYF46vSgW1Gg",
+    authDomain: "purebacktest-pro.firebaseapp.com",
+    projectId: "purebacktest-pro",
+    storageBucket: "purebacktest-pro.appspot.com",
+    messagingSenderId: "1098654321012",
+    appId: "1:1098654321012:web:a1b2c3d4e5f6g7h8i9j0k"
+};
+
+try {
+    const app = initializeApp(firebaseConfig);
+    window.auth = getAuth(app);
+    window.db = getFirestore(app);
+    window.collection = collection;
+    window.addDoc = addDoc;
+} catch (e) {
+    console.error("Firebase Initialization Skipped Offline: ", e);
+}
+
 let symbol = localStorage.getItem("symbol") || "XAUUSD";
 let tf = "h4";
 let speed = parseInt(localStorage.getItem("speed")) || 500;
@@ -476,8 +299,17 @@ let timer = null;
 let trades = [];
 let activeTrade = null;
 let entryLine, slLine, tpLine;
-let pendingType = null;
 let sessionEnded = false;
+
+let activeIndicators = JSON.parse(localStorage.getItem("applied_indicators")) || [
+    { id: "ind_1", type: "SMA", params: { period: 20, source: "close" }, color: "#ff9800", width: 1.5, visible: true },
+    { id: "ind_2", type: "EMA", params: { period: 50, source: "close" }, color: "#e91e63", width: 1.5, visible: true }
+];
+
+const INDICATOR_DEFINITIONS = {
+    SMA: { name: "Simple Moving Average", params: [{ id: "period", name: "Period Length", type: "number", default: 14 }] },
+    EMA: { name: "Exponential Moving Average", params: [{ id: "period", name: "Period Length", type: "number", default: 20 }] }
+};
 
 const chartEl = document.getElementById("chart");
 const chart = LightweightCharts.createChart(chartEl, {
@@ -489,6 +321,7 @@ const chart = LightweightCharts.createChart(chartEl, {
     handleScale: { axisPressedMouseMove: true, mouseWheel: true, pinch: true },
     crosshair: { mode: LightweightCharts.CrosshairMode.Normal }
 });
+window.chart = chart;
 
 const series = chart.addCandlestickSeries({
     upColor: '#089981', downColor: '#f23645', borderVisible: false, wickUpColor: '#089981', wickDownColor: '#f23645'
@@ -509,302 +342,215 @@ function calcLots() {
     const bal = parseFloat(document.getElementById("balance").value);
     const riskPct = parseFloat(document.getElementById("riskPct").value);
     const slPips = parseFloat(document.getElementById("slPips").value);
-    const contract = parseFloat(document.getElementById("contractSize").value);
+    const contract = 100000;
     const resultEl = document.getElementById("calcLotResult");
     const finalLotInput = document.getElementById("finalLots");
-
-    if (bal && riskPct && slPips && contract) {
+    
+    if (bal && riskPct && slPips) {
         const riskAmount = bal * (riskPct / 100);
         const lot = riskAmount / (slPips * (contract * 0.01));
-        resultEl.innerText = lot.toFixed(2);
-        finalLotInput.value = lot.toFixed(2);
-    }
-}
-
-function updateStats() {
-    const totalPL = trades.reduce((a, b) => a + b.pl, 0);
-    const bal = parseFloat(document.getElementById("balance").value);
-    const wins = trades.filter(t => t.pl > 0).length;
-    const winRate = trades.length > 0 ? ((wins / trades.length) * 100).toFixed(1) : 0;
-
-    document.getElementById("tradeCount").innerText = trades.length;
-    document.getElementById("totalPL").innerText = (totalPL >= 0 ? '+$' : '-$') + Math.abs(totalPL).toFixed(2);
-    document.getElementById("totalPL").style.color = totalPL >= 0 ? 'var(--up)' : 'var(--down)';
-    document.getElementById("currentEquity").innerText = '$' + (bal + totalPL).toLocaleString();
-    document.getElementById("winRate").innerText = winRate + '%';
-}
-
-function calculatePnL(price) {
-    if (!activeTrade) return 0;
-    const diff = activeTrade.type === 'BUY' ? (price - activeTrade.entry) : (activeTrade.entry - price);
-    return diff * activeTrade.lots * activeTrade.contract;
-}
-
-function updateTradeLines(type, entry, sl, tp, lots) {
-    const currentPrice = historyData[historyData.length - 1]?.close || entry;
-    const pnl = calculatePnL(currentPrice);
-    const pnlString = (pnl >= 0 ? '+' : '') + pnl.toFixed(2);
-
-    if (entryLine) series.removePriceLine(entryLine);
-    if (slLine) series.removePriceLine(slLine);
-    if (tpLine) series.removePriceLine(tpLine);
-
-    entryLine = series.createPriceLine({ price: entry, color: '#2962ff', lineWidth: 2, axisLabelVisible: true, title: `${lots} Lots | ${pnlString} USD ✕` });
-    slLine = series.createPriceLine({ price: sl, color: '#f23645', lineWidth: 2, lineStyle: LightweightCharts.LineStyle.Dashed, axisLabelVisible: true, title: 'SL' });
-    tpLine = series.createPriceLine({ price: tp, color: '#089981', lineWidth: 2, lineStyle: LightweightCharts.LineStyle.Dashed, axisLabelVisible: true, title: 'TP' });
-}
-
-function prepareTrade(type) {
-    if (activeTrade) return;
-    pendingType = type;
-    document.getElementById("drawerTitle").innerText = `NEW ${type} ORDER`;
-    document.getElementById("drawerTitle").style.color = type === 'BUY' ? 'var(--up)' : 'var(--down)';
-    document.getElementById("tradeDrawer").style.display = "block";
-}
-
-function cancelTrade() {
-    document.getElementById("tradeDrawer").style.display = "none";
-    pendingType = null;
-}
-
-function confirmTrade() {
-    if (!pendingType) return;
-    placeTrade(pendingType);
-    cancelTrade();
-}
-
-function placeTrade(type) {
-    if (activeTrade) return;
-    const currentPrice = historyData[historyData.length - 1]?.close || 0;
-    const lotSize = parseFloat(document.getElementById("finalLots").value);
-    const slPips = parseFloat(document.getElementById("slPips").value);
-    const tpPips = parseFloat(document.getElementById("tpPips").value);
-    const contract = parseFloat(document.getElementById("contractSize").value);
-
-    const pipVal = 0.1;
-    const slDist = slPips * pipVal;
-    const tpDist = tpPips * pipVal;
-
-    const sl = type === 'BUY' ? currentPrice - slDist : currentPrice + slDist;
-    const tp = type === 'BUY' ? currentPrice + tpDist : currentPrice - tpDist;
-
-    activeTrade = { type, entry: currentPrice, sl, tp, lots: lotSize, contract };
-    updateTradeLines(type, currentPrice, sl, tp, lotSize);
-}
-
-function closeTrade() {
-    if (!activeTrade) return;
-    const currentPrice = historyData[historyData.length - 1]?.close || 0;
-    const pnl = calculatePnL(currentPrice);
-
-    trades.push({ type: activeTrade.type, price: activeTrade.entry, pl: pnl });
-
-    const journal = document.getElementById("journal");
-    const item = document.createElement("div");
-    item.className = "journal-item";
-    item.innerHTML = `
-        <div style="display:flex; flex-direction:column">
-            <span>
-                <span class="tag ${activeTrade.type === 'BUY' ? 'tag-buy' : 'tag-sell'}">${activeTrade.type}</span>
-                ${activeTrade.entry}
-            </span>
-            <span style="font-size:9px; color:#787b86">Size: ${activeTrade.lots}</span>
-        </div>
-        <span style="color:${pnl >= 0 ? 'var(--up)' : 'var(--down)'}">${pnl >= 0 ? '+' : ''}${pnl.toFixed(2)}</span>
-    `;
-    journal.prepend(item);
-
-    if (entryLine) series.removePriceLine(entryLine);
-    if (slLine) series.removePriceLine(slLine);
-    if (tpLine) series.removePriceLine(tpLine);
-
-    activeTrade = null;
-    updateStats();
-}
-
-function openSessionModal() {
-    if (sessionEnded) return;
-    sessionEnded = true;
-    window.pause();
-    document.getElementById("sessionModal").style.display = "flex";
-}
-
-function closeSessionModal() {
-    document.getElementById("sessionModal").style.display = "none";
-}
-
-window.closeSessionModal = closeSessionModal;
-window.calcLots = calcLots;
-window.prepareTrade = prepareTrade;
-window.confirmTrade = confirmTrade;
-window.cancelTrade = cancelTrade;
-window.chart = chart;
-window.series = series;
-
-chart.subscribeCrosshairMove(param => {
-    if (!param || !param.time) return;
-    const candle = param.seriesData.get(series);
-    if (candle) {
-        document.getElementById("vO").innerText = candle.open;
-        document.getElementById("vH").innerText = candle.high;
-        document.getElementById("vL").innerText = candle.low;
-        document.getElementById("vC").innerText = candle.close;
-    }
-});
-</script>
-
-<script type="module">
-import { addIndicator, updateIndicators, rebuildIndicators, removeIndicator, editIndicator, indicators } from "./indicators/manager.js";
-
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
-function renderIndicatorsLegend() {
-    const container = document.getElementById("indicatorsLegend");
-    container.innerHTML = "";
-
-    indicators.forEach((ind) => {
-        const item = document.createElement("div");
-        item.className = "legend-item";
-
-        const dot = document.createElement("span");
-        dot.className = "legend-dot";
-        dot.style.background = ind.options.color || ind.options.macdColor || "#2962ff";
-
-        const title = document.createElement("span");
-        title.className = "legend-title";
-        
-        if(ind.type === "MACD") {
-            title.innerText = `MACD (${ind.options.fastPeriod}, ${ind.options.slowPeriod}, ${ind.options.signalPeriod})`;
-        } else if(ind.type === "BB") {
-            title.innerText = `BB (${ind.options.period}, ${ind.options.stdDevMultiplier})`;
-        } else {
-            title.innerText = `${ind.type} (${ind.options.period})`;
+        if (isFinite(lot) && lot > 0) {
+            const finalVal = lot.toFixed(2);
+            if (resultEl) resultEl.innerText = `${finalVal} Lots (Risk: $${riskAmount.toFixed(2)})`;
+            if (finalLotInput) finalLotInput.value = finalVal;
+            return;
         }
+    }
+    if (resultEl) resultEl.innerText = "-- Lots";
+}
+window.calcLots = calcLots;
 
-        title.onclick = () => window.openEditIndicatorModal(ind.id);
+function calculateSMA(candles, period) {
+    let res = [];
+    for (let i = 0; i < candles.length; i++) {
+        if (i < period - 1) { res.push({ time: candles[i].time, value: null }); continue; }
+        let sum = 0;
+        for (let j = 0; j < period; j++) { sum += candles[i - j].close; }
+        res.push({ time: candles[i].time, value: sum / period });
+    }
+    return res;
+}
 
-        const removeBtn = document.createElement("span");
-        removeBtn.className = "legend-remove-btn";
-        removeBtn.innerText = "✕";
-        removeBtn.onclick = (e) => {
-            e.stopPropagation();
-            window.deleteIndicator(ind.id);
-        };
+function calculateEMA(candles, period) {
+    let res = [];
+    if (candles.length === 0) return res;
+    let k = 2 / (period + 1);
+    let ema = candles[0].close;
+    res.push({ time: candles[0].time, value: ema });
+    for (let i = 1; i < candles.length; i++) {
+        ema = candles[i].close * k + ema * (1 - k);
+        res.push({ time: candles[i].time, value: i < period - 1 ? null : ema });
+    }
+    return res;
+}
 
-        item.appendChild(dot);
-        item.appendChild(title);
-        item.appendChild(removeBtn);
-        container.appendChild(item);
+function rebuildIndicators({ chart, candles }) {
+    if (window.indicatorSeriesList) {
+        window.indicatorSeriesList.forEach(s => chart.removeSeries(s));
+    }
+    window.indicatorSeriesList = [];
+    
+    activeIndicators.forEach(ind => {
+        if (!ind.visible) return;
+        let lineData = [];
+        if (ind.type === "SMA") lineData = calculateSMA(candles, parseInt(ind.params.period));
+        else if (ind.type === "EMA") lineData = calculateEMA(candles, parseInt(ind.params.period));
+        
+        const validData = lineData.filter(d => d.value !== null);
+        if (validData.length > 0) {
+            const lineSeries = chart.addLineSeries({ color: ind.color, lineWidth: ind.width, crosshairMarkerVisible: false, priceLineVisible: false });
+            lineSeries.setData(validData);
+            window.indicatorSeriesList.push(lineSeries);
+        }
     });
 }
 
-function generateModalInputsHTML(type, existingOptions = null) {
-    if (type === "MACD") {
-        const fast = existingOptions ? existingOptions.fastPeriod : 12;
-        const slow = existingOptions ? existingOptions.slowPeriod : 26;
-        const sig = existingOptions ? existingOptions.signalPeriod : 9;
-        return `
-            <div class="modal-input-row"><span class="modal-label">Fast Period</span><input type="number" id="macdFast" class="modal-input-field" value="${fast}"></div>
-            <div class="modal-input-row"><span class="modal-label">Slow Period</span><input type="number" id="macdSlow" class="modal-input-field" value="${fast}"></div>
-            <div class="modal-input-row"><span class="modal-label">Signal Period</span><input type="number" id="macdSignal" class="modal-input-field" value="${sig}"></div>
+function renderIndicatorsLegend() {
+    const el = document.getElementById("indicatorsLegend");
+    if (!el) return;
+    el.innerHTML = "";
+    if (activeIndicators.length === 0) { el.style.display = "none"; return; }
+    el.style.display = "flex";
+    
+    activeIndicators.forEach(ind => {
+        const item = document.createElement("div");
+        item.className = "indicator-item";
+        const paramStr = Object.entries(ind.params).map(([k,v]) => v).join(",");
+        item.innerHTML = `
+            <span class="indicator-name" style="color: ${ind.color}">${ind.type} (${paramStr})</span>
+            <div class="indicator-actions">
+                <button class="ind-action-btn" onclick="toggleIndicatorVisibility('${ind.id}')">${ind.visible ? '👁️' : '❌'}</button>
+                <button class="ind-action-btn" onclick="openEditIndicatorModal('${ind.id}')">⚙️</button>
+                <button class="ind-action-btn" onclick="deleteIndicator('${ind.id}')" style="color: #f23645;">🗑️</button>
+            </div>
         `;
-    } else if (type === "BB") {
-        const period = existingOptions ? existingOptions.period : 20;
-        const dev = existingOptions ? existingOptions.stdDevMultiplier : 2;
-        const color = existingOptions ? existingOptions.color : "#2196f3";
-        return `
-            <div class="modal-input-row"><span class="modal-label">Bands Period</span><input type="number" id="bbPeriod" class="modal-input-field" value="${period}"></div>
-            <div class="modal-input-row"><span class="modal-label">Std Deviation</span><input type="number" id="bbDev" class="modal-input-field" value="${dev}" step="0.1"></div>
-            <div class="modal-input-row"><span class="modal-label">Bands Color</span><input type="color" id="bbColor" class="modal-color-picker" value="${color}"></div>
-        `;
-    } else {
-        const period = existingOptions ? existingOptions.period : (type === "RSI" || type === "ATR" ? 14 : 20);
-        const color = existingOptions ? existingOptions.color : (type === "SMA" ? "#2196f3" : type === "EMA" ? "#ff9800" : "#e91e63");
-        return `
-            <div class="modal-input-row"><span class="modal-label">Inputs Period</span><input type="number" id="standardPeriod" class="modal-input-field" value="${period}"></div>
-            <div class="modal-input-row"><span class="modal-label">Style Color</span><input type="color" id="standardColor" class="modal-color-picker" value="${color}"></div>
-        `;
-    }
+        el.appendChild(item);
+    });
 }
 
-window.openAddIndicatorModal = function() {
-    const selector = document.getElementById("indicatorSelect");
-    const selectedType = selector.value;
-    if (!selectedType) return;
+window.toggleIndicatorVisibility = function(id) {
+    const ind = activeIndicators.find(i => i.id === id);
+    if (ind) {
+        ind.visible = !ind.visible;
+        localStorage.setItem("applied_indicators", JSON.stringify(activeIndicators));
+        rebuildIndicators({ chart: window.chart, candles: window.historyData });
+        renderIndicatorsLegend();
+    }
+};
 
-    document.getElementById("modalIndicatorTitle").innerText = `${selectedType} Setup Configuration`;
+window.openIndicatorModal = function() {
     document.getElementById("modalTargetMode").value = "ADD";
-    document.getElementById("modalTargetType").value = selectedType;
-    
-    document.getElementById("modalBodyContent").innerHTML = generateModalInputsHTML(selectedType);
-    document.getElementById("indicatorModal").style.display = "flex";
-    selector.value = "";
+    document.getElementById("indicatorModalTitle").innerText = "Add Technical Indicator Overlay";
+    let html = `
+        <div class="field-group">
+            <label>Indicator Type</label>
+            <select id="modalIndType" onchange="renderModalParams()">
+                ${Object.keys(INDICATOR_DEFINITIONS).map(k => `<option value="${k}">${INDICATOR_DEFINITIONS[k].name}</option>`).join("")}
+            </select>
+        </div>
+        <div id="modalParamContainer"></div>
+        <div class="grid-2">
+            <div class="field-group">
+                <label>Line Style Color</label>
+                <input type="color" id="modalIndColor" value="#ff9800">
+            </div>
+            <div class="field-group">
+                <label>Line Thickness</label>
+                <select id="modalIndWidth">
+                    <option value="1">1px (Thin)</option>
+                    <option value="1.5" selected>1.5px (Normal)</option>
+                    <option value="2.5">2.5px (Thick)</option>
+                </select>
+            </div>
+        </div>
+    `;
+    document.getElementById("indicatorModalBody").innerHTML = html;
+    renderModalParams();
+    document.getElementById("indicatorModal").classList.add("active");
 };
 
 window.openEditIndicatorModal = function(id) {
-    const ind = indicators.find(i => i.id === id);
+    const ind = activeIndicators.find(i => i.id === id);
     if (!ind) return;
-
-    document.getElementById("modalIndicatorTitle").innerText = `Modify ${ind.type} Properties`;
     document.getElementById("modalTargetMode").value = "EDIT";
     document.getElementById("modalTargetId").value = id;
-    document.getElementById("modalTargetType").value = ind.type;
-
-    document.getElementById("modalBodyContent").innerHTML = generateModalInputsHTML(ind.type, ind.options);
-    document.getElementById("indicatorModal").style.display = "flex";
+    document.getElementById("indicatorModalTitle").innerText = `Edit ${ind.type} Properties`;
+    
+    let html = `
+        <input type="hidden" id="modalIndType" value="${ind.type}">
+        <div id="modalParamContainer"></div>
+        <div class="grid-2">
+            <div class="field-group">
+                <label>Line Style Color</label>
+                <input type="color" id="modalIndColor" value="${ind.color}">
+            </div>
+            <div class="field-group">
+                <label>Line Thickness</label>
+                <select id="modalIndWidth">
+                    <option value="1" ${ind.width == 1 ? 'selected' : ''}>1px</option>
+                    <option value="1.5" ${ind.width == 1.5 ? 'selected' : ''}>1.5px</option>
+                    <option value="2.5" ${ind.width == 2.5 ? 'selected' : ''}>2.5px</option>
+                </select>
+            </div>
+        </div>
+    `;
+    document.getElementById("indicatorModalBody").innerHTML = html;
+    const container = document.getElementById("modalParamContainer");
+    container.innerHTML = INDICATOR_DEFINITIONS[ind.type].params.map(p => `
+        <div class="field-group">
+            <label>${p.name}</label>
+            <input type="${p.type}" id="param_${p.id}" value="${ind.params[p.id] ?? p.default}">
+        </div>
+    `).join("");
+    document.getElementById("indicatorModal").classList.add("active");
 };
 
-window.closeIndicatorModal = function() {
-    document.getElementById("indicatorModal").style.display = "none";
+window.renderModalParams = function() {
+    const type = document.getElementById("modalIndType").value;
+    const container = document.getElementById("modalParamContainer");
+    container.innerHTML = INDICATOR_DEFINITIONS[type].params.map(p => `
+        <div class="field-group">
+            <label>${p.name}</label>
+            <input type="${p.type}" id="param_${p.id}" value="${p.default}">
+        </div>
+    `).join("");
 };
+
+window.closeIndicatorModal = function() { document.getElementById("indicatorModal").classList.remove("active"); };
 
 window.submitIndicatorModal = function() {
     const mode = document.getElementById("modalTargetMode").value;
-    const type = document.getElementById("modalTargetType").value;
+    const type = document.getElementById("modalIndType").value;
+    const color = document.getElementById("modalIndColor").value;
+    const width = parseFloat(document.getElementById("modalIndWidth").value);
+    let params = {};
+    INDICATOR_DEFINITIONS[type].params.forEach(p => {
+        params[p.id] = parseFloat(document.getElementById(`param_${p.id}`).value);
+    });
     
-    let options = {};
-    if (type === "MACD") {
-        options = {
-            fastPeriod: parseInt(document.getElementById("macdFast").value) || 12,
-            slowPeriod: parseInt(document.getElementById("macdSlow").value) || 26,
-            signalPeriod: parseInt(document.getElementById("macdSignal").value) || 9
-        };
-    } else if (type === "BB") {
-        options = {
-            period: parseInt(document.getElementById("bbPeriod").value) || 20,
-            stdDevMultiplier: parseFloat(document.getElementById("bbDev").value) || 2.0,
-            color: document.getElementById("bbColor").value
-        };
-    } else {
-        options = {
-            period: parseInt(document.getElementById("standardPeriod").value) || 14,
-            color: document.getElementById("standardColor").value
-        };
-    }
-
     if (mode === "ADD") {
-        addIndicator({
-            type,
-            chart: window.chart,
-            candles: window.historyData,
-            options
-        });
-    } else if (mode === "EDIT") {
+        activeIndicators.push({ id: "ind_" + Date.now(), type, params, color, width, visible: true });
+    } else {
         const id = document.getElementById("modalTargetId").value;
-        editIndicator(id, window.chart, window.historyData, options);
+        const ind = activeIndicators.find(i => i.id === id);
+        if (ind) { ind.params = params; ind.color = color; ind.width = width; }
     }
-
-    window.closeIndicatorModal();
+    localStorage.setItem("applied_indicators", JSON.stringify(activeIndicators));
+    rebuildIndicators({ chart: window.chart, candles: window.historyData });
     renderIndicatorsLegend();
+    window.closeIndicatorModal();
 };
 
 window.deleteIndicator = function(id) {
-    removeIndicator(id, window.chart);
+    activeIndicators = activeIndicators.filter(i => i.id !== id);
+    localStorage.setItem("applied_indicators", JSON.stringify(activeIndicators));
+    rebuildIndicators({ chart: window.chart, candles: window.historyData });
     renderIndicatorsLegend();
 };
 
+// ============================================================================
+// CORE DATA FEED TIMELINE SIMULATION ENGINE REPLAY MATRIX
+// ============================================================================
 window.next = function() {
     if (index >= data.length) {
         openSessionModal();
@@ -814,13 +560,10 @@ window.next = function() {
     const candle = data[index];
     historyData.push(candle);
     series.update(candle);
-
-    updateIndicators(candle);
+    rebuildIndicators({ chart: window.chart, candles: window.historyData });
 
     volumeSeries.update({
-        time: candle.time,
-        value: candle.volume || 10,
-        color: candle.close >= candle.open ? 'rgba(8,153,129,0.2)' : 'rgba(242,54,69,0.2)'
+        time: candle.time, value: candle.volume || 10, color: candle.close >= candle.open ? 'rgba(8,153,129,0.2)' : 'rgba(242,54,69,0.2)'
     });
 
     document.getElementById("sellP").innerText = candle.close;
@@ -832,14 +575,11 @@ window.next = function() {
         } else {
             if (candle.high >= activeTrade.sl || candle.low <= activeTrade.tp) closeTrade();
         }
-        if (activeTrade) {
-            updateTradeLines(activeTrade.type, activeTrade.entry, activeTrade.sl, activeTrade.tp, activeTrade.lots);
-        }
+        if (activeTrade) updateTradeLines(activeTrade.type, activeTrade.entry, activeTrade.sl, activeTrade.tp, activeTrade.lots);
     }
 
     lastReplayTime = candle.time;
     updateTime(lastReplayTime);
-
     if (isAutoFollow) chart.timeScale().scrollToRealTime();
     index++;
 };
@@ -850,14 +590,14 @@ window.load = function() {
 
     const preloader = document.getElementById("appPreloader");
     if (preloader) preloader.classList.remove("fade-out");
-
     document.getElementById("status").innerText = `FETCHING ${tf.toUpperCase()}...`;
-    const initialParam = localStorage.getItem("initial") || "2023-01-01T00:00:00.000Z";
-    const finalTo = localStorage.getItem("to") || new Date().toISOString();
+    
+    // Core Date Synchronization Realignment Match Fixes
+    const initialParam = localStorage.getItem("initial") || "2026-02-16T00:00:00.000Z";
+    const finalTo = localStorage.getItem("to") || "2026-08-13T00:00:00.000Z";
     let currentISO = lastReplayTime ? new Date(lastReplayTime * 1000).toISOString() : initialParam;
 
-    // Correct URL mapping securely to your hosted Render backend server infrastructure
-    const url = `https://purebacktest-backend.onrender.com/data?symbol=${symbol}&tf=${tf}&initial=${initialParam}&current=${currentISO}&to=${finalTo}`;
+    const url = `https://backtestlab-backend-fotx.onrender.com/data?symbol=${symbol}&tf=${tf}&initial=${initialParam}&current=${currentISO}&to=${finalTo}`;
 
     fetch(url)
     .then(r => r.json())
@@ -868,7 +608,6 @@ window.load = function() {
         index = 0;
 
         series.setData(historyData);
-        
         rebuildIndicators({ chart: window.chart, candles: window.historyData });
         renderIndicatorsLegend();
 
@@ -879,9 +618,7 @@ window.load = function() {
         document.getElementById("displaySymbol").innerText = `${symbol} · ${tf.toUpperCase()}`;
         document.getElementById("status").innerText = isPlaying ? "RUNNING" : "PAUSED";
         isFetching = false;
-
         setTimeout(() => { chart.timeScale().scrollToPosition(5, false); }, 50);
-
         if (preloader) preloader.classList.add("fade-out");
     })
     .catch(err => {
@@ -892,67 +629,32 @@ window.load = function() {
     });
 };
 
-window.startTimer = function() {
-    if (!timer) timer = setInterval(window.next, speed);
-    isPlaying = true;
-};
-
-window.stopTimer = function() {
-    clearInterval(timer);
-    timer = null;
-};
-
+window.startTimer = function() { if (!timer) timer = setInterval(window.next, speed); isPlaying = true; };
+window.stopTimer = function() { clearInterval(timer); timer = null; isPlaying = false; };
 window.play = function() { window.startTimer(); document.getElementById("status").innerText = "RUNNING"; };
 window.pause = function() { window.stopTimer(); document.getElementById("status").innerText = "PAUSED"; };
 window.changeTF = function() { window.pause(); tf = document.getElementById("tf").value; window.load(); };
 window.changeSpeed = function() {
     speed = parseInt(document.getElementById("speed").value);
+    localStorage.setItem("speed", speed);
     if (isPlaying) { window.stopTimer(); window.startTimer(); }
 };
-
+window.step = function() { window.pause(); window.next(); };
 window.changeSymbol = function() {
-    symbol = document.getElementById("symbolSelect").value;
+    symbol = document.getElementById("symbol").value;
     localStorage.setItem("symbol", symbol);
-    window.pause();
     lastReplayTime = null;
-    window.historyData = [];
-    historyData = [];
-    data = [];
-    series.setData([]);
-    volumeSeries.setData([]);
     window.load();
 };
 
-window.goLive = function() { isAutoFollow = true; chart.timeScale().scrollToRealTime(); };
-
-// ========================================
-// FIREBASE SECURITY & STORAGE INFRASTRUCTURE
-// ========================================
-const firebaseConfig = {
-    apiKey: "AIzaSyAensfI53w49Fd4A7Lz5_K9N1JOxZsW7Kk",
-    authDomain: "backtestlabpro.firebaseapp.com",
-    projectId: "backtestlabpro",
-    storageBucket: "backtestlabpro.firebasestorage.app",
-    messagingSenderId: "560146824734",
-    appId: "1:560146824734:web:5287d0ded3a1024e75780f",
-    measurementId: "G-YY82TZ1ZG7"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const auth = getAuth(app);
-
-window.db = db;
-window.auth = auth;
-window.collection = collection;
-window.addDoc = addDoc;
+window.openSessionModal = function() { window.pause(); document.getElementById("sessionModal").classList.add("active"); };
+window.closeSessionModal = function() { document.getElementById("sessionModal").classList.remove("active"); };
 
 window.saveSession = async function() {
     try {
         if (!window.auth || !window.db) return alert("Firebase resources are completely offline.");
         const user = window.auth.currentUser;
         if (!user) return alert("No Logged In User Found.");
-
         const sessionName = document.getElementById("sessionNameInput").value.trim();
         if (!sessionName) return alert("Enter Session Name");
 
@@ -963,692 +665,278 @@ window.saveSession = async function() {
             equity: document.getElementById("currentEquity").innerText, winrate: document.getElementById("winRate").innerText,
             created_at: new Date().toISOString()
         };
-
         const docRef = await window.addDoc(window.collection(window.db, "users", user.uid, "sessions"), sessionData);
         alert("Firestore Session Saved Successfully! ID: " + docRef.id);
-    } catch (err) {
-        alert("Firestore Error: " + err.message);
-    }
+    } catch (err) { alert("Firestore Error: " + err.message); }
 };
 
-onAuthStateChanged(auth, (user) => {
-    console.log(user ? "USER LOGGED: " + user.email : "NO USER LOGGED");
-});
+let activeTab = "trade";
+window.setTab = function(t) { activeTab = t; renderPanel(); };
+
+function renderPanel() {
+    const container = document.getElementById("panelContent");
+    document.getElementById("tab-trade").className = "tab" + (activeTab === 'trade' ? ' active' : '');
+    document.getElementById("tab-positions").className = "tab" + (activeTab === 'positions' ? ' active' : '');
+    document.getElementById("tab-history").className = "tab" + (activeTab === 'history' ? ' active' : '');
+    document.getElementById("tab-positions").innerText = `Open (${activeTrade ? 1 : 0})`;
+
+    if (activeTab === "trade") {
+        container.innerHTML = `
+            <div style="text-align: center; margin-bottom: -5px;">
+                <span style="font-size: 20px; font-weight: bold; color: #fff;" id="displaySymbol">${symbol} · ${tf.toUpperCase()}</span>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <span class="stat-label">Wallet Balance</span>
+                    <div style="display:flex; align-items:center; gap:4px;">
+                        <span style="color:#848e9c; font-size:12px;">$</span>
+                        <input type="number" id="balance" value="${localStorage.getItem("balance") || "10000"}" oninput="localStorage.setItem('balance', this.value); calcLots();" style="background:transparent; border:none; padding:0; font-size:16px; font-weight:bold; color:#fff; width:100%; font-family:monospace;">
+                    </div>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-label">Current Equity</span>
+                    <span class="stat-value" id="currentEquity">$10,000.00</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-label">Total P&L</span>
+                    <span class="stat-value" id="totalPL">$0.00</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-label">Win Rate Ratio</span>
+                    <span class="stat-value" id="winRate">0%</span>
+                </div>
+            </div>
+            <div class="panel-section">
+                <label>Risk Parameter Calculator</label>
+                <div class="grid-2">
+                    <div class="input-wrapper">
+                        <input type="number" id="riskPct" value="1.0" step="0.1" oninput="calcLots()">
+                        <span class="unit">%</span>
+                    </div>
+                    <div class="input-wrapper">
+                        <input type="number" id="slPips" value="100" oninput="calcLots()">
+                        <span class="unit">PIPS</span>
+                    </div>
+                </div>
+                <div style="font-size: 11px; color: var(--accent); font-weight: 600; padding: 2px 0;" id="calcLotResult">-- Lots</div>
+            </div>
+            <div class="panel-section" style="border-top: 1px solid var(--border); padding-top: 15px;">
+                <label>Direct Lot Execution Size</label>
+                <div class="input-wrapper">
+                    <input type="number" id="finalLots" value="0.10" step="0.01">
+                    <span class="unit">LOTS</span>
+                </div>
+            </div>
+            <div class="grid-2" style="margin-top: 5px;">
+                <button class="btn-sell" onclick="executeMarket('SELL')">
+                    <div style="font-size:11px; font-weight:normal; opacity:0.6;" id="sellP">--</div>SELL SHORT
+                </button>
+                <button class="btn-buy" onclick="executeMarket('BUY')">
+                    <div style="font-size:11px; font-weight:normal; opacity:0.6;" id="buyP">--</div>BUY LONG
+                </button>
+            </div>
+        `;
+        calcLots();
+        updateLivePnL();
+    } else if (activeTab === "positions") {
+        if (!activeTrade) {
+            container.innerHTML = `<div style="color:#5d6673; text-align:center; padding: 30px 0;">No Active Floating Positions</div>`;
+            return;
+        }
+        container.innerHTML = `
+            <div class="positions-list">
+                <div class="position-card">
+                    <div class="card-header">
+                        <span class="${activeTrade.type==='BUY'?'badge-buy':'badge-sell'}">${activeTrade.type} ${activeTrade.lots} Lots</span>
+                        <span id="posPnL" style="font-family:monospace;">$0.00</span>
+                    </div>
+                    <div class="card-row"><span>Entry Price</span><span style="color:#fff">${activeTrade.entry}</span></div>
+                    <div class="card-row"><span>Stop Loss</span><span style="color:#fff">${activeTrade.sl}</span></div>
+                    <div class="card-row"><span>Take Profit</span><span style="color:#fff">${activeTrade.tp}</span></div>
+                    <button class="btn-sell" style="background:#2a3040; border:1px solid #363c4e; height:30px; font-size:12px; margin-top:5px;" onclick="closeTrade()">Liquidate Position Market</button>
+                </div>
+            </div>
+        `;
+        updateLivePnL();
+    } else if (activeTab === "history") {
+        if (trades.length === 0) {
+            container.innerHTML = `<div style="color:#5d6673; text-align:center; padding: 30px 0;">No Historical Trade Records Found</div>`;
+            return;
+        }
+        let html = `<div class="history-list">`;
+        trades.slice().reverse().forEach(t => {
+            html += `
+                <div class="position-card" style="opacity: 0.85;">
+                    <div class="card-header">
+                        <span class="${t.type==='BUY'?'badge-buy':'badge-sell'}">${t.type} ${t.lots} Lots</span>
+                        <span class="${t.pnl>=0?'badge-buy':'badge-sell'}" style="font-family:monospace;">${t.pnl>=0?'+':''}$${t.pnl.toFixed(2)}</span>
+                    </div>
+                    <div class="card-row"><span>In/Out</span><span>${t.entry} ➡️ ${t.exitPrice}</span></div>
+                </div>
+            `;
+        });
+        html += `</div>`;
+        container.innerHTML = html;
+    }
+}
+
+function executeMarket(type) {
+    if (activeTrade) return alert("An open position is already floating.");
+    if (index === 0 || !data[index-1]) return alert("No active tick stream available.");
+    const currentPrice = data[index-1].close;
+    const lots = parseFloat(document.getElementById("finalLots").value) || 0.1;
+    const slPips = parseFloat(document.getElementById("slPips").value) || 100;
+    
+    let sl, tp;
+    if (type === 'BUY') {
+        sl = currentPrice - (slPips * 0.01); tp = currentPrice + (slPips * 0.01 * 2);
+    } else {
+        sl = currentPrice + (slPips * 0.01); tp = currentPrice - (slPips * 0.01 * 2);
+    }
+    
+    activeTrade = { type, entry: currentPrice, lots, sl, tp, time: data[index-1].time };
+    updateTradeLines(type, currentPrice, sl, tp, lots);
+    if (activeTab !== 'trade') activeTab = "positions";
+    renderPanel();
+}
+
+function updateTradeLines(type, entry, sl, tp, lots) {
+    if (entryLine) series.removePriceLine(entryLine);
+    if (slLine) series.removePriceLine(slLine);
+    if (tpLine) series.removePriceLine(tpLine);
+    entryLine = series.createPriceLine({ price: entry, color: '#2962ff', lineWidth: 1, lineStyle: 2, axisLabelVisible: true, title: `ENTRY (${lots} Lots)` });
+    slLine = series.createPriceLine({ price: sl, color: '#f23645', lineWidth: 1, lineStyle: 2, axisLabelVisible: true, title: 'SL' });
+    tpLine = series.createPriceLine({ price: tp, color: '#089981', lineWidth: 1, lineStyle: 2, axisLabelVisible: true, title: 'TP' });
+}
+
+function closeTrade() {
+    if (!activeTrade) return;
+    const exitPrice = data[index-1].close;
+    let pnl = 0;
+    if (activeTrade.type === 'BUY') pnl = (exitPrice - activeTrade.entry) * activeTrade.lots * 1000;
+    else pnl = (activeTrade.entry - exitPrice) * activeTrade.lots * 1000;
+    
+    activeTrade.exitPrice = exitPrice; activeTrade.pnl = pnl;
+    trades.push(activeTrade);
+    
+    const balInput = document.getElementById("balance");
+    if (balInput) {
+        let currentBal = parseFloat(balInput.value);
+        balInput.value = (currentBal + pnl).toFixed(2);
+        localStorage.setItem("balance", balInput.value);
+    }
+    if (entryLine) { series.removePriceLine(entryLine); entryLine = null; }
+    if (slLine) { series.removePriceLine(slLine); slLine = null; }
+    if (tpLine) { series.removePriceLine(tpLine); tpLine = null; }
+    activeTrade = null;
+    renderPanel();
+    updateLivePnL();
+}
+window.closeTrade = closeTrade;
+window.executeMarket = executeMarket;
+
+function updateLivePnL() {
+    let closedPnL = 0; trades.forEach(t => closedPnL += t.pnl);
+    let floatingPnL = 0;
+    if (activeTrade && index > 0 && data[index-1]) {
+        const cur = data[index-1].close;
+        if (activeTrade.type === 'BUY') floatingPnL = (cur - activeTrade.entry) * activeTrade.lots * 1000;
+        else floatingPnL = (activeTrade.entry - cur) * activeTrade.lots * 1000;
+        const posPnL = document.getElementById("posPnL");
+        if (posPnL) { posPnL.innerText = (floatingPnL >= 0 ? '+' : '') + '$' + floatingPnL.toFixed(2); posPnL.className = floatingPnL >= 0 ? 'badge-buy' : 'badge-sell'; }
+    }
+    const totalPL = document.getElementById("totalPL");
+    const net = closedPnL + floatingPnL;
+    if (totalPL) { totalPL.innerText = (net >= 0 ? '+' : '') + '$' + net.toFixed(2); totalPL.className = "stat-value " + (net >= 0 ? 'positive' : 'negative'); }
+    const balVal = parseFloat(localStorage.getItem("balance") || "10000");
+    const currentEquity = document.getElementById("currentEquity");
+    if (currentEquity) currentEquity.innerText = '$' + (balVal + floatingPnL).toFixed(2);
+    const winRate = document.getElementById("winRate");
+    if (winRate && trades.length > 0) {
+        const wins = trades.filter(t => t.pnl > 0).length; winRate.innerText = ((wins / trades.length) * 100).toFixed(0) + '%';
+    }
+}
+
+setInterval(() => { if (isPlaying && activeTrade) updateLivePnL(); }, 200);
 
 window.load();
 window.calcLots();
+renderPanel();
 </script>
+
 <script>
 (() => {
-
-const canvas = document.getElementById('drawingCanvasOverlay');
-const ctx = canvas.getContext('2d');
-
-let tool = 'cursor';
-let drawings = [];
-
-let drawing = false;
-let startX = 0;
-let startY = 0;
-let currentShape = null;
-
-let selected = null;
-let dragOffsetX = 0;
-let dragOffsetY = 0;
-
-function resizeCanvas() {
-    const rect = chartEl.getBoundingClientRect();
-
-    canvas.width = rect.width * devicePixelRatio;
-    canvas.height = rect.height * devicePixelRatio;
-
-    canvas.style.width = rect.width + 'px';
-    canvas.style.height = rect.height + 'px';
-
-    ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
-
-    redraw();
-}
-
-resizeCanvas();
-
-window.addEventListener('resize', resizeCanvas);
-
-function redraw() {
-
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-
-    drawings.forEach(drawShape);
-
-    if(currentShape){
-        drawShape(currentShape,true);
+    const canvas = document.getElementById('drawingCanvasOverlay');
+    const ctx = canvas.getContext('2d');
+    let tool = 'cursor'; let drawings = []; let drawing = false; let startX = 0; let startY = 0; let currentShape = null;
+    function resizeCanvas() {
+        const rect = chartEl.getBoundingClientRect();
+        canvas.width = rect.width * devicePixelRatio; canvas.height = rect.height * devicePixelRatio;
+        canvas.style.width = rect.width + 'px'; canvas.style.height = rect.height + 'px';
+        ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0); redraw();
     }
-}
-
-function drawHandle(x,y){
-    ctx.fillStyle='#fff';
-    ctx.beginPath();
-    ctx.arc(x,y,4,0,Math.PI*2);
-    ctx.fill();
-}
-
-function drawShape(shape,preview=false){
-
-    ctx.lineWidth = 2;
-    ctx.strokeStyle = shape.color || '#2962ff';
-    ctx.fillStyle = shape.fill || 'rgba(41,98,255,0.15)';
-
-    switch(shape.type){
-
-        case 'trend':
-            line(shape.x1,shape.y1,shape.x2,shape.y2);
-        break;
-
-        case 'ray':
-            drawRay(shape);
-        break;
-
-        case 'extend':
-            drawExtended(shape);
-        break;
-
-        case 'hline':
-            line(0,shape.y1,canvas.width,shape.y1);
-        break;
-
-        case 'vline':
-            line(shape.x1,0,shape.x1,canvas.height);
-        break;
-
-        case 'rect':
-            rect(shape);
-        break;
-
-        case 'circle':
-            circle(shape);
-        break;
-
-        case 'arrow':
-            arrow(shape);
-        break;
-
-        case 'channel':
-            channel(shape);
-        break;
-
-       case 'fib':
-    fib(shape);
-break;
-
-case 'fibext':
-    fibExtension(shape);
-break;
-
-case 'fibfan':
-    fibFan(shape);
-break;
-
-case 'fibarc':
-    fibArc(shape);
-break;
-
-case 'fibchannel':
-    fibChannel(shape);
-break;
-
-case 'fibtimezone':
-    fibTimeZones(shape);
-break;
-
-case 'fibspiral':
-    fibSpiral(shape);
-break;
-
-case 'fibspeed':
-    fibSpeed(shape);
-break;
-
-case 'fibtrend':
-    fibTrend(shape);
-break;
-
-case 'fibprojection':
-    fibProjection(shape);
-break;
-
-case 'fibwedge':
-    fibWedge(shape);
-break;
-
-        case 'long':
-            riskBox(shape,'#089981');
-        break;
-
-        case 'short':
-            riskBox(shape,'#f23645');
-        break;
-
-        case 'brush':
-        case 'path':
-            brush(shape);
-        break;
-
-        case 'highlight':
-            highlight(shape);
-        break;
-
-        case 'triangle':
-            triangle(shape);
-        break;
-
-        case 'measure':
-            measure(shape);
-        break;
-
-        case 'text':
-            drawText(shape);
-        break;
-
-        case 'label':
-            label(shape);
-        break;
-    }
-
-    if(selected===shape){
-        drawHandle(shape.x1,shape.y1);
-        drawHandle(shape.x2,shape.y2);
-    }
-}
-
-function line(x1,y1,x2,y2){
-    ctx.beginPath();
-    ctx.moveTo(x1,y1);
-    ctx.lineTo(x2,y2);
-    ctx.stroke();
-}
-
-function rect(s){
-    ctx.fillRect(s.x1,s.y1,s.x2-s.x1,s.y2-s.y1);
-    ctx.strokeRect(s.x1,s.y1,s.x2-s.x1,s.y2-s.y1);
-}
-
-function circle(s){
-    const r=Math.hypot(s.x2-s.x1,s.y2-s.y1);
-    ctx.beginPath();
-    ctx.arc(s.x1,s.y1,r,0,Math.PI*2);
-    ctx.fill();
-    ctx.stroke();
-}
-
-function arrow(s){
-    line(s.x1,s.y1,s.x2,s.y2);
-
-    const angle=Math.atan2(s.y2-s.y1,s.x2-s.x1);
-
-    ctx.beginPath();
-    ctx.moveTo(s.x2,s.y2);
-    ctx.lineTo(s.x2-12*Math.cos(angle-0.3),s.y2-12*Math.sin(angle-0.3));
-    ctx.lineTo(s.x2-12*Math.cos(angle+0.3),s.y2-12*Math.sin(angle+0.3));
-    ctx.closePath();
-    ctx.fill();
-}
-
-function drawRay(s){
-
-    const angle=Math.atan2(s.y2-s.y1,s.x2-s.x1);
-
-    const len=5000;
-
-    const ex=s.x1+Math.cos(angle)*len;
-    const ey=s.y1+Math.sin(angle)*len;
-
-    line(s.x1,s.y1,ex,ey);
-}
-
-function drawExtended(s){
-
-    const angle=Math.atan2(s.y2-s.y1,s.x2-s.x1);
-
-    const len=5000;
-
-    const sx=s.x1-Math.cos(angle)*len;
-    const sy=s.y1-Math.sin(angle)*len;
-
-    const ex=s.x1+Math.cos(angle)*len;
-    const ey=s.y1+Math.sin(angle)*len;
-
-    line(sx,sy,ex,ey);
-}
-
-// Ensure proper fallbacks for drawings layers
-function brush(s){
-
-    ctx.beginPath();
-
-    s.points.forEach((p,i)=>{
-        if(i===0) ctx.moveTo(p.x,p.y);
-        else ctx.lineTo(p.x,p.y);
-    });
-
-    ctx.stroke();
-}
-
-function highlight(s){
-
-    ctx.save();
-
-    ctx.globalAlpha=0.2;
-    ctx.lineWidth=12;
-
-    brush(s);
-
-    ctx.restore();
-}
-
-function triangle(s){
-
-    ctx.beginPath();
-
-    ctx.moveTo(s.x1,s.y2);
-    ctx.lineTo((s.x1+s.x2)/2,s.y1);
-    ctx.lineTo(s.x2,s.y2);
-
-    ctx.closePath();
-
-    ctx.fill();
-    ctx.stroke();
-}
-
-function measure(s){
-
-    line(s.x1,s.y1,s.x2,s.y2);
-
-    const dist=Math.round(Math.hypot(s.x2-s.x1,s.y2-s.y1));
-
-    ctx.fillStyle='#fff';
-    ctx.fillText(dist+' px',(s.x1+s.x2)/2,(s.y1+s.y2)/2);
-}
-
-function channel(s){
-
-    line(s.x1,s.y1,s.x2,s.y2);
-
-    const offset=50;
-
-    line(s.x1,s.y1+offset,s.x2,s.y2+offset);
-}
-
-function fib(s){
-
-    const levels=[0,0.236,0.382,0.5,0.618,1];
-
-    levels.forEach(l=>{
-
-        const y=s.y1+(s.y2-s.y1)*l;
-
-        line(s.x1,y,s.x2,y);
-
-        ctx.fillStyle='#fff';
-        ctx.fillText((l*100).toFixed(1)+'%',s.x2+5,y);
-    });
-}
-function fibExtension(s){
-
-    const levels=[1.272,1.414,1.618,2.618];
-
-    line(s.x1,s.y1,s.x2,s.y2);
-
-    levels.forEach(l=>{
-
-        const y=s.y2-(s.y2-s.y1)*l;
-
-        line(s.x1,y,s.x2+120,y);
-
-        ctx.fillStyle='#fff';
-        ctx.fillText(l.toFixed(3),s.x2+10,y-2);
-    });
-}
-
-function fibFan(s){
-
-    const levels=[0.382,0.5,0.618];
-
-    levels.forEach(l=>{
-
-        const y=s.y1+(s.y2-s.y1)*l;
-
-        line(s.x1,s.y1,s.x2,y);
-    });
-}
-
-function fibArc(s){
-
-    const radius=Math.hypot(s.x2-s.x1,s.y2-s.y1);
-
-    [0.382,0.5,0.618].forEach(l=>{
-
-        ctx.beginPath();
-
-        ctx.arc(
-            s.x1,
-            s.y1,
-            radius*l,
-            0,
-            Math.PI
-        );
-
-        ctx.stroke();
-    });
-}
-
-function fibChannel(s){
-
-    const levels=[0.382,0.618,1];
-
-    line(s.x1,s.y1,s.x2,s.y2);
-
-    levels.forEach(l=>{
-
-        const offset=120*l;
-
-        line(
-            s.x1,
-            s.y1+offset,
-            s.x2,
-            s.y2+offset
-        );
-    });
-}
-
-function fibTimeZones(s){
-
-    const fibs=[1,2,3,5,8,13,21];
-
-    fibs.forEach(f=>{
-
-        const x=s.x1+(f*40);
-
-        line(x,0,x,canvas.height);
-
-        ctx.fillStyle='#fff';
-        ctx.fillText(f,x+3,20);
-    });
-}
-
-function fibSpiral(s){
-
-    const radius=Math.hypot(s.x2-s.x1,s.y2-s.y1);
-
-    let angle=0;
-
-    ctx.beginPath();
-
-    for(let i=0;i<200;i++){
-
-        const r=radius*(i/200);
-
-        const x=s.x1+Math.cos(angle)*r;
-        const y=s.y1+Math.sin(angle)*r;
-
-        if(i===0) ctx.moveTo(x,y);
-        else ctx.lineTo(x,y);
-
-        angle+=0.3;
-    }
-
-    ctx.stroke();
-}
-
-function fibSpeed(s){
-
-    const levels=[0.33,0.66,1];
-
-    levels.forEach(l=>{
-
-        line(
-            s.x1,
-            s.y1,
-            s.x2,
-            s.y1+(s.y2-s.y1)*l
-        );
-    });
-}
-
-function fibTrend(s){
-
-    line(s.x1,s.y1,s.x2,s.y2);
-
-    [0.618,1,1.618].forEach(l=>{
-
-        const ex=s.x2+((s.x2-s.x1)*l);
-        const ey=s.y2+((s.y2-s.y1)*l);
-
-        line(s.x2,s.y2,ex,ey);
-    });
-}
-
-function fibProjection(s){
-
-    const levels=[0.618,1,1.618];
-
-    levels.forEach(l=>{
-
-        const ex=s.x2+((s.x2-s.x1)*l);
-
-        line(
-            ex,
-            s.y1,
-            ex,
-            s.y2
-        );
-    });
-}
-
-function fibWedge(s){
-
-    line(s.x1,s.y1,s.x2,s.y2);
-
-    line(
-        s.x1,
-        s.y1+80,
-        s.x2,
-        s.y2-80
-    );
-
-    [0.382,0.5,0.618].forEach(l=>{
-
-        const y=s.y1+((s.y2-s.y1)*l);
-
-        line(s.x1,y,s.x2,y);
-    });
-}
-function riskBox(s,color){
-
-    ctx.fillStyle=color+'33';
-    ctx.strokeStyle=color;
-
-    rect(s);
-}
-
-function drawText(s){
-
-    ctx.fillStyle='#fff';
-    ctx.font='14px Arial';
-    ctx.fillText(s.text,s.x1,s.y1);
-}
-
-function label(s){
-
-    ctx.fillStyle='#2962ff';
-    ctx.fillRect(s.x1,s.y1,80,24);
-
-    ctx.fillStyle='#fff';
-    ctx.fillText(s.text,s.x1+8,s.y1+16);
-}
-
-window.setTool=function(t){
-
-    tool=t;
-
-    document.querySelectorAll('.tool-icon').forEach(e=>{
-        e.classList.remove('active');
-    });
-
-    let targetIcon = document.getElementById('tool-'+t);
-    if (!targetIcon) {
-        if(['trend','ray','extend','hline','vline','arrow','channel'].includes(t)) targetIcon = document.getElementById('primary-lines-icon');
-if([
-    'fib',
-    'fibext',
-    'fibfan',
-    'fibarc',
-    'fibchannel',
-    'fibtimezone',
-    'fibspiral',
-    'fibspeed',
-    'fibtrend',
-    'fibprojection',
-    'fibwedge'
-].includes(t))        if(['rect','circle','triangle'].includes(t)) targetIcon = document.getElementById('primary-shapes-icon');
-        if(['text','label'].includes(t)) targetIcon = document.getElementById('primary-text-icon');
-        if(['brush','highlight','path'].includes(t)) targetIcon = document.getElementById('primary-brush-icon');
-        if(['long','short'].includes(t)) targetIcon = document.getElementById('primary-positions-icon');
-        if(['measure','eraser'].includes(t)) targetIcon = document.getElementById('primary-utils-icon');
-    }
-
-    if(targetIcon) targetIcon.classList.add('active');
-
-    if(t==='cursor'){
-        canvas.style.pointerEvents='none';
-        chart.applyOptions({
-            handleScroll:true,
-            handleScale:true
+    resizeCanvas(); window.addEventListener('resize', resizeCanvas);
+
+    function redraw() {
+        ctx.clearRect(0,0,canvas.width,canvas.height); ctx.strokeStyle = '#2962ff'; ctx.lineWidth = 2; ctx.fillStyle = 'rgba(41, 98, 255, 0.1)';
+        drawings.forEach(d => {
+            ctx.beginPath();
+            if(d.type==='line'){ ctx.moveTo(d.x1,d.y1); ctx.lineTo(d.x2,d.y2); ctx.stroke(); }
+            else if(d.type==='ray'){ ctx.moveTo(d.x1,d.y1); ctx.lineTo(canvas.width,d.y1); ctx.stroke(); }
+            else if(d.type==='rect'){ ctx.rect(d.x1,d.y1,d.x2-d.x1,d.y2-d.y1); ctx.fill(); ctx.stroke(); }
+            else if(d.type==='arrow'){ drawArrow(ctx, d.x1, d.y1, d.x2, d.y2); }
+            else if(d.type==='label'){ ctx.fillStyle = '#fff'; ctx.font = '12px sans-serif'; ctx.fillText(d.text, d.x1, d.y1); }
         });
-    }else{
-        canvas.style.pointerEvents='auto';
-        chart.applyOptions({
-            handleScroll:false,
-            handleScale:false
-        });
-    }
-};
-
-window.clearDrawings=function(){
-    drawings=[];
-    redraw();
-};
-
-canvas.addEventListener('mousedown',e=>{
-
-    const rect=canvas.getBoundingClientRect();
-
-    startX=e.clientX-rect.left;
-    startY=e.clientY-rect.top;
-
-    drawing=true;
-
-    if(tool==='brush' || tool==='highlight' || tool==='path'){
-        currentShape={
-            type:tool,
-            points:[{x:startX,y:startY}]
-        };
-        return;
-    }
-
-    if(tool==='text'){
-        const txt=prompt('Text');
-        if(txt){
-            drawings.push({
-                type:'text',
-                x1:startX,
-                y1:startY,
-                text:txt
-            });
-            redraw();
+        if (drawing && currentShape) {
+            ctx.strokeStyle = 'rgba(41, 98, 255, 0.6)'; ctx.beginPath();
+            if(currentShape.type==='line'){ ctx.moveTo(currentShape.x1,currentShape.y1); ctx.lineTo(currentShape.x2,currentShape.y2); ctx.stroke(); }
+            else if(currentShape.type==='ray'){ ctx.moveTo(currentShape.x1,currentShape.y1); ctx.lineTo(canvas.width,currentShape.y1); ctx.stroke(); }
+            else if(currentShape.type==='rect'){ ctx.rect(currentShape.x1,currentShape.y1,currentShape.x2-currentShape.x1,currentShape.y2-currentShape.y1); ctx.stroke(); }
+            else if(currentShape.type==='arrow'){ drawArrow(ctx, currentShape.x1, currentShape.y1, currentShape.x2, currentShape.y2); }
         }
-        drawing=false;
-        return;
     }
 
-    if(tool==='label'){
-        const txt=prompt('Label');
-        if(txt){
-            drawings.push({
-                type:'label',
-                x1:startX,
-                y1:startY,
-                text:txt
-            });
-            redraw();
-        }
-        drawing=false;
-        return;
+    function drawArrow(context, fromx, fromy, tox, toy) {
+        const headlen = 10; const dx = tox - fromx; const dy = toy - fromy; const angle = Math.atan2(dy, dx);
+        context.moveTo(fromx, fromy); context.lineTo(tox, toy);
+        context.lineTo(tox - headlen * Math.cos(angle - Math.PI / 6), toy - headlen * Math.sin(angle - Math.PI / 6));
+        context.moveTo(tox); context.lineTo(tox - headlen * Math.cos(angle + Math.PI / 6), toy - headlen * Math.sin(angle + Math.PI / 6));
+        context.stroke();
     }
 
-    currentShape={
-        type:tool,
-        x1:startX,
-        y1:startY,
-        x2:startX,
-        y2:startY
+    window.setTool = function(t) {
+        tool = t;
+        document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
+        if(document.getElementById(`tool-${t}`)) document.getElementById(`tool-${t}`).classList.add('active');
+        canvas.className = tool === 'cursor' ? '' : (tool === 'eraser' ? 'canvas-eraser-mode' : 'canvas-drawing-mode');
     };
-});
 
-canvas.addEventListener('mousemove',e=>{
+    window.clearAllDrawings = function() { if(confirm("Flush all items?")) { drawings = []; redraw(); } };
 
-    if(!drawing || !currentShape) return;
-
-    const rect=canvas.getBoundingClientRect();
-
-    const x=e.clientX-rect.left;
-    const y=e.clientY-rect.top;
-
-    if(currentShape.points){
-        currentShape.points.push({x,y});
-    }else{
-        currentShape.x2=x;
-        currentShape.y2=y;
-    }
-
-    redraw();
-});
-
-canvas.addEventListener('mouseup',()=>{
-
-    if(!drawing) return;
-
-    drawing=false;
-
-    if(currentShape){
-
-        if(tool==='eraser'){
-
-            drawings=drawings.filter(d=>{
-
-                return !(
-                    Math.abs(d.x1-currentShape.x1)<20 &&
-                    Math.abs(d.y1-currentShape.y1)<20
-                );
-            });
-
-        }else{
-            drawings.push(currentShape);
+    canvas.addEventListener('mousedown', e => {
+        const rect = canvas.getBoundingClientRect(); startX = e.clientX - rect.left; startY = e.clientY - rect.top;
+        if (tool === 'cursor') return;
+        drawing = true;
+        if (tool === 'label') {
+            const txt = prompt('Label text:');
+            if (txt) { drawings.push({ type: 'label', x1: startX, y1: startY, text: txt }); redraw(); }
+            drawing = false; return;
         }
-
-        currentShape=null;
-
-        redraw();
-    }
-});
-
-chart.timeScale().subscribeVisibleTimeRangeChange(redraw);
-chart.subscribeCrosshairMove(redraw);
-
-resizeCanvas();
-
+        currentShape = { type: tool, x1: startX, y1: startY, x2: startX, y2: startY };
+    });
+    canvas.addEventListener('mousemove', e => {
+        if (!drawing || !currentShape) return;
+        const rect = canvas.getBoundingClientRect(); currentShape.x2 = e.clientX - rect.left; currentShape.y2 = e.clientY - rect.top; redraw();
+    });
+    canvas.addEventListener('mouseup', () => {
+        if (!drawing) return; drawing = false;
+        if (currentShape) {
+            if (tool === 'eraser') { drawings = drawings.filter(d => !(Math.abs(d.x1 - currentShape.x1) < 20 && Math.abs(d.y1 - currentShape.y1) < 20)); }
+            else drawings.push(currentShape);
+            currentShape = null; redraw();
+        }
+    });
 })();
 </script>
-
-
 </body>
 </html>

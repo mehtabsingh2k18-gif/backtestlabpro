@@ -93,7 +93,7 @@
         .stat-value.positive { color: var(--up); }
         .stat-value.negative { color: var(--down); }
 
-        /* Premium Modals */
+        /* Premium Modal Overlays */
         .premium-modal-backdrop { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(4,6,10,0.8); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 99999; opacity: 0; visibility: hidden; transition: all 0.25s ease; }
         .premium-modal-backdrop.active { opacity: 1; visibility: visible; }
         .premium-modal-window { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; width: 420px; max-width: 90%; box-shadow: 0 20px 40px rgba(0,0,0,0.5); display: flex; flex-direction: column; overflow: hidden; transform: scale(0.95); transition: all 0.25s ease; }
@@ -114,6 +114,7 @@
         .field-group label { font-size: 11px; color: #848e9c; font-weight: 600; text-transform: uppercase; }
         .field-group input, .field-group select { height: 36px; box-sizing: border-box; background: #1c2030; border: 1px solid #2d3245; }
         
+        /* History & Positions Tracking Lists */
         .positions-list, .history-list { display: flex; flex-direction: column; gap: 8px; font-size: 12px; }
         .position-card { background: #181c27; border: 1px solid var(--border); border-radius: 4px; padding: 10px; display: flex; flex-direction: column; gap: 6px; }
         .card-header { display: flex; justify-content: space-between; font-weight: bold; }
@@ -121,6 +122,7 @@
         .badge-buy { color: var(--up); }
         .badge-sell { color: var(--down); }
         
+        /* Timeframe Container Red Circle Elements Styling */
         .time-box { font-family: monospace; font-size: 13px; font-weight: bold; color: var(--accent); background: #1e222d; padding: 5px 12px; border-radius: 4px; border: 1px solid var(--border); min-width: 140px; text-align: center; }
         .speed-control-container { display: flex; align-items: center; gap: 6px; background: #1e222d; border: 1px solid var(--border); padding: 4px 8px; border-radius: 4px; }
         .speed-control-container span { font-size: 11px; font-weight: 600; color: #848e9c; }
@@ -138,7 +140,7 @@
                 <div class="configure-core"></div>
             </div>
         </div>
-        <div class="preloader-text" id="preloaderText">INITIALIZING SIMULATION ENGINE...</div>
+        <div class="preloader-text" id="preloaderText">INITIALIZING ENGINE...</div>
     </div>
 
     <header>
@@ -178,7 +180,7 @@
                 </select>
             </div>
 
-            <div class="time-box" id="timeBox">LOADING STREAM CLOCK...</div>
+            <div class="time-box" id="timeBox">LOADING CLOCK...</div>
         </div>
 
         <div>
@@ -194,7 +196,7 @@
             <button class="tool-btn" id="tool-line" onclick="setTool('line')" title="Trendline Vector">➖</button>
             <button class="tool-btn" id="tool-ray" onclick="setTool('ray')" title="Horizontal Ray Projection">➡️</button>
             <button class="tool-btn" id="tool-rect" onclick="setTool('rect')" title="Rectangle Block Zone">⬜</button>
-            <button class="tool-btn" id="tool-arrow" onclick="setTool('arrow')" title="Directional Arrow">↗️</button>
+            <button class="tool-btn" id="tool-arrow" onclick="setTool('arrow')" title="Directional Vector Arrow">↗️</button>
             <button class="tool-btn" id="tool-label" onclick="setTool('label')" title="Text Annotation Layer">🔤</button>
             <div class="tool-separator"></div>
             <button class="tool-btn" id="tool-eraser" onclick="setTool('eraser')" title="Object Eraser Node">🧹</button>
@@ -203,7 +205,9 @@
 
         <div class="chart-container">
             <canvas id="drawingCanvasOverlay"></canvas>
+            
             <div class="indicators-legend" id="indicatorsLegend"></div>
+            
             <div id="chart"></div>
         </div>
 
@@ -246,9 +250,9 @@
             <div class="premium-modal-body">
                 <div class="field-group">
                     <label>Session Identity Name</label>
-                    <input type="text" id="sessionNameInput" placeholder="e.g., H4 Trend Replay Test Strategy">
+                    <input type="text" id="sessionNameInput" placeholder="e.g., XAUUSD Breakout Strategy Testing">
                 </div>
-                <p style="font-size: 11px; color: #848e9c; margin: 0; line-height: 1.4;">Saving your session syncs your account analytics balance logs directly into Firestore cloud system endpoints.</p>
+                <p style="font-size: 11px; color: #848e9c; margin: 0; line-height: 1.4;">Saving your session syncs your active metric data, including final account balance, total profit metric ratio curves, and trade execution cards, directly onto Firestore cloud infrastructure databases.</p>
             </div>
             <div class="premium-modal-footer">
                 <button class="premium-btn premium-btn-secondary" onclick="closeSessionModal()">Discard</button>
@@ -259,7 +263,7 @@
 
 <script type="module">
 // ============================================================================
-// FIREBASE LIFECYCLE ROUTER HANDLER INITIALIZATION
+// CORE BACKTEST INFRASTRUCTURE DATA STORAGE ENGINE
 // ============================================================================
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
@@ -281,9 +285,10 @@ try {
     window.collection = collection;
     window.addDoc = addDoc;
 } catch (e) {
-    console.error("Firebase Initialization Skipped Offline: ", e);
+    console.error("Firebase Initialization Failed: ", e);
 }
 
+// Global Core Infrastructure Variables
 let symbol = localStorage.getItem("symbol") || "XAUUSD";
 let tf = "h4";
 let speed = parseInt(localStorage.getItem("speed")) || 500;
@@ -299,16 +304,21 @@ let timer = null;
 let trades = [];
 let activeTrade = null;
 let entryLine, slLine, tpLine;
+let pendingType = null;
 let sessionEnded = false;
 
+// Active Applied Indicators Metadata Array Node List Matrix System
 let activeIndicators = JSON.parse(localStorage.getItem("applied_indicators")) || [
     { id: "ind_1", type: "SMA", params: { period: 20, source: "close" }, color: "#ff9800", width: 1.5, visible: true },
     { id: "ind_2", type: "EMA", params: { period: 50, source: "close" }, color: "#e91e63", width: 1.5, visible: true }
 ];
 
+// Indicators Dictionary Object Definitions Framework Map
 const INDICATOR_DEFINITIONS = {
     SMA: { name: "Simple Moving Average", params: [{ id: "period", name: "Period Length", type: "number", default: 14 }] },
-    EMA: { name: "Exponential Moving Average", params: [{ id: "period", name: "Period Length", type: "number", default: 20 }] }
+    EMA: { name: "Exponential Moving Average", params: [{ id: "period", name: "Period Length", type: "number", default: 20 }] },
+    RSI: { name: "Relative Strength Index", params: [{ id: "period", name: "RSI Length", type: "number", default: 14 }] },
+    MACD: { name: "MACD Oscillator", params: [{ id: "fast", name: "Fast EMA", type: "number", default: 12 }, { id: "slow", name: "Slow EMA", type: "number", default: 26 }, { id: "signal", name: "Signal Smoothing", type: "number", default: 9 }] }
 };
 
 const chartEl = document.getElementById("chart");
@@ -342,11 +352,11 @@ function calcLots() {
     const bal = parseFloat(document.getElementById("balance").value);
     const riskPct = parseFloat(document.getElementById("riskPct").value);
     const slPips = parseFloat(document.getElementById("slPips").value);
-    const contract = 100000;
+    const contract = parseFloat(document.getElementById("contractSize").value);
     const resultEl = document.getElementById("calcLotResult");
     const finalLotInput = document.getElementById("finalLots");
     
-    if (bal && riskPct && slPips) {
+    if (bal && riskPct && slPips && contract) {
         const riskAmount = bal * (riskPct / 100);
         const lot = riskAmount / (slPips * (contract * 0.01));
         if (isFinite(lot) && lot > 0) {
@@ -360,6 +370,9 @@ function calcLots() {
 }
 window.calcLots = calcLots;
 
+// ============================================================================
+// TECHNICAL ANALYTICAL INDICATOR OVERLAYS MATHEMATICAL ENGINE MATRIX
+// ============================================================================
 function calculateSMA(candles, period) {
     let res = [];
     for (let i = 0; i < candles.length; i++) {
@@ -392,29 +405,48 @@ function rebuildIndicators({ chart, candles }) {
     
     activeIndicators.forEach(ind => {
         if (!ind.visible) return;
+        
         let lineData = [];
-        if (ind.type === "SMA") lineData = calculateSMA(candles, parseInt(ind.params.period));
-        else if (ind.type === "EMA") lineData = calculateEMA(candles, parseInt(ind.params.period));
+        if (ind.type === "SMA") {
+            lineData = calculateSMA(candles, parseInt(ind.params.period));
+        } else if (ind.type === "EMA") {
+            lineData = calculateEMA(candles, parseInt(ind.params.period));
+        }
         
         const validData = lineData.filter(d => d.value !== null);
         if (validData.length > 0) {
-            const lineSeries = chart.addLineSeries({ color: ind.color, lineWidth: ind.width, crosshairMarkerVisible: false, priceLineVisible: false });
+            const lineSeries = chart.addLineSeries({
+                color: ind.color,
+                lineWidth: ind.width,
+                crosshairMarkerVisible: false,
+                priceLineVisible: false
+            });
             lineSeries.setData(validData);
             window.indicatorSeriesList.push(lineSeries);
         }
     });
 }
 
+function updateIndicators(newCandle) {
+    if (!window.indicatorSeriesList || window.indicatorSeriesList.length === 0) return;
+    rebuildIndicators({ chart: window.chart, candles: window.historyData });
+}
+
 function renderIndicatorsLegend() {
     const el = document.getElementById("indicatorsLegend");
     if (!el) return;
     el.innerHTML = "";
-    if (activeIndicators.length === 0) { el.style.display = "none"; return; }
+    
+    if (activeIndicators.length === 0) {
+        el.style.display = "none";
+        return;
+    }
     el.style.display = "flex";
     
     activeIndicators.forEach(ind => {
         const item = document.createElement("div");
         item.className = "indicator-item";
+        
         const paramStr = Object.entries(ind.params).map(([k,v]) => v).join(",");
         item.innerHTML = `
             <span class="indicator-name" style="color: ${ind.color}">${ind.type} (${paramStr})</span>
@@ -441,6 +473,7 @@ window.toggleIndicatorVisibility = function(id) {
 window.openIndicatorModal = function() {
     document.getElementById("modalTargetMode").value = "ADD";
     document.getElementById("indicatorModalTitle").innerText = "Add Technical Indicator Overlay";
+    
     let html = `
         <div class="field-group">
             <label>Indicator Type</label>
@@ -460,10 +493,12 @@ window.openIndicatorModal = function() {
                     <option value="1">1px (Thin)</option>
                     <option value="1.5" selected>1.5px (Normal)</option>
                     <option value="2.5">2.5px (Thick)</option>
+                    <option value="4">4px (Heavy)</option>
                 </select>
             </div>
         </div>
     `;
+    
     document.getElementById("indicatorModalBody").innerHTML = html;
     renderModalParams();
     document.getElementById("indicatorModal").classList.add("active");
@@ -472,6 +507,7 @@ window.openIndicatorModal = function() {
 window.openEditIndicatorModal = function(id) {
     const ind = activeIndicators.find(i => i.id === id);
     if (!ind) return;
+    
     document.getElementById("modalTargetMode").value = "EDIT";
     document.getElementById("modalTargetId").value = id;
     document.getElementById("indicatorModalTitle").innerText = `Edit ${ind.type} Properties`;
@@ -487,14 +523,17 @@ window.openEditIndicatorModal = function(id) {
             <div class="field-group">
                 <label>Line Thickness</label>
                 <select id="modalIndWidth">
-                    <option value="1" ${ind.width == 1 ? 'selected' : ''}>1px</option>
-                    <option value="1.5" ${ind.width == 1.5 ? 'selected' : ''}>1.5px</option>
-                    <option value="2.5" ${ind.width == 2.5 ? 'selected' : ''}>2.5px</option>
+                    <option value="1" ${ind.width == 1 ? 'selected' : ''}>1px (Thin)</option>
+                    <option value="1.5" ${ind.width == 1.5 ? 'selected' : ''}>1.5px (Normal)</option>
+                    <option value="2.5" ${ind.width == 2.5 ? 'selected' : ''}>2.5px (Thick)</option>
+                    <option value="4" ${ind.width == 4 ? 'selected' : ''}>4px (Heavy)</option>
                 </select>
             </div>
         </div>
     `;
+    
     document.getElementById("indicatorModalBody").innerHTML = html;
+    
     const container = document.getElementById("modalParamContainer");
     container.innerHTML = INDICATOR_DEFINITIONS[ind.type].params.map(p => `
         <div class="field-group">
@@ -502,12 +541,17 @@ window.openEditIndicatorModal = function(id) {
             <input type="${p.type}" id="param_${p.id}" value="${ind.params[p.id] ?? p.default}">
         </div>
     `).join("");
+    
+    document.getElementById("modalIndColor").value = ind.color;
+    document.getElementById("modalIndWidth").value = ind.width;
     document.getElementById("indicatorModal").classList.add("active");
 };
 
 window.renderModalParams = function() {
     const type = document.getElementById("modalIndType").value;
     const container = document.getElementById("modalParamContainer");
+    if (!container || !INDICATOR_DEFINITIONS[type]) return;
+    
     container.innerHTML = INDICATOR_DEFINITIONS[type].params.map(p => `
         <div class="field-group">
             <label>${p.name}</label>
@@ -516,25 +560,42 @@ window.renderModalParams = function() {
     `).join("");
 };
 
-window.closeIndicatorModal = function() { document.getElementById("indicatorModal").classList.remove("active"); };
+window.closeIndicatorModal = function() {
+    document.getElementById("indicatorModal").classList.remove("active");
+};
 
 window.submitIndicatorModal = function() {
     const mode = document.getElementById("modalTargetMode").value;
     const type = document.getElementById("modalIndType").value;
     const color = document.getElementById("modalIndColor").value;
     const width = parseFloat(document.getElementById("modalIndWidth").value);
+    
     let params = {};
     INDICATOR_DEFINITIONS[type].params.forEach(p => {
-        params[p.id] = parseFloat(document.getElementById(`param_${p.id}`).value);
+        const val = document.getElementById(`param_${p.id}`).value;
+        params[p.id] = p.type === "number" ? parseFloat(val) : val;
     });
     
     if (mode === "ADD") {
-        activeIndicators.push({ id: "ind_" + Date.now(), type, params, color, width, visible: true });
+        const newInd = {
+            id: "ind_" + Date.now(),
+            type,
+            params,
+            color,
+            width,
+            visible: true
+        };
+        activeIndicators.push(newInd);
     } else {
         const id = document.getElementById("modalTargetId").value;
         const ind = activeIndicators.find(i => i.id === id);
-        if (ind) { ind.params = params; ind.color = color; ind.width = width; }
+        if (ind) {
+            ind.params = params;
+            ind.color = color;
+            ind.width = width;
+        }
     }
+    
     localStorage.setItem("applied_indicators", JSON.stringify(activeIndicators));
     rebuildIndicators({ chart: window.chart, candles: window.historyData });
     renderIndicatorsLegend();
@@ -560,10 +621,13 @@ window.next = function() {
     const candle = data[index];
     historyData.push(candle);
     series.update(candle);
-    rebuildIndicators({ chart: window.chart, candles: window.historyData });
+
+    updateIndicators(candle);
 
     volumeSeries.update({
-        time: candle.time, value: candle.volume || 10, color: candle.close >= candle.open ? 'rgba(8,153,129,0.2)' : 'rgba(242,54,69,0.2)'
+        time: candle.time,
+        value: candle.volume || 10,
+        color: candle.close >= candle.open ? 'rgba(8,153,129,0.2)' : 'rgba(242,54,69,0.2)'
     });
 
     document.getElementById("sellP").innerText = candle.close;
@@ -575,11 +639,14 @@ window.next = function() {
         } else {
             if (candle.high >= activeTrade.sl || candle.low <= activeTrade.tp) closeTrade();
         }
-        if (activeTrade) updateTradeLines(activeTrade.type, activeTrade.entry, activeTrade.sl, activeTrade.tp, activeTrade.lots);
+        if (activeTrade) {
+            updateTradeLines(activeTrade.type, activeTrade.entry, activeTrade.sl, activeTrade.tp, activeTrade.lots);
+        }
     }
 
     lastReplayTime = candle.time;
     updateTime(lastReplayTime);
+
     if (isAutoFollow) chart.timeScale().scrollToRealTime();
     index++;
 };
@@ -590,13 +657,15 @@ window.load = function() {
 
     const preloader = document.getElementById("appPreloader");
     if (preloader) preloader.classList.remove("fade-out");
+
     document.getElementById("status").innerText = `FETCHING ${tf.toUpperCase()}...`;
     
-    // Core Date Synchronization Realignment Match Fixes
-    const initialParam = localStorage.getItem("initial") || "2026-02-16T00:00:00.000Z";
-    const finalTo = localStorage.getItem("to") || "2026-08-13T00:00:00.000Z";
+    // Core Correction: Default parameters set directly to 2026 to properly bind into MT5 text schemas
+    const initialParam = localStorage.getItem("initial") || "2026-01-01T00:00:00.000Z";
+    const finalTo = localStorage.getItem("to") || new Date().toISOString();
     let currentISO = lastReplayTime ? new Date(lastReplayTime * 1000).toISOString() : initialParam;
 
+    // Direct Integration Matrix for the Live Render Datastream Node Endpoint Router
     const url = `https://backtestlab-backend-fotx.onrender.com/data?symbol=${symbol}&tf=${tf}&initial=${initialParam}&current=${currentISO}&to=${finalTo}`;
 
     fetch(url)
@@ -608,6 +677,7 @@ window.load = function() {
         index = 0;
 
         series.setData(historyData);
+        
         rebuildIndicators({ chart: window.chart, candles: window.historyData });
         renderIndicatorsLegend();
 
@@ -618,7 +688,9 @@ window.load = function() {
         document.getElementById("displaySymbol").innerText = `${symbol} · ${tf.toUpperCase()}`;
         document.getElementById("status").innerText = isPlaying ? "RUNNING" : "PAUSED";
         isFetching = false;
+
         setTimeout(() => { chart.timeScale().scrollToPosition(5, false); }, 50);
+
         if (preloader) preloader.classList.add("fade-out");
     })
     .catch(err => {
@@ -629,8 +701,16 @@ window.load = function() {
     });
 };
 
-window.startTimer = function() { if (!timer) timer = setInterval(window.next, speed); isPlaying = true; };
-window.stopTimer = function() { clearInterval(timer); timer = null; isPlaying = false; };
+window.startTimer = function() {
+    if (!timer) timer = setInterval(window.next, speed);
+    isPlaying = true;
+};
+
+window.stopTimer = function() {
+    clearInterval(timer);
+    timer = null;
+};
+
 window.play = function() { window.startTimer(); document.getElementById("status").innerText = "RUNNING"; };
 window.pause = function() { window.stopTimer(); document.getElementById("status").innerText = "PAUSED"; };
 window.changeTF = function() { window.pause(); tf = document.getElementById("tf").value; window.load(); };
@@ -647,14 +727,23 @@ window.changeSymbol = function() {
     window.load();
 };
 
-window.openSessionModal = function() { window.pause(); document.getElementById("sessionModal").classList.add("active"); };
-window.closeSessionModal = function() { document.getElementById("sessionModal").classList.remove("active"); };
+// ============================================================================
+// MODAL SESSION UTILITIES CONFIGURATOR
+// ============================================================================
+window.openSessionModal = function() {
+    window.pause();
+    document.getElementById("sessionModal").classList.add("active");
+};
+window.closeSessionModal = function() {
+    document.getElementById("sessionModal").classList.remove("active");
+};
 
 window.saveSession = async function() {
     try {
         if (!window.auth || !window.db) return alert("Firebase resources are completely offline.");
         const user = window.auth.currentUser;
         if (!user) return alert("No Logged In User Found.");
+
         const sessionName = document.getElementById("sessionNameInput").value.trim();
         if (!sessionName) return alert("Enter Session Name");
 
@@ -665,11 +754,19 @@ window.saveSession = async function() {
             equity: document.getElementById("currentEquity").innerText, winrate: document.getElementById("winRate").innerText,
             created_at: new Date().toISOString()
         };
+
         const docRef = await window.addDoc(window.collection(window.db, "users", user.uid, "sessions"), sessionData);
         alert("Firestore Session Saved Successfully! ID: " + docRef.id);
-    } catch (err) { alert("Firestore Error: " + err.message); }
+    } catch (err) {
+        alert("Firestore Error: " + err.message);
+    }
 };
 
+onAuthStateChanged(auth, (user) => {
+    console.log(user ? "USER LOGGED: " + user.email : "NO USER LOGGED");
+});
+
+// Initialize Framework Matrix Components Lifecycle Hook
 let activeTab = "trade";
 window.setTab = function(t) { activeTab = t; renderPanel(); };
 
@@ -678,6 +775,7 @@ function renderPanel() {
     document.getElementById("tab-trade").className = "tab" + (activeTab === 'trade' ? ' active' : '');
     document.getElementById("tab-positions").className = "tab" + (activeTab === 'positions' ? ' active' : '');
     document.getElementById("tab-history").className = "tab" + (activeTab === 'history' ? ' active' : '');
+    
     document.getElementById("tab-positions").innerText = `Open (${activeTrade ? 1 : 0})`;
 
     if (activeTab === "trade") {
@@ -685,6 +783,7 @@ function renderPanel() {
             <div style="text-align: center; margin-bottom: -5px;">
                 <span style="font-size: 20px; font-weight: bold; color: #fff;" id="displaySymbol">${symbol} · ${tf.toUpperCase()}</span>
             </div>
+
             <div class="stats-grid">
                 <div class="stat-box">
                     <span class="stat-label">Wallet Balance</span>
@@ -706,6 +805,7 @@ function renderPanel() {
                     <span class="stat-value" id="winRate">0%</span>
                 </div>
             </div>
+
             <div class="panel-section">
                 <label>Risk Parameter Calculator</label>
                 <div class="grid-2">
@@ -718,8 +818,10 @@ function renderPanel() {
                         <span class="unit">PIPS</span>
                     </div>
                 </div>
+                <input type="hidden" id="contractSize" value="100000">
                 <div style="font-size: 11px; color: var(--accent); font-weight: 600; padding: 2px 0;" id="calcLotResult">-- Lots</div>
             </div>
+
             <div class="panel-section" style="border-top: 1px solid var(--border); padding-top: 15px;">
                 <label>Direct Lot Execution Size</label>
                 <div class="input-wrapper">
@@ -727,12 +829,15 @@ function renderPanel() {
                     <span class="unit">LOTS</span>
                 </div>
             </div>
+
             <div class="grid-2" style="margin-top: 5px;">
                 <button class="btn-sell" onclick="executeMarket('SELL')">
-                    <div style="font-size:11px; font-weight:normal; opacity:0.6;" id="sellP">--</div>SELL SHORT
+                    <div style="font-size:11px; font-weight:normal; opacity:0.6;" id="sellP">--</div>
+                    SELL SHORT
                 </button>
                 <button class="btn-buy" onclick="executeMarket('BUY')">
-                    <div style="font-size:11px; font-weight:normal; opacity:0.6;" id="buyP">--</div>BUY LONG
+                    <div style="font-size:11px; font-weight:normal; opacity:0.6;" id="buyP">--</div>
+                    BUY LONG
                 </button>
             </div>
         `;
@@ -740,7 +845,7 @@ function renderPanel() {
         updateLivePnL();
     } else if (activeTab === "positions") {
         if (!activeTrade) {
-            container.innerHTML = `<div style="color:#5d6673; text-align:center; padding: 30px 0;">No Active Floating Positions</div>`;
+            container.innerHTML = `<div style="color:#5d6673; text-align:center; padding: 30px 0;">No Active Floating Postions</div>`;
             return;
         }
         container.innerHTML = `
@@ -781,29 +886,36 @@ function renderPanel() {
 }
 
 function executeMarket(type) {
-    if (activeTrade) return alert("An open position is already floating.");
-    if (index === 0 || !data[index-1]) return alert("No active tick stream available.");
+    if (activeTrade) return alert("An open position is already floating inside the execution engine context.");
+    if (index === 0 || !data[index-1]) return alert("Cannot execute orders without real-time tick context streams.");
+    
     const currentPrice = data[index-1].close;
     const lots = parseFloat(document.getElementById("finalLots").value) || 0.1;
     const slPips = parseFloat(document.getElementById("slPips").value) || 100;
     
     let sl, tp;
     if (type === 'BUY') {
-        sl = currentPrice - (slPips * 0.01); tp = currentPrice + (slPips * 0.01 * 2);
+        sl = currentPrice - (slPips * 0.01);
+        tp = currentPrice + (slPips * 0.01 * 2);
     } else {
-        sl = currentPrice + (slPips * 0.01); tp = currentPrice - (slPips * 0.01 * 2);
+        sl = currentPrice + (slPips * 0.01);
+        tp = currentPrice - (slPips * 0.01 * 2);
     }
     
     activeTrade = { type, entry: currentPrice, lots, sl, tp, time: data[index-1].time };
-    updateTradeLines(type, currentPrice, sl, tp, lots);
+    
+    entryLine = series.createPriceLine({ price: activeTrade.entry, color: '#2962ff', lineWidth: 1, lineStyle: 2, axisLabelVisible: true, title: `ENTRY (${lots} Lots)` });
+    slLine = series.createPriceLine({ price: activeTrade.sl, color: '#f23645', lineWidth: 1, lineStyle: 2, axisLabelVisible: true, title: 'SL' });
+    tpLine = series.createPriceLine({ price: activeTrade.tp, color: '#089981', lineWidth: 1, lineStyle: 2, axisLabelVisible: true, title: 'TP' });
+    
     if (activeTab !== 'trade') activeTab = "positions";
     renderPanel();
 }
 
 function updateTradeLines(type, entry, sl, tp, lots) {
-    if (entryLine) series.removePriceLine(entryLine);
-    if (slLine) series.removePriceLine(slLine);
-    if (tpLine) series.removePriceLine(tpLine);
+    if (entryLine) { series.removePriceLine(entryLine); }
+    if (slLine) { series.removePriceLine(slLine); }
+    if (tpLine) { series.removePriceLine(tpLine); }
     entryLine = series.createPriceLine({ price: entry, color: '#2962ff', lineWidth: 1, lineStyle: 2, axisLabelVisible: true, title: `ENTRY (${lots} Lots)` });
     slLine = series.createPriceLine({ price: sl, color: '#f23645', lineWidth: 1, lineStyle: 2, axisLabelVisible: true, title: 'SL' });
     tpLine = series.createPriceLine({ price: tp, color: '#089981', lineWidth: 1, lineStyle: 2, axisLabelVisible: true, title: 'TP' });
@@ -813,10 +925,15 @@ function closeTrade() {
     if (!activeTrade) return;
     const exitPrice = data[index-1].close;
     let pnl = 0;
-    if (activeTrade.type === 'BUY') pnl = (exitPrice - activeTrade.entry) * activeTrade.lots * 1000;
-    else pnl = (activeTrade.entry - exitPrice) * activeTrade.lots * 1000;
     
-    activeTrade.exitPrice = exitPrice; activeTrade.pnl = pnl;
+    if (activeTrade.type === 'BUY') {
+        pnl = (exitPrice - activeTrade.entry) * activeTrade.lots * 1000;
+    } else {
+        pnl = (activeTrade.entry - exitPrice) * activeTrade.lots * 1000;
+    }
+    
+    activeTrade.exitPrice = exitPrice;
+    activeTrade.pnl = pnl;
     trades.push(activeTrade);
     
     const balInput = document.getElementById("balance");
@@ -825,9 +942,11 @@ function closeTrade() {
         balInput.value = (currentBal + pnl).toFixed(2);
         localStorage.setItem("balance", balInput.value);
     }
+    
     if (entryLine) { series.removePriceLine(entryLine); entryLine = null; }
     if (slLine) { series.removePriceLine(slLine); slLine = null; }
     if (tpLine) { series.removePriceLine(tpLine); tpLine = null; }
+    
     activeTrade = null;
     renderPanel();
     updateLivePnL();
@@ -836,28 +955,47 @@ window.closeTrade = closeTrade;
 window.executeMarket = executeMarket;
 
 function updateLivePnL() {
-    let closedPnL = 0; trades.forEach(t => closedPnL += t.pnl);
+    let closedPnL = 0;
+    trades.forEach(t => closedPnL += t.pnl);
+    
     let floatingPnL = 0;
     if (activeTrade && index > 0 && data[index-1]) {
         const cur = data[index-1].close;
-        if (activeTrade.type === 'BUY') floatingPnL = (cur - activeTrade.entry) * activeTrade.lots * 1000;
-        else floatingPnL = (activeTrade.entry - cur) * activeTrade.lots * 1000;
+        if (activeTrade.type === 'BUY') {
+            floatingPnL = (cur - activeTrade.entry) * activeTrade.lots * 1000;
+        } else {
+            floatingPnL = (activeTrade.entry - cur) * activeTrade.lots * 1000;
+        }
         const posPnL = document.getElementById("posPnL");
-        if (posPnL) { posPnL.innerText = (floatingPnL >= 0 ? '+' : '') + '$' + floatingPnL.toFixed(2); posPnL.className = floatingPnL >= 0 ? 'badge-buy' : 'badge-sell'; }
+        if (posPnL) {
+            posPnL.innerText = (floatingPnL >= 0 ? '+' : '') + '$' + floatingPnL.toFixed(2);
+            posPnL.className = floatingPnL >= 0 ? 'badge-buy' : 'badge-sell';
+        }
     }
+    
     const totalPL = document.getElementById("totalPL");
     const net = closedPnL + floatingPnL;
-    if (totalPL) { totalPL.innerText = (net >= 0 ? '+' : '') + '$' + net.toFixed(2); totalPL.className = "stat-value " + (net >= 0 ? 'positive' : 'negative'); }
+    if (totalPL) {
+        totalPL.innerText = (net >= 0 ? '+' : '') + '$' + net.toFixed(2);
+        totalPL.className = "stat-value " + (net >= 0 ? 'positive' : 'negative');
+    }
+    
     const balVal = parseFloat(localStorage.getItem("balance") || "10000");
     const currentEquity = document.getElementById("currentEquity");
-    if (currentEquity) currentEquity.innerText = '$' + (balVal + floatingPnL).toFixed(2);
+    if (currentEquity) {
+        currentEquity.innerText = '$' + (balVal + floatingPnL).toFixed(2);
+    }
+    
     const winRate = document.getElementById("winRate");
     if (winRate && trades.length > 0) {
-        const wins = trades.filter(t => t.pnl > 0).length; winRate.innerText = ((wins / trades.length) * 100).toFixed(0) + '%';
+        const wins = trades.filter(t => t.pnl > 0).length;
+        winRate.innerText = ((wins / trades.length) * 100).toFixed(0) + '%';
     }
 }
 
-setInterval(() => { if (isPlaying && activeTrade) updateLivePnL(); }, 200);
+setInterval(() => {
+    if (isPlaying && activeTrade) updateLivePnL();
+}, 200);
 
 window.load();
 window.calcLots();
@@ -865,75 +1003,166 @@ renderPanel();
 </script>
 
 <script>
+// ============================================================================
+// ABSTRACT DESIGN VECTOR GRAPHICS DRAWING CANVAS LAYER ARCHITECTURE
+// ============================================================================
 (() => {
     const canvas = document.getElementById('drawingCanvasOverlay');
     const ctx = canvas.getContext('2d');
-    let tool = 'cursor'; let drawings = []; let drawing = false; let startX = 0; let startY = 0; let currentShape = null;
+    let tool = 'cursor';
+    let drawings = [];
+    let drawing = false;
+    let startX = 0;
+    let startY = 0;
+    let currentShape = null;
+    let selected = null;
+    let dragOffsetX = 0;
+    let dragOffsetY = 0;
+
     function resizeCanvas() {
         const rect = chartEl.getBoundingClientRect();
-        canvas.width = rect.width * devicePixelRatio; canvas.height = rect.height * devicePixelRatio;
-        canvas.style.width = rect.width + 'px'; canvas.style.height = rect.height + 'px';
-        ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0); redraw();
+        canvas.width = rect.width * devicePixelRatio;
+        canvas.height = rect.height * devicePixelRatio;
+        canvas.style.width = rect.width + 'px';
+        canvas.style.height = rect.height + 'px';
+        ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
+        redraw();
     }
-    resizeCanvas(); window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
 
     function redraw() {
-        ctx.clearRect(0,0,canvas.width,canvas.height); ctx.strokeStyle = '#2962ff'; ctx.lineWidth = 2; ctx.fillStyle = 'rgba(41, 98, 255, 0.1)';
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        ctx.strokeStyle = '#2962ff';
+        ctx.lineWidth = 2;
+        ctx.fillStyle = 'rgba(41, 98, 255, 0.1)';
+
         drawings.forEach(d => {
             ctx.beginPath();
-            if(d.type==='line'){ ctx.moveTo(d.x1,d.y1); ctx.lineTo(d.x2,d.y2); ctx.stroke(); }
-            else if(d.type==='ray'){ ctx.moveTo(d.x1,d.y1); ctx.lineTo(canvas.width,d.y1); ctx.stroke(); }
-            else if(d.type==='rect'){ ctx.rect(d.x1,d.y1,d.x2-d.x1,d.y2-d.y1); ctx.fill(); ctx.stroke(); }
-            else if(d.type==='arrow'){ drawArrow(ctx, d.x1, d.y1, d.x2, d.y2); }
-            else if(d.type==='label'){ ctx.fillStyle = '#fff'; ctx.font = '12px sans-serif'; ctx.fillText(d.text, d.x1, d.y1); }
+            if(d.type==='line'){
+                ctx.moveTo(d.x1,d.y1);
+                ctx.lineTo(d.x2,d.y2);
+                ctx.stroke();
+            }else if(d.type==='ray'){
+                ctx.moveTo(d.x1,d.y1);
+                ctx.lineTo(canvas.width,d.y1);
+                ctx.stroke();
+            }else if(d.type==='rect'){
+                ctx.rect(d.x1,d.y1,d.x2-d.x1,d.y2-d.y1);
+                ctx.fill();
+                ctx.stroke();
+            }else if(d.type==='arrow'){
+                drawArrow(ctx, d.x1, d.y1, d.x2, d.y2);
+            }else if(d.type==='label'){
+                ctx.fillStyle = '#fff';
+                ctx.font = '12px sans-serif';
+                ctx.fillText(d.text, d.x1, d.y1);
+            }
         });
+
         if (drawing && currentShape) {
-            ctx.strokeStyle = 'rgba(41, 98, 255, 0.6)'; ctx.beginPath();
-            if(currentShape.type==='line'){ ctx.moveTo(currentShape.x1,currentShape.y1); ctx.lineTo(currentShape.x2,currentShape.y2); ctx.stroke(); }
-            else if(currentShape.type==='ray'){ ctx.moveTo(currentShape.x1,currentShape.y1); ctx.lineTo(canvas.width,currentShape.y1); ctx.stroke(); }
-            else if(currentShape.type==='rect'){ ctx.rect(currentShape.x1,currentShape.y1,currentShape.x2-currentShape.x1,currentShape.y2-currentShape.y1); ctx.stroke(); }
-            else if(currentShape.type==='arrow'){ drawArrow(ctx, currentShape.x1, currentShape.y1, currentShape.x2, currentShape.y2); }
+            ctx.strokeStyle = 'rgba(41, 98, 255, 0.6)';
+            ctx.beginPath();
+            if(currentShape.type==='line'){
+                ctx.moveTo(currentShape.x1,currentShape.y1);
+                ctx.lineTo(currentShape.x2,currentShape.y2);
+                ctx.stroke();
+            }else if(currentShape.type==='ray'){
+                ctx.moveTo(currentShape.x1,currentShape.y1);
+                ctx.lineTo(canvas.width,currentShape.y1);
+                ctx.stroke();
+            }else if(currentShape.type==='rect'){
+                ctx.rect(currentShape.x1,currentShape.y1,currentShape.x2-currentShape.x1,currentShape.y2-currentShape.y1);
+                ctx.stroke();
+            }else if(currentShape.type==='arrow'){
+                drawArrow(ctx, currentShape.x1, currentShape.y1, currentShape.x2, currentShape.y2);
+            }
         }
     }
 
     function drawArrow(context, fromx, fromy, tox, toy) {
-        const headlen = 10; const dx = tox - fromx; const dy = toy - fromy; const angle = Math.atan2(dy, dx);
-        context.moveTo(fromx, fromy); context.lineTo(tox, toy);
+        const headlen = 10;
+        const dx = tox - fromx;
+        const dy = toy - fromy;
+        const angle = Math.atan2(dy, dx);
+        context.moveTo(fromx, fromy);
+        context.lineTo(tox, toy);
         context.lineTo(tox - headlen * Math.cos(angle - Math.PI / 6), toy - headlen * Math.sin(angle - Math.PI / 6));
-        context.moveTo(tox); context.lineTo(tox - headlen * Math.cos(angle + Math.PI / 6), toy - headlen * Math.sin(angle + Math.PI / 6));
+        context.moveTo(tox);
+        context.lineTo(tox - headlen * Math.cos(angle + Math.PI / 6), toy - headlen * Math.sin(angle + Math.PI / 6));
         context.stroke();
     }
 
     window.setTool = function(t) {
         tool = t;
-        document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
-        if(document.getElementById(`tool-${t}`)) document.getElementById(`tool-${t}`).classList.add('active');
-        canvas.className = tool === 'cursor' ? '' : (tool === 'eraser' ? 'canvas-eraser-mode' : 'canvas-drawing-mode');
+        const buttons = document.querySelectorAll('.tool-btn');
+        buttons.forEach(b => b.classList.remove('active'));
+        const activeBtn = document.getElementById(`tool-${t}`);
+        if(activeBtn) activeBtn.classList.add('active');
+        
+        if(tool === 'cursor') {
+            canvas.className = '';
+        } else if(tool === 'eraser') {
+            canvas.className = 'canvas-eraser-mode';
+        } else {
+            canvas.className = 'canvas-drawing-mode';
+        }
     };
 
-    window.clearAllDrawings = function() { if(confirm("Flush all items?")) { drawings = []; redraw(); } };
+    window.clearAllDrawings = function() {
+        if(confirm("Flush all drawings items out of overlay matrix channels?")) {
+            drawings = [];
+            redraw();
+        }
+    };
 
     canvas.addEventListener('mousedown', e => {
-        const rect = canvas.getBoundingClientRect(); startX = e.clientX - rect.left; startY = e.clientY - rect.top;
+        const rect = canvas.getBoundingClientRect();
+        startX = e.clientX - rect.left;
+        startY = e.clientY - rect.top;
+
         if (tool === 'cursor') return;
+
         drawing = true;
+
         if (tool === 'label') {
-            const txt = prompt('Label text:');
-            if (txt) { drawings.push({ type: 'label', x1: startX, y1: startY, text: txt }); redraw(); }
-            drawing = false; return;
+            const txt = prompt('Label text annotation entry line:');
+            if (txt) {
+                drawings.push({ type: 'label', x1: startX, y1: startY, text: txt });
+                redraw();
+            }
+            drawing = false;
+            return;
         }
+
         currentShape = { type: tool, x1: startX, y1: startY, x2: startX, y2: startY };
     });
+
     canvas.addEventListener('mousemove', e => {
         if (!drawing || !currentShape) return;
-        const rect = canvas.getBoundingClientRect(); currentShape.x2 = e.clientX - rect.left; currentShape.y2 = e.clientY - rect.top; redraw();
+        const rect = canvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        currentShape.x2 = x;
+        currentShape.y2 = y;
+        redraw();
     });
+
     canvas.addEventListener('mouseup', () => {
-        if (!drawing) return; drawing = false;
+        if (!drawing) return;
+        drawing = false;
+
         if (currentShape) {
-            if (tool === 'eraser') { drawings = drawings.filter(d => !(Math.abs(d.x1 - currentShape.x1) < 20 && Math.abs(d.y1 - currentShape.y1) < 20)); }
-            else drawings.push(currentShape);
-            currentShape = null; redraw();
+            if (tool === 'eraser') {
+                drawings = drawings.filter(d => {
+                    return !(Math.abs(d.x1 - currentShape.x1) < 20 && Math.abs(d.y1 - currentShape.y1) < 20);
+                });
+            } else {
+                drawings.push(currentShape);
+            }
+            currentShape = null;
+            redraw();
         }
     });
 })();

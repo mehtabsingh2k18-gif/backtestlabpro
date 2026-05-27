@@ -856,8 +856,8 @@ window.load = function() {
     const finalTo = localStorage.getItem("to") || new Date().toISOString();
     let currentISO = lastReplayTime ? new Date(lastReplayTime * 1000).toISOString() : initialParam;
 
-    /* UPDATED TO POINT DIRECTLY TO YOUR RENDER PRODUCTION BACKEND SERVER PIPELINE */
-    const url = `https://backtestlab-backend-fotx.onrender.com/data?symbol=${symbol}&tf=${tf}&initial=${initialParam}&current=${currentISO}&to=${finalTo}`;
+    // Fixed Target URLs mapping locally to your local Flask infrastructure framework
+    const url = `http://127.0.0.1:5000/data?symbol=${symbol}&tf=${tf}&initial=${initialParam}&current=${currentISO}&to=${finalTo}`;
 
     fetch(url)
     .then(r => r.json())

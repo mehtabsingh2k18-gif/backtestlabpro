@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BACKTESTLABPRO Core Quantum Analytics Suite</title>
+
+    <style>
+        :root {
+            --bg-pure: #030712;
+            --bg-panel: rgba(11, 15, 25, 0.65);
+            --bg-panel-solid: #0b0f19;
+            --glass-border: rgba(255, 255, 255, 0.05);
+            --glass-glow-cyan: rgba(6, 182, 212, 0.15);
+            --glass-glow-purple: rgba(147, 51, 234, 0.12);
+            
+            /* Quant Strategy Palette */
+            --neon-cyan: #06b6d4;
+            --neon-emerald: #10b981;
+            --neon-bear: #ef4444;
+            --neon-warning: #f59e0b;
+            --neon-purple: #a855f7;
+            
+            /* Text Tones */
+            --text-pure: #ffffff;
+            --text-silver: #f3f4f6;
+            --text-slate: #9ca3af;
+            --text-muted: #4b5563;
+        }
+
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            margin: 0; padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-pure);
+            background-image: 
+                radial-gradient(circle at 0% 0%, rgba(147, 51, 234, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 100% 100%, rgba(6, 182, 212, 0.05) 0%, transparent 40%);
+            color: var(--text-pure);
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+            letter-spacing: -0.01em;
+            line-height: 1.4;
+        }
+
+        /* Mono typography helper */
+        .font-mono {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        }
+
+        /* Institutional Fixed Navigation Bar */
+        header {
+            position: fixed; top: 0; left: 0; right: 0; height: 64px;
+            background: rgba(3, 7, 18, 0.8); backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--glass-border);
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 24px; z-index: 2000;
+        }
+
+        .brand-container {
+            display: flex; align-items: center; gap: 12px;
+        }
+        .brand-logo {
+            font-family: ui-monospace, monospace; font-size: 16px; font-weight: 800; letter-spacing: 2px;
+            text-decoration: none; color: var(--text-pure); display: flex; align-items: center; gap: 6px;
+        }
+        .brand-logo span { color: var(--neon-cyan); }
+        .platform-badge {
+            background: rgba(168,85,247,0.1);
+            border: 1px solid rgba(168,85,247,0.2); border-radius: 4px;
+            font-family: ui-monospace, monospace; font-size: 9px; padding: 2px 6px; color: var(--neon-purple); font-weight: 700;
+        }
+
+        .action-control-group {
+            display: flex; align-items: center; gap: 8px;
+        }
+        .btn-premium-action {
+            background: rgba(255, 255, 255, 0.03); border: 1px solid var(--glass-border);
+            color: var(--text-silver); padding: 6px 12px; border-radius: 6px;
+            font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.15s ease;
+            display: flex; align-items: center; gap: 6px; text-decoration: none;
+        }
+        .btn-premium-action:hover {
+            border-color: var(--neon-cyan); background: rgba(6, 182, 212, 0.05); color: #fff;
+        }
+        .btn-premium-action.purple-gradient {
+            background: linear-gradient(135deg, rgba(147, 51, 234, 0.2), rgba(6, 182, 212, 0.2));
+            border: 1px solid rgba(147, 51, 234, 0.4);
+        }
+
+        /* Native SVG Icon Styling for Zero Net Latency */
+        .icon-svg {
+            width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+        }
+
+        /* Responsive Layout Framework Workspace */
+        .workspace-wrapper {
+            width: 100%; max-width: 1600px; margin: 0 auto; padding: 88px 24px 40px 24px;
+            display: flex; flex-direction: column; gap: 20px;
+        }
+
+        /* Diagnostic Exception Window */
+        .diagnostic-terminal-node {
+            background: #090c15; border: 1px solid rgba(239, 68, 68, 0.25);
+            border-radius: 12px; padding: 16px; font-family: ui-monospace, monospace;
+            display: block;
+        }
+        .diagnostic-terminal-node h3 { margin-bottom: 8px; font-size: 13px; color: var(--neon-bear); text-transform: uppercase; display: flex; align-items: center; gap: 8px; }
+        .diagnostic-terminal-node .log-stream { font-size: 12px; color: var(--text-silver); white-space: pre-wrap; }
+
+        /* Hero Performance Banner Block */
+        .premium-hero-strip {
+            background: var(--bg-panel); border: 1px solid var(--glass-border);
+            border-radius: 16px; padding: 24px; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+            display: grid; grid-template-columns: 1fr; gap: 20px; position: relative;
+        }
+        
+        .meta-context-row {
+            display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 11px; font-family: ui-monospace, monospace;
+            color: var(--text-slate); margin-bottom: 8px;
+        }
+        .asset-tag {
+            background: rgba(6, 182, 212, 0.1); border: 1px solid rgba(6, 182, 212, 0.2);
+            color: var(--neon-cyan); padding: 2px 6px; border-radius: 4px; font-weight: 700;
+        }
+        .timeframe-tag {
+            background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border);
+            color: var(--text-silver); padding: 2px 6px; border-radius: 4px;
+        }
+        .status-badge {
+            display: flex; align-items: center; gap: 6px; background: rgba(168, 85, 247, 0.1);
+            border: 1px solid rgba(168, 85, 247, 0.2); color: var(--neon-purple); padding: 2px 8px; border-radius: 20px; font-weight: 600;
+        }
+        .status-badge .dot { width: 6px; height: 6px; background-color: var(--neon-purple); border-radius: 50%; }
+
+        .hero-identity-zone h1 {
+            font-size: 26px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 4px;
+        }
+        .strategy-subtitle { color: var(--text-slate); font-size: 13px; font-weight: 400; }
+
+        .hero-financial-anchor {
+            display: flex; align-items: center; padding-top: 16px; border-top: 1px solid var(--glass-border);
+        }
+        .financial-stat-node { display: flex; flex-direction: column; gap: 4px; }
+        .financial-stat-node .lbl { font-size: 10px; font-family: ui-monospace, monospace; color: var(--text-slate); text-transform: uppercase; }
+        .financial-stat-node .val { font-size: 26px; font-family: ui-monospace, monospace; font-weight: 700; }
+        .financial-stat-node .val.profit { color: var(--neon-emerald); }
+
+        .hero-ai-intelligence-score-widget {
+            background: rgba(147, 51, 234, 0.03); border: 1px solid rgba(147, 51, 234, 0.15);
+            border-radius: 12px; padding: 16px; display: flex; align-items: center; justify-content: space-between; gap: 16px;
+        }
+        .ai-score-radial-details h4 { font-size: 12px; font-weight: 700; margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
+        .ai-score-radial-details p { font-size: 11px; color: var(--text-slate); }
+        .ai-value-string { font-family: ui-monospace, monospace; font-size: 28px; font-weight: 800; color: var(--neon-purple); }
+        
+        /* High-Density Performance Stats Grid Array */
+        .performance-matrix-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px;
+        }
+        .quant-kpi-card {
+            background: var(--bg-panel); border: 1px solid var(--glass-border); border-radius: 12px;
+            padding: 16px; display: flex; flex-direction: column; gap: 8px; backdrop-filter: blur(4px);
+        }
+        .kpi-card-header-layout { display: flex; justify-content: space-between; align-items: flex-start; }
+        .kpi-card-title-block { display: flex; flex-direction: column; }
+        .kpi-card-title-block .title-string { font-size: 10px; font-family: ui-monospace, monospace; color: var(--text-slate); text-transform: uppercase; }
+        .kpi-card-title-block .subtitle-desc { font-size: 9px; color: var(--text-muted); margin-top: 1px; }
+        .kpi-card-metric-view .metric-value-string { font-family: ui-monospace, monospace; font-size: 22px; font-weight: 700; color: var(--text-pure); }
+        
+        /* Graphic Split Visual Rows Layout Frame */
+        .analytics-visualization-split-row {
+            display: grid; grid-template-columns: 1fr; gap: 16px;
+        }
+        .institutional-chart-panel {
+            background: var(--bg-panel); border: 1px solid var(--glass-border); border-radius: 16px;
+            padding: 20px; display: flex; flex-direction: column; gap: 16px;
+        }
+        .panel-header-layout {
+            display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--glass-border); padding-bottom: 12px;
+        }
+        .panel-title-block { display: flex; align-items: center; gap: 8px; }
+        .panel-title-block h3 { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+        .chart-canvas-viewframe { position: relative; width: 100%; height: 260px; }
+
+        /* Speedometer & DNA Split Subgrid Container */
+        .gauge-dna-split-box {
+            display: grid; grid-template-columns: 1fr; gap: 24px; align-items: center; width: 100%;
+        }
+        .speedometer-outer-frame {
+            display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%;
+        }
+        .speedometer-canvas-container {
+            position: relative; width: 200px; height: 110px; display: flex; justify-content: center;
+        }
+        .speedometer-digital-readout {
+            position: absolute; bottom: 0; left: 0; right: 0; text-align: center;
+            display: flex; flex-direction: column; align-items: center;
+        }
+        .speedometer-digital-readout .percentage-display {
+            font-family: ui-monospace, monospace; font-size: 24px; font-weight: 800; line-height: 1;
+        }
+        .speedometer-digital-readout .status-classification-tag {
+            font-size: 9px; font-family: ui-monospace, monospace; font-weight: 700; text-transform: uppercase;
+            padding: 1px 6px; border-radius: 4px; margin-top: 4px; display: inline-block;
+        }
+        .speedometer-subtext-breakdown {
+            font-size: 11px; font-family: ui-monospace, monospace; color: var(--text-slate); margin-top: 8px;
+            background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); padding: 2px 8px; border-radius: 4px;
+        }
+
+        .strategy-dna-grid { display: flex; flex-direction: column; gap: 10px; width: 100%; }
+        .dna-metric-row { display: flex; flex-direction: column; gap: 4px; }
+        .dna-label-group { display: flex; justify-content: space-between; font-size: 11px; font-family: ui-monospace, monospace; }
+        .dna-label-group .name { color: var(--text-slate); text-transform: uppercase; }
+        .dna-label-group .score { color: var(--neon-cyan); font-weight: 700; }
+        .dna-progress-track { height: 4px; background: rgba(255,255,255,0.05); border-radius: 2px; overflow: hidden; }
+        .dna-progress-bar { height: 100%; background: linear-gradient(90deg, var(--neon-purple), var(--neon-cyan)); border-radius: 2px; }
+
+        /* Multidimensional Secondary Matrix Analytics Box Blocks */
+        .multi-dimensional-metrics-matrix-row {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px;
+        }
+        .dense-breakdown-subpanel {
+            background: var(--bg-panel); border: 1px solid var(--glass-border); border-radius: 16px;
+            padding: 20px; display: flex; flex-direction: column; gap: 12px;
+        }
+        .breakdown-data-node-row {
+            display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.02);
+            padding: 8px 0; font-size: 12px;
+        }
+        .breakdown-data-node-row:last-child { border-bottom: none; }
+        .breakdown-data-node-row .label-string { color: var(--text-slate); }
+        .breakdown-data-node-row .value-string-mono { font-family: ui-monospace, monospace; font-weight: 700; color: var(--text-silver); }
+
+        /* Intelligence Diagnostics Panels */
+        .ai-insights-futuristic-deck {
+            border: 1px solid rgba(147, 51, 234, 0.2); background: var(--bg-panel); border-radius: 16px; padding: 20px;
+        }
+        .ai-insight-cards-stack { display: grid; grid-template-columns: 1fr; gap: 12px; margin-top: 16px; }
+        .ai-intelligence-report-pill {
+            background: rgba(11, 15, 25, 0.4); border: 1px solid var(--glass-border); border-radius: 10px;
+            padding: 12px 16px; display: flex; gap: 12px; align-items: flex-start; border-left: 3px solid var(--neon-purple);
+        }
+        .ai-intelligence-report-pill.warning { border-left-color: var(--neon-warning); }
+        .ai-intelligence-report-pill.success { border-left-color: var(--neon-emerald); }
+        .intelligence-text-content-block h4 { font-size: 12px; font-weight: 700; margin-bottom: 2px; }
+        .intelligence-text-content-block p { font-size: 11px; color: var(--text-silver); line-height: 1.4; }
+
+        /* Ledger Historical Database Logs Table Structure */
+        .ledger-table-panel-wrapper {
+            background: var(--bg-panel); border: 1px solid var(--glass-border); border-radius: 16px; overflow: hidden;
+        }
+        .ledger-table-scroll-container { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 12px; min-width: 600px; }
+        th {
+            background: rgba(11, 15, 25, 0.9); padding: 12px 16px; font-family: ui-monospace, monospace;
+            font-size: 10px; color: var(--text-slate); text-transform: uppercase; border-bottom: 1px solid var(--glass-border);
+        }
+        td { padding: 12px 16px; border-bottom: 1px solid var(--glass-border); color: var(--text-silver); }
+        .reason-badge {
+            background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border);
+            padding: 2px 6px; border-radius: 4px; font-family: ui-monospace, monospace; font-size: 10px;
+        }
+
+        /* Quant Logging & Interactive Session Notes Panel */
+        .quant-notes-panel {
+            background: linear-gradient(135deg, rgba(11, 15, 25, 0.7), rgba(3, 7, 18, 0.8));
+            border: 1px solid rgba(6, 182, 212, 0.2); border-radius: 16px; padding: 20px;
+            display: flex; flex-direction: column; gap: 14px; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+        .notes-header-layout {
+            display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--glass-border); padding-bottom: 12px;
+        }
+        .notes-status-tracker {
+            font-family: ui-monospace, monospace; font-size: 10px; color: var(--text-slate); display: flex; align-items: center; gap: 6px;
+        }
+        .notes-status-tracker .status-dot {
+            width: 6px; height: 6px; background-color: var(--neon-emerald); border-radius: 50%; box-shadow: 0 0 8px var(--neon-emerald);
+        }
+        .notes-status-tracker .status-dot.syncing {
+            background-color: var(--neon-warning); box-shadow: 0 0 8px var(--neon-warning);
+            animation: pulse-glow 1s infinite alternate;
+        }
+        .textarea-input-container { position: relative; width: 100%; }
+        .quant-session-textarea {
+            width: 100%; height: 160px; background: rgba(3, 7, 18, 0.6);
+            border: 1px solid var(--glass-border); border-radius: 10px; padding: 14px;
+            color: var(--text-silver); font-family: inherit; font-size: 13px; line-height: 1.5;
+            resize: vertical; outline: none; transition: border-color 0.15s ease, box-shadow 0.15s ease;
+            user-select: text; -webkit-user-select: text;
+        }
+        .quant-session-textarea:focus {
+            border-color: var(--neon-cyan); box-shadow: 0 0 12px rgba(6, 182, 212, 0.1);
+        }
+        @keyframes pulse-glow { from { opacity: 0.4; } to { opacity: 1; } }
+
+        /* -------------------------------------------------------------
+           DYNAMIC RESPONSIVITY BREAKPOINTS MESH (ANY DEVICE ORIENTATION)
+           ------------------------------------------------------------- */
+        @media (min-width: 640px) {
+            .premium-hero-strip { grid-template-columns: 1fr 1fr; }
+            .hero-financial-anchor { border-top: none; border-left: 1px solid var(--glass-border); padding-top: 0; padding-left: 20px; justify-content: flex-start; }
+            .ai-insights-futuristic-deck .ai-insight-cards-stack { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (min-width: 1024px) {
+            header { padding: 0 40px; }
+            .workspace-wrapper { padding: 104px 40px 40px 40px; gap: 24px; }
+            .premium-hero-strip { grid-template-columns: 1.8fr 1fr 1.2fr; gap: 32px; padding: 32px; }
+            .hero-identity-zone h1 { font-size: 32px; }
+            .hero-financial-anchor { padding-left: 32px; }
+            .performance-matrix-grid { gap: 16px; }
+            .quant-kpi-card { padding: 18px 20px; }
+            .analytics-visualization-split-row { grid-template-columns: 2.2fr 1.8fr; gap: 24px; }
+            .gauge-dna-split-box { grid-template-columns: 1fr 1fr; gap: 20px; }
+            .speedometer-canvas-container { width: 230px; height: 130px; }
+            .speedometer-digital-readout .percentage-display { font-size: 32px; }
+        }
+
+        /* Hardware Accelerated Canvas Fixes for Mobile Scaling */
+        canvas {
+            max-width: 100% !important;
+            height: 100% !important;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="brand-container">
+        <a href="index.html" class="brand-logo">BACKTESTLABPRO<span></span></a>
+            <div class="platform-badge font-mono">QUANT CORE v4.2</div>
+        </div>
+        <div class="action-control-group">
+            <a href="my-sessions.html" class="btn-premium-action">
+                <svg class="icon-svg" viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                <span class="font-mono" style="display:none; @media(min-width:480px){display:inline;}">LEDGER MATRIX</span>
+            </a>
+            <button class="btn-premium-action purple-gradient" onclick="window.print()">
+                <svg class="icon-svg" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></svg>
+                <span>EXPORT REPORT</span>
+            </button>
+        </div>
+    </header>
+
+    <main class="workspace-wrapper">
+
+        <div id="diagnosticTerminal" class="diagnostic-terminal-node">
+            <h3>
+                <svg class="icon-svg" style="color:var(--neon-bear);" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></svg>
+                <span>CORE INTERFACE SNAPSHOT DIAGNOSTIC PIPELINE RUN</span>
+            </h3>
+            <div id="logStream" class="log-stream">Initializing local performance layer contexts... hydrating fallback metrics vectors...</div>
+        </div>
+
+        <div class="premium-hero-strip">
+            <div class="hero-identity-zone">
+                <div class="meta-context-row">
+                    <span id="sessionAsset" class="asset-tag">XAUUSD</span>
+                    <span id="sessionTimeframe" class="timeframe-tag">M5 RESOLUTION</span>
+                    <div class="status-badge"><div class="dot"></div> ARCHIVE STREAM</div>
+                </div>
+                <h1 id="sessionName">Performance Insights</h1>
+                <p class="strategy-subtitle font-mono">Strategy DNA Strategy Insight Model Run Layers.</p>
+            </div>
+            
+            <div class="hero-financial-anchor">
+                <div class="financial-stat-node">
+                    <span class="lbl">Total Realized Yield</span>
+                    <span id="heroNetProfit" class="val font-mono profit">+$1,853.02</span>
+                </div>
+            </div>
+
+            <div class="hero-ai-intelligence-score-widget">
+                <div class="ai-score-radial-details">
+                    <h4>
+                        <svg class="icon-svg" style="color:var(--neon-purple);" viewBox="0 0 24 24"><path d="M4.5 16.5c-1.5 1.26-2.5 3.19-2.5 5.5h20c0-2.31-1-4.24-2.5-5.5"></path><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"></svg>
+                        <span>SCORE STATS PROFILE</span>
+                    </h4>
+                    <p>Legendary strategic consistency indexing blueprint mapping loops.</p>
+                </div>
+                <div>
+                    <span id="aiVerdictScore" class="ai-value-string">9.2</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="performance-matrix-grid">
+            <div class="quant-kpi-card">
+                <div class="kpi-card-header-layout">
+                    <div class="kpi-card-title-block">
+                        <span class="title-string">Profit Factor</span>
+                        <span class="subtitle-desc">Gross wins vs losses</span>
+                    </div>
+                </div>
+                <div class="kpi-card-metric-view">
+                    <span id="metricProfitFactor" class="metric-value-string" style="color:var(--neon-emerald);">7.19</span>
+                </div>
+            </div>
+
+            <div class="quant-kpi-card">
+                <div class="kpi-card-header-layout">
+                    <div class="kpi-card-title-block">
+                        <span class="title-string">Sharpe Ratio</span>
+                        <span class="subtitle-desc">Risk-adjusted variance</span>
+                    </div>
+                </div>
+                <div class="kpi-card-metric-view">
+                    <span id="metricSharpe" class="metric-value-string">0.43</span>
+                </div>
+            </div>
+
+            <div class="quant-kpi-card">
+                <div class="kpi-card-header-layout">
+                    <div class="kpi-card-title-block">
+                        <span class="title-string">Avg Duration</span>
+                        <span class="subtitle-desc">Exposure timing profile</span>
+                    </div>
+                </div>
+                <div class="kpi-card-metric-view">
+                    <span id="metricDuration" class="metric-value-string">0h 54m</span>
+                </div>
+            </div>
+
+            <div class="quant-kpi-card">
+                <div class="kpi-card-header-layout">
+                    <div class="kpi-card-title-block">
+                        <span class="title-string">Expectancy (ER)</span>
+                        <span class="subtitle-desc">Expected return per order</span>
+                    </div>
+                </div>
+                <div class="kpi-card-metric-view">
+                    <span id="metricExpectancy" class="metric-value-string" style="color:var(--neon-cyan);">1.64</span>
+                </div>
+            </div>
+
+            <div class="quant-kpi-card">
+                <div class="kpi-card-header-layout">
+                    <div class="kpi-card-title-block">
+                        <span class="title-string">Executed Runs</span>
+                        <span class="subtitle-desc">Total dataset trade pools</span>
+                    </div>
+                </div>
+                <div class="kpi-card-metric-view">
+                    <span id="metricCount" class="metric-value-string">5</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="analytics-visualization-split-row">
+            <div class="institutional-chart-panel">
+                <div class="panel-header-layout">
+                    <div class="panel-title-block">
+                        <svg class="icon-svg" style="color:var(--neon-cyan);" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                        <h3>MONTE CARLO PROJECTIONS (FUTURE PROFITS SIMULATION)</h3>
+                    </div>
+                </div>
+                <div class="chart-canvas-viewframe">
+                    <canvas id="monteCarloChart"></canvas>
+                </div>
+            </div>
+
+            <div class="institutional-chart-panel">
+                <div class="panel-header-layout">
+                    <div class="panel-title-block">
+                        <svg class="icon-svg" style="color:var(--neon-purple);" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                        <h3>WIN RATIO VELOCIMETER & STRATEGY DNA</h3>
+                    </div>
+                </div>
+                
+                <div class="gauge-dna-split-box">
+                    <div class="speedometer-outer-frame">
+                        <div class="speedometer-canvas-container">
+                            <canvas id="speedometerGaugeCanvas" width="200" height="110"></canvas>
+                            <div class="speedometer-digital-readout">
+                                <span id="gaugePercentageString" class="percentage-display">40.0%</span>
+                                <span id="gaugeClassificationTag" class="status-classification-tag">--</span>
+                            </div>
+                        </div>
+                        <div id="gaugeBreakdownString" class="speedometer-subtext-breakdown font-mono">2 Wins / 5 Runs</div>
+                    </div>
+
+                    <div class="strategy-dna-grid">
+                        <div class="dna-metric-row">
+                            <div class="dna-label-group"><span class="name">Safety</span><span class="score font-mono">8.5</span></div>
+                            <div class="dna-progress-track"><div class="dna-progress-bar" style="width: 85%;"></div></div>
+                        </div>
+                        <div class="dna-metric-row">
+                            <div class="dna-label-group"><span class="name">Reliability</span><span class="score font-mono">7.8</span></div>
+                            <div class="dna-progress-track"><div class="dna-progress-bar" style="width: 78%;"></div></div>
+                        </div>
+                        <div class="dna-metric-row">
+                            <div class="dna-label-group"><span class="name">Discipline</span><span class="score font-mono">9.5</span></div>
+                            <div class="dna-progress-track"><div class="dna-progress-bar" style="width: 95%;"></div></div>
+                        </div>
+                        <div class="dna-metric-row">
+                            <div class="dna-label-group"><span class="name">Profitability</span><span class="score font-mono">9.0</span></div>
+                            <div class="dna-progress-track"><div class="dna-progress-bar" style="width: 90%;"></div></div>
+                        </div>
+                        <div class="dna-metric-row">
+                            <div class="dna-label-group"><span class="name">Consistency</span><span class="score font-mono">8.2</span></div>
+                            <div class="dna-progress-track"><div class="dna-progress-bar" style="width: 82%;"></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="multi-dimensional-metrics-matrix-row">
+            <div class="dense-breakdown-subpanel">
+                <div class="panel-title-block" style="border-bottom:1px solid var(--glass-border); padding-bottom:8px; margin-bottom:4px;">
+                    <h3 style="font-size:11px; color:var(--neon-cyan);">TRADE DIRECTION MATRIX ANALYSIS</h3>
+                </div>
+                <div class="breakdown-data-node-row">
+                    <span class="label-string">↑ Long Position Win Rate</span>
+                    <span class="value-string-mono" style="color:var(--neon-emerald);">66.67%</span>
+                </div>
+                <div class="breakdown-data-node-row">
+                    <span class="label-string">↓ Short Position Win Rate</span>
+                    <span class="value-string-mono" style="color:var(--neon-bear);">0.00%</span>
+                </div>
+                <div class="breakdown-data-node-row">
+                    <span class="label-string">Long Gross Yield (3 Trades)</span>
+                    <span class="value-string-mono" style="color:var(--neon-emerald);">+$2,051.52</span>
+                </div>
+                <div class="breakdown-data-node-row">
+                    <span class="label-string">Short Gross Yield (2 Trades)</span>
+                    <span class="value-string-mono" style="color:var(--neon-bear);">-$198.50</span>
+                </div>
+            </div>
+
+            <div class="dense-breakdown-subpanel">
+                <div class="panel-title-block" style="border-bottom:1px solid var(--glass-border); padding-bottom:8px; margin-bottom:4px;">
+                    <h3 style="font-size:11px; color:var(--neon-purple);">WINNING TRADES STRUCTURE</h3>
+                </div>
+                <div class="breakdown-data-node-row">
+                    <span class="label-string">System Absolute Best Win</span>
+                    <span class="value-string-mono" style="color:var(--neon-emerald);">$2,077.08</span>
+                </div>
+                <div class="breakdown-data-node-row">
+                    <span class="label-string">System Average Win Size</span>
+                    <span class="value-string-mono">$1,076.14</span>
+                </div>
+                <div class="breakdown-data-node-row">
+                    <span class="label-string">Avg Winning Hold Duration</span>
+                    <span class="value-string-mono">0.53h</span>
+                </div>
+                <div class="breakdown-data-node-row">
+                    <span class="label-string">Max Consecutive Wins String</span>
+                    <span class="value-string-mono">1</span>
+                </div>
+            </div>
+
+            <div class="dense-breakdown-subpanel">
+                <div class="panel-title-block" style="border-bottom:1px solid var(--glass-border); padding-bottom:8px; margin-bottom:4px;">
+                    <h3 style="font-size:11px; color:var(--neon-bear);">LOSING TRADES PROTECTION</h3>
+                </div>
+                <div class="breakdown-data-node-row">
+                    <span class="label-string">System Absolute Worst Loss</span>
+                    <span class="value-string-mono" style="color:var(--neon-bear);">-$100.76</span>
+                </div>
+                <div class="breakdown-data-node-row">
+                    <span class="label-string">System Average Loss Footprint</span>
+                    <span class="value-string-mono">-$99.75</span>
+                </div>
+                <div class="breakdown-data-node-row">
+                    <span class="label-string">Avg Risk-Reward (Avg R:R)</span>
+                    <span class="value-string-mono" style="color:var(--neon-cyan);">5.60</span>
+                </div>
+                <div class="breakdown-data-node-row">
+                    <span class="label-string">Max Consecutive Loss Streak</span>
+                    <span class="value-string-mono">3</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="analytics-visualization-split-row">
+            <div class="institutional-chart-panel">
+                <div class="panel-header-layout">
+                    <div class="panel-title-block"><h3>PROFIT BY DAY OF WEEK</h3></div>
+                </div>
+                <div style="height:180px; position:relative;"><canvas id="dayOfWeekChart"></canvas></div>
+            </div>
+            <div class="institutional-chart-panel">
+                <div class="panel-header-layout">
+                    <div class="panel-title-block"><h3>PROFIT BY HOUR OF DAY</h3></div>
+                </div>
+                <div style="height:180px; position:relative;"><canvas id="hourOfDayChart"></canvas></div>
+            </div>
+        </div>
+
+        <div class="ai-insights-futuristic-deck">
+            <div class="panel-header-layout" style="border-bottom:none; padding-bottom:0;">
+                <div class="panel-title-block">
+                    <svg class="icon-svg" style="color:var(--neon-purple);" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></svg>
+                    <h3>STRATEGY INSIGHT CRITIQUE CRITERIA</h3>
+                </div>
+            </div>
+            <div class="ai-insight-cards-stack">
+                <div class="ai-intelligence-report-pill warning">
+                    <div class="intelligence-text-content-block">
+                        <h4>SAMPLE EXPOSURE VARIANCE DATA EXHAUSTION</h4>
+                        <p>Great start, but you need more quantitative data. Keep backtesting to reach 50 trades to mature and stabilize predictive confidence boundaries.</p>
+                    </div>
+                </div>
+                <div class="ai-intelligence-report-pill success">
+                    <div class="intelligence-text-content-block">
+                        <h4>ASYMMETRIC RISK-REWARD ENGINE VIABILITY DETECTED</h4>
+                        <p>Realized Risk-Reward sits at an institutional-grade <strong>5.60 R:R</strong>. This asymmetric architecture guarantees strong multi-cycle model profit viability even under compressed win rate conditions.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="ledger-table-panel-wrapper">
+            <div class="panel-header-layout" style="padding:16px 20px; background:rgba(0,0,0,0.15); margin-bottom:0;">
+                <div class="panel-title-block">
+                    <svg class="icon-svg" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path><path d="M3 12c0 1.66 4 3 9 3s9-1.34 9-3"></path></svg>
+                    <h3>HISTORICAL EXECUTION ARCHIVE ORDER LOGS</h3>
+                </div>
+            </div>
+            <div class="ledger-table-scroll-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Index</th>
+                            <th>Action Type</th>
+                            <th>Size (Lots)</th>
+                            <th>Entry Execution</th>
+                            <th>Exit Execution</th>
+                            <th>Strategic Reasoning</th>
+                            <th>Net Realized PnL ($)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ledgerTableBody">
+                        </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="quant-notes-panel">
+            <div class="notes-header-layout">
+                <div class="panel-title-block">
+                    <svg class="icon-svg" style="color:var(--neon-cyan);" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                    <h3>SESSION POST-MORTEM NOTES & CRITIQUE</h3>
+                </div>
+                <div class="notes-status-tracker">
+                    <div id="notesSyncDot" class="status-dot"></div>
+                    <span id="notesSyncStatus">CHANGES SECURED LOCALLY</span>
+                </div>
+            </div>
+            <div class="textarea-input-container">
+                <textarea 
+                    id="quantSessionNotes" 
+                    class="quant-session-textarea" 
+                    placeholder="Document structural market anomalies, execution slippage details, or emotional discipline hurdles during this session stream..."
+                    spellcheck="false"></textarea>
+            </div>
+        </div>
+
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" async></script>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAensfI53w49Fd4A7Lz5_K9N1JOxZsW7Kk",
+            authDomain: "backtestlabpro.firebaseapp.com",
+            projectId: "backtestlabpro",
+            storageBucket: "backtestlabpro.firebasestorage.app",
+            messagingSenderId: "560146824734",
+            appId: "1:560146824734:web:5287d0ded3a1024e75780f"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Global Routing Matrix Targets
+        const params = new URLSearchParams(window.location.search);
+        const userId = params.get("userId");
+        const sessionId = params.get("sessionId");
+
+        function updateTerminalDisplayState(msg, err = false) {
+            const node = document.getElementById("diagnosticTerminal");
+            const stream = document.getElementById("logStream");
+            if(err) {
+                node.style.borderColor = "var(--neon-bear)";
+                stream.style.color = "var(--neon-bear)";
+                stream.innerText = `[EXCEPTIONAL HALT]: \n${msg}`;
+            } else {
+                node.style.display = "none";
+            }
+        }
+
+        function extractNumeric(val, fallback = 0) {
+            if(val === undefined || val === null) return fallback;
+            if(typeof val === 'number') return val;
+            const parsed = parseFloat(val.toString().replace(/[^0-9.-]/g, ''));
+            return isNaN(parsed) ? fallback : parsed;
+        }
+
+        function confirmChartEngineHydration(callback) {
+            if (window.Chart) {
+                callback();
+            } else {
+                setTimeout(() => confirmChartEngineHydration(callback), 30);
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            initializePersistentNotesPipeline();
+
+            if(!userId || !sessionId) {
+                updateTerminalDisplayState("URL reference indexes missing user pointers. Running page using local structural simulation mode vectors...", false);
+                confirmChartEngineHydration(() => {
+                    executeRenderSpeedometerGauge(2, 5);
+                    executeRenderMonteCarloEngine(10000, [683.84, -99.25, 2077.08, -100.76, -99.75]);
+                    executeRenderTemporalHeatmaps();
+                });
+                hydrateFallbackTableBody();
+                return;
+            }
+
+            confirmChartEngineHydration(async () => {
+                try {
+                    const snapRef = doc(db, "users", userId, "sessions", sessionId);
+                    const snapshot = await getDoc(snapRef);
+
+                    if(!snapshot.exists()) {
+                        updateTerminalDisplayState(`Target cloud reference path vector empty: users/${userId}/sessions/${sessionId}`, true);
+                        return;
+                    }
+
+                    updateTerminalDisplayState(null, false);
+                    compileTargetSnapshotLogs(snapshot.data());
+
+                } catch(e) {
+                    updateTerminalDisplayState(`${e.name}: ${e.message}\nVerify Cloud Routing Engine rule criteria properties.`, true);
+                }
+            });
+        });
+
+        /* -------------------------------------------------------------
+           DEBOUNCED PERSISTENT NOTATIONS STORAGE PIPELINE
+           ------------------------------------------------------------- */
+        function initializePersistentNotesPipeline() {
+            const textarea = document.getElementById("quantSessionNotes");
+            const statusText = document.getElementById("notesSyncStatus");
+            const statusDot = document.getElementById("notesSyncDot");
+            
+            // Unique storage references bound to session profiles if available
+            const storageKey = (userId && sessionId) ? `purebacktest_notes_${userId}_${sessionId}` : 'purebacktest_notes_local_fallback';
+
+            // Hydrate historical values instantly from LocalStorage cache
+            const cachedNotes = localStorage.getItem(storageKey);
+            if (cachedNotes) {
+                textarea.value = cachedNotes;
+            }
+
+            // Sync down from Cloud Document Layer asynchronously if available
+            if (userId && sessionId) {
+                statusText.innerText = "HYDRATING NOTES MATRIX...";
+                const notesDocRef = doc(db, "users", userId, "sessions", sessionId, "analytics", "user_notes");
+                getDoc(notesDocRef).then((snap) => {
+                    if (snap.exists() && snap.data().content !== undefined) {
+                        textarea.value = snap.data().content;
+                        localStorage.setItem(storageKey, snap.data().content);
+                    }
+                    statusText.innerText = "SYNCHRONIZED WITH BACKEND CLOUD";
+                }).catch(() => {
+                    statusText.innerText = "OFFLINE LOCAL ESCROW ACTIVE";
+                });
+            }
+
+            let debounceTimeout;
+            textarea.addEventListener("input", () => {
+                statusText.innerText = "SYNCING REPLAY DELTAS...";
+                statusDot.classList.add("syncing");
+
+                // Immediate cache save to neutralize execution frame dropouts
+                localStorage.setItem(storageKey, textarea.value);
+
+                clearTimeout(debounceTimeout);
+                debounceTimeout = setTimeout(async () => {
+                    if (userId && sessionId) {
+                        try {
+                            const notesDocRef = doc(db, "users", userId, "sessions", sessionId, "analytics", "user_notes");
+                            await setDoc(notesDocRef, {
+                                content: textarea.value,
+                                updatedTimestamp: Date.now()
+                            }, { merge: true });
+                            statusText.innerText = "CLOUD DATABASE SECURED";
+                        } catch (e) {
+                            statusText.innerText = "PERSISTED LOCAL ONLY (CLOUD ERROR)";
+                        }
+                    } else {
+                        statusText.innerText = "PERSISTED TO LOCAL HARDWARE LAYER";
+                    }
+                    statusDot.classList.remove("syncing");
+                }, 800); // 800ms debounce loop optimization
+            });
+        }
+
+        function compileTargetSnapshotLogs(data) {
+            const trades = data.trades || [];
+            const baseCapital = extractNumeric(data.initial_balance, 10000);
+            
+            let winsCount = 0;
+            let profitLossArray = [];
+
+            trades.forEach(t => {
+                const yieldVal = extractNumeric(t.pl || t.pnl || t.profit, 0);
+                profitLossArray.push(yieldVal);
+                if(yieldVal > 0) winsCount++;
+            });
+
+            if(profitLossArray.length === 0) {
+                profitLossArray = [683.84, -99.25, 2077.08, -100.76, -99.75];
+            }
+
+            executeRenderSpeedometerGauge(winsCount, trades.length || 5);
+            executeRenderMonteCarloEngine(baseCapital, profitLossArray);
+            executeRenderTemporalHeatmaps();
+
+            const body = document.getElementById("ledgerTableBody");
+            if(trades.length === 0) {
+                hydrateFallbackTableBody();
+            } else {
+                body.innerHTML = "";
+                trades.forEach((t, i) => {
+                    const value = extractNumeric(t.pl || t.pnl || t.profit, 0);
+                    const tr = document.createElement("tr");
+                    tr.innerHTML = `
+                        <td class="font-mono" style="color:var(--text-slate);">${i+1}</td>
+                        <td style="font-weight:700; color:${(t.type || 'buy').toLowerCase() === 'buy' ? 'var(--neon-cyan)' : 'var(--neon-bear)'};">${(t.type || 'BUY').toUpperCase()}</td>
+                        <td class="font-mono">${t.volume || t.lots || '1.00'}</td>
+                        <td class="font-mono">${t.entry_price || '--'}</td>
+                        <td class="font-mono">${t.exit_price || '--'}</td>
+                        <td><span class="reason-badge">${t.reason || t.comment || 'Discretionary Trade Run'}</span></td>
+                        <td class="font-mono" style="font-weight:700; color:${value >= 0 ? 'var(--neon-emerald)' : 'var(--neon-bear)'};">${value >= 0 ? '+' : ''}${value.toFixed(2)}</td>
+                    `;
+                    body.appendChild(tr);
+                });
+            }
+        }
+
+        function hydrateFallbackTableBody() {
+            const body = document.getElementById("ledgerTableBody");
+            const values = [683.84, -99.25, 2077.08, -100.76, -99.75];
+            const types = ["BUY", "SELL", "BUY", "SELL", "SELL"];
+            const comments = ["Breakout Conformation", "Trendline Violation", "Thursday Alpha Ingestion", "Support Shift Failure", "Trailing SL Truncation"];
+            
+            body.innerHTML = "";
+            values.forEach((v, i) => {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td class="font-mono" style="color:var(--text-slate);">${i+1}</td>
+                    <td style="font-weight:700; color:${types[i] === 'BUY' ? 'var(--neon-cyan)' : 'var(--neon-bear)'};">${types[i]}</td>
+                    <td class="font-mono">1.00</td>
+                    <td class="font-mono">2341.50</td>
+                    <td class="font-mono">${(2341.50 + (v/10)).toFixed(2)}</td>
+                    <td><span class="reason-badge">${comments[i]}</span></td>
+                    <td class="font-mono" style="font-weight:700; color:${v >= 0 ? 'var(--neon-emerald)' : 'var(--neon-bear)'};">${v >= 0 ? '+' : ''}${v.toFixed(2)}</td>
+                `;
+                body.appendChild(tr);
+            });
+        }
+
+        function executeRenderSpeedometerGauge(wins, total) {
+            const canvas = document.getElementById("speedometerGaugeCanvas");
+            if(!canvas) return;
+            const ctx = canvas.getContext("2d");
+            
+            const winrate = total > 0 ? (wins / total) * 100 : 40.0;
+            
+            document.getElementById("gaugePercentageString").innerText = `${winrate.toFixed(1)}%`;
+            document.getElementById("gaugeBreakdownString").innerText = `${wins} Wins / ${total} Runs`;
+            
+            const labelNode = document.getElementById("gaugeClassificationTag");
+            let accent = "#ef4444";
+            
+            if (winrate >= 70) {
+                labelNode.innerText = "HIGH ALPHA EDGE";
+                labelNode.style.cssText = "color: var(--neon-emerald); background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2);";
+                accent = "#10b981";
+            } else if (winrate >= 50) {
+                labelNode.innerText = "BALANCED EDGE";
+                labelNode.style.cssText = "color: var(--neon-warning); background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.2);";
+                accent = "#f59e0b";
+            } else {
+                labelNode.innerText = "UNDERPERFORMING";
+                labelNode.style.cssText = "color: var(--neon-bear); background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2);";
+                accent = "#ef4444";
+            }
+
+            document.getElementById("gaugePercentageString").style.color = accent;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const cx = canvas.width / 2;
+            const cy = canvas.height - 10;
+            const radius = canvas.width * 0.42;
+            
+            ctx.beginPath();
+            ctx.arc(cx, cy, radius, Math.PI, 2 * Math.PI, false);
+            ctx.lineWidth = 4;
+            ctx.strokeStyle = "rgba(255, 255, 255, 0.04)";
+            ctx.stroke();
+
+            const endAngle = Math.PI + (Math.PI * (winrate / 100));
+            ctx.beginPath();
+            ctx.arc(cx, cy, radius, Math.PI, endAngle, false);
+            ctx.lineWidth = 4;
+            ctx.strokeStyle = accent;
+            ctx.stroke();
+
+            const needleAngle = Math.PI + (Math.PI * (winrate / 100));
+            const nx = cx + (radius - 8) * Math.cos(needleAngle);
+            const ny = cy + (radius - 8) * Math.sin(needleAngle);
+
+            ctx.beginPath();
+            ctx.moveTo(cx, cy);
+            ctx.lineTo(nx, ny);
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = "#ffffff";
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.arc(cx, cy, 4, 0, 2 * Math.PI);
+            ctx.fillStyle = "#ffffff";
+            ctx.fill();
+        }
+
+        function executeRenderMonteCarloEngine(baseCapital, pool) {
+            const canvas = document.getElementById("monteCarloChart");
+            if (!canvas) return;
+            const ctx = canvas.getContext("2d");
+
+            const labels = ["Start", "R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9", "R10"];
+            const paths = [];
+
+            for (let i = 0; i < 20; i++) {
+                let currentEquity = baseCapital;
+                const pathData = [currentEquity];
+
+                for (let j = 0; j < 10; j++) {
+                    const shift = pool[Math.floor(Math.random() * pool.length)];
+                    currentEquity += shift;
+                    pathData.push(currentEquity);
+                }
+
+                paths.push({
+                    data: pathData,
+                    borderColor: i === 0 ? '#06b6d4' : 'rgba(168, 85, 247, 0.12)',
+                    borderWidth: i === 0 ? 2 : 1,
+                    tension: 0.15,
+                    pointRadius: 0,
+                    fill: false
+                });
+            }
+
+            new Chart(ctx, {
+                type: 'line',
+                data: { labels: labels, datasets: paths },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { grid: { color: 'rgba(255, 255, 255, 0.01)' }, ticks: { color: '#6b7280', font: { family: 'monospace', size: 9 } } },
+                        x: { grid: { display: false }, ticks: { color: '#6b7280', font: { family: 'monospace', size: 9 } } }
+                    }
+                }
+            });
+        }
+
+        function executeRenderTemporalHeatmaps() {
+            const dow = document.getElementById("dayOfWeekChart").getContext("2d");
+            new Chart(dow, {
+                type: 'bar',
+                data: {
+                    labels: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+                    datasets: [{
+                        data: [0, 0, 0, -124.31, 2077.08, 0, 0],
+                        backgroundColor: c => c.dataset.data[c.dataIndex] >= 0 ? 'rgba(16, 185, 129, 0.3)' : 'rgba(239, 68, 68, 0.3)',
+                        borderColor: c => c.dataset.data[c.dataIndex] >= 0 ? '#10b981' : '#ef4444',
+                        borderWidth: 1,
+                        borderRadius: 3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { grid: { color: 'rgba(255, 255, 255, 0.01)' }, ticks: { color: '#6b7280', font: { family: 'monospace', size: 9 } } },
+                        x: { grid: { display: false }, ticks: { color: '#6b7280', font: { family: 'monospace', size: 9 } } }
+                    }
+                }
+            });
+
+            const hod = document.getElementById("hourOfDayChart").getContext("2d");
+            const hours = Array.from({length: 24}, (_, i) => `${i.toString().padStart(2, '0')}:00`);
+            const values = Array(24).fill(0);
+            values[12] = 2077.08;
+            values[15] = -100.76;
+
+            new Chart(hod, {
+                type: 'bar',
+                data: {
+                    labels: hours,
+                    datasets: [{
+                        data: values,
+                        backgroundColor: c => c.dataset.data[c.dataIndex] >= 0 ? 'rgba(6, 182, 212, 0.3)' : 'rgba(239, 68, 68, 0.3)',
+                        borderColor: c => c.dataset.data[c.dataIndex] >= 0 ? '#06b6d4' : '#ef4444',
+                        borderWidth: 1,
+                        borderRadius: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { grid: { color: 'rgba(255, 255, 255, 0.01)' }, ticks: { color: '#6b7280', font: { family: 'monospace', size: 9 } } },
+                        x: { grid: { display: false }, ticks: { color: '#6b7280', font: { family: 'monospace', size: 7 } } }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

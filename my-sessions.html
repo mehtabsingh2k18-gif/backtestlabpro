@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BACKTESTLABPRO | Saved Replay Sessions</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAensfI53w49Fd4A7Lz5_K9N1JOxZsW7Kk",
+            authDomain: "backtestlabpro.firebaseapp.com",
+            projectId: "backtestlabpro",
+            storageBucket: "backtestlabpro.firebasestorage.app",
+            messagingSenderId: "560146824734",
+            appId: "1:560146824734:web:5287d0ded3a1024e75780f"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        const gridContainer = document.getElementById("sessionsGrid");
+        const loadingIndicator = document.getElementById("loadingIndicator");
+
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                // If user is unauthenticated, throw them out to the portal log
+                window.location.href = "login.html";
+                return;
+            }
+
+            try {
+                // Fetch all documents from /users/{userId}/sessions/
+                const sessionsRef = collection(db, "users", user.uid, "sessions");
+                const querySnapshot = await getDocs(sessionsRef);
+                
+                loadingIndicator.style.display = "none";
+                
+                if (querySnapshot.empty) {
+                    gridContainer.innerHTML = `
+                        <div class="empty-state-message">
+                            <h3>No Backtest Run Logs Found</h3>
+                            <p>You haven't preserved any trading sessions yet. Open the charting terminal to commit your data layers.</p>
+                            <a href="chart.html" class="cta-btn-primary" style="display:inline-flex; text-decoration:none; margin-top:20px;">Launch Terminal</a>
+                        </div>
+                    `;
+                    return;
+                }
+
+                querySnapshot.forEach((doc) => {
+                    const session = doc.data();
+                    const sessionId = doc.id;
+                    
+                    // Parse text labels safely to adapt to layout requirements
+                    const name = session.session_name || "Unnamed Replay Run";
+                    const symbol = session.symbol || "N/A";
+                    const timeframe = session.timeframe || "N/A";
+                    const winrate = session.winrate || "0%";
+                    const profit = session.total_pl || "$0.00";
+                    const balance = session.balance || "10000";
+
+                    const isNegative = profit.includes("-");
+                    const profitStyleClass = isNegative ? "metric-neg" : (profit !== "$0.00" ? "metric-pos" : "");
+
+                    // Generate a glass document interface card matching site theme
+                    const card = document.createElement("div");
+                    card.className = "session-entry-card";
+                    card.onclick = () => {
+                        // Forward parameters over to the analytics viewing setup
+                        window.location.href = `analytics.html?userId=${user.uid}&sessionId=${sessionId}`;
+                    };
+
+                    card.innerHTML = `
+                        <div class="card-meta-header">
+                            <span class="asset-pill">${symbol}</span>
+                            <span class="timeframe-badge">${timeframe.toUpperCase()}</span>
+                        </div>
+                        <h3 class="session-display-title">${name}</h3>
+                        
+                        <div class="session-metrics-distribution">
+                            <div class="m-box">
+                                <span class="m-lbl">Win Rate</span>
+                                <span class="m-val" style="color: var(--neon-emerald);">${winrate}</span>
+                            </div>
+                            <div class="m-box">
+                                <span class="m-lbl">Net P&L</span>
+                                <span class="m-val ${profitStyleClass}">${profit}</span>
+                            </div>
+                            <div class="m-box">
+                                <span class="m-lbl">Ending Balance</span>
+                                <span class="m-val">$${Number(balance).toLocaleString()}</span>
+                            </div>
+                        </div>
+                        <div class="card-footer-anchor">View Deep Analytics Metrics →</div>
+                    `;
+                    
+                    gridContainer.appendChild(card);
+                });
+
+            } catch (error) {
+                console.error("Error reading session configuration matrices:", error);
+                loadingIndicator.innerText = "Error pulling database layers. Verify connection variables.";
+            }
+        });
+    </script>
+
+    <style>
+        :root {
+            --bg-pure: #020408;
+            --bg-deep-gradient: radial-gradient(circle at 50% -20%, #0a1224 0%, #020408 70%);
+            --glass-card: rgba(6, 11, 22, 0.45);
+            --glass-card-hover: rgba(10, 18, 36, 0.7);
+            --neon-cyan: #00F0FF;
+            --neon-cyan-glow: rgba(0, 240, 255, 0.25);
+            --neon-emerald: #00FF94;
+            --neon-bear: #FF3366;
+            --text-white: #FFFFFF;
+            --text-silver: #CBD5E1;
+            --text-slate: #64748B;
+            --border-line: rgba(255, 255, 255, 0.04);
+            --border-line-focus: rgba(0, 240, 255, 0.3);
+        }
+
+        body {
+            margin: 0; padding: 0;
+            background-color: var(--bg-pure);
+            background-image: var(--bg-deep-gradient);
+            color: var(--text-white);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            min-height: 100vh;
+        }
+
+        header {
+            position: fixed; top: 0; left: 0; right: 0; height: 80px;
+            background: rgba(2, 4, 8, 0.7); backdrop-filter: blur(24px);
+            border-bottom: 1px solid var(--border-line);
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 60px; z-index: 1000;
+        }
+
+        .brand-logo {
+            font-family: 'JetBrains Mono', monospace; font-size: 20px; font-weight: 800; letter-spacing: 2px;
+            text-decoration: none; color: inherit;
+        }
+        .brand-logo span { color: var(--neon-cyan); }
+
+        .nav-back-btn {
+            background: rgba(255,255,255,0.03); border: 1px solid var(--border-line);
+            color: var(--text-white); padding: 8px 18px; border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700;
+            cursor: pointer; transition: all 0.25s ease; text-decoration: none;
+        }
+        .nav-back-btn:hover { border-color: var(--neon-cyan); background: rgba(0, 240, 255, 0.03); }
+
+        .workspace-container {
+            max-width: 1200px; margin: 0 auto; padding: 140px 40px 60px 40px;
+        }
+
+        .page-heading { margin-bottom: 40px; }
+        .page-heading h1 { font-size: 36px; font-weight: 800; tracking: -1px; margin: 0 0 8px 0; }
+        .page-heading p { color: var(--text-slate); font-size: 16px; margin: 0; }
+
+        #loadingIndicator {
+            font-family: 'JetBrains Mono', monospace; font-size: 14px; color: var(--neon-cyan);
+            text-align: center; padding: 60px 0;
+        }
+
+        /* GRID PATTERN HOUSING SAVED RUN LOGS */
+        .sessions-matrix-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 24px;
+        }
+
+        .session-entry-card {
+            background: var(--glass-card); border: 1px solid var(--border-line); border-radius: 16px;
+            padding: 24px; backdrop-filter: blur(20px); cursor: pointer;
+            position: relative; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .session-entry-card:hover {
+            transform: translateY(-4px); border-color: var(--border-line-focus);
+            background: var(--glass-card-hover); box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+        }
+
+        .card-meta-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+        .asset-pill {
+            background: rgba(0, 240, 255, 0.06); color: var(--neon-cyan); font-family: 'JetBrains Mono', monospace;
+            font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 6px; border: 1px solid rgba(0,240,255,0.15);
+        }
+        .timeframe-badge { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-slate); font-weight: 700; }
+
+        .session-display-title { font-size: 18px; font-weight: 700; margin: 0 0 20px 0; color: #fff; line-height: 1.3; }
+
+        .session-metrics-distribution {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
+            border-top: 1px solid var(--border-line); border-bottom: 1px solid var(--border-line);
+            padding: 14px 0; margin-bottom: 16px;
+        }
+        .m-box { display: flex; flex-direction: column; gap: 4px; }
+        .m-lbl { font-size: 10px; font-family: 'JetBrains Mono', monospace; color: var(--text-slate); text-transform: uppercase; }
+        .m-val { font-size: 14px; font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #fff; }
+        
+        .metric-pos { color: var(--neon-emerald) !important; }
+        .metric-neg { color: var(--neon-bear) !important; }
+
+        .card-footer-anchor {
+            font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-slate);
+            font-weight: 700; text-transform: uppercase; transition: color 0.2s ease;
+        }
+        .session-entry-card:hover .card-footer-anchor { color: var(--neon-cyan); }
+
+        .empty-state-message {
+            grid-column: 1 / -1; text-align: center; padding: 80px 20px; background: var(--glass-card);
+            border: 1px dashed var(--border-line); border-radius: 16px;
+        }
+        .empty-state-message h3 { font-size: 20px; font-weight: 700; margin: 0 0 10px 0; }
+        .empty-state-message p { color: var(--text-slate); font-size: 14px; margin: 0; }
+        
+        .cta-btn-primary {
+            background: linear-gradient(90deg, #00F0FF 0%, #0072FF 100%); color: #020408;
+            padding: 12px 24px; border: none; border-radius: 8px; font-weight: 800; font-size: 14px;
+            cursor: pointer; box-shadow: 0 4px 20px rgba(0, 240, 255, 0.25); transition: all 0.2s ease;
+        }
+        .cta-btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 25px rgba(0, 240, 255, 0.45); }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="index.html" class="brand-logo">BACKTESTL<span>ABPRO</span></a>
+        <a href="index.html" class="nav-back-btn">← RETURN HOME</a>
+    </header>
+
+    <main class="workspace-container">
+        <div class="page-heading">
+            <h1>Your Backtesting Ledger</h1>
+            <p>Select any historical replay run below to parse structural win metrics, track historical equity growth, or log execution patterns.</p>
+        </div>
+
+        <div id="loadingIndicator">Querying Firestore Session Streams...</div>
+
+        <div id="sessionsGrid" class="sessions-matrix-grid"></div>
+    </main>
+
+</body>
+</html>

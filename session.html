@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>PureBacktest - Create Session</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0b0e14;
+            color: #d1d4dc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .box {
+            width: 420px;
+            background: #131722;
+            padding: 30px;
+            border-radius: 8px;
+            border: 1px solid #2a2e39;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            position: relative;
+        }
+
+        h2 {
+            margin-top: 0;
+            color: #fff;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            font-size: 12px;
+            color: #787b86;
+            text-transform: uppercase;
+        }
+
+        input, select, button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 5px;
+            background: #1e222d;
+            border: 1px solid #363a45;
+            color: white;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        input:focus, select:focus {
+            border-color: #2962ff;
+            outline: none;
+        }
+
+        .launchBtn {
+            background: #2962ff;
+            border: none;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 25px;
+            transition: background 0.2s;
+        }
+
+        .launchBtn:hover {
+            background: #1e4bd8;
+        }
+
+        .hint {
+            font-size: 11px;
+            color: #5d606b;
+            margin-top: 4px;
+        }
+
+        .topUser {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .profile {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: #22c55e;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+        }
+
+        .logoutBtn {
+            background: #ef4444;
+            border: none;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            width: auto;
+        }
+
+        .userEmail {
+            font-size: 11px;
+            color: #787b86;
+            margin-top: 5px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="box">
+    <div class="topUser">
+        <div id="profileLogo" class="profile">U</div>
+        <button id="logoutBtn" class="logoutBtn">Logout</button>
+    </div>
+
+    <h2>New Replay Session</h2>
+    <div id="userEmail" class="userEmail">Loading user...</div>
+
+    <label>Trading Pair</label>
+    <select id="symbol">
+        <option value="XAUUSD">XAUUSD (Gold)</option>
+        <option value="GBPUSD">GBPUSD</option>
+        <option value="EURUSD">EURUSD</option>
+        <option value="USDJPY">USDJPY</option>
+        <option value="GBPJPY">GBPJPY</option>
+    </select>
+
+    <label>History Beginning (Pre-load Data)</label>
+    <input type="date" id="from" value="2025-01-14">
+    <div class="hint">How far back the chart data starts.</div>
+
+    <label>Replay Start Point</label>
+    <input type="date" id="start" value="2025-02-16">
+    <div class="hint">The specific date where the candles begin to play.</div>
+
+    <label>Backtest End Date</label>
+    <input type="date" id="to" value="2025-08-13">
+
+    <label>Initial Speed</label>
+    <select id="speed">
+        <option value="1000">1x (1 sec/candle)</option>
+        <option value="500" selected>2x</option>
+        <option value="100">10x</option>
+    </select>
+
+    <button class="launchBtn" onclick="go()">Launch Terminal</button>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyAensfI53w49Fd4A7Lz5_K9N1JOxZsW7Kk",
+    authDomain: "backtestlabpro.firebaseapp.com",
+    projectId: "backtestlabpro",
+    storageBucket: "backtestlabpro.firebasestorage.app",
+    messagingSenderId: "560146824734",
+    appId: "1:560146824734:web:5287d0ded3a1024e75780f",
+    measurementId: "G-YY82TZ1ZG7"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+const logoutBtn = document.getElementById("logoutBtn");
+const profileLogo = document.getElementById("profileLogo");
+const userEmail = document.getElementById("userEmail");
+
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        profileLogo.innerText = user.email[0].toUpperCase();
+        userEmail.innerText = user.email;
+        
+        // Ensure UID and Email are cached for the save function in chart.html
+        localStorage.setItem("user_uid", user.uid);
+        localStorage.setItem("user_email", user.email);
+    } else {
+        alert("Please login first");
+        window.location.href = "index.html";
+    }
+});
+
+logoutBtn.addEventListener("click", async () => {
+    await signOut(auth);
+    localStorage.clear();
+    window.location.href = "index.html";
+});
+</script>
+
+<script>
+function go() {
+    const symbol = document.getElementById("symbol").value;
+    const from = document.getElementById("from").value;
+    const to = document.getElementById("to").value;
+    const start = document.getElementById("start").value;
+    const speed = document.getElementById("speed").value;
+
+    // Validation
+    if (new Date(start) < new Date(from)) {
+        alert("Replay Start cannot be earlier than History Beginning!");
+        return;
+    }
+
+    /* IMPORTANT: Save 'start' as 'initial'. 
+       The chart.html looks for localStorage.getItem("initial") to know where to begin the replay.
+    */
+    localStorage.setItem("symbol", symbol);
+    localStorage.setItem("from", from);     // History data begins here
+    localStorage.setItem("initial", start);  // Replay simulation begins here
+    localStorage.setItem("to", to);         // Backtest ends here
+    localStorage.setItem("speed", speed);
+
+    window.location.href = "chart.html";
+}
+</script>
+
+</body>
+</html>

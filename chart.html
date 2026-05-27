@@ -232,14 +232,12 @@
             </div>
         </div>
 
-       <!-- PROFESSIONAL FIBONACCI TOOLSUITE -->
-<div class="tool-group">
+       <div class="tool-group">
 
     <div class="tool-icon" id="primary-fib-icon">🌀</div>
 
     <div class="tool-menu">
 
-        <!-- CORE -->
         <div class="tool-item" onclick="setTool('fib')">
             <span class="item-icon">F</span>
             Fibonacci Retracement
@@ -858,7 +856,8 @@ window.load = function() {
     const finalTo = localStorage.getItem("to") || new Date().toISOString();
     let currentISO = lastReplayTime ? new Date(lastReplayTime * 1000).toISOString() : initialParam;
 
-    const url = `http://127.0.0.1:5000/data?symbol=${symbol}&tf=${tf}&initial=${initialParam}&current=${currentISO}&to=${finalTo}`;
+    /* UPDATED TO POINT DIRECTLY TO YOUR RENDER PRODUCTION BACKEND SERVER PIPELINE */
+    const url = `https://backtestlab-backend-fotx.onrender.com/data?symbol=${symbol}&tf=${tf}&initial=${initialParam}&current=${currentISO}&to=${finalTo}`;
 
     fetch(url)
     .then(r => r.json())

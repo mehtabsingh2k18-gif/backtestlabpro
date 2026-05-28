@@ -857,17 +857,39 @@ window.load = function() {
     const initialParam = localStorage.getItem("initial") || "2023-01-01T00:00:00.000Z";
     const finalTo = localStorage.getItem("to") || new Date().toISOString();
     let currentISO = lastReplayTime ? new Date(lastReplayTime * 1000).toISOString() : initialParam;
-
 const API = "https://huggingface.co/spaces/mehtab13/backtestlab-data/raw/main";
+
+// 1. Parse current time settings to dynamically isolate targeted single-month filename
+const currentDateObj = new Date(currentISO);
+const targetYear     = currentDateObj.getUTCFullYear();
+const targetMonth    = String(currentDateObj.getUTCMonth() + 1).padStart(2, '0');
 
 const url = `${API}/${symbol.toLowerCase()}/${tf.toLowerCase()}/${targetYear}/${targetMonth}.json`;
 console.log(url);
-    fetch(url)
-    .then(r => r.json())
+
+fetch(url)
+    .then(r => {
+        if (!r.ok) throw new Error(`Data chunk file missing for ${targetYear}/${targetMonth}`);
+        return r.json();
+    })
     .then(res => {
-        window.historyData = res.history || [];
+        // --- CHUNK FILTERING FIX ---
+        // Convert timestamp conditions to seconds to match the data's "time" key
+        const startTs   = Math.floor(new Date(initialParam).getTime() / 1000);
+        const currentTs = Math.floor(currentDateObj.getTime() / 1000);
+        const endTs     = Math.floor(new Date(finalTo).getTime() / 1000);
+
+        // Treat raw 'res' directly as the array of candle data
+        const rawArray = Array.isArray(res) ? res : [];
+
+        // Distribute the flat raw array into exactly what your engine expects
+        window.historyData = rawArray.filter(candle => parseInt(candle.time) >= startTs && parseInt(candle.time) <= currentTs);
         historyData = window.historyData;
-        data = res.data || [];
+        
+        // Load subsequent candles up to the boundary limit
+        data = rawArray.filter(candle => parseInt(candle.time) > currentTs && parseInt(candle.time) <= endTs).slice(0, 5000);
+        // ---------------------------
+
         index = 0;
 
         series.setData(historyData);
@@ -927,7 +949,6 @@ window.changeSymbol = function() {
 };
 
 window.goLive = function() { isAutoFollow = true; chart.timeScale().scrollToRealTime(); };
-
 // ========================================
 // FIREBASE SECURITY & STORAGE INFRASTRUCTURE
 // ========================================

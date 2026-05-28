@@ -709,7 +709,7 @@ function generateModalInputsHTML(type, existingOptions = null) {
         const sig = existingOptions ? existingOptions.signalPeriod : 9;
         return `
             <div class="modal-input-row"><span class="modal-label">Fast Period</span><input type="number" id="macdFast" class="modal-input-field" value="${fast}"></div>
-            <div class="modal-input-row"><span class="modal-label">Slow Period</span><input type="number" id="macdSlow" class="modal-input-field" value="${fast}"></div>
+            <div class="modal-input-row"><span class="modal-label">Slow Period</span><input type="number" id="macdSlow" class="modal-input-field" value="${slow}"></div>
             <div class="modal-input-row"><span class="modal-label">Signal Period</span><input type="number" id="macdSignal" class="modal-input-field" value="${sig}"></div>
         `;
     } else if (type === "BB") {
@@ -808,10 +808,21 @@ window.deleteIndicator = function(id) {
 };
 
 window.next = function() {
-    if (index >= data.length) {
-        openSessionModal();
-        return;
-    }
+   if (index >= data.length) {
+
+    loadNextChunk().then(hasMore => {
+
+        if(!hasMore){
+            openSessionModal();
+            return;
+        }
+
+        next();
+
+    });
+
+    return;
+}
 
     const candle = data[index];
     historyData.push(candle);
@@ -847,6 +858,63 @@ window.next = function() {
 };
 
 window.load = function() {
+    async function loadNextChunk() {
+
+    try {
+
+        if(data.length === 0 && historyData.length === 0) {
+            return false;
+        }
+
+        // last candle currently loaded
+        const lastCandle =
+            data[data.length - 1] ||
+            historyData[historyData.length - 1];
+
+        if(!lastCandle) return false;
+
+        const lastDate = new Date(lastCandle.time * 1000);
+
+        // move to NEXT MONTH
+        lastDate.setUTCMonth(lastDate.getUTCMonth() + 1);
+
+        const year = lastDate.getUTCFullYear();
+        const month = String(lastDate.getUTCMonth() + 1).padStart(2, '0');
+
+        const API = "https://huggingface.co/spaces/mehtab13/backtestlab-data/raw/main";
+
+        const url =
+            `${API}/${symbol.toLowerCase()}/${tf.toLowerCase()}/${year}/${month}.json`;
+
+        console.log("LOADING NEXT CHUNK:", url);
+
+        const r = await fetch(url);
+
+        if(!r.ok) {
+            console.log("NO MORE CHUNKS");
+            return false;
+        }
+
+        const res = await r.json();
+
+        if(!Array.isArray(res) || res.length === 0) {
+            return false;
+        }
+
+        // append new candles
+        data = data.concat(res);
+
+        console.log("NEXT CHUNK LOADED:", res.length);
+
+        return true;
+
+    } catch(err) {
+
+        console.error(err);
+
+        return false;
+    }
+}
     if (isFetching) return;
     isFetching = true;
 

@@ -811,7 +811,7 @@ window.next = function() {
 
 if(index >= data.length - 5){
 
-    loadNextChunk();
+    window.loadNextChunk();
 }
 
 if(index >= data.length){
@@ -860,8 +860,7 @@ window.load = function() {
 let chunkLoading = false;
 let loadedMonths = new Set();
 
-async function loadNextChunk() {
-
+window.loadNextChunk = async function() {
     if(chunkLoading) return false;
 
     chunkLoading = true;

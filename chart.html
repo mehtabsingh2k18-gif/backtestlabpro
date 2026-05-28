@@ -858,8 +858,7 @@ window.load = function() {
     const finalTo = localStorage.getItem("to") || new Date().toISOString();
     let currentISO = lastReplayTime ? new Date(lastReplayTime * 1000).toISOString() : initialParam;
 
-    const url = `http://127.0.0.1:5000/data?symbol=${symbol}&tf=${tf}&initial=${initialParam}&current=${currentISO}&to=${finalTo}`;
-
+const url = `https://mehtab13-backtestlab-data.hf.space/data?symbol=${symbol}&tf=${tf}&initial=${initialParam}&current=${currentISO}&to=${finalTo}`;
     fetch(url)
     .then(r => r.json())
     .then(res => {

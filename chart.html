@@ -1,996 +1,710 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>PureBacktest Pro - Professional Edition</title>
-    <script src="https://unpkg.com/lightweight-charts@4.2.0/dist/lightweight-charts.standalone.production.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BACKTESTLABPRO| Institutional Grade Strategy Replay Platform</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAensfI53w49Fd4A7Lz5_K9N1JOxZsW7Kk",
+            authDomain: "backtestlabpro.firebaseapp.com",
+            projectId: "backtestlabpro",
+            storageBucket: "backtestlabpro.firebasestorage.app",
+            messagingSenderId: "560146824734",
+            appId: "1:560146824734:web:5287d0ded3a1024e75780f"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        const dynamicCtas = document.querySelectorAll('.dynamic-route-cta');
+        const authNavDesk = document.getElementById('authNavDesk');
+
+        // Monitor Auth state changes to dynamically rebuild navigation control buttons
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // User is authenticated -> Render session management navigation commands
+                authNavDesk.innerHTML = `
+                    <a href="session.html" class="session-nav-link" style="color: var(--neon-emerald); font-weight:700;">+ New Session</a>
+                    <a href="my-sessions.html">My Saved Sessions</a>
+                    <button id="logoutBtn" class="nav-gate-btn" style="border-color: var(--neon-bear); color: #fff;">SIGN OUT</button>
+                `;
+
+                // Set click action for logout execution
+                document.getElementById("logoutBtn").onclick = () => {
+                    signOut(auth).then(() => window.location.reload());
+                };
+
+                // Re-route hero panel call to actions directly to the charting workspace
+                dynamicCtas.forEach(cta => {
+                    cta.innerText = "Launch Command Center";
+                    cta.onclick = (e) => {
+                        e.preventDefault();
+                        window.location.href = "session.html";
+                    };
+                });
+            } else {
+                // User is logged out -> Provide classic portal login triggers
+                authNavDesk.innerHTML = `
+                    <a href="#features">Core Features</a>
+                    <a href="#process">The Strategy Flow</a>
+                    <a href="#pricing">Why Free?</a>
+                    <a href="login.html" class="nav-gate-btn" id="authStatusIndicator">PORTAL LOGIN</a>
+                `;
+
+                dynamicCtas.forEach(cta => {
+                    cta.innerText = "Start Backtesting Free";
+                    cta.onclick = (e) => {
+                        e.preventDefault();
+                        window.location.href = "login.html";
+                    };
+                });
+            }
+        });
+    </script>
 
     <style>
-        :root { --bg: #0b0e14; --panel: #131722; --text: #d1d4dc; --accent: #2962ff; --up: #089981; --down: #f23645; --border: #2a2e39; }
-        body { margin: 0; background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Trebuchet MS", Roboto, Ubuntu, sans-serif; overflow: hidden; display: flex; flex-direction: column; height: 100vh; }
-        
-        /* Premium Brand Preloader Overlay CSS */
-        .app-preloader { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #0b0e14; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 999999; transition: opacity 0.4s ease, visibility 0.4s ease; }
-        .app-preloader.fade-out { opacity: 0; visibility: hidden; pointer-events: none; }
-        
-        /* CSS Reconstructed Vector Emblem representation of your brand logo */
-        .loader-logo-container { display: flex; flex-direction: column; align-items: center; gap: 20px; animation: brandPulse 1.2s ease-in-out infinite; }
-        .logo-svg-wrapper { width: 120px; height: 120px; }
-        .loader-text { color: #ffffff; font-size: 18px; font-weight: 600; letter-spacing: 0.5px; font-family: sans-serif; }
-        .loader-text span { color: var(--accent); }
-        .loader-subtext { color: #787b86; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; margin-top: -10px; }
-
-        @keyframes brandPulse {
-            0% { transform: scale(0.98); opacity: 0.4; filter: drop-shadow(0 0 0px rgba(41, 98, 255, 0)); }
-            50% { transform: scale(1.02); opacity: 1.0; filter: drop-shadow(0 0 15px rgba(41, 98, 255, 0.3)); }
-            100% { transform: scale(0.98); opacity: 0.4; filter: drop-shadow(0 0 0px rgba(41, 98, 255, 0)); }
+        :root {
+            --bg-pure: #020408;
+            --bg-deep-gradient: radial-gradient(circle at 50% -20%, #0a1224 0%, #020408 70%);
+            --glass-card: rgba(6, 11, 22, 0.45);
+            --glass-card-hover: rgba(10, 18, 36, 0.7);
+            --neon-cyan: #00F0FF;
+            --neon-cyan-glow: rgba(0, 240, 255, 0.25);
+            --neon-emerald: #00FF94;
+            --neon-emerald-glow: rgba(0, 255, 148, 0.2);
+            --neon-bear: #FF3366;
+            --text-white: #FFFFFF;
+            --text-silver: #CBD5E1;
+            --text-slate: #64748B;
+            --border-line: rgba(255, 255, 255, 0.04);
+            --border-line-focus: rgba(0, 240, 255, 0.3);
         }
 
-        .topbar { height: 48px; background: var(--panel); display: flex; align-items: center; padding: 0 12px; border-bottom: 1px solid var(--border); gap: 10px; z-index: 30; }
-        .group { display: flex; background: #1e222d; border-radius: 4px; padding: 2px; }
-        button, select { background: transparent; border: none; color: var(--text); padding: 6px 12px; cursor: pointer; font-size: 13px; }
-        button:hover { background: #2a2e39; border-radius: 3px; }
-        
-        .main-container { display: flex; flex: 1; width: 100vw; overflow: hidden; position: relative; }
-        
-        /* FIXED OVERFLOW CLIPPING FOR SIDEBAR */
-        .left-sidebar { width: 58px; background: var(--panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; padding-top: 10px; gap: 14px; overflow-y: visible; overflow-x: visible; z-index: 500; position: relative; }
-        
-        .tool-group { position: relative; width: 100%; display: flex; justify-content: center; }
-        
-        .tool-icon { color: #787b86; cursor: pointer; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; border-radius: 6px; font-size: 18px; transition: 0.15s; user-select: none; background: transparent; }
-        .tool-icon:hover { background: #2a2e39; color: #fff; }
-        .tool-icon.active { background: var(--accent); color: #fff; }
+        * { box-sizing: border-box; scroll-behavior: smooth; }
 
-        /* Categorized Flyout Menus - Adjusted left to match alignment and ensured high z-index stacking */
-        .tool-menu { position: absolute; left: 48px; top: 0; background: #1c2030; border: 1px solid #363a45; border-radius: 8px; min-width: 200px; display: none; flex-direction: column; overflow: hidden; box-shadow: 5px 10px 30px rgba(0,0,0,0.55); z-index: 99999; }
-        .tool-group:hover .tool-menu { display: flex; }
-        
-        .tool-item { padding: 10px 14px; font-size: 13px; color: #d1d4dc; cursor: pointer; transition: 0.12s; white-space: nowrap; display: flex; align-items: center; gap: 10px; }
-        .tool-item:hover { background: var(--accent); color: white; }
-        .tool-item .item-icon { width: 18px; display: inline-block; text-align: center; }
-
-        #chart { flex: 1; height: calc(100vh - 50px); position: relative; background: var(--bg); cursor: crosshair; }
-        .right-sidebar { width: 340px; background: var(--panel); border-left: 1px solid var(--border); display: flex; flex-direction: column; z-index: 25; overflow-y: auto; }
-        .sidebar-header { padding: 12px; font-size: 11px; font-weight: bold; color: #787b86; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid var(--border); background: #1a1e2a; display: flex; justify-content: space-between; }
-        
-        .risk-box { padding: 15px; border-bottom: 1px solid var(--border); background: #131722; }
-        .input-row { display: flex; gap: 10px; margin-bottom: 10px; }
-        .input-group { flex: 1; display: flex; flex-direction: column; }
-        .input-group label { font-size: 10px; color: #787b86; margin-bottom: 4px; }
-        .input-group input { background: #1e222d; border: 1px solid #363a45; color: white; padding: 6px; border-radius: 3px; font-size: 12px; outline: none; }
-        .input-group input:focus { border-color: var(--accent); }
-        .lot-display { background: rgba(41, 98, 255, 0.1); border: 1px dashed var(--accent); padding: 10px; border-radius: 4px; text-align: center; margin-top: 5px; margin-bottom: 15px; }
-        .lot-val { font-size: 18px; font-weight: bold; color: var(--accent); }
-
-        #tradeDrawer { display: none; background: #1e222d; padding: 15px; border-top: 1px solid var(--accent); margin-top: 10px; border-radius: 4px; }
-        .confirm-btn { width: 100%; padding: 10px; background: var(--accent); color: white; border-radius: 4px; font-weight: bold; margin-top: 10px; border: none; cursor: pointer; }
-
-        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); border-bottom: 1px solid var(--border); }
-        .stat-card { background: var(--panel); padding: 12px; display: flex; flex-direction: column; }
-        .stat-label { font-size: 10px; color: #787b86; margin-bottom: 3px; }
-        .stat-value { font-size: 16px; font-weight: bold; font-family: monospace; }
-
-        #journal { flex: 1; overflow-y: auto; background: var(--bg); }
-        .journal-item { padding: 10px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; font-size: 12px; }
-        .tag { padding: 2px 4px; border-radius: 3px; font-size: 10px; font-weight: bold; margin-right: 5px; }
-        .tag-buy { background: var(--up); color: white; }
-        .tag-sell { background: var(--down); color: white; }
-
-        .tv-overlay { position: absolute; z-index: 10; pointer-events: none; }
-        .symbol-info { top: 10px; left: 10px; display: flex; flex-direction: column; }
-        .symbol-title { font-size: 16px; font-weight: bold; color: #fff; }
-        .symbol-values { font-size: 12px; font-family: monospace; margin-top: 4px; }
-        .val-label { color: #787b86; margin-right: 2px; }
-        
-        .execution-btns-sidebar { display: flex; gap: 10px; margin-top: 10px; }
-        .exec-btn { flex: 1; padding: 10px; display: flex; flex-direction: column; align-items: center; border-radius: 4px; cursor: pointer; border: 1px solid transparent; transition: opacity 0.2s; }
-        .exec-btn:active { opacity: 0.7; }
-        .sell { background: rgba(242, 54, 69, 0.1); border-color: var(--down); color: var(--down); }
-        .buy { background: rgba(8, 153, 129, 0.1); border-color: var(--up); color: var(--up); }
-        .btn-price { font-weight: bold; font-size: 14px; }
-        .btn-label { font-size: 10px; font-weight: bold; margin-top: 2px; }
-
-        .time-box { position: absolute; bottom: 30px; right: 20px; background: #131722; padding: 5px 10px; border: 1px solid #363a45; border-radius: 4px; font-family: monospace; z-index: 10; pointer-events: none; }
-        #status { margin-left: auto; font-size: 11px; color: #787b86; font-weight: bold; padding-right: 15px;}
-
-        .indicators-legend-overlay { position: absolute; top: 60px; left: 10px; display: flex; flex-direction: column; gap: 6px; z-index: 20; pointer-events: auto; }
-        .legend-item { display: inline-flex; align-items: center; background: rgba(19, 23, 34, 0.85); border: 1px solid var(--border); border-radius: 4px; padding: 4px 8px; font-size: 12px; gap: 6px; color: #d1d4dc; }
-        .legend-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
-        .legend-title { font-weight: 500; cursor: pointer; }
-        .legend-title:hover { color: #fff; text-decoration: underline; }
-        .legend-remove-btn { color: #787b86; cursor: pointer; font-weight: bold; margin-left: 4px; font-size: 11px; display: flex; align-items: center; justify-content: center; width: 14px; height: 14px; border-radius: 2px; }
-        .legend-remove-btn:hover { background: rgba(242, 54, 69, 0.2); color: var(--down); }
-
-        .premium-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); z-index: 9999; align-items: center; justify-content: center; }
-        .premium-modal-content { background: #1c2030; border: 1px solid #363a45; border-radius: 6px; width: 350px; padding: 0; box-shadow: 0 16px 40px rgba(0,0,0,0.5); overflow: hidden; animation: modalFadeIn 0.15s ease-out; }
-        .premium-modal-header { background: #131722; padding: 14px 18px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-        .premium-modal-title { font-size: 14px; font-weight: 600; color: #ffffff; letter-spacing: 0.3px; }
-        .premium-modal-close { color: #787b86; cursor: pointer; font-size: 16px; font-weight: bold; }
-        .premium-modal-close:hover { color: #ffffff; }
-        .premium-modal-body { padding: 18px; display: flex; flex-direction: column; gap: 14px; }
-        .modal-input-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
-        .modal-label { font-size: 13px; color: #b2b5be; }
-        .modal-input-field { width: 80px; background: #2a2e39; border: 1px solid #434651; color: white; padding: 6px 8px; border-radius: 4px; font-size: 13px; text-align: left; outline: none; }
-        .modal-input-field:focus { border-color: var(--accent); }
-        .modal-color-picker { width: 32px; height: 32px; padding: 0; border: 1px solid #434651; background: transparent; border-radius: 4px; cursor: pointer; outline: none; vertical-align: middle; }
-        .premium-modal-footer { background: #131722; padding: 12px 18px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 8px; }
-        .premium-btn { padding: 8px 16px; font-size: 13px; border-radius: 4px; font-weight: 500; border: none; cursor: pointer; }
-        .premium-btn-secondary { background: transparent; color: #b2b5be; }
-        .premium-btn-secondary:hover { background: #2a2e39; color: #fff; }
-        .premium-btn-primary { background: var(--accent); color: white; }
-        .premium-btn-primary:hover { background: #1e53e5; }
-
-        @keyframes modalFadeIn {
-            from { opacity: 0; transform: scale(0.96); }
-            to { opacity: 1; transform: scale(1); }
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-pure);
+            background-image: var(--bg-deep-gradient);
+            color: var(--text-white);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* --- DRAWING LAYER STYLING OVERLAYS --- */
-        #drawingCanvasOverlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            z-index: 15;
-            pointer-events: none;
+        /* STRUCTURAL SCROLLBAR LAYOUT MODIFIER */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-pure); }
+        ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--neon-cyan); }
+
+        /* APPLICATION HEADER ELEMENT NAVIGATION DESK */
+        header {
+            position: fixed;
+            top: 0; left: 0; right: 0; height: 80px;
+            background: rgba(2, 4, 8, 0.7);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-bottom: 1px solid var(--border-line);
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 60px; z-index: 1000;
         }
+
+        .brand-logo {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 20px; font-weight: 800; letter-spacing: 2px;
+            cursor: pointer; text-decoration: none; color: inherit;
+        }
+        .brand-logo span { color: var(--neon-cyan); text-shadow: 0 0 12px var(--neon-cyan-glow); }
+
+        nav { display: flex; align-items: center; gap: 35px; }
+        nav a {
+            color: var(--text-silver); text-decoration: none; font-size: 14px;
+            font-weight: 500; transition: color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        nav a:hover { color: var(--neon-cyan); }
+
+        .nav-gate-btn {
+            background: transparent; border: 1px solid var(--border-line);
+            color: var(--text-white); padding: 8px 18px; border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700;
+            cursor: pointer; transition: all 0.25s ease; text-decoration: none;
+        }
+        .nav-gate-btn:hover { border-color: var(--neon-cyan); background: rgba(0, 240, 255, 0.03); }
+
+        /* UNIVERSAL MARK-UP ELEMENTS */
+        .section-container { max-width: 1440px; margin: 0 auto; padding: 120px 60px; position: relative; }
+        
+        .badge-pill {
+            background: rgba(0, 240, 255, 0.05); border: 1px solid rgba(0, 240, 255, 0.15);
+            color: var(--neon-cyan); font-family: 'JetBrains Mono', monospace;
+            font-size: 11px; font-weight: 700; padding: 6px 14px; border-radius: 100px;
+            display: inline-block; margin-bottom: 25px; letter-spacing: 1px;
+            text-transform: uppercase; text-shadow: 0 0 10px rgba(0, 240, 255, 0.2);
+        }
+
+        .section-heading-centered { text-align: center; max-width: 800px; margin: 0 auto 80px auto; }
+        .section-heading-centered h2 { font-size: 44px; font-weight: 800; letter-spacing: -1px; margin: 0 0 15px 0; }
+        .section-heading-centered p { color: var(--text-slate); font-size: 17px; line-height: 1.6; margin: 0; }
+
+        /* PRIMARY ACTION TRIGGER BUTTON TYPES */
+        .cta-btn-primary {
+            background: linear-gradient(90deg, #00F0FF 0%, #0072FF 100%); color: #020408;
+            padding: 18px 36px; border: none; border-radius: 10px; font-weight: 800; font-size: 16px;
+            cursor: pointer; display: inline-flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 30px rgba(0, 240, 255, 0.25); text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .cta-btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 35px rgba(0, 240, 255, 0.45); }
+
+        .cta-btn-secondary {
+            background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-line);
+            color: var(--text-white); padding: 18px 36px; border-radius: 10px; font-weight: 700; font-size: 16px;
+            cursor: pointer; display: inline-flex; align-items: center; justify-content: center;
+            text-decoration: none; transition: all 0.25s ease;
+        }
+        .cta-btn-secondary:hover { background: rgba(255, 255, 255, 0.07); border-color: rgba(255, 255, 255, 0.2); }
+
+        /* MODULE 1: THE CORE HERO ARENA STAGE */
+        .hero-stage-layout {
+            padding-top: 180px; padding-bottom: 140px;
+            display: grid; grid-template-columns: 1.1fr 1fr; gap: 40px; align-items: center;
+        }
+
+        .hero-content h1 { font-size: 62px; font-weight: 800; line-height: 1.05; letter-spacing: -2px; margin: 0 0 20px 0; }
+        .hero-content h1 span { background: linear-gradient(90deg, #FFFFFF 30%, var(--neon-cyan) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero-content p { color: var(--text-silver); font-size: 18px; line-height: 1.6; margin: 0 0 35px 0; max-width: 620px; }
+
+        .trust-array-line {
+            display: flex; align-items: center; gap: 24px; margin-top: 40px;
+            padding-top: 30px; border-top: 1px solid var(--border-line);
+        }
+        .trust-array-item {
+            display: flex; align-items: center; gap: 8px; font-family: 'JetBrains Mono', monospace;
+            font-size: 12px; color: var(--text-slate); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .trust-array-item svg { color: var(--neon-cyan); filter: drop-shadow(0 0 5px var(--neon-cyan-glow)); }
+
+        /* RUNNING FLOATING RUN CONFIG ITEMS */
+        .hero-visual-matrix { position: relative; display: flex; justify-content: center; align-items: center; }
+        
+        .glow-back-element {
+            position: absolute; width: 450px; height: 450px; border-radius: 50%;
+            background: radial-gradient(circle, rgba(0,240,255,0.06) 0%, transparent 65%);
+            filter: blur(40px); z-index: 1; pointer-events: none;
+        }
+
+        .dashboard-canvas-mock {
+            background: var(--glass-card); border: 1px solid var(--border-line);
+            border-radius: 20px; width: 100%; padding: 24px; backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px); z-index: 2; box-shadow: 0 40px 80px rgba(0,0,0,0.7);
+            position: relative; display: flex; flex-direction: column; gap: 20px;
+        }
+
+        .canvas-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-line); padding-bottom: 15px; }
+        .canvas-title { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--neon-cyan); font-weight: 700; display: flex; align-items: center; gap: 8px; }
+        .canvas-pulse { width: 6px; height: 6px; background-color: var(--neon-emerald); border-radius: 50%; box-shadow: 0 0 10px var(--neon-emerald); }
+
+        .mock-chart-window { width: 100%; height: 280px; background: rgba(2,4,8,0.5); border-radius: 12px; border: 1px solid rgba(255,255,255,0.02); overflow: hidden; position: relative; }
+        
+        /* FLOATING COMPONENT LAYERS BLOCK */
+        .floating-stat-tag {
+            position: absolute; background: rgba(8, 15, 30, 0.85); border: 1px solid var(--border-line-focus);
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-radius: 10px; padding: 12px 18px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.5); z-index: 10; display: flex; flex-direction: column; gap: 4px;
+            transition: transform 0.3s ease;
+        }
+        .floating-stat-tag:hover { transform: translateY(-4px) scale(1.02); border-color: var(--neon-cyan); }
+        
+        .ft-1 { top: -20px; left: -30px; }
+        .ft-2 { bottom: 40px; right: -25px; border-color: rgba(0, 255, 148, 0.3); }
+        .ft-3 { bottom: -25px; left: 40px; }
+
+        .ft-lbl { font-size: 10px; font-family: 'JetBrains Mono', monospace; color: var(--text-slate); text-transform: uppercase; letter-spacing: 1px; }
+        .ft-val { font-size: 18px; font-family: 'JetBrains Mono', monospace; font-weight: 700; }
+
+        /* MODULE 2: VALUE PROP POSITIONING MATRIX */
+        .value-props-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+        
+        .prop-card-wrapper {
+            background: var(--glass-card); border: 1px solid var(--border-line); border-radius: 16px;
+            padding: 35px; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            position: relative; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .prop-card-wrapper::before {
+            content: ''; position: absolute; inset: 0; border-radius: 16px; padding: 1px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.04), transparent);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none;
+        }
+        .prop-card-wrapper:hover {
+            transform: translateY(-5px); border-color: rgba(0, 240, 255, 0.2);
+            background: var(--glass-card-hover); box-shadow: 0 20px 40px rgba(0,240,255,0.02);
+        }
+
+        .prop-card-icon {
+            width: 42px; height: 42px; border-radius: 8px; background: rgba(255,255,255,0.02);
+            border: 1px solid var(--border-line); color: var(--neon-cyan); display: flex;
+            justify-content: center; align-items: center; margin-bottom: 25px;
+            filter: drop-shadow(0 0 8px rgba(0, 240, 255, 0.1));
+        }
+
+        .prop-card-wrapper h3 { font-size: 20px; font-weight: 700; margin: 0 0 10px 0; letter-spacing: -0.3px; }
+        .prop-card-wrapper p { color: var(--text-silver); font-size: 14px; line-height: 1.5; margin: 0; }
+
+        /* MODULE 3: PROOF SIGNALS AND COMMUNITY METRICS */
+        .social-proof-wrapper {
+            background: rgba(4, 8, 16, 0.4); border-top: 1px solid var(--border-line); border-bottom: 1px solid var(--border-line);
+            padding: 80px 0; margin: 40px 0;
+        }
+
+        .proof-metrics-strip {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px; text-align: center; margin-bottom: 8px;
+        }
+        .metric-strip-card h4 { font-family: 'JetBrains Mono', monospace; font-size: 42px; font-weight: 700; color: var(--text-white); margin: 0 0 8px 0; letter-spacing: -1px; }
+        .metric-strip-card h4 span { color: var(--neon-cyan); }
+        .metric-strip-card p { color: var(--text-slate); font-size: 12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 1.5px; margin: 0; }
+
+        .quotes-editorial-layout {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 80px;
+        }
+        .quote-editorial-card {
+            background: var(--glass-card); border: 1px solid var(--border-line); border-radius: 12px; padding: 30px;
+            font-style: italic; color: var(--text-silver); line-height: 1.6; font-size: 15px; position: relative;
+        }
+        .quote-editorial-card::after {
+            content: "”"; position: absolute; top: 15px; right: 25px; font-size: 60px; color: rgba(255,255,255,0.03);
+            font-family: serif; line-height: 1;
+        }
+        .quote-author { font-style: normal; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--neon-cyan); text-transform: uppercase; letter-spacing: 1px; margin-top: 20px; display: block; }
+
+        /* MODULE 4: ARCHITECTURAL STEP FLOW */
+        .process-flow-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; position: relative; }
+        .process-flow-row::before {
+            content: ''; position: absolute; top: 55px; left: 10%; right: 10%; height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border-line) 20%, var(--border-line) 80%, transparent);
+            z-index: 1;
+        }
+        .process-step-node { display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; z-index: 2; }
+        
+        .step-circle-badge {
+            width: 50px; height: 50px; border-radius: 50%; background: #060b16; border: 2px solid var(--border-line);
+            display: flex; justify-content: center; align-items: center; font-family: 'JetBrains Mono', monospace;
+            font-size: 16px; font-weight: 700; color: var(--neon-cyan); margin-bottom: 25px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.8); transition: border-color 0.25s ease;
+        }
+        .process-step-node:hover .step-circle-badge { border-color: var(--neon-cyan); box-shadow: 0 0 15px rgba(0, 240, 255, 0.15); }
+
+        .process-step-node h3 { font-size: 18px; font-weight: 700; margin: 0 0 10px 0; }
+        .process-step-node p { color: var(--text-slate); font-size: 14px; line-height: 1.5; margin: 0; max-width: 280px; }
+
+        .process-footer-note { text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--text-slate); margin-top: 60px; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* MODULE 5: COMPETITIVE COMPLIANCE */
+        .matrix-split-container { display: grid; grid-template-columns: 1fr 1.2fr; gap: 60px; align-items: start; }
+        
+        .matrix-feature-bullet-list { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 35px; }
+        .feature-bullet-item { display: flex; align-items: center; gap: 12px; font-size: 15px; color: var(--text-silver); }
+        .feature-bullet-item svg { color: var(--neon-emerald); flex-shrink: 0; }
+
+        .comparison-table-wrapper {
+            background: var(--glass-card); border: 1px solid var(--border-line); border-radius: 16px;
+            overflow: hidden; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+        }
+        .comp-grid-row { display: grid; grid-template-columns: 1.5fr 1fr 1fr; padding: 18px 24px; border-bottom: 1px solid var(--border-line); align-items: center; }
+        .comp-grid-row.hdr-row { background: rgba(255,255,255,0.01); font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700; color: var(--text-slate); text-transform: uppercase; letter-spacing: 1px; }
+        .comp-grid-row:last-child { border-bottom: none; }
+        
+        .comp-cell-feature { font-size: 14px; font-weight: 600; }
+        .comp-cell-platform { font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 700; color: var(--neon-emerald); text-shadow: 0 0 10px rgba(0, 255, 148, 0.1); }
+        .comp-cell-competitor { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--text-slate); }
+
+        /* MODULE 6: FINAL CTA TERMINATION CLOSURE */
+        .termination-gradient-panel {
+            background: linear-gradient(180deg, rgba(6, 12, 24, 0.8) 0%, rgba(2, 4, 8, 1) 100%);
+            border: 1px solid var(--border-line-focus); border-radius: 24px; padding: 80px 40px;
+            text-align: center; position: relative; overflow: hidden;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.8);
+        }
+        .termination-gradient-panel::before {
+            content: ''; position: absolute; top: 0; left: 25%; right: 25%; height: 1px;
+            background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
+        }
+
+        .termination-gradient-panel h2 { font-size: 48px; font-weight: 800; letter-spacing: -1.5px; margin: 0 0 15px 0; }
+        .termination-gradient-panel p { color: var(--text-silver); font-size: 18px; max-width: 650px; margin: 0 auto 40px auto; line-height: 1.6; }
+
+        /* LIVE TICKER ANIMATED FOOTER STRIP */
+        .ticker-tape-container {
+            position: absolute; bottom: 0; left: 0; right: 0; height: 35px;
+            background: rgba(2,4,8,0.9); border-top: 1px solid var(--border-line);
+            display: flex; align-items: center; overflow: hidden; pointer-events: none;
+        }
+        .ticker-infinite-track {
+            display: flex; gap: 50px; padding-left: 50px;
+            animation: tapeShift 25s linear infinite; white-space: nowrap;
+        }
+        .ticker-node { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
+        .tick-bull { color: var(--neon-emerald); }
+        .tick-bear { color: var(--neon-bear); }
+
+        @keyframes tapeShift {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        footer { border-top: 1px solid var(--border-line); background: #010204; padding: 40px 60px; text-align: center; }
+        .footer-brand { font-family: 'JetBrains Mono', monospace; font-size: 14px; font-weight: 700; color: var(--text-slate); margin-bottom: 12px; }
+        .footer-brand span { color: var(--neon-cyan); }
+        .footer-disclaimer { max-width: 900px; margin: 0 auto; color: #334155; font-size: 11px; line-height: 1.6; text-align: center; }
     </style>
 </head>
 <body>
 
-<div id="appPreloader" class="app-preloader">
-    <div class="loader-logo-container">
-        <svg class="logo-svg-wrapper" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M38 25H62M43 25V42L22 73C20 76 22 80 26 80H74C78 80 80 76 78 73L57 42V25" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-            <rect x="34" y="56" width="3" height="12" fill="#2962ff"/>
-            <path d="M35.5 52V72" stroke="#2962ff" stroke-width="1.5" stroke-linecap="round"/>
+    <header>
+        <a href="index.html" class="brand-logo">BACKTES<span>TLABPRO</span></a>
+        <nav id="authNavDesk">
+            <a href="#features">Core Features</a>
+            <a href="#process">The Strategy Flow</a>
+            <a href="#pricing">Why Free?</a>
+            <a href="login.html" class="nav-gate-btn">PORTAL LOGIN</a>
+        </nav>
+    </header>
+
+    <section class="section-container hero-stage-layout">
+        <div class="hero-content">
+            <div class="badge-pill">Institutional Access Matrix</div>
+            <h1>Backtest Any Trading Strategy — <span>Completely Free</span></h1>
+            <p>Unlimited strategy testing, AI-powered analytics, mentorship, and 20 years of historical market data — built for traders who want real results without paying thousands.</p>
             
-            <rect x="44" y="48" width="3" height="14" fill="#2962ff"/>
-            <path d="M45.5 42V66" stroke="#2962ff" stroke-width="1.5" stroke-linecap="round"/>
-            
-            <rect x="54" y="42" width="3" height="16" fill="#089981"/>
-            <path d="M55.5 36V62" stroke="#089981" stroke-width="1.5" stroke-linecap="round"/>
-            
-            <rect x="64" y="34" width="3" height="14" fill="#089981"/>
-            <path d="M65.5 28V52" stroke="#089981" stroke-width="1.5" stroke-linecap="round"/>
-            <circle cx="50" cy="72" r="10" fill="#0b0e14" stroke="#089981" stroke-width="2.5"/>
-            <polygon points="48,68 55,72 48,76" fill="#089981"/>
-        </svg>
-        <div class="loader-text">BacktestLab <span>Pro</span></div>
-        <div class="loader-subtext">Test · Replay · Trade Better</div>
-    </div>
-</div>
-
-<div class="topbar">
-    <div class="group">
-        <select id="symbolSelect" onchange="changeSymbol()">
-            <option value="XAUUSD">GOLD (XAUUSD)</option>
-            <option value="EURUSD">EURUSD</option>
-            <option value="GBPUSD">GBPUSD</option>
-        </select>
-    </div>
-
-    <div class="group">
-        <button onclick="play()">PLAY</button>
-        <button onclick="pause()">PAUSE</button>
-        <button onclick="next()">STEP</button>
-    </div>
-    
-    <div class="group">
-        <select id="tf" onchange="changeTF()">
-            <option value="m1">1m</option>
-            <option value="m5">5m</option>
-            <option value="m15">15m</option>
-            <option value="h1">1h</option>
-            <option value="h4" selected>4h</option>
-            <option value="d1">1d</option>
-        </select>
-    </div>
-    
-    <div class="group">
-        <select id="speed" onchange="changeSpeed()">
-            <option value="1000">1x</option>
-            <option value="500" selected>2x</option>
-            <option value="100">10x</option>
-            <option value="30">Max</option>
-        </select>
-    </div>
-
-    <div class="group">
-        <select id="indicatorSelect" onchange="openAddIndicatorModal()">
-            <option value="" disabled selected>+ Indicators</option>
-            <option value="SMA">SMA (Simple Moving Avg)</option>
-            <option value="EMA">EMA (Exponential Moving Avg)</option>
-            <option value="RSI">RSI (Relative Strength Index)</option>
-            <option value="MACD">MACD (Convergence/Divergence)</option>
-            <option value="BB">BB (Bollinger Bands)</option>
-            <option value="ATR">ATR (Average True Range)</option>
-        </select>
-    </div>
-
-    <button onclick="goLive()" style="color: var(--accent)">GO LIVE</button>
-    <div id="status">READY</div>
-</div>
-
-<div class="main-container">
-    <div class="left-sidebar">
-        <div class="tool-group">
-            <div class="tool-icon active" id="tool-cursor" onclick="setTool('cursor')">↖</div>
-        </div>
-        
-        <div class="tool-group">
-            <div class="tool-icon" id="primary-lines-icon">／</div>
-            <div class="tool-menu">
-                <div class="tool-item" onclick="setTool('trend')"><span class="item-icon">／</span> Trend Line</div>
-                <div class="tool-item" onclick="setTool('ray')"><span class="item-icon">⟍</span> Ray Line</div>
-                <div class="tool-item" onclick="setTool('extend')"><span class="item-icon">⟋</span> Extended Line</div>
-                <div class="tool-item" onclick="setTool('hline')"><span class="item-icon">H</span> Horizontal Line</div>
-                <div class="tool-item" onclick="setTool('vline')"><span class="item-icon">V</span> Vertical Line</div>
-                <div class="tool-item" onclick="setTool('arrow')"><span class="item-icon">➜</span> Arrow Line</div>
-                <div class="tool-item" onclick="setTool('channel')"><span class="item-icon">≋</span> Parallel Channel</div>
+            <div style="display: flex; gap: 16px; align-items: center;">
+                <button class="cta-btn-primary dynamic-route-cta">Start Backtesting Free</button>
+                <a href="#features" class="cta-btn-secondary">See Performance Analytics</a>
             </div>
-        </div>
 
-        <div class="tool-group">
-            <div class="tool-icon" id="primary-fib-icon">🌀</div>
-            <div class="tool-menu">
-                <div class="tool-item" onclick="setTool('fib')"><span class="item-icon">F</span> Fibonacci Retracement</div>
-                <div class="tool-item" onclick="setTool('fibtrend')"><span class="item-icon">↗</span> Fib Trend Extension</div>
-                <div class="tool-item" onclick="setTool('fibext')"><span class="item-icon">⇱</span> Fibonacci Extension</div>
-                <div class="tool-item" onclick="setTool('fibprojection')"><span class="item-icon">⌲</span> Fibonacci Projection</div>
-                <div class="tool-item" onclick="setTool('fibchannel')"><span class="item-icon">≋</span> Fibonacci Channel</div>
-                <div class="tool-item" onclick="setTool('fibwedge')"><span class="item-icon">⋀</span> Fibonacci Wedge</div>
-                <div class="tool-item" onclick="setTool('fibspeed')"><span class="item-icon">⚡</span> Fibonacci Speed Resistance</div>
-                <div class="tool-item" onclick="setTool('fibtimezone')"><span class="item-icon">⏱</span> Fibonacci Time Zones</div>
-                <div class="tool-item" onclick="setTool('fibspiral')"><span class="item-icon">🌀</span> Fibonacci Spiral</div>
-                <div class="tool-item" onclick="setTool('fibarc')"><span class="item-icon">◜</span> Fibonacci Arcs</div>
-                <div class="tool-item" onclick="setTool('fibfan')"><span class="item-icon">╱</span> Fibonacci Fan</div>
-            </div>
-        </div>
-
-        <div class="tool-group">
-            <div class="tool-icon" id="primary-shapes-icon">▭</div>
-            <div class="tool-menu">
-                <div class="tool-item" onclick="setTool('rect')"><span class="item-icon">▭</span> Rectangle</div>
-                <div class="tool-item" onclick="setTool('circle')"><span class="item-icon">◯</span> Circle</div>
-                <div class="tool-item" onclick="setTool('triangle')"><span class="item-icon">△</span> Triangle</div>
-            </div>
-        </div>
-
-        <div class="tool-group">
-            <div class="tool-icon" id="primary-text-icon">T</div>
-            <div class="tool-menu">
-                <div class="tool-item" onclick="setTool('text')"><span class="item-icon">T</span> Text Annotation</div>
-                <div class="tool-item" onclick="setTool('label')"><span class="item-icon">🏷</span> Pricing Label</div>
-            </div>
-        </div>
-
-        <div class="tool-group">
-            <div class="tool-icon" id="primary-brush-icon">✎</div>
-            <div class="tool-menu">
-                <div class="tool-item" onclick="setTool('brush')"><span class="item-icon">✎</span> Standard Brush</div>
-                <div class="tool-item" onclick="setTool('highlight')"><span class="item-icon">🖍</span> Marker Highlighter</div>
-                <div class="tool-item" onclick="setTool('path')"><span class="item-icon">⌇</span> Multi-point Path</div>
-            </div>
-        </div>
-
-        <div class="tool-group">
-            <div class="tool-icon" id="primary-positions-icon">🟢</div>
-            <div class="tool-menu">
-                <div class="tool-item" onclick="setTool('long')"><span class="item-icon">🟢</span> Long Position</div>
-                <div class="tool-item" onclick="setTool('short')"><span class="item-icon">🔴</span> Short Position</div>
-            </div>
-        </div>
-
-        <div class="tool-group">
-            <div class="tool-icon" id="primary-utils-icon">📏</div>
-            <div class="tool-menu">
-                <div class="tool-item" onclick="setTool('measure')"><span class="item-icon">📏</span> Measure Ruler</div>
-                <div class="tool-item" onclick="setTool('eraser')"><span class="item-icon">⌫</span> Precision Eraser</div>
-                <div class="tool-item" onclick="clearDrawings()"><span class="item-icon">🗑</span> Wipe All Clear</div>
-            </div>
-        </div>
-    </div>
-    
-    <div id="chartRoot" style="flex:1; position:relative; overflow:hidden;">
-        <div id="chart" style="width:100%; height:100%; position:absolute; top:0; left:0;"></div>
-        <canvas id="drawingCanvasOverlay"></canvas>
-
-        <div class="tv-overlay symbol-info">
-            <div class="symbol-title" id="displaySymbol">XAUUSD · 4H</div>
-            <div class="symbol-values" id="fullOhlc">
-                <span class="val-label">O</span><span id="vO">-</span>
-                <span class="val-label">H</span><span id="vH">-</span>
-                <span class="val-label">L</span><span id="vL">-</span>
-                <span class="val-label">C</span><span id="vC">-</span>
-            </div>
-        </div>
-
-        <div id="indicatorsLegend" class="indicators-legend-overlay"></div>
-        <div id="timeBox" class="time-box">--:--</div>
-    </div>
-    
-    <div class="right-sidebar">
-        <div class="sidebar-header">Risk Calculator</div>
-        <div class="risk-box">
-            <div class="input-row">
-                <div class="input-group">
-                    <label>Balance ($)</label>
-                    <input type="number" id="balance" value="10000" oninput="calcLots()">
+            <div class="trust-array-line">
+                <div class="trust-array-item">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                    No Subscriptions
                 </div>
-                <div class="input-group">
-                    <label>Risk (%)</label>
-                    <input type="number" id="riskPct" value="2" oninput="calcLots()">
+                <div class="trust-array-item">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                    No Hidden Fees
+                </div>
+                <div class="trust-array-item">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                    No Trial Limits
                 </div>
             </div>
+        </div>
+
+        <div class="hero-visual-matrix">
+            <div class="glow-back-element"></div>
             
-            <div class="lot-display">
-                <div style="font-size: 10px; color: #787b86;">RECOMMENDED LOTS</div>
-                <div class="lot-val" id="calcLotResult">0.40</div>
+            <div class="floating-stat-tag ft-1">
+                <span class="ft-lbl">Historical Horizon</span>
+                <span class="ft-val" style="color: var(--neon-cyan);">20 Years Data</span>
+            </div>
+            <div class="floating-stat-tag ft-2">
+                <span class="ft-lbl">Strategy Verification Edge</span>
+                <span class="ft-val" style="color: var(--neon-emerald);">74.2% Win Rate</span>
+            </div>
+            <div class="floating-stat-tag ft-3">
+                <span class="ft-lbl">Processing Latency</span>
+                <span class="ft-val" style="color: white;">Unlimited Runs</span>
             </div>
 
-            <div class="execution-btns-sidebar">
-                <div class="exec-btn sell" onclick="prepareTrade('SELL')">
-                    <span class="btn-price" id="sellP">-</span>
-                    <span class="btn-label">SELL</span>
+            <div class="dashboard-canvas-mock">
+                <div class="canvas-header">
+                    <div class="canvas-title"><div class="canvas-pulse"></div>XAUUSD, M5 // CORE_SIMULATION_ARRAY</div>
+                    <span style="font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--text-slate);">RAM VECTOR ENGINE</span>
                 </div>
-                <div class="exec-btn buy" onclick="prepareTrade('BUY')">
-                    <span class="btn-price" id="buyP">-</span>
-                    <span class="btn-label">BUY</span>
+                <div class="mock-chart-window">
+                    <canvas id="heroDynamicChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="social-proof-wrapper">
+        <div class="section-container" style="padding: 0 60px;">
+            <div class="proof-metrics-strip">
+                <div class="metric-strip-card">
+                    <h4>420M<span>+</span></h4>
+                    <p>Candlesticks Processed</p>
+                </div>
+                <div class="metric-strip-card">
+                    <h4>185K<span>+</span></h4>
+                    <p>Strategies Optimized</p>
+                </div>
+                <div class="metric-strip-card">
+                    <h4>0.00<span>$</span></h4>
+                    <p>Subscription Overhead</p>
+                </div>
+                <div class="metric-strip-card">
+                    <h4>14.6<span>%</span></h4>
+                    <p>Average R:R Optimization</p>
                 </div>
             </div>
 
-            <div id="tradeDrawer">
-                <div style="font-size: 11px; font-weight: bold; margin-bottom: 10px; color: var(--accent)" id="drawerTitle">NEW BUY ORDER</div>
-                <div class="input-row">
-                    <div class="input-group">
-                        <label>SL (Pips)</label>
-                        <input type="number" id="slPips" value="50" oninput="calcLots()">
-                    </div>
-                    <div class="input-group">
-                        <label>TP (Pips)</label>
-                        <input type="number" id="tpPips" value="100">
-                    </div>
+            <div class="quotes-editorial-layout">
+                <div class="quote-editorial-card">
+                    "Finally, a platform that doesn’t lock basic features behind an aggressive corporate paywall."
+                    <span class="quote-author">// Quantitative Commodity Alpha Trader</span>
                 </div>
-                <div class="input-row">
-                    <div class="input-group">
-                        <label>Trade Lots</label>
-                        <input type="number" id="finalLots" step="0.01" value="0.40">
-                    </div>
-                    <div class="input-group">
-                        <label>Contract Size</label>
-                        <input type="number" id="contractSize" value="100" oninput="calcLots()">
-                    </div>
+                <div class="quote-editorial-card">
+                    "The analytics metrics alone feel like a $500/month institucional tier bloomberg terminal workspace configuration."
+                    <span class="quote-author">// FX Volatility Fund Analyst</span>
                 </div>
-                <button class="confirm-btn" onclick="confirmTrade()">CONFIRM TRADE</button>
-                <button onclick="cancelTrade()" style="width:100%; font-size:10px; margin-top:5px; color:#787b86">CANCEL</button>
+                <div class="quote-editorial-card">
+                    "I structurally evaluated 3 detailed years of complex strategy tracking data models inside a single weekend."
+                    <span class="quote-author">// Retail Strategy Scaling Practitioner</span>
+                </div>
             </div>
         </div>
+    </section>
 
-        <div class="stats-grid">
-            <div class="stat-card"><span class="stat-label">EQUITY</span><span class="stat-value" id="currentEquity">$10,000</span></div>
-            <div class="stat-card"><span class="stat-label">PROFIT/LOSS</span><span class="stat-value" id="totalPL">$0.00</span></div>
-            <div class="stat-card"><span class="stat-label">TRADES</span><span class="stat-value" id="tradeCount">0</span></div>
-            <div class="stat-card"><span class="stat-label">WIN RATE</span><span class="stat-value" id="winRate">0%</span></div>
+    <section id="features" class="section-container">
+        <div class="section-heading-centered">
+            <div class="badge-pill">Operational Parameters</div>
+            <h2>Professional Grade Trading Research Without The Complexity</h2>
+            <p>We eliminate capital payload limitations. Access structural alpha computation workflows on robust market depth models instantly.</p>
         </div>
 
-        <div id="journal"></div>
-    </div>
-</div>
-
-<div id="sessionModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:99999; align-items:center; justify-content:center;">
-    <div style="width:400px; background:#131722; border:1px solid #2a2e39; border-radius:8px; padding:20px; box-sizing:border-box;">
-        <div style="font-size:18px; font-weight:bold; margin-bottom:15px; color:white;">Save Backtest Session</div>
-        <div style="font-size:12px; color:#787b86; margin-bottom:15px;">Replay reached final session date.</div>
-        <input id="sessionNameInput" type="text" placeholder="Enter Session Name" style="width:100%; background:#1e222d; border:1px solid #363a45; color:white; padding:10px; border-radius:4px; box-sizing:border-box; margin-bottom:15px;">
-        <div style="display:flex; gap:10px;">
-            <button onclick="saveSession()" style="flex:1; background:#2962ff; color:white; border:none; padding:10px; border-radius:4px; cursor:pointer;">SAVE SESSION</button>
-            <button onclick="closeSessionModal()" style="flex:1; background:#2a2e39; color:white; border:none; padding:10px; border-radius:4px; cursor:pointer;">CANCEL</button>
+        <div class="value-props-grid">
+            <div class="prop-card-wrapper">
+                <div class="prop-card-icon">🎛️</div>
+                <h3>Unlimited Backtesting</h3>
+                <p>Test as many strategies as your target matrices require. No daily operation bounds, execution throttles, or history processing metrics capped.</p>
+            </div>
+            <div class="prop-card-wrapper">
+                <div class="prop-card-icon">🧬</div>
+                <h3>20 Years of Market Data</h3>
+                <p>Train, stress-test, and isolate strategies across multiple decade intervals of real, raw historical market volatility logs.</p>
+            </div>
+            <div class="prop-card-wrapper">
+                <div class="prop-card-icon">🧠</div>
+                <h3>AI Performance Analytics</h3>
+                <p>Isolate structural win rates, drawdowns, math factor distributions, behavior patterns, and optimization parameters effortlessly.</p>
+            </div>
+            <div class="prop-card-wrapper">
+                <div class="prop-card-icon">🎓</div>
+                <h3>Free Mentorship & Guidance</h3>
+                <p>Learn structural execution management directly from senior volatility analysts to upgrade processing loops continuously.</p>
+            </div>
+            <div class="prop-card-wrapper">
+                <div class="prop-card-icon">👥</div>
+                <h3>Beginners & Professionals</h3>
+                <p>Optimized interface logic is highly simple for evolving practitioners yet intensely deep for advanced quant engineers.</p>
+            </div>
+            <div class="prop-card-wrapper">
+                <div class="prop-card-icon">⚡</div>
+                <h3>Lightning Fast Execution</h3>
+                <p>Get computed trade data breakdowns back in fractional seconds using advanced web-worker multi-threaded compilers.</p>
+            </div>
         </div>
-    </div>
-</div>
+    </section>
 
-<div id="indicatorModal" class="premium-modal">
-    <div class="premium-modal-content">
-        <div class="premium-modal-header">
-            <span id="modalIndicatorTitle" class="premium-modal-title">Indicator Settings</span>
-            <span class="premium-modal-close" onclick="closeIndicatorModal()">✕</span>
+    <section id="process" class="section-container">
+        <div class="section-heading-centered">
+            <div class="badge-pill">Execution Matrix Pipeline</div>
+            <h2>Three Steps to Algorithmic Mastery</h2>
         </div>
-        <div class="premium-modal-body" id="modalBodyContent"></div>
-        <div class="premium-modal-footer">
-            <input type="hidden" id="modalTargetMode" value="ADD">
-            <input type="hidden" id="modalTargetId" value="">
-            <input type="hidden" id="modalTargetType" value="">
-            <button class="premium-btn premium-btn-secondary" onclick="closeIndicatorModal()">Cancel</button>
-            <button class="premium-btn premium-btn-primary" onclick="submitIndicatorModal()">Apply</button>
+
+        <div class="process-flow-row">
+            <div class="process-step-node">
+                <div class="step-circle-badge">01</div>
+                <h3>Configure Strategy Mapping</h3>
+                <p>Upload raw tracking vectors or click custom condition triggers to profile your market entry parameters cleanly.</p>
+            </div>
+            <div class="process-step-node">
+                <div class="step-circle-badge">02</div>
+                <h3>Run Backtest Instantly</h3>
+                <p>Launch the cloud parsing array engine to replay multi-timeframe candle data logs at high speeds.</p>
+            </div>
+            <div class="process-step-node">
+                <div class="step-circle-badge">03</div>
+                <h3>Analyze & Improve Logs</h3>
+                <p>Review comprehensive diagnostic risk reports, win distributions, and equity graphs to adapt parameters.</p>
+            </div>
         </div>
-    </div>
-</div>
+        <div class="process-footer-note">Professional-grade trading research without the complexity.</div>
+    </section>
 
-<script>
-// ========================================
-// CORE BACKTEST STATE ENGINE
-// ========================================
-let symbol = localStorage.getItem("symbol") || "XAUUSD";
-let tf = "h4";
-let speed = parseInt(localStorage.getItem("speed")) || 500;
-let isPlaying = false;
-let isAutoFollow = true;
-let isFetching = false;
-let lastReplayTime = null;
-let data = [];
-let historyData = [];
-window.historyData = historyData;
-let index = 0;
-let timer = null;
-let trades = [];
-let activeTrade = null;
-let entryLine, slLine, tpLine;
-let pendingType = null;
-let sessionEnded = false;
-
-const chartEl = document.getElementById("chart");
-const chart = LightweightCharts.createChart(chartEl, {
-    layout: { background: { color: '#0b0e14' }, textColor: '#d1d4dc' },
-    grid: { vertLines: { color: '#1e222d' }, horzLines: { color: '#1e222d' } },
-    timeScale: { timeVisible: true, secondsVisible: false, borderColor: '#2a2e39', shiftVisibleRangeOnNewBar: true, rightOffset: 8 },
-    rightPriceScale: { borderColor: '#2a2e39', autoScale: true },
-    handleScroll: { mouseWheel: true, pressedMouseMove: true, horzTouchDrag: true, vertTouchDrag: true },
-    handleScale: { axisPressedMouseMove: true, mouseWheel: true, pinch: true },
-    crosshair: { mode: LightweightCharts.CrosshairMode.Normal }
-});
-
-const series = chart.addCandlestickSeries({
-    upColor: '#089981', downColor: '#f23645', borderVisible: false, wickUpColor: '#089981', wickDownColor: '#f23645'
-});
-
-const volumeSeries = chart.addHistogramSeries({
-    color: '#26a69a', priceFormat: { type: 'volume' }, priceScaleId: ''
-});
-volumeSeries.priceScale().applyOptions({ scaleMargins: { top: 0.8, bottom: 0 } });
-
-function updateTime(ts) {
-    if (!ts) return;
-    const d = new Date(ts * 1000);
-    document.getElementById("timeBox").innerText = d.toLocaleString('en-GB').toUpperCase();
-}
-
-function calcLots() {
-    const bal = parseFloat(document.getElementById("balance").value);
-    const riskPct = parseFloat(document.getElementById("riskPct").value);
-    const slPips = parseFloat(document.getElementById("slPips").value);
-    const contract = parseFloat(document.getElementById("contractSize").value);
-    const resultEl = document.getElementById("calcLotResult");
-    const finalLotInput = document.getElementById("finalLots");
-
-    if (bal && riskPct && slPips && contract) {
-        const riskAmount = bal * (riskPct / 100);
-        const lot = riskAmount / (slPips * (contract * 0.01));
-        resultEl.innerText = lot.toFixed(2);
-        finalLotInput.value = lot.toFixed(2);
-    }
-}
-
-function updateStats() {
-    const totalPL = trades.reduce((a, b) => a + b.pl, 0);
-    const bal = parseFloat(document.getElementById("balance").value);
-    const wins = trades.filter(t => t.pl > 0).length;
-    const winRate = trades.length > 0 ? ((wins / trades.length) * 100).toFixed(1) : 0;
-
-    document.getElementById("tradeCount").innerText = trades.length;
-    document.getElementById("totalPL").innerText = (totalPL >= 0 ? '+$' : '-$') + Math.abs(totalPL).toFixed(2);
-    document.getElementById("totalPL").style.color = totalPL >= 0 ? 'var(--up)' : 'var(--down)';
-    document.getElementById("currentEquity").innerText = '$' + (bal + totalPL).toLocaleString();
-    document.getElementById("winRate").innerText = winRate + '%';
-}
-
-function calculatePnL(price) {
-    if (!activeTrade) return 0;
-    const diff = activeTrade.type === 'BUY' ? (price - activeTrade.entry) : (activeTrade.entry - price);
-    return diff * activeTrade.lots * activeTrade.contract;
-}
-
-function updateTradeLines(type, entry, sl, tp, lots) {
-    const currentPrice = historyData[historyData.length - 1]?.close || entry;
-    const pnl = calculatePnL(currentPrice);
-    const pnlString = (pnl >= 0 ? '+' : '') + pnl.toFixed(2);
-
-    if (entryLine) series.removePriceLine(entryLine);
-    if (slLine) series.removePriceLine(slLine);
-    if (tpLine) series.removePriceLine(tpLine);
-
-    entryLine = series.createPriceLine({ price: entry, color: '#2962ff', lineWidth: 2, axisLabelVisible: true, title: `${lots} Lots | ${pnlString} USD ✕` });
-    slLine = series.createPriceLine({ price: sl, color: '#f23645', lineWidth: 2, lineStyle: LightweightCharts.LineStyle.Dashed, axisLabelVisible: true, title: 'SL' });
-    tpLine = series.createPriceLine({ price: tp, color: '#089981', lineWidth: 2, lineStyle: LightweightCharts.LineStyle.Dashed, axisLabelVisible: true, title: 'TP' });
-}
-
-function prepareTrade(type) {
-    if (activeTrade) return;
-    pendingType = type;
-    document.getElementById("drawerTitle").innerText = `NEW ${type} ORDER`;
-    document.getElementById("drawerTitle").style.color = type === 'BUY' ? 'var(--up)' : 'var(--down)';
-    document.getElementById("tradeDrawer").style.display = "block";
-}
-
-function cancelTrade() {
-    document.getElementById("tradeDrawer").style.display = "none";
-    pendingType = null;
-}
-
-function confirmTrade() {
-    if (!pendingType) return;
-    placeTrade(pendingType);
-    cancelTrade();
-}
-
-function placeTrade(type) {
-    if (activeTrade) return;
-    const currentPrice = historyData[historyData.length - 1]?.close || 0;
-    const lotSize = parseFloat(document.getElementById("finalLots").value);
-    
-    const slPips = parseFloat(document.getElementById("slPips").value);
-    const tpPips = parseFloat(document.getElementById("tpPips").value);
-    const contract = parseFloat(document.getElementById("contractSize").value);
-
-    const pipMultiplier = symbol.includes("JPY") ? 0.01 : 0.0001;
-    const isGold = symbol.includes("XAU") || symbol.includes("GOLD");
-    const tickSize = isGold ? 0.1 : pipMultiplier; 
-
-    const slPrice = type === 'BUY' ? currentPrice - (slPips * tickSize) : currentPrice + (slPips * tickSize);
-    const tpPrice = type === 'BUY' ? currentPrice + (tpPips * tickSize) : currentPrice - (tpPips * tickSize);
-
-    activeTrade = {
-        type: type,
-        entry: currentPrice,
-        sl: slPrice,
-        tp: tpPrice,
-        lots: lotSize,
-        contract: contract,
-        pl: 0,
-        time: historyData[historyData.length - 1]?.time
-    };
-
-    updateTradeLines(type, currentPrice, slPrice, tpPrice, lotSize);
-    updateStats();
-}
-
-function handlePositionTracking(candle) {
-    if (!activeTrade) return;
-
-    let targetHit = false;
-    let closedPrice = 0;
-    let logTag = activeTrade.type === 'BUY' ? '<span class="tag tag-buy">BUY</span>' : '<span class="tag tag-sell">SELL</span>';
-
-    if (activeTrade.type === 'BUY') {
-        if (candle.low <= activeTrade.sl) {
-            targetHit = true;
-            closedPrice = activeTrade.sl;
-            activeTrade.pl = (activeTrade.sl - activeTrade.entry) * activeTrade.lots * activeTrade.contract;
-        } else if (candle.high >= activeTrade.tp) {
-            targetHit = true;
-            closedPrice = activeTrade.tp;
-            activeTrade.pl = (activeTrade.tp - activeTrade.entry) * activeTrade.lots * activeTrade.contract;
-        }
-    } else { 
-        if (candle.high >= activeTrade.sl) {
-            targetHit = true;
-            closedPrice = activeTrade.sl;
-            activeTrade.pl = (activeTrade.entry - activeTrade.sl) * activeTrade.lots * activeTrade.contract;
-        } else if (candle.low <= activeTrade.tp) {
-            targetHit = true;
-            closedPrice = activeTrade.tp;
-            activeTrade.pl = (activeTrade.entry - activeTrade.tp) * activeTrade.lots * activeTrade.contract;
-        }
-    }
-
-    if (targetHit) {
-        trades.push({ ...activeTrade, closePrice: closedPrice, closeTime: candle.time });
-        
-        const journal = document.getElementById("journal");
-        const item = document.createElement("div");
-        item.className = "journal-item";
-        item.innerHTML = `
-            <div>${logTag} <b>${symbol}</b> @ ${activeTrade.entry.toFixed(3)} ➔ ${closedPrice.toFixed(3)}</div>
-            <div style="color: ${activeTrade.pl >= 0 ? 'var(--up)' : 'var(--down)'}; font-weight:bold;">
-                ${activeTrade.pl >= 0 ? '+' : ''}${activeTrade.pl.toFixed(2)} USD
-            </div>
-        `;
-        journal.insertBefore(item, journal.firstChild);
-
-        if (entryLine) series.removePriceLine(entryLine);
-        if (slLine) series.removePriceLine(slLine);
-        if (tpLine) series.removePriceLine(tpLine);
-        entryLine = slLine = tpLine = null;
-        activeTrade = null;
-        
-        updateStats();
-    } else {
-        updateTradeLines(activeTrade.type, activeTrade.entry, activeTrade.sl, activeTrade.tp, activeTrade.lots);
-    }
-}
-
-// ========================================
-// REPLAY MECHANICS & SERVER ROUTING
-// ========================================
-async function fetchBacktestData() {
-    if (isFetching) return;
-    isFetching = true;
-    document.getElementById("status").innerText = "FETCHING DATA...";
-    
-    try {
-        const response = await fetch(`/api/backtest-data?symbol=${symbol}&tf=${tf}`);
-        const result = await response.json();
-        
-        if (result && result.data && result.data.length > 0) {
-            data = result.data;
-            index = 0;
-            historyData = [];
-            window.historyData = historyData;
-            
-            series.setData([]);
-            volumeSeries.setData([]);
-            
-            document.getElementById("status").innerText = "READY";
-            sessionEnded = false;
-            
-            next();
-        } else {
-            document.getElementById("status").innerText = "NO DATA FOUND";
-        }
-    } catch (err) {
-        console.error("Error processing request pipeline:", err);
-        document.getElementById("status").innerText = "CONNECTION ERROR";
-    } finally {
-        isFetching = false;
-    }
-}
-
-function play() {
-    if (isPlaying || sessionEnded) return;
-    isPlaying = true;
-    document.getElementById("status").innerText = "PLAYING";
-    
-    timer = setInterval(() => {
-        next();
-    }, speed);
-}
-
-function pause() {
-    isPlaying = false;
-    document.getElementById("status").innerText = "PAUSED";
-    if (timer) clearInterval(timer);
-}
-
-function next() {
-    if (index >= data.length) {
-        pause();
-        sessionEnded = true;
-        document.getElementById("status").innerText = "FINISHED";
-        document.getElementById("sessionModal").style.display = "flex";
-        return;
-    }
-
-    const currentBar = data[index];
-    historyData.push(currentBar);
-    
-    series.update(currentBar);
-    volumeSeries.update({
-        time: currentBar.time,
-        value: currentBar.volume || 0,
-        color: currentBar.close >= currentBar.open ? 'rgba(8, 153, 129, 0.5)' : 'rgba(242, 54, 69, 0.5)'
-    });
-
-    document.getElementById("vO").innerText = currentBar.open.toFixed(3);
-    document.getElementById("vH").innerText = currentBar.high.toFixed(3);
-    document.getElementById("vL").innerText = currentBar.low.toFixed(3);
-    document.getElementById("vC").innerText = currentBar.close.toFixed(3);
-    
-    if (historyData.length > 0) {
-        document.getElementById("sellP").innerText = currentBar.close.toFixed(3);
-        document.getElementById("buyP").innerText = currentBar.close.toFixed(3);
-    }
-    
-    updateTime(currentBar.time);
-    handlePositionTracking(currentBar);
-    recalculateActiveIndicators();
-
-    if (isAutoFollow) {
-        chart.timeScale().fitContent();
-    }
-
-    index++;
-}
-
-function changeSymbol() {
-    symbol = document.getElementById("symbolSelect").value;
-    localStorage.setItem("symbol", symbol);
-    document.getElementById("displaySymbol").innerText = `${symbol} · ${tf.toUpperCase()}`;
-    fetchBacktestData();
-}
-
-function changeTF() {
-    tf = document.getElementById("tf").value;
-    document.getElementById("displaySymbol").innerText = `${symbol} · ${tf.toUpperCase()}`;
-    fetchBacktestData();
-}
-
-function changeSpeed() {
-    speed = parseInt(document.getElementById("speed").value);
-    localStorage.setItem("speed", speed);
-    if (isPlaying) {
-        pause();
-        play();
-    }
-}
-
-function goLive() {
-    alert("Transitioning environment configurations to immediate streaming relays...");
-}
-
-// ========================================
-// INTERACTIVE SESSION ROUTINES
-// ========================================
-function closeSessionModal() {
-    document.getElementById("sessionModal").style.display = "none";
-}
-
-async function saveSession() {
-    const sessionName = document.getElementById("sessionNameInput").value || `Session-${symbol}-${tf}`;
-    const totalPL = trades.reduce((a, b) => a + b.pl, 0);
-    
-    const payload = {
-        name: sessionName,
-        symbol: symbol,
-        timeframe: tf,
-        trades_count: trades.length,
-        final_pl: totalPL,
-        journal_log: JSON.stringify(trades)
-    };
-
-    try {
-        const res = await fetch("/api/save-session", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload)
-        });
-        
-        if (res.ok) {
-            alert("Session tracked successfully!");
-            closeSessionModal();
-        } else {
-            alert("Execution configuration error trying to preserve historical model states.");
-        }
-    } catch (e) {
-        console.error(e);
-    }
-}
-
-// ========================================
-// PREMIUM TECHNICAL INDICATORS MATRIX
-// ========================================
-let activeIndicatorsList = [];
-let indicatorSeriesMap = new Map();
-
-function openAddIndicatorModal() {
-    const selected = document.getElementById("indicatorSelect").value;
-    if (!selected) return;
-
-    const modal = document.getElementById("indicatorModal");
-    const title = document.getElementById("modalIndicatorTitle");
-    const body = document.getElementById("modalBodyContent");
-
-    document.getElementById("modalTargetMode").value = "ADD";
-    document.getElementById("modalTargetType").value = selected;
-
-    title.innerText = `Configure ${selected} Parameters`;
-    
-    let htmlInputs = "";
-    if (selected === "SMA" || selected === "EMA") {
-        htmlInputs = `
-            <div class="modal-input-row">
-                <span class="modal-label">Length Period</span>
-                <input type="number" id="ind_param_length" class="modal-input-field" value="14">
-            </div>
-            <div class="modal-input-row">
-                <span class="modal-label">Line Color</span>
-                <input type="color" id="ind_param_color" class="modal-color-picker" value="#ff9800">
-            </div>
-        `;
-    } else if (selected === "RSI") {
-        htmlInputs = `
-            <div class="modal-input-row">
-                <span class="modal-label">RSI Period</span>
-                <input type="number" id="ind_param_length" class="modal-input-field" value="14">
-            </div>
-            <div class="modal-input-row">
-                <span class="modal-label">Line Color</span>
-                <input type="color" id="ind_param_color" class="modal-color-picker" value="#9c27b0">
-            </div>
-        `;
-    } else if (selected === "BB") {
-        htmlInputs = `
-            <div class="modal-input-row">
-                <span class="modal-label">Length Period</span>
-                <input type="number" id="ind_param_length" class="modal-input-field" value="20">
-            </div>
-            <div class="modal-input-row">
-                <span class="modal-label">Standard Dev</span>
-                <input type="number" id="ind_param_mult" class="modal-input-field" value="2" step="0.1">
-            </div>
-            <div class="modal-input-row">
-                <span class="modal-label">Basis Color</span>
-                <input type="color" id="ind_param_color" class="modal-color-picker" value="#2196f3">
-            </div>
-        `;
-    } else {
-        htmlInputs = `<div style="font-size:13px; color:#787b86;">Standard native calculations apply to tracking configuration fields.</div>`;
-    }
-
-    body.innerHTML = htmlInputs;
-    modal.style.display = "flex";
-    document.getElementById("indicatorSelect").value = "";
-}
-
-function closeIndicatorModal() {
-    document.getElementById("indicatorModal").style.display = "none";
-}
-
-function submitIndicatorModal() {
-    const mode = document.getElementById("modalTargetMode").value;
-    const type = document.getElementById("modalTargetType").value;
-    
-    const length = parseInt(document.getElementById("ind_param_length")?.value || 14);
-    const color = document.getElementById("ind_param_color")?.value || "#ff9800";
-    const mult = parseFloat(document.getElementById("ind_param_mult")?.value || 2);
-
-    if (mode === "ADD") {
-        const uniqueId = "ind_" + Date.now();
-        const config = { id: uniqueId, type: type, length: length, color: color, mult: mult };
-        
-        activeIndicatorsList.push(config);
-        createIndicatorSeriesInstance(config);
-    }
-    
-    recalculateActiveIndicators();
-    renderIndicatorsLegendUI();
-    closeIndicatorModal();
-}
-
-function createIndicatorSeriesInstance(config) {
-    if (config.type === "SMA" || config.type === "EMA" || config.type === "RSI") {
-        const lineSeries = chart.addLineSeries({
-            color: config.color,
-            lineWidth: 1.5,
-            priceLineVisible: false,
-            lastValueVisible: true
-        });
-        indicatorSeriesMap.set(config.id, [lineSeries]);
-    } else if (config.type === "BB") {
-        const topLine = chart.addLineSeries({ color: 'rgba(33, 150, 243, 0.7)', lineWidth: 1, priceLineVisible: false });
-        const basisLine = chart.addLineSeries({ color: config.color, lineWidth: 1.5, priceLineVisible: false });
-        const bottomLine = chart.addLineSeries({ color: 'rgba(33, 150, 243, 0.7)', lineWidth: 1, priceLineVisible: false });
-        indicatorSeriesMap.set(config.id, [topLine, basisLine, bottomLine]);
-    }
-}
-
-function removeIndicator(id) {
-    activeIndicatorsList = activeIndicatorsList.filter(item => item.id !== id);
-    const seriesInstances = indicatorSeriesMap.get(id);
-    if (seriesInstances) {
-        seriesInstances.forEach(s => chart.removeSeries(s));
-        indicatorSeriesMap.delete(id);
-    }
-    renderIndicatorsLegendUI();
-}
-
-function renderIndicatorsLegendUI() {
-    const container = document.getElementById("indicatorsLegend");
-    container.innerHTML = "";
-
-    activeIndicatorsList.forEach(ind => {
-        const item = document.createElement("div");
-        item.className = "legend-item";
-        
-        let displayLabel = `${ind.type} (${ind.length})`;
-        if (ind.type === "BB") displayLabel = `BB (${ind.length}, ${ind.mult})`;
-
-        item.innerHTML = `
-            <span class="legend-dot" style="background: ${ind.color || '#fff'}"></span>
-            <span class="legend-title">${displayLabel}</span>
-            <span class="legend-remove-btn" onclick="removeIndicator('${ind.id}')">✕</span>
-        `;
-        container.appendChild(item);
-    });
-}
-
-function recalculateActiveIndicators() {
-    if (historyData.length === 0) return;
-
-    activeIndicatorsList.forEach(ind => {
-        const instances = indicatorSeriesMap.get(ind.id);
-        if (!instances) return;
-
-        const currentCandle = historyData[historyData.length - 1];
-
-        if (ind.type === "SMA") {
-            if (historyData.length >= ind.length) {
-                let sum = 0;
-                for (let i = historyData.length - ind.length; i < historyData.length; i++) {
-                    sum += historyData[i].close;
-                }
-                instances[0].update({ time: currentCandle.time, value: sum / ind.length });
-            }
-        } else if (ind.type === "EMA") {
-            if (historyData.length >= ind.length) {
-                let k = 2 / (ind.length + 1);
-                let prevValue = historyData[historyData.length - 2]?.close || currentCandle.close;
-                let currentEma = currentCandle.close * k + prevValue * (1 - k);
-                instances[0].update({ time: currentCandle.time, value: currentEma });
-            }
-        } else if (ind.type === "BB") {
-            if (historyData.length >= ind.length) {
-                let chunk = historyData.slice(-ind.length);
-                let sum = chunk.reduce((a, b) => a + b.close, 0);
-                let basis = sum / ind.length;
+    <section id="pricing" class="section-container">
+        <div class="matrix-split-container">
+            <div>
+                <div class="badge-pill" style="border-color: var(--neon-emerald-glow); color:var(--neon-emerald);">Zero Capital Overhead</div>
+                <h2 style="font-size: 40px; font-weight: 800; margin: 0 0 20px 0; letter-spacing: -1px;">Everything Included.<br><span style="color:var(--neon-emerald)">Free Forever.</span></h2>
+                <p style="color: var(--text-silver); line-height: 1.6; font-size: 16px; margin: 0 0 30px 0;">We don't monetize core utility toolings. Access complete deep performance verification features natively without premium tier walls.</p>
                 
-                let variance = chunk.reduce((a, b) => a + Math.pow(b.close - basis, 2), 0) / ind.length;
-                let stdDev = Math.sqrt(variance);
+                <div class="matrix-feature-bullet-list">
+                    <div class="feature-bullet-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>Unlimited Sessions</div>
+                    <div class="feature-bullet-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>Historical Market Data</div>
+                    <div class="feature-bullet-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>Unlimited Strategies</div>
+                    <div class="feature-bullet-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>Comprehensive Strategy Reports</div>
+                    <div class="feature-bullet-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>Full Analytics Package</div>
+                    <div class="feature-bullet-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>Mentorship Deck Access</div>
+                </div>
+            </div>
 
-                instances[0].update({ time: currentCandle.time, value: basis + (stdDev * ind.mult) });
-                instances[1].update({ time: currentCandle.time, value: basis });
-                instances[2].update({ time: currentCandle.time, value: basis - (stdDev * ind.mult) });
-            }
+            <div class="comparison-table-wrapper">
+                <div class="comp-grid-row hdr-row">
+                    <div>Capability Metric</div>
+                    <div>PureBacktest</div>
+                    <div>Competitors</div>
+                </div>
+                <div class="comp-grid-row">
+                    <div class="comp-cell-feature">20-Year Tick History</div>
+                    <div class="comp-cell-platform">UNLIMITED FREE</div>
+                    <div class="comp-cell-competitor">$120/mo Premium Tier</div>
+                </div>
+                <div class="comp-grid-row">
+                    <div class="comp-cell-feature">Simultaneous Session Runs</div>
+                    <div class="comp-cell-platform">UNLIMITED FREE</div>
+                    <div class="comp-cell-competitor">Capped at 3 Logs</div>
+                </div>
+                <div class="comp-grid-row">
+                    <div class="comp-cell-feature">AI Quantitative Metrics</div>
+                    <div class="comp-cell-platform">INCLUDED FREE</div>
+                    <div class="comp-cell-competitor">Add-On Package ($50/mo)</div>
+                </div>
+                <div class="comp-grid-row">
+                    <div class="comp-cell-feature">Hidden Maintenance Fees</div>
+                    <div class="comp-cell-platform">NONE</div>
+                    <div class="comp-cell-competitor">Subscription Bounds</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section-container" style="margin-bottom: 100px;">
+        <div class="termination-gradient-panel">
+            <h2>Stop Paying For Basic Trading Tools</h2>
+            <p>Get institutional-level backtesting, analytics, and professional trading guidance — completely free.</p>
+            <button class="cta-btn-primary dynamic-route-cta">Start Backtesting Now</button>
+
+            <div class="ticker-tape-container">
+                <div class="ticker-infinite-track">
+                    <div class="ticker-node">XAUUSD <span class="tick-bull">+1.24%</span></div>
+                    <div class="ticker-node">EURUSD <span class="tick-bear">-0.45%</span></div>
+                    <div class="ticker-node">GBPUSD <span class="tick-bull">+0.82%</span></div>
+                    <div class="ticker-node">USDCAD <span class="tick-bear">-0.12%</span></div>
+                    <div class="ticker-node">USDJPY <span class="tick-bull">+2.15%</span></div>
+                    <div class="ticker-node">BTCUSD <span class="tick-bull">+4.67%</span></div>
+                    <div class="ticker-node">XAUUSD <span class="tick-bull">+1.24%</span></div>
+                    <div class="ticker-node">EURUSD <span class="tick-bear">-0.45%</span></div>
+                    <div class="ticker-node">GBPUSD <span class="tick-bull">+0.82%</span></div>
+                    <div class="ticker-node">USDCAD <span class="tick-bear">-0.12%</span></div>
+                    <div class="ticker-node">USDJPY <span class="tick-bull">+2.15%</span></div>
+                    <div class="ticker-node">BTCUSD <span class="tick-bull">+4.67%</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-brand">PURE<span>BACKTEST</span> // STRATEGIC EDGE PLATFORMS</div>
+        <p class="footer-disclaimer">
+            Risk Disclosure Statement: Simulation performance results possess operational limitations. Virtual track processing outcomes do not mirror active liquidity execution patterns or slip variances. Simulated strategies do not guarantee net execution stability across production equity pools. Protect your risk protocols.
+        </p>
+    </footer>
+
+    <script>
+        const canvas = document.getElementById('heroDynamicChart');
+        const ctx = canvas.getContext('2d');
+        const dataNodes = [];
+
+        function forceCanvasSizing() {
+            if(!canvas) return;
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = 280;
         }
-    });
-}
+        window.addEventListener('resize', forceCanvasSizing);
+        forceCanvasSizing();
 
-// ========================================
-// ADVANCED GEOMETRIC CANVAS OVERLAY
-// ========================================
-let currentTool = 'cursor';
-const overlayCanvas = document.getElementById("drawingCanvasOverlay");
-const ctx = overlayCanvas.getContext("2d");
-let isDrawingNow = false;
-let drawStartPoint = null;
+        let pricingBasis = 2000;
+        for(let i=0; i<45; i++) {
+            let movement = (Math.random() - 0.46) * 16;
+            let o = pricingBasis;
+            let c = pricingBasis + movement;
+            let h = Math.max(o, c) + Math.random() * 4;
+            let l = Math.min(o, c) - Math.random() * 4;
+            dataNodes.push({ o, h, l, c });
+            pricingBasis = c;
+        }
 
-function setTool(toolName) {
-    currentTool = toolName;
-    
-    document.querySelectorAll(".tool-icon").forEach(el => el.classList.remove("active"));
-    
-    const toolBtn = document.getElementById(`tool-${toolName}`);
-    if (toolBtn) toolBtn.classList.add("active");
+        function paintArenaChart() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const spacePad = 20;
+            const w = canvas.width - spacePad * 2;
+            const h = canvas.height - spacePad * 2;
 
-    if (toolName !== 'cursor') {
-        overlayCanvas.style.pointerEvents = "auto";
-        chart.applyOptions({ handleScroll: false, handleScale: false });
-    } else {
-        overlayCanvas.style.pointerEvents = "none";
-        chart.applyOptions({ handleScroll: true, handleScale: true });
-    }
-}
+            const limits = dataNodes.map(d => d.h);
+            const baselines = dataNodes.map(d => d.l);
+            const topMax = Math.max(...limits);
+            const lowMin = Math.min(...baselines);
+            const deltaRange = topMax - lowMin || 1;
 
-function resizeDrawingCanvas() {
-    const box = chartEl.getBoundingClientRect();
-    overlayCanvas.width = box.width;
-    overlayCanvas.height = box.height;
-    overlayCanvas.style.width = box.width + "px";
-    overlayCanvas.style.height = box.height + "px";
-}
+            const unitWidth = w / dataNodes.length;
+            const unitGaps = unitWidth * 0.35;
 
-function clearDrawings() {
-    ctx.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
-    alert("Canvas workspace cleared.");
-    setTool('cursor');
-}
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.02)';
+            ctx.lineWidth = 1;
+            for(let j = 1; j < 5; j++) {
+                let targetLineY = spacePad + (h / 5) * j;
+                ctx.beginPath();
+                ctx.moveTo(spacePad, targetLineY);
+                ctx.lineTo(canvas.width - spacePad, targetLineY);
+                ctx.stroke();
+            }
 
-window.addEventListener("resize", resizeDrawingCanvas);
-setTimeout(() => {
-    resizeDrawingCanvas();
-    fetchBacktestData();
-    document.getElementById("appPreloader").classList.add("fade-out");
-}, 1200);
-</script>
+            dataNodes.forEach((node, idx) => {
+                const targetX = spacePad + idx * unitWidth;
+                const posOpen = spacePad + h - ((node.o - lowMin) / deltaRange) * h;
+                const posClose = spacePad + h - ((node.c - lowMin) / deltaRange) * h;
+                const posHigh = spacePad + h - ((node.h - lowMin) / deltaRange) * h;
+                const posLow = spacePad + h - ((node.l - lowMin) / deltaRange) * h;
 
+                const isBullState = node.c >= node.o;
+                ctx.strokeStyle = isBullState ? '#00FF94' : '#FF3366';
+                ctx.fillStyle = isBullState ? 'rgba(0, 255, 148, 0.9)' : 'rgba(255, 51, 102, 0.9)';
+                ctx.lineWidth = 1.5;
+
+                ctx.beginPath();
+                ctx.moveTo(targetX + unitWidth / 2, posHigh);
+                ctx.lineTo(targetX + unitWidth / 2, posLow);
+                ctx.stroke();
+
+                const candleBlockHeight = Math.abs(posClose - posOpen) || 2;
+                ctx.fillRect(targetX + unitGaps / 2, Math.min(posOpen, posClose), unitWidth - unitGaps, candleBlockHeight);
+            });
+        }
+
+        setInterval(() => {
+            dataNodes.shift();
+            let precedingClose = dataNodes[dataNodes.length - 1].c;
+            let movement = (Math.random() - 0.46) * 16;
+            let o = precedingClose;
+            let c = precedingClose + movement;
+            let h = Math.max(o, c) + Math.random() * 4;
+            let l = Math.min(o, c) - Math.random() * 4;
+            dataNodes.push({ o, h, l, c });
+            paintArenaChart();
+        }, 800);
+
+        setTimeout(paintArenaChart, 100);
+    </script>
 </body>
 </html>

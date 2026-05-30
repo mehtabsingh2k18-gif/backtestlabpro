@@ -485,7 +485,9 @@ const chartEl = document.getElementById("chart");
 const chart = LightweightCharts.createChart(chartEl, {
     layout: { background: { color: '#0b0e14' }, textColor: '#d1d4dc' },
     grid: { vertLines: { color: '#1e222d' }, horzLines: { color: '#1e222d' } },
-    timeScale: { timeVisible: true, secondsVisible: false, borderColor: '#2a2e39', shiftVisibleRangeOnNewBar: true, rightOffset: 8 },
+    timeScale: { timeVisible: true, secondsVisible: false, borderColor: '#2a2e39', shiftVisibleRangeOnNewBar: true, rightOffset: 8 , rightOffset: 12,
+    shiftVisibleRangeOnNewBar: true,
+},
     rightPriceScale: { borderColor: '#2a2e39', autoScale: true },
     handleScroll: { mouseWheel: true, pressedMouseMove: true, horzTouchDrag: true, vertTouchDrag: true },
     handleScale: { axisPressedMouseMove: true, mouseWheel: true, pinch: true },
@@ -809,7 +811,7 @@ window.deleteIndicator = function(id) {
 
 window.next = function() {
 
-if(index >= data.length - 5){
+if(index >= data.length - 500){
 
     window.loadNextChunk();
 }
@@ -851,7 +853,8 @@ if(index >= data.length){
     lastReplayTime = candle.time;
     updateTime(lastReplayTime);
 
-    if (isAutoFollow) chart.timeScale().scrollToRealTime();
+if (isAutoFollow)
+    chart.timeScale().scrollToPosition(1, false);
     index++;
 };
 
@@ -926,11 +929,7 @@ window.loadNextChunk = async function() {
         }
 
         // remove duplicates
-        const map = new Map();
-
-        [...data, ...res].forEach(c => {
-            map.set(c.time, c);
-        });
+       data.push(...res);
 
         data = Array
             .from(map.values())
@@ -1118,7 +1117,7 @@ window.calcLots();
 
 const canvas = document.getElementById('drawingCanvasOverlay');
 const ctx = canvas.getContext('2d');
-
+let isLoadingChunk = false;
 let tool = 'cursor';
 let drawings = [];
 
@@ -1676,12 +1675,9 @@ window.clearDrawings=function(){
 canvas.addEventListener('mousedown',e=>{
 
     const rect=canvas.getBoundingClientRect();
-
     startX=e.clientX-rect.left;
     startY=e.clientY-rect.top;
-
     drawing=true;
-
     if(tool==='brush' || tool==='highlight' || tool==='path'){
         currentShape={
             type:tool,
@@ -1689,7 +1685,6 @@ canvas.addEventListener('mousedown',e=>{
         };
         return;
     }
-
     if(tool==='text'){
         const txt=prompt('Text');
         if(txt){
@@ -1704,7 +1699,6 @@ canvas.addEventListener('mousedown',e=>{
         drawing=false;
         return;
     }
-
     if(tool==='label'){
         const txt=prompt('Label');
         if(txt){
@@ -1719,7 +1713,6 @@ canvas.addEventListener('mousedown',e=>{
         drawing=false;
         return;
     }
-
     currentShape={
         type:tool,
         x1:startX,
@@ -1728,62 +1721,41 @@ canvas.addEventListener('mousedown',e=>{
         y2:startY
     };
 });
-
 canvas.addEventListener('mousemove',e=>{
-
     if(!drawing || !currentShape) return;
-
     const rect=canvas.getBoundingClientRect();
-
     const x=e.clientX-rect.left;
     const y=e.clientY-rect.top;
-
     if(currentShape.points){
         currentShape.points.push({x,y});
     }else{
         currentShape.x2=x;
-        currentShape.y2=y;
+       currentShape.y2=y;
     }
-
     redraw();
 });
-
 canvas.addEventListener('mouseup',()=>{
-
     if(!drawing) return;
-
     drawing=false;
-
     if(currentShape){
-
         if(tool==='eraser'){
-
             drawings=drawings.filter(d=>{
-
-                return !(
+             return !(
                     Math.abs(d.x1-currentShape.x1)<20 &&
                     Math.abs(d.y1-currentShape.y1)<20
                 );
             });
-
         }else{
             drawings.push(currentShape);
         }
-
         currentShape=null;
-
         redraw();
     }
 });
-
 chart.timeScale().subscribeVisibleTimeRangeChange(redraw);
 chart.subscribeCrosshairMove(redraw);
-
 resizeCanvas();
-
 })();
 </script>
-
-
 </body>
 </html>

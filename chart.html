@@ -9,11 +9,9 @@
         :root { --bg: #0b0e14; --panel: #131722; --text: #d1d4dc; --accent: #2962ff; --up: #089981; --down: #f23645; --border: #2a2e39; }
         body { margin: 0; background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Trebuchet MS", Roboto, Ubuntu, sans-serif; overflow: hidden; display: flex; flex-direction: column; height: 100vh; }
         
-        /* Premium Brand Preloader Overlay CSS */
         .app-preloader { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #0b0e14; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 999999; transition: opacity 0.4s ease, visibility 0.4s ease; }
         .app-preloader.fade-out { opacity: 0; visibility: hidden; pointer-events: none; }
         
-        /* CSS Reconstructed Vector Emblem representation of your brand logo */
         .loader-logo-container { display: flex; flex-direction: column; align-items: center; gap: 20px; animation: brandPulse 1.2s ease-in-out infinite; }
         .logo-svg-wrapper { width: 120px; height: 120px; }
         .loader-text { color: #ffffff; font-size: 18px; font-weight: 600; letter-spacing: 0.5px; font-family: sans-serif; }
@@ -33,7 +31,6 @@
         
         .main-container { display: flex; flex: 1; width: 100vw; overflow: hidden; position: relative; }
         
-        /* FIXED OVERFLOW CLIPPING FOR SIDEBAR */
         .left-sidebar { width: 58px; background: var(--panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; padding-top: 10px; gap: 14px; overflow-y: visible; overflow-x: visible; z-index: 500; position: relative; }
         
         .tool-group { position: relative; width: 100%; display: flex; justify-content: center; }
@@ -42,8 +39,7 @@
         .tool-icon:hover { background: #2a2e39; color: #fff; }
         .tool-icon.active { background: var(--accent); color: #fff; }
 
-        /* Categorized Flyout Menus - Adjusted left to match alignment and ensured high z-index stacking */
-        .tool-menu { position: absolute; left: 48px; top: 0; background: #1c2030; border: 1px solid #363a45; border-radius: 8px; min-width: 200px; display: none; flex-direction: column; overflow: hidden; box-shadow: 5px 10px 30px rgba(0,0,0,0.55); z-index: 99999; }
+        .tool-menu { position: absolute; left: 48px; top: 0; background: #1c2030; border: 1px solid #363a45; border-radius: 8px; min-width: 220px; display: none; flex-direction: column; overflow: hidden; box-shadow: 5px 10px 30px rgba(0,0,0,0.55); z-index: 99999; }
         .tool-group:hover .tool-menu { display: flex; }
         
         .tool-item { padding: 10px 14px; font-size: 13px; color: #d1d4dc; cursor: pointer; transition: 0.12s; white-space: nowrap; display: flex; align-items: center; gap: 10px; }
@@ -103,15 +99,15 @@
         .legend-remove-btn:hover { background: rgba(242, 54, 69, 0.2); color: var(--down); }
 
         .premium-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); z-index: 9999; align-items: center; justify-content: center; }
-        .premium-modal-content { background: #1c2030; border: 1px solid #363a45; border-radius: 6px; width: 350px; padding: 0; box-shadow: 0 16px 40px rgba(0,0,0,0.5); overflow: hidden; animation: modalFadeIn 0.15s ease-out; }
+        .premium-modal-content { background: #1c2030; border: 1px solid #363a45; border-radius: 6px; width: 380px; padding: 0; box-shadow: 0 16px 40px rgba(0,0,0,0.5); overflow: hidden; animation: modalFadeIn 0.15s ease-out; }
         .premium-modal-header { background: #131722; padding: 14px 18px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
         .premium-modal-title { font-size: 14px; font-weight: 600; color: #ffffff; letter-spacing: 0.3px; }
         .premium-modal-close { color: #787b86; cursor: pointer; font-size: 16px; font-weight: bold; }
         .premium-modal-close:hover { color: #ffffff; }
-        .premium-modal-body { padding: 18px; display: flex; flex-direction: column; gap: 14px; }
+        .premium-modal-body { padding: 18px; display: flex; flex-direction: column; gap: 14px; max-height: 450px; overflow-y: auto; }
         .modal-input-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
         .modal-label { font-size: 13px; color: #b2b5be; }
-        .modal-input-field { width: 80px; background: #2a2e39; border: 1px solid #434651; color: white; padding: 6px 8px; border-radius: 4px; font-size: 13px; text-align: left; outline: none; }
+        .modal-input-field { width: 100px; background: #2a2e39; border: 1px solid #434651; color: white; padding: 6px 8px; border-radius: 4px; font-size: 13px; text-align: left; outline: none; }
         .modal-input-field:focus { border-color: var(--accent); }
         .modal-color-picker { width: 32px; height: 32px; padding: 0; border: 1px solid #434651; background: transparent; border-radius: 4px; cursor: pointer; outline: none; vertical-align: middle; }
         .premium-modal-footer { background: #131722; padding: 12px 18px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 8px; }
@@ -126,18 +122,15 @@
             to { opacity: 1; transform: scale(1); }
         }
 
-        /* --- DRAWING LAYER STYLING OVERLAYS --- */
-        #drawingCanvasOverlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            z-index: 15;
-            pointer-events: none;
-        }
+        #drawingCanvasOverlay { position: absolute; top: 0; left: 0; z-index: 15; pointer-events: none; }
+
+        /* Custom Drawing Context Context Menu Layout */
+        .canvas-context-menu { position: absolute; background: #1c2030; border: 1px solid #363a45; border-radius: 6px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); display: none; flex-direction: column; z-index: 100000; overflow: hidden; width: 150px; }
+        .context-menu-item { padding: 8px 12px; font-size: 12px; color: #d1d4dc; cursor: pointer; transition: background 0.15s; }
+        .context-menu-item:hover { background: var(--accent); color: white; }
     </style>
 </head>
 <body>
-
 
 <div id="appPreloader" class="app-preloader">
     <div class="loader-logo-container">
@@ -145,13 +138,10 @@
             <path d="M38 25H62M43 25V42L22 73C20 76 22 80 26 80H74C78 80 80 76 78 73L57 42V25" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
             <rect x="34" y="56" width="3" height="12" fill="#2962ff"/>
             <path d="M35.5 52V72" stroke="#2962ff" stroke-width="1.5" stroke-linecap="round"/>
-            
             <rect x="44" y="48" width="3" height="14" fill="#2962ff"/>
             <path d="M45.5 42V66" stroke="#2962ff" stroke-width="1.5" stroke-linecap="round"/>
-            
             <rect x="54" y="42" width="3" height="16" fill="#089981"/>
             <path d="M55.5 36V62" stroke="#089981" stroke-width="1.5" stroke-linecap="round"/>
-            
             <rect x="64" y="34" width="3" height="14" fill="#089981"/>
             <path d="M65.5 28V52" stroke="#089981" stroke-width="1.5" stroke-linecap="round"/>
             <circle cx="50" cy="72" r="10" fill="#0b0e14" stroke="#089981" stroke-width="2.5"/>
@@ -206,27 +196,6 @@
             <option value="MACD">MACD (Convergence/Divergence)</option>
             <option value="BB">BB (Bollinger Bands)</option>
             <option value="ATR">ATR (Average True Range)</option>
-            <option value="VWAP">VWAP</option>
-<option value="SUPER">Supertrend</option>
-<option value="DONCHIAN">Donchian Channels</option>
-<option value="STOCH">Stochastic</option>
-<option value="STOCHRSI">Stochastic RSI</option>
-<option value="OBV">OBV</option>
-<option value="MFI">MFI</option>
-<option value="ADX">ADX</option>
-<option value="KELTNER">Keltner Channels</option>
-<option value="SAR">Parabolic SAR</option>
-<option value="CCI">CCI</option>
-<option value="WPR">Williams %R</option>
-<option value="ROC">ROC</option>
-<option value="ADLINE">A/D Line</option>
-<option value="VWMA">VWMA</option>
-<option value="HMA">HMA</option>
-<option value="WMA">WMA</option>
-<option value="PIVOT">Pivot Points</option>
-<option value="DHL">Daily High Low</option>
-<option value="WHL">Weekly High Low</option>
-<option value="ICHIMOKU">Ichimoku</option>
         </select>
     </div>
 
@@ -253,71 +222,15 @@
             </div>
         </div>
 
-       <!-- PROFESSIONAL FIBONACCI TOOLSUITE -->
-<div class="tool-group">
-
-    <div class="tool-icon" id="primary-fib-icon">🌀</div>
-
-    <div class="tool-menu">
-
-        <!-- CORE -->
-        <div class="tool-item" onclick="setTool('fib')">
-            <span class="item-icon">F</span>
-            Fibonacci Retracement
+        <div class="tool-group">
+            <div class="tool-icon" id="primary-fib-icon">F</div>
+            <div class="tool-menu">
+                <div class="tool-item" onclick="setTool('fib')"><span class="item-icon">F</span> Fibonacci Retracement</div>
+                <div class="tool-item" onclick="setTool('fibExt')"><span class="item-icon">FE</span> Trend-Based Fib Extension</div>
+                <div class="tool-item" onclick="setTool('fibTimeZone')"><span class="item-icon">⏰</span> Fibonacci Time Zones</div>
+                <div class="tool-item" onclick="setTool('fibFan')"><span class="item-icon">🪭</span> Fibonacci Fan Matrix</div>
+            </div>
         </div>
-
-        <div class="tool-item" onclick="setTool('fibtrend')">
-            <span class="item-icon">↗</span>
-            Fib Trend Extension
-        </div>
-
-        <div class="tool-item" onclick="setTool('fibext')">
-            <span class="item-icon">⇱</span>
-            Fibonacci Extension
-        </div>
-
-        <div class="tool-item" onclick="setTool('fibprojection')">
-            <span class="item-icon">⌲</span>
-            Fibonacci Projection
-        </div>
-
-        <div class="tool-item" onclick="setTool('fibchannel')">
-            <span class="item-icon">≋</span>
-            Fibonacci Channel
-        </div>
-
-        <div class="tool-item" onclick="setTool('fibwedge')">
-            <span class="item-icon">⋀</span>
-            Fibonacci Wedge
-        </div>
-
-        <div class="tool-item" onclick="setTool('fibspeed')">
-            <span class="item-icon">⚡</span>
-            Fibonacci Speed Resistance
-        </div>
-
-        <div class="tool-item" onclick="setTool('fibtimezone')">
-            <span class="item-icon">⏱</span>
-            Fibonacci Time Zones
-        </div>
-
-        <div class="tool-item" onclick="setTool('fibspiral')">
-            <span class="item-icon">🌀</span>
-            Fibonacci Spiral
-        </div>
-
-        <div class="tool-item" onclick="setTool('fibarc')">
-            <span class="item-icon">◜</span>
-            Fibonacci Arcs
-        </div>
-
-        <div class="tool-item" onclick="setTool('fibfan')">
-            <span class="item-icon">╱</span>
-            Fibonacci Fan
-        </div>
-
-    </div>
-</div>
 
         <div class="tool-group">
             <div class="tool-icon" id="primary-shapes-icon">▭</div>
@@ -469,7 +382,7 @@
             <span class="premium-modal-close" onclick="closeIndicatorModal()">✕</span>
         </div>
         <div class="premium-modal-body" id="modalBodyContent">
-            </div>
+        </div>
         <div class="premium-modal-footer">
             <input type="hidden" id="modalTargetMode" value="ADD">
             <input type="hidden" id="modalTargetId" value="">
@@ -480,10 +393,27 @@
     </div>
 </div>
 
+<div id="toolSettingsModal" class="premium-modal">
+    <div class="premium-modal-content">
+        <div class="premium-modal-header">
+            <span class="premium-modal-title" id="toolSettingsTitle">Drawing Tool Properties</span>
+            <span class="premium-modal-close" onclick="closeToolSettingsModal()">✕</span>
+        </div>
+        <div class="premium-modal-body" id="toolSettingsBody">
+        </div>
+        <div class="premium-modal-footer">
+            <button class="premium-btn premium-btn-secondary" onclick="closeToolSettingsModal()">Cancel</button>
+            <button class="premium-btn premium-btn-primary" onclick="applyToolSettings()">Save Parameters</button>
+        </div>
+    </div>
+</div>
+
+<div id="canvasContextMenu" class="canvas-context-menu">
+    <div class="context-menu-item" onclick="openSelectedToolSettings()">⚙ Settings</div>
+    <div class="context-menu-item" onclick="deleteSelectedDrawing()" style="color:var(--down)">🗑 Delete Item</div>
+</div>
+
 <script>
-// ========================================
-// CORE BACKTEST STATE ENGINE
-// ========================================
 let symbol = localStorage.getItem("symbol") || "XAUUSD";
 let tf = "h4";
 let speed = parseInt(localStorage.getItem("speed")) || 500;
@@ -501,16 +431,12 @@ let activeTrade = null;
 let entryLine, slLine, tpLine;
 let pendingType = null;
 let sessionEnded = false;
-window.sessionEnded = false;
-window.sessionEndTime = null;
-window.sessionEnded = false;
+
 const chartEl = document.getElementById("chart");
 const chart = LightweightCharts.createChart(chartEl, {
     layout: { background: { color: '#0b0e14' }, textColor: '#d1d4dc' },
     grid: { vertLines: { color: '#1e222d' }, horzLines: { color: '#1e222d' } },
-    timeScale: { timeVisible: true, secondsVisible: false, borderColor: '#2a2e39', shiftVisibleRangeOnNewBar: true, rightOffset: 8 , rightOffset: 12,
-    shiftVisibleRangeOnNewBar: true,
-},
+    timeScale: { timeVisible: true, secondsVisible: false, borderColor: '#2a2e39', shiftVisibleRangeOnNewBar: true, rightOffset: 8 },
     rightPriceScale: { borderColor: '#2a2e39', autoScale: true },
     handleScroll: { mouseWheel: true, pressedMouseMove: true, horzTouchDrag: true, vertTouchDrag: true },
     handleScale: { axisPressedMouseMove: true, mouseWheel: true, pinch: true },
@@ -650,10 +576,12 @@ function closeTrade() {
 }
 
 function openSessionModal() {
+    if (sessionEnded) return;
     sessionEnded = true;
     window.pause();
     document.getElementById("sessionModal").style.display = "flex";
 }
+
 function closeSessionModal() {
     document.getElementById("sessionModal").style.display = "none";
 }
@@ -732,7 +660,7 @@ function generateModalInputsHTML(type, existingOptions = null) {
         const sig = existingOptions ? existingOptions.signalPeriod : 9;
         return `
             <div class="modal-input-row"><span class="modal-label">Fast Period</span><input type="number" id="macdFast" class="modal-input-field" value="${fast}"></div>
-            <div class="modal-input-row"><span class="modal-label">Slow Period</span><input type="number" id="macdSlow" class="modal-input-field" value="${fast}"></div>
+            <div class="modal-input-row"><span class="modal-label">Slow Period</span><input type="number" id="macdSlow" class="modal-input-field" value="${slow}"></div>
             <div class="modal-input-row"><span class="modal-label">Signal Period</span><input type="number" id="macdSignal" class="modal-input-field" value="${sig}"></div>
         `;
     } else if (type === "BB") {
@@ -831,25 +759,10 @@ window.deleteIndicator = function(id) {
 };
 
 window.next = function() {
-
-if(index >= data.length - 500){
-
-    window.loadNextChunk();
-}
-
-if (index >= data.length) {
-
-   if (window.sessionEnded) {
-    window.pause();
-    openSessionModal();
-    return;
-}
-
-    console.log("WAITING FOR NEXT CHUNK...");
-    window.loadNextChunk();
-    return;
-}
-
+    if (index >= data.length) {
+        openSessionModal();
+        return;
+    }
 
     const candle = data[index];
     historyData.push(candle);
@@ -880,125 +793,11 @@ if (index >= data.length) {
     lastReplayTime = candle.time;
     updateTime(lastReplayTime);
 
-if (isAutoFollow)
-    chart.timeScale().scrollToPosition(1, false);
+    if (isAutoFollow) chart.timeScale().scrollToRealTime();
     index++;
 };
 
 window.load = function() {
-    
-let chunkLoading = false;
-let loadedMonths = new Set();
-
-window.loadNextChunk = async function() {
-    if(chunkLoading) return false;
-
-    chunkLoading = true;
-
-    try {
-
-        // CURRENT replay candle
-        const currentCandle =
-            historyData[historyData.length - 1];
-
-        if(!currentCandle){
-            chunkLoading = false;
-            return false;
-        }
-
-        // derive NEXT month from current replay time
-        const d = new Date(currentCandle.time * 1000);
-
-        d.setUTCMonth(d.getUTCMonth() + 1);
-
-        const year = d.getUTCFullYear();
-        const month = String(d.getUTCMonth() + 1).padStart(2,'0');
-
-        const chunkKey = `${year}-${month}`;
-
-        // prevent duplicate fetches
-        if(loadedMonths.has(chunkKey)){
-            chunkLoading = false;
-            return false;
-        }
-
-        loadedMonths.add(chunkKey);
-
-       const finalLimit = new Date(localStorage.getItem("to")).getTime() / 1000;
-
-// last loaded candle time (IMPORTANT)
-const lastCandle = historyData[historyData.length - 1];
-
-if (!lastCandle) {
-    chunkLoading = false;
-    return false;
-}
-
-// 🚨 HARD STOP CONDITION
-if (lastCandle.time >= finalLimit) {
-    window.sessionEnded = true;
-    console.log("SESSION END REACHED — STOPPING CHUNKS");
-    chunkLoading = false;
-    return false;
-}
-        const API =
-        "https://huggingface.co/spaces/mehtab13/backtestlab-data/raw/main";
-
-        const url =
-        `${API}/${symbol.toLowerCase()}/${tf.toLowerCase()}/${year}/${month}.json`;
-
-        console.log("FETCHING:", url);
-
-        const r = await fetch(url);
-
-        if(!r.ok){
-            console.log("NO CHUNK:", chunkKey);
-            chunkLoading = false;
-            return false;
-        }
-
-        const res = await r.json();
-
-        if(!Array.isArray(res) || !res.length){
-            chunkLoading = false;
-            return false;
-        }
-
-        // remove duplicates
-      data.push(...res);
-
-// remove duplicates by time
-const unique = new Map();
-
-for (const c of data) {
-    unique.set(c.time, c);
-}
-
-data = Array.from(unique.values())
-    .sort((a, b) => a.time - b.time);
-
-        console.log(
-            "CHUNK LOADED:",
-            chunkKey,
-            "TOTAL:",
-            data.length
-        );
-
-        chunkLoading = false;
-
-        return true;
-
-    } catch(err){
-
-        console.error(err);
-
-        chunkLoading = false;
-
-        return false;
-    }
-}
-
-
     if (isFetching) return;
     isFetching = true;
 
@@ -1009,39 +808,14 @@ data = Array.from(unique.values())
     const initialParam = localStorage.getItem("initial") || "2023-01-01T00:00:00.000Z";
     const finalTo = localStorage.getItem("to") || new Date().toISOString();
     let currentISO = lastReplayTime ? new Date(lastReplayTime * 1000).toISOString() : initialParam;
-const API = "https://huggingface.co/spaces/mehtab13/backtestlab-data/raw/main";
 
-// 1. Parse current time settings to dynamically isolate targeted single-month filename
-const currentDateObj = new Date(currentISO);
-const targetYear     = currentDateObj.getUTCFullYear();
-const targetMonth    = String(currentDateObj.getUTCMonth() + 1).padStart(2, '0');
-
-const url = `${API}/${symbol.toLowerCase()}/${tf.toLowerCase()}/${targetYear}/${targetMonth}.json`;
-console.log(url);
-
-fetch(url)
-    .then(r => {
-        if (!r.ok) throw new Error(`Data chunk file missing for ${targetYear}/${targetMonth}`);
-        return r.json();
-    })
+const url = `https://mehtab13-backtestlab-pro.hf.space/data?symbol=${symbol}&tf=${tf}&initial=${initialParam}&current=${currentISO}&to=${finalTo}`;
+    fetch(url)
+    .then(r => r.json())
     .then(res => {
-        // --- CHUNK FILTERING FIX ---
-        // Convert timestamp conditions to seconds to match the data's "time" key
-        const startTs   = Math.floor(new Date(initialParam).getTime() / 1000);
-        const currentTs = Math.floor(currentDateObj.getTime() / 1000);
-        const endTs     = Math.floor(new Date(finalTo).getTime() / 1000);
-
-        // Treat raw 'res' directly as the array of candle data
-        const rawArray = Array.isArray(res) ? res : [];
-
-        // Distribute the flat raw array into exactly what your engine expects
-        window.historyData = rawArray.filter(candle => parseInt(candle.time) >= startTs && parseInt(candle.time) <= currentTs);
+        window.historyData = res.history || [];
         historyData = window.historyData;
-        
-        // Load subsequent candles up to the boundary limit
-        data = rawArray.filter(candle => parseInt(candle.time) > currentTs && parseInt(candle.time) <= endTs).slice(0, 5000);
-        // ---------------------------
-
+        data = res.data || [];
         index = 0;
 
         series.setData(historyData);
@@ -1101,9 +875,7 @@ window.changeSymbol = function() {
 };
 
 window.goLive = function() { isAutoFollow = true; chart.timeScale().scrollToRealTime(); };
-// ========================================
-// FIREBASE SECURITY & STORAGE INFRASTRUCTURE
-// ========================================
+
 const firebaseConfig = {
     apiKey: "AIzaSyAensfI53w49Fd4A7Lz5_K9N1JOxZsW7Kk",
     authDomain: "backtestlabpro.firebaseapp.com",
@@ -1140,14 +912,8 @@ window.saveSession = async function() {
             created_at: new Date().toISOString()
         };
 
-       const docRef = await window.addDoc(
-    window.collection(window.db, "users", user.uid, "sessions"),
-    sessionData
-);
-
-alert("Session Saved Successfully!");
-
-window.location.href = "my-sessions.html";
+        const docRef = await window.addDoc(window.collection(window.db, "users", user.uid, "sessions"), sessionData);
+        alert("Firestore Session Saved Successfully! ID: " + docRef.id);
     } catch (err) {
         alert("Firestore Error: " + err.message);
     }
@@ -1160,12 +926,12 @@ onAuthStateChanged(auth, (user) => {
 window.load();
 window.calcLots();
 </script>
+
 <script>
 (() => {
-
 const canvas = document.getElementById('drawingCanvasOverlay');
 const ctx = canvas.getContext('2d');
-let isLoadingChunk = false;
+
 let tool = 'cursor';
 let drawings = [];
 
@@ -1175,33 +941,28 @@ let startY = 0;
 let currentShape = null;
 
 let selected = null;
-let dragOffsetX = 0;
-let dragOffsetY = 0;
+let rightClickedShape = null;
+
+// Multi-point tool management tracks intermediate point placements (e.g., Extension)
+let multiPointStage = 0;
+let multiPointTemp = null;
 
 function resizeCanvas() {
     const rect = chartEl.getBoundingClientRect();
-
     canvas.width = rect.width * devicePixelRatio;
     canvas.height = rect.height * devicePixelRatio;
-
     canvas.style.width = rect.width + 'px';
     canvas.style.height = rect.height + 'px';
-
     ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
-
     redraw();
 }
 
 resizeCanvas();
-
 window.addEventListener('resize', resizeCanvas);
 
 function redraw() {
-
     ctx.clearRect(0,0,canvas.width,canvas.height);
-
     drawings.forEach(drawShape);
-
     if(currentShape){
         drawShape(currentShape,true);
     }
@@ -1209,128 +970,81 @@ function redraw() {
 
 function drawHandle(x,y){
     ctx.fillStyle='#fff';
+    ctx.strokeStyle='#2962ff';
+    ctx.lineWidth = 1;
     ctx.beginPath();
     ctx.arc(x,y,4,0,Math.PI*2);
     ctx.fill();
+    ctx.stroke();
 }
 
 function drawShape(shape,preview=false){
-
-    ctx.lineWidth = 2;
+    ctx.lineWidth = shape.lineWidth || 2;
     ctx.strokeStyle = shape.color || '#2962ff';
     ctx.fillStyle = shape.fill || 'rgba(41,98,255,0.15)';
 
     switch(shape.type){
-
         case 'trend':
             line(shape.x1,shape.y1,shape.x2,shape.y2);
         break;
-
         case 'ray':
             drawRay(shape);
         break;
-
         case 'extend':
             drawExtended(shape);
         break;
-
         case 'hline':
             line(0,shape.y1,canvas.width,shape.y1);
         break;
-
         case 'vline':
             line(shape.x1,0,shape.x1,canvas.height);
         break;
-
         case 'rect':
             rect(shape);
         break;
-
         case 'circle':
             circle(shape);
         break;
-
         case 'arrow':
             arrow(shape);
         break;
-
         case 'channel':
             channel(shape);
         break;
-
-       case 'fib':
-    fib(shape);
-break;
-
-case 'fibext':
-    fibExtension(shape);
-break;
-
-case 'fibfan':
-    fibFan(shape);
-break;
-
-case 'fibarc':
-    fibArc(shape);
-break;
-
-case 'fibchannel':
-    fibChannel(shape);
-break;
-
-case 'fibtimezone':
-    fibTimeZones(shape);
-break;
-
-case 'fibspiral':
-    fibSpiral(shape);
-break;
-
-case 'fibspeed':
-    fibSpeed(shape);
-break;
-
-case 'fibtrend':
-    fibTrend(shape);
-break;
-
-case 'fibprojection':
-    fibProjection(shape);
-break;
-
-case 'fibwedge':
-    fibWedge(shape);
-break;
-
+        case 'fib':
+            fib(shape);
+        break;
+        case 'fibExt':
+            fibExt(shape);
+        break;
+        case 'fibTimeZone':
+            fibTimeZone(shape);
+        break;
+        case 'fibFan':
+            fibFan(shape);
+        break;
         case 'long':
             riskBox(shape,'#089981');
         break;
-
         case 'short':
             riskBox(shape,'#f23645');
         break;
-
         case 'brush':
         case 'path':
             brush(shape);
         break;
-
         case 'highlight':
             highlight(shape);
         break;
-
         case 'triangle':
             triangle(shape);
         break;
-
         case 'measure':
             measure(shape);
         break;
-
         case 'text':
             drawText(shape);
         break;
-
         case 'label':
             label(shape);
         break;
@@ -1338,7 +1052,8 @@ break;
 
     if(selected===shape){
         drawHandle(shape.x1,shape.y1);
-        drawHandle(shape.x2,shape.y2);
+        if(shape.x2 !== undefined) drawHandle(shape.x2,shape.y2);
+        if(shape.x3 !== undefined) drawHandle(shape.x3,shape.y3);
     }
 }
 
@@ -1364,9 +1079,7 @@ function circle(s){
 
 function arrow(s){
     line(s.x1,s.y1,s.x2,s.y2);
-
     const angle=Math.atan2(s.y2-s.y1,s.x2-s.x1);
-
     ctx.beginPath();
     ctx.moveTo(s.x2,s.y2);
     ctx.lineTo(s.x2-12*Math.cos(angle-0.3),s.y2-12*Math.sin(angle-0.3));
@@ -1376,301 +1089,143 @@ function arrow(s){
 }
 
 function drawRay(s){
-
     const angle=Math.atan2(s.y2-s.y1,s.x2-s.x1);
-
     const len=5000;
-
-    const ex=s.x1+Math.cos(angle)*len;
-    const ey=s.y1+Math.sin(angle)*len;
-
-    line(s.x1,s.y1,ex,ey);
+    line(s.x1,s.y1,s.x1+Math.cos(angle)*len,s.y1+Math.sin(angle)*len);
 }
 
 function drawExtended(s){
-
     const angle=Math.atan2(s.y2-s.y1,s.x2-s.x1);
-
     const len=5000;
-
-    const sx=s.x1-Math.cos(angle)*len;
-    const sy=s.y1-Math.sin(angle)*len;
-
-    const ex=s.x1+Math.cos(angle)*len;
-    const ey=s.y1+Math.sin(angle)*len;
-
-    line(sx,sy,ex,ey);
+    line(s.x1-Math.cos(angle)*len,s.y1-Math.sin(angle)*len,s.x1+Math.cos(angle)*len,s.y1+Math.sin(angle)*len);
 }
 
-// Ensure proper fallbacks for drawings layers
 function brush(s){
-
     ctx.beginPath();
-
     s.points.forEach((p,i)=>{
         if(i===0) ctx.moveTo(p.x,p.y);
         else ctx.lineTo(p.x,p.y);
     });
-
     ctx.stroke();
 }
 
 function highlight(s){
-
     ctx.save();
-
-    ctx.globalAlpha=0.2;
-    ctx.lineWidth=12;
-
+    ctx.globalAlpha=shape.opacity || 0.2;
+    ctx.lineWidth=s.lineWidth || 12;
     brush(s);
-
     ctx.restore();
 }
 
 function triangle(s){
-
     ctx.beginPath();
-
     ctx.moveTo(s.x1,s.y2);
     ctx.lineTo((s.x1+s.x2)/2,s.y1);
     ctx.lineTo(s.x2,s.y2);
-
     ctx.closePath();
-
     ctx.fill();
     ctx.stroke();
 }
 
 function measure(s){
-
     line(s.x1,s.y1,s.x2,s.y2);
-
     const dist=Math.round(Math.hypot(s.x2-s.x1,s.y2-s.y1));
-
     ctx.fillStyle='#fff';
     ctx.fillText(dist+' px',(s.x1+s.x2)/2,(s.y1+s.y2)/2);
 }
 
 function channel(s){
-
     line(s.x1,s.y1,s.x2,s.y2);
-
-    const offset=50;
-
+    const offset= s.channelOffset || 50;
     line(s.x1,s.y1+offset,s.x2,s.y2+offset);
 }
 
+// Custom Configurable Fibonacci Engine Builders
 function fib(s){
-
-    const levels=[0,0.236,0.382,0.5,0.618,1];
-
+    const levels = s.fibLevels || [0, 0.236, 0.382, 0.5, 0.618, 0.786, 1];
     levels.forEach(l=>{
-
         const y=s.y1+(s.y2-s.y1)*l;
-
         line(s.x1,y,s.x2,y);
-
-        ctx.fillStyle='#fff';
+        ctx.fillStyle= s.textColor || '#787b86';
+        ctx.font = "11px sans-serif";
         ctx.fillText((l*100).toFixed(1)+'%',s.x2+5,y);
     });
 }
-function fibExtension(s){
 
-    const levels=[1.272,1.414,1.618,2.618];
+function fibExt(s){
+    // 3-point alignment infrastructure construction logic
+    line(s.x1, s.y1, s.x2, s.y2);
+    const referencePointX = s.x3 !== undefined ? s.x3 : s.x2;
+    const referencePointY = s.y3 !== undefined ? s.y3 : s.y2;
+    
+    if(s.x3 !== undefined) {
+        line(s.x2, s.y2, s.x3, s.y3);
+    }
 
-    line(s.x1,s.y1,s.x2,s.y2);
+    const deltaY = s.y2 - s.y1;
+    const levels = s.fibLevels || [0, 0.236, 0.382, 0.5, 0.618, 0.786, 1, 1.618];
+    
+    levels.forEach(l => {
+        const targetY = referencePointY + (deltaY * l);
+        line(s.x1, targetY, referencePointX, targetY);
+        ctx.fillStyle = s.textColor || '#787b86';
+        ctx.fillText(`Ext ${l.toFixed(3)}`, referencePointX + 6, targetY + 3);
+    });
+}
 
-    levels.forEach(l=>{
+function fibTimeZone(s){
+    const baseDistance = Math.abs(s.x2 - s.x1);
+    if(baseDistance < 2) return;
+    const intervals = [0, 1, 2, 3, 5, 8, 13, 21, 34, 55];
+    const direction = s.x2 >= s.x1 ? 1 : -1;
 
-        const y=s.y2-(s.y2-s.y1)*l;
-
-        line(s.x1,y,s.x2+120,y);
-
-        ctx.fillStyle='#fff';
-        ctx.fillText(l.toFixed(3),s.x2+10,y-2);
+    intervals.forEach(node => {
+        const computedX = s.x1 + (direction * node * baseDistance);
+        line(computedX, 0, computedX, canvas.height);
+        ctx.fillStyle = s.textColor || '#787b86';
+        ctx.fillText(`(${node})`, computedX + 4, s.y1 - 10);
     });
 }
 
 function fibFan(s){
+    line(s.x1, s.y1, s.x2, s.y2);
+    const levels = s.fibLevels || [0.382, 0.5, 0.618];
+    const deltaX = s.x2 - s.x1;
+    const deltaY = s.y2 - s.y1;
 
-    const levels=[0.382,0.5,0.618];
-
-    levels.forEach(l=>{
-
-        const y=s.y1+(s.y2-s.y1)*l;
-
-        line(s.x1,s.y1,s.x2,y);
+    levels.forEach(l => {
+        const innerX = s.x1 + deltaX;
+        const innerY = s.y1 + (deltaY * l);
+        line(s.x1, s.y1, innerX, innerY);
+        ctx.fillStyle = s.textColor || '#787b86';
+        ctx.fillText(`Fan ${l}`, innerX - 35, innerY - 4);
     });
 }
 
-function fibArc(s){
-
-    const radius=Math.hypot(s.x2-s.x1,s.y2-s.y1);
-
-    [0.382,0.5,0.618].forEach(l=>{
-
-        ctx.beginPath();
-
-        ctx.arc(
-            s.x1,
-            s.y1,
-            radius*l,
-            0,
-            Math.PI
-        );
-
-        ctx.stroke();
-    });
-}
-
-function fibChannel(s){
-
-    const levels=[0.382,0.618,1];
-
-    line(s.x1,s.y1,s.x2,s.y2);
-
-    levels.forEach(l=>{
-
-        const offset=120*l;
-
-        line(
-            s.x1,
-            s.y1+offset,
-            s.x2,
-            s.y2+offset
-        );
-    });
-}
-
-function fibTimeZones(s){
-
-    const fibs=[1,2,3,5,8,13,21];
-
-    fibs.forEach(f=>{
-
-        const x=s.x1+(f*40);
-
-        line(x,0,x,canvas.height);
-
-        ctx.fillStyle='#fff';
-        ctx.fillText(f,x+3,20);
-    });
-}
-
-function fibSpiral(s){
-
-    const radius=Math.hypot(s.x2-s.x1,s.y2-s.y1);
-
-    let angle=0;
-
-    ctx.beginPath();
-
-    for(let i=0;i<200;i++){
-
-        const r=radius*(i/200);
-
-        const x=s.x1+Math.cos(angle)*r;
-        const y=s.y1+Math.sin(angle)*r;
-
-        if(i===0) ctx.moveTo(x,y);
-        else ctx.lineTo(x,y);
-
-        angle+=0.3;
-    }
-
-    ctx.stroke();
-}
-
-function fibSpeed(s){
-
-    const levels=[0.33,0.66,1];
-
-    levels.forEach(l=>{
-
-        line(
-            s.x1,
-            s.y1,
-            s.x2,
-            s.y1+(s.y2-s.y1)*l
-        );
-    });
-}
-
-function fibTrend(s){
-
-    line(s.x1,s.y1,s.x2,s.y2);
-
-    [0.618,1,1.618].forEach(l=>{
-
-        const ex=s.x2+((s.x2-s.x1)*l);
-        const ey=s.y2+((s.y2-s.y1)*l);
-
-        line(s.x2,s.y2,ex,ey);
-    });
-}
-
-function fibProjection(s){
-
-    const levels=[0.618,1,1.618];
-
-    levels.forEach(l=>{
-
-        const ex=s.x2+((s.x2-s.x1)*l);
-
-        line(
-            ex,
-            s.y1,
-            ex,
-            s.y2
-        );
-    });
-}
-
-function fibWedge(s){
-
-    line(s.x1,s.y1,s.x2,s.y2);
-
-    line(
-        s.x1,
-        s.y1+80,
-        s.x2,
-        s.y2-80
-    );
-
-    [0.382,0.5,0.618].forEach(l=>{
-
-        const y=s.y1+((s.y2-s.y1)*l);
-
-        line(s.x1,y,s.x2,y);
-    });
-}
 function riskBox(s,color){
-
-    ctx.fillStyle=color+'33';
-    ctx.strokeStyle=color;
-
+    ctx.fillStyle= s.fill || color+'33';
+    ctx.strokeStyle= s.color || color;
     rect(s);
 }
 
 function drawText(s){
-
-    ctx.fillStyle='#fff';
-    ctx.font='14px Arial';
+    ctx.fillStyle= s.color || '#fff';
+    ctx.font= (s.fontSize || 14) + 'px Arial';
     ctx.fillText(s.text,s.x1,s.y1);
 }
 
 function label(s){
-
-    ctx.fillStyle='#2962ff';
-    ctx.fillRect(s.x1,s.y1,80,24);
-
+    ctx.fillStyle= s.color || '#2962ff';
+    ctx.fillRect(s.x1,s.y1,90,24);
     ctx.fillStyle='#fff';
+    ctx.font = "12px sans-serif";
     ctx.fillText(s.text,s.x1+8,s.y1+16);
 }
 
 window.setTool=function(t){
-
     tool=t;
+    multiPointStage = 0; 
+    multiPointTemp = null;
 
     document.querySelectorAll('.tool-icon').forEach(e=>{
         e.classList.remove('active');
@@ -1679,19 +1234,8 @@ window.setTool=function(t){
     let targetIcon = document.getElementById('tool-'+t);
     if (!targetIcon) {
         if(['trend','ray','extend','hline','vline','arrow','channel'].includes(t)) targetIcon = document.getElementById('primary-lines-icon');
-if([
-    'fib',
-    'fibext',
-    'fibfan',
-    'fibarc',
-    'fibchannel',
-    'fibtimezone',
-    'fibspiral',
-    'fibspeed',
-    'fibtrend',
-    'fibprojection',
-    'fibwedge'
-].includes(t))        if(['rect','circle','triangle'].includes(t)) targetIcon = document.getElementById('primary-shapes-icon');
+        if(['fib','fibExt','fibTimeZone','fibFan'].includes(t)) targetIcon = document.getElementById('primary-fib-icon');
+        if(['rect','circle','triangle'].includes(t)) targetIcon = document.getElementById('primary-shapes-icon');
         if(['text','label'].includes(t)) targetIcon = document.getElementById('primary-text-icon');
         if(['brush','highlight','path'].includes(t)) targetIcon = document.getElementById('primary-brush-icon');
         if(['long','short'].includes(t)) targetIcon = document.getElementById('primary-positions-icon');
@@ -1702,16 +1246,10 @@ if([
 
     if(t==='cursor'){
         canvas.style.pointerEvents='none';
-        chart.applyOptions({
-            handleScroll:true,
-            handleScale:true
-        });
+        chart.applyOptions({ handleScroll:true, handleScale:true });
     }else{
         canvas.style.pointerEvents='auto';
-        chart.applyOptions({
-            handleScroll:false,
-            handleScale:false
-        });
+        chart.applyOptions({ handleScroll:false, handleScale:false });
     }
 };
 
@@ -1720,78 +1258,240 @@ window.clearDrawings=function(){
     redraw();
 };
 
-canvas.addEventListener('mousedown',e=>{
+// Selection and Context Engine Detections
+function findShapeNear(x, y) {
+    // Reverse scanning captures the topmost layer matching cursor proximity bounds
+    for(let i=drawings.length-1; i>=0; i--) {
+        const s = drawings[i];
+        if(Math.abs(s.x1 - x) < 15 && Math.abs(s.y1 - y) < 15) return s;
+        if(s.x2 !== undefined && Math.abs(s.x2 - x) < 15 && Math.abs(s.y2 - y) < 15) return s;
+        if(s.x3 !== undefined && Math.abs(s.x3 - x) < 15 && Math.abs(s.y3 - y) < 15) return s;
+        
+        // Bounding box shortcuts for simple geometry structural clicks
+        if(s.type === 'rect' || s.type === 'long' || s.type === 'short') {
+            if(x >= Math.min(s.x1, s.x2) && x <= Math.max(s.x1, s.x2) && y >= Math.min(s.y1, s.y2) && y <= Math.max(s.y1, s.y2)) {
+                return s;
+            }
+        }
+    }
+    return null;
+}
 
-    const rect=canvas.getBoundingClientRect();
-    startX=e.clientX-rect.left;
-    startY=e.clientY-rect.top;
-    drawing=true;
-    if(tool==='brush' || tool==='highlight' || tool==='path'){
-        currentShape={
-            type:tool,
-            points:[{x:startX,y:startY}]
-        };
-        return;
+canvas.addEventListener('contextmenu', e => {
+    e.preventDefault();
+    const rect = canvas.getBoundingClientRect();
+    const clickX = e.clientX - rect.left;
+    const clickY = e.clientY - rect.top;
+
+    const targeted = findShapeNear(clickX, clickY);
+    if(targeted) {
+        rightClickedShape = targeted;
+        selected = targeted;
+        redraw();
+        
+        const menu = document.getElementById('canvasContextMenu');
+        menu.style.left = e.clientX + 'px';
+        menu.style.top = e.clientY + 'px';
+        menu.style.display = 'flex';
+    } else {
+        hideContextMenu();
     }
-    if(tool==='text'){
-        const txt=prompt('Text');
-        if(txt){
-            drawings.push({
-                type:'text',
-                x1:startX,
-                y1:startY,
-                text:txt
-            });
-            redraw();
-        }
-        drawing=false;
-        return;
-    }
-    if(tool==='label'){
-        const txt=prompt('Label');
-        if(txt){
-            drawings.push({
-                type:'label',
-                x1:startX,
-                y1:startY,
-                text:txt
-            });
-            redraw();
-        }
-        drawing=false;
-        return;
-    }
-    currentShape={
-        type:tool,
-        x1:startX,
-        y1:startY,
-        x2:startX,
-        y2:startY
-    };
 });
-canvas.addEventListener('mousemove',e=>{
+
+function hideContextMenu() {
+    document.getElementById('canvasContextMenu').style.display = 'none';
+}
+
+document.addEventListener('click', () => { hideContextMenu(); });
+
+window.deleteSelectedDrawing = function() {
+    if(rightClickedShape) {
+        drawings = drawings.filter(item => item !== rightClickedShape);
+        if(selected === rightClickedShape) selected = null;
+        rightClickedShape = null;
+        redraw();
+    }
+    hideContextMenu();
+};
+
+// UI Field Mapping and Tool Adjustments Menu Interfacing Logic
+window.openSelectedToolSettings = function() {
+    if(!rightClickedShape) return;
+    hideContextMenu();
+
+    const s = rightClickedShape;
+    const body = document.getElementById('toolSettingsBody');
+    document.getElementById('toolSettingsTitle').innerText = `${s.type.toUpperCase()} Settings Configurator`;
+    
+    // Default dynamic properties configuration interface injections
+    let html = `
+        <div class="modal-input-row">
+            <span class="modal-label">Border Color</span>
+            <input type="color" id="propColor" class="modal-color-picker" value="${s.color || '#2962ff'}">
+        </div>
+        <div class="modal-input-row">
+            <span class="modal-label">Thickness (px)</span>
+            <input type="number" id="propLineWidth" class="modal-input-field" value="${s.lineWidth || 2}" min="1" max="10">
+        </div>
+    `;
+
+    if(['rect','circle','triangle','long','short'].includes(s.type)) {
+        html += `
+            <div class="modal-input-row">
+                <span class="modal-label">Fill Color</span>
+                <input type="color" id="propFill" class="modal-color-picker" value="${s.fill ? s.fill.substring(0,7) : '#2962ff'}">
+            </div>
+        `;
+    }
+
+    if(['fib','fibExt','fibFan'].includes(s.type)) {
+        const levelsStr = s.fibLevels ? s.fibLevels.join(', ') : (s.type === 'fibExt' ? '0, 0.236, 0.382, 0.5, 0.618, 0.786, 1, 1.618' : '0, 0.236, 0.382, 0.5, 0.618, 0.786, 1');
+        html += `
+            <div class="modal-input-row">
+                <span class="modal-label">Fib Levels (CSV)</span>
+                <input type="text" id="propFibLevels" class="modal-input-field" style="width:160px;" value="${levelsStr}">
+            </div>
+            <div class="modal-input-row">
+                <span class="modal-label">Labels Color</span>
+                <input type="color" id="propTextColor" class="modal-color-picker" value="${s.textColor || '#787b86'}">
+            </div>
+        `;
+    }
+
+    if(s.type === 'text' || s.type === 'label') {
+        html += `
+            <div class="modal-input-row">
+                <span class="modal-label">Text Content</span>
+                <input type="text" id="propText" class="modal-input-field" style="width:160px;" value="${s.text || ''}">
+            </div>
+        `;
+    }
+
+    body.innerHTML = html;
+    document.getElementById('toolSettingsModal').style.display = 'flex';
+};
+
+window.closeToolSettingsModal = function() {
+    document.getElementById('toolSettingsModal').style.display = 'none';
+};
+
+window.applyToolSettings = function() {
+    if(!rightClickedShape) return;
+    const s = rightClickedShape;
+
+    s.color = document.getElementById('propColor').value;
+    s.lineWidth = parseInt(document.getElementById('propLineWidth').value) || 2;
+
+    const fillEl = document.getElementById('propFill');
+    if(fillEl) s.fill = fillEl.value + '33'; // Appends hex alpha transparency value overlay layer safely
+
+    const fibLvlEl = document.getElementById('propFibLevels');
+    if(fibLvlEl) {
+        s.fibLevels = fibLvlEl.value.split(',').map(v => parseFloat(v.trim())).filter(v => !isNaN(v));
+    }
+
+    const txtColorEl = document.getElementById('propTextColor');
+    if(txtColorEl) s.textColor = txtColorEl.value;
+
+    const txtEl = document.getElementById('propText');
+    if(txtEl) s.text = txtEl.value;
+
+    window.closeToolSettingsModal();
+    redraw();
+};
+
+canvas.addEventListener('mousedown', e => {
+    if(e.button === 2) return; // Right-clicks bypass layout state mutations
+    
+    const rect = canvas.getBoundingClientRect();
+    startX = e.clientX - rect.left;
+    startY = e.clientY - rect.top;
+
+    // Selection alignment test execution loops
+    if(tool === 'cursor') {
+        const hit = findShapeNear(startX, startY);
+        if(hit) { selected = hit; redraw(); }
+        else { selected = null; redraw(); }
+        return;
+    }
+
+    // 3-point calculation pipeline routing
+    if(tool === 'fibExt') {
+        if(multiPointStage === 0) {
+            drawing = true;
+            currentShape = { type: 'fibExt', x1: startX, y1: startY, x2: startX, y2: startY };
+        } else if(multiPointStage === 1) {
+            multiPointStage = 2;
+        }
+        return;
+    }
+
+    drawing = true;
+
+    if(tool==='brush' || tool==='highlight' || tool==='path'){
+        currentShape={ type:tool, points:[{x:startX,y:startY}], lineWidth: tool==='highlight'?12:2 };
+        return;
+    }
+
+    if(tool==='text'){
+        const txt=prompt('Enter Canvas Text:');
+        if(txt){ drawings.push({ type:'text', x1:startX, y1:startY, text:txt }); redraw(); }
+        drawing=false; return;
+    }
+
+    if(tool==='label'){
+        const txt=prompt('Enter Label Price/Text:');
+        if(txt){ drawings.push({ type:'label', x1:startX, y1:startY, text:txt }); redraw(); }
+        drawing=false; return;
+    }
+
+    currentShape={ type:tool, x1:startX, y1:startY, x2:startX, y2:startY };
+});
+
+canvas.addEventListener('mousemove', e => {
     if(!drawing || !currentShape) return;
-    const rect=canvas.getBoundingClientRect();
-    const x=e.clientX-rect.left;
-    const y=e.clientY-rect.top;
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    if(currentShape.type === 'fibExt') {
+        if(multiPointStage === 0) {
+            currentShape.x2 = x; currentShape.y2 = y;
+        } else if(multiPointStage === 1 || multiPointStage === 2) {
+            currentShape.x3 = x; currentShape.y3 = y;
+        }
+        redraw(); return;
+    }
+
     if(currentShape.points){
         currentShape.points.push({x,y});
     }else{
         currentShape.x2=x;
-       currentShape.y2=y;
+        currentShape.y2=y;
     }
     redraw();
 });
-canvas.addEventListener('mouseup',()=>{
+
+canvas.addEventListener('mouseup', () => {
     if(!drawing) return;
-    drawing=false;
+
+    if(tool === 'fibExt') {
+        if(multiPointStage === 0) {
+            multiPointStage = 1; // Transitioning to third node positioning stage layout anchor
+        } else if(multiPointStage === 2) {
+            drawing = false;
+            multiPointStage = 0;
+            if(currentShape) { drawings.push(currentShape); currentShape = null; }
+            redraw();
+        }
+        return;
+    }
+
+    drawing = false;
     if(currentShape){
         if(tool==='eraser'){
             drawings=drawings.filter(d=>{
-             return !(
-                    Math.abs(d.x1-currentShape.x1)<20 &&
-                    Math.abs(d.y1-currentShape.y1)<20
-                );
+                return !(Math.abs(d.x1-currentShape.x1)<20 && Math.abs(d.y1-currentShape.y1)<20);
             });
         }else{
             drawings.push(currentShape);
@@ -1800,11 +1500,11 @@ canvas.addEventListener('mouseup',()=>{
         redraw();
     }
 });
+
 chart.timeScale().subscribeVisibleTimeRangeChange(redraw);
 chart.subscribeCrosshairMove(redraw);
 resizeCanvas();
 })();
-
 </script>
 </body>
 </html>

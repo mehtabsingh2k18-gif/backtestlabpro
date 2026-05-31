@@ -501,7 +501,9 @@ let activeTrade = null;
 let entryLine, slLine, tpLine;
 let pendingType = null;
 let sessionEnded = false;
-
+window.sessionEnded = false;
+window.sessionEndTime = null;
+window.sessionEnded = false;
 const chartEl = document.getElementById("chart");
 const chart = LightweightCharts.createChart(chartEl, {
     layout: { background: { color: '#0b0e14' }, textColor: '#d1d4dc' },
@@ -648,12 +650,10 @@ function closeTrade() {
 }
 
 function openSessionModal() {
-    if (sessionEnded) return;
     sessionEnded = true;
     window.pause();
     document.getElementById("sessionModal").style.display = "flex";
 }
-
 function closeSessionModal() {
     document.getElementById("sessionModal").style.display = "none";
 }
@@ -837,12 +837,18 @@ if(index >= data.length - 500){
     window.loadNextChunk();
 }
 
-if(index >= data.length){
+if (index >= data.length) {
 
-    console.log("WAITING FOR NEXT CHUNK...");
+   if (window.sessionEnded) {
+    window.pause();
+    openSessionModal();
     return;
 }
 
+    console.log("WAITING FOR NEXT CHUNK...");
+    window.loadNextChunk();
+    return;
+}
 
 
     const candle = data[index];
@@ -918,14 +924,23 @@ window.loadNextChunk = async function() {
 
         loadedMonths.add(chunkKey);
 
-        const finalLimit =
-            new Date(localStorage.getItem("to")).getTime();
+       const finalLimit = new Date(localStorage.getItem("to")).getTime() / 1000;
 
-        if(d.getTime() > finalLimit){
-            chunkLoading = false;
-            return false;
-        }
+// last loaded candle time (IMPORTANT)
+const lastCandle = historyData[historyData.length - 1];
 
+if (!lastCandle) {
+    chunkLoading = false;
+    return false;
+}
+
+// 🚨 HARD STOP CONDITION
+if (lastCandle.time >= finalLimit) {
+    window.sessionEnded = true;
+    console.log("SESSION END REACHED — STOPPING CHUNKS");
+    chunkLoading = false;
+    return false;
+}
         const API =
         "https://huggingface.co/spaces/mehtab13/backtestlab-data/raw/main";
 
@@ -950,11 +965,17 @@ window.loadNextChunk = async function() {
         }
 
         // remove duplicates
-       data.push(...res);
+      data.push(...res);
 
-        data = Array
-            .from(map.values())
-            .sort((a,b)=>a.time-b.time);
+// remove duplicates by time
+const unique = new Map();
+
+for (const c of data) {
+    unique.set(c.time, c);
+}
+
+data = Array.from(unique.values())
+    .sort((a, b) => a.time - b.time);
 
         console.log(
             "CHUNK LOADED:",
@@ -1119,8 +1140,14 @@ window.saveSession = async function() {
             created_at: new Date().toISOString()
         };
 
-        const docRef = await window.addDoc(window.collection(window.db, "users", user.uid, "sessions"), sessionData);
-        alert("Firestore Session Saved Successfully! ID: " + docRef.id);
+       const docRef = await window.addDoc(
+    window.collection(window.db, "users", user.uid, "sessions"),
+    sessionData
+);
+
+alert("Session Saved Successfully!");
+
+window.location.href = "my-sessions.html";
     } catch (err) {
         alert("Firestore Error: " + err.message);
     }
@@ -1777,6 +1804,7 @@ chart.timeScale().subscribeVisibleTimeRangeChange(redraw);
 chart.subscribeCrosshairMove(redraw);
 resizeCanvas();
 })();
+
 </script>
 </body>
 </html>

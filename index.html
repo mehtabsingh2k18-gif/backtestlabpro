@@ -1,27 +1,619 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BACKTESTLABPRO| Institutional Grade Strategy Replay Platform</title>
-<meta name="google-site-verification" content="NAqrOt8C6U1xEudnQdNCiZMWcv18COh5diY1o20hMYk" />
+    <title>BacktestLab Pro | Free Institutional-Grade Backtesting Platform</title>
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-V7SXCF9923"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-V7SXCF9923');
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-V7SXCF9923"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  gtag('config', 'G-V7SXCF9923');
-</script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            dark: '#050507',
+                            card: '#0c0c0e',
+                            accent: '#6366f1', // Indigo
+                            success: '#10b981', // Emerald Green
+                            purple: '#a855f7' // Purple
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #050507;
+            color: #f4f4f5;
+            overflow-x: hidden;
+        }
+        
+        /* Spline-style deep 3D glow background gradients */
+        .glow-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.15;
+            z-index: 0;
+            pointer-events: none;
+        }
+        @media (min-width: 768px) {
+            .glow-orb { filter: blur(140px); opacity: 0.18; }
+        }
+
+        /* Abstract Chart Overlay background effect */
+        .meaningful-bg-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            min-height: 700px;
+            opacity: 0.2;
+            filter: blur(2px);
+            pointer-events: none;
+            z-index: 1;
+            mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 100%);
+            -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 100%);
+        }
+        @media (min-width: 768px) {
+            .meaningful-bg-overlay { opacity: 0.25; min-height: 900px; }
+        }
+        
+        /* Glassmorphism card utilities */
+        .glass-card {
+            background: rgba(12, 12, 14, 0.5);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        .glass-card:hover {
+            border-color: rgba(99, 102, 241, 0.3);
+            box-shadow: 0 0 40px rgba(99, 102, 241, 0.08);
+        }
+
+        /* Hide scrollbars but keep functionality */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Custom Reveal Animation States */
+        .scroll-animate {
+            will-change: transform, opacity;
+        }
+        .reveal-active {
+            opacity: 1 !important;
+            transform: translateY(0) !important;
+        }
+    </style>
+</head>
+<body class="font-sans antialiased relative">
+
+    <div class="meaningful-bg-overlay flex items-center justify-center overflow-hidden">
+        <svg width="1440" height="900" viewBox="0 0 1440 900" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full scale-110 md:scale-105 transform origin-top">
+            <g stroke="rgba(255,255,255,0.03)" stroke-width="1">
+                <line x1="0" y1="150" x2="1440" y2="150" />
+                <line x1="0" y1="300" x2="1440" y2="300" />
+                <line x1="0" y1="450" x2="1440" y2="450" />
+                <line x1="0" y1="600" x2="1440" y2="600" />
+                <line x1="0" y1="750" x2="1440" y2="750" />
+                
+                <line x1="200" y1="0" x2="200" y2="900" />
+                <line x1="440" y1="0" x2="440" y2="900" />
+                <line x1="680" y1="0" x2="680" y2="900" />
+                <line x1="920" y1="0" x2="920" y2="900" />
+                <line x1="1160" y1="0" x2="1160" y2="900" />
+            </g>
+
+            <path d="M 100 700 Q 350 620 500 480 T 950 320 T 1350 120" stroke="url(#chart-gradient-accent)" stroke-width="3" stroke-linecap="round"/>
+            <path d="M 100 750 Q 400 720 650 550 T 1100 400 T 1400 280" stroke="url(#chart-gradient-purple)" stroke-width="1.5" stroke-dasharray="6 6" opacity="0.6"/>
+
+            <g fill="rgba(239, 68, 68, 0.2)" stroke="rgba(239, 68, 68, 0.35)" stroke-width="1.5">
+                <rect x="345" y="580" width="10" height="40" rx="1"/> <line x1="350" y1="565" x2="350" y2="635"/>
+                <rect x="635" y="490" width="10" height="55" rx="1"/> <line x1="640" y1="470" x2="640" y2="560"/>
+                <rect x="915" y="340" width="10" height="30" rx="1"/> <line x1="920" y1="325" x2="920" y2="385"/>
+            </g>
+            <g fill="rgba(16, 185, 129, 0.2)" stroke="rgba(16, 185, 129, 0.35)" stroke-width="1.5">
+                <rect x="215" y="630" width="10" height="50" rx="1"/> <line x1="220" y1="610" x2="220" y2="695"/>
+                <rect x="475" y="450" width="10" height="70" rx="1"/> <line x1="480" y1="430" x2="480" y2="535"/>
+                <rect x="765" y="380" width="10" height="60" rx="1"/> <line x1="770" y1="360" x2="770" y2="455"/>
+                <rect x="1195" y="170" width="10" height="85" rx="1"/> <line x1="1200" y1="150" x2="1200" y2="270"/>
+            </g>
+
+            <defs>
+                <linearGradient id="chart-gradient-accent" x1="0" y1="900" x2="1440" y2="0" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stop-color="#6366f1" />
+                    <stop offset="50%" stop-color="#a855f7" />
+                    <stop offset="100%" stop-color="#10b981" />
+                </linearGradient>
+                <linearGradient id="chart-gradient-purple" x1="0" y1="900" x2="1440" y2="0" gradientUnits="userSpaceOnUse">
+                    <stop offset="10%" stop-color="#a855f7" />
+                    <stop offset="100%" stop-color="#6366f1" />
+                </linearGradient>
+            </defs>
+        </svg>
+    </div>
+
+    <div class="glow-orb w-[300px] h-[300px] md:w-[600px] md:h-[600px] bg-brand-accent top-[-100px] left-[-100px]"></div>
+    <div class="glow-orb w-[350px] h-[350px] md:w-[700px] md:h-[700px] bg-brand-purple top-[20%] right-[-150px]"></div>
+    <div class="glow-orb w-[300px] h-[300px] md:w-[500px] md:h-[500px] bg-brand-success bottom-[10%] left-[-100px]"></div>
+
+    <header class="sticky top-0 z-50 w-full border-b border-white/5 bg-brand-dark/70 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="h-10 w-10 rounded-xl bg-gradient-to-tr from-brand-accent to-brand-purple flex items-center justify-center shadow-lg shadow-brand-accent/20 flex-shrink-0">
+                    <i class="fa-solid fa-chart-line text-white text-lg"></i>
+                </div>
+                <span class="font-display font-bold text-xl tracking-tight bg-gradient-to-r from-white to-zinc-400 bg-clip-text text-transparent">BacktestLab<span class="text-brand-accent">.pro</span></span>
+            </div>
+
+            <nav class="hidden md:flex items-center gap-6 lg:gap-8 text-sm font-medium text-zinc-400">
+                <a href="#features" class="hover:text-white transition-colors">Features</a>
+                <a href="#markets" class="hover:text-white transition-colors">Data Coverage</a>
+                <a href="#automation" class="hover:text-white transition-colors">Bot Automation</a>
+                <a href="#articles" class="hover:text-white transition-colors">Articles</a>
+                <a href="#about" class="hover:text-white transition-colors">About Us</a>
+                <a href="#pricing" class="hover:text-white transition-colors flex items-center gap-1">Pricing <span class="text-[9px] bg-brand-success/10 text-brand-success px-1.5 py-0.5 rounded font-bold">FREE</span></a>
+                <a href="#contact" class="hover:text-white transition-colors">Contact</a>
+            </nav>
+
+            <div class="hidden md:flex items-center gap-4">
+                <div id="logged-out-actions" class="flex items-center gap-4">
+                    <button onclick="triggerAuthFlow()" class="text-sm font-medium text-zinc-400 hover:text-white transition-colors min-w-[44px] min-h-[44px]">Sign In</button>
+                    <button onclick="triggerAuthFlow()" class="text-sm font-medium bg-white text-brand-dark px-4 py-2.5 rounded-xl hover:bg-zinc-200 transition-all font-display shadow-lg min-h-[44px]">Get Free Account</button>
+                </div>
+                
+                <div id="logged-in-actions" class="hidden flex items-center gap-3">
+                    <a href="#my-sessions" class="text-sm font-medium text-zinc-300 hover:text-white border border-white/10 px-4 py-2.5 rounded-xl glass-card transition-all flex items-center gap-2 min-h-[44px]">
+                        <i class="fa-solid fa-folder-open text-brand-accent"></i> My Sessions
+                    </a>
+                    <a href="#new-session" class="text-sm font-medium bg-gradient-to-r from-brand-accent to-brand-purple text-white px-5 py-2.5 rounded-xl hover:opacity-90 transition-all font-display shadow-md flex items-center gap-2 min-h-[44px]">
+                        <i class="fa-solid fa-plus text-xs"></i> New Session
+                    </a>
+                    <button id="firebase-logout-btn" class="text-xs text-zinc-500 hover:text-zinc-300 ml-2 p-2 min-w-[44px] min-h-[44px]" title="Log Out"><i class="fa-solid fa-power-off text-sm"></i></button>
+                </div>
+            </div>
+
+            <button id="mobile-menu-btn" class="md:hidden text-zinc-400 hover:text-white text-2xl focus:outline-none p-2 min-w-[48px] min-h-[48px] flex items-center justify-end">
+                <i class="fa-solid fa-bars-staggered"></i>
+            </button>
+        </div>
+
+        <div id="mobile-menu" class="hidden md:hidden border-t border-white/5 bg-brand-dark/95 backdrop-blur-lg px-4 pt-4 pb-8 space-y-3 absolute w-full left-0 transition-all duration-300 shadow-2xl z-50 max-h-[calc(100vh-5rem)] overflow-y-auto">
+            <a href="#features" class="block text-zinc-300 hover:text-white py-3 px-2 rounded-lg hover:bg-white/5 transition-colors">Features</a>
+            <a href="#markets" class="block text-zinc-300 hover:text-white py-3 px-2 rounded-lg hover:bg-white/5 transition-colors">Data Coverage</a>
+            <a href="#automation" class="block text-zinc-300 hover:text-white py-3 px-2 rounded-lg hover:bg-white/5 transition-colors">Bot Automation</a>
+            <a href="#articles" class="block text-zinc-300 hover:text-white py-3 px-2 rounded-lg hover:bg-white/5 transition-colors">Articles</a>
+            <a href="#about" class="block text-zinc-300 hover:text-white py-3 px-2 rounded-lg hover:bg-white/5 transition-colors">About Us</a>
+            <a href="#pricing" class="block text-zinc-300 hover:text-white py-3 px-2 rounded-lg hover:bg-white/5 transition-colors">Pricing</a>
+            <a href="#contact" class="block text-zinc-300 hover:text-white py-3 px-2 rounded-lg hover:bg-white/5 transition-colors">Contact</a>
+            <hr class="border-white/5 my-3">
+            <div id="mobile-auth-placeholder" class="space-y-3 pt-2"></div>
+        </div>
+    </header>
+
+    <main class="relative z-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-24 md:space-y-32">
+
+        <section class="pt-12 sm:pt-20 pb-12 text-center relative max-w-5xl mx-auto scroll-animate opacity-0 translate-y-8 transition-all duration-1000 ease-out">
+            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-brand-accent/10 border border-brand-accent/20 text-xs text-brand-accent font-medium mb-6 md:mb-8">
+                <span class="h-2 w-2 rounded-full bg-brand-accent animate-ping"></span> 100% Free Forever • Absolutely Zero Ads
+            </div>
+
+            <h1 class="font-display font-bold text-4xl sm:text-6xl lg:text-7xl tracking-tight leading-[1.15] md:leading-[1.1] mb-6">
+                Institutional Backtesting. <br class="hidden sm:inline">
+                <span class="bg-gradient-to-r from-brand-accent via-brand-purple to-brand-success bg-clip-text text-transparent">Zero Cost. Zero Limits.</span>
+            </h1>
+
+            <p class="text-zinc-400 text-base sm:text-lg md:text-xl max-w-2xl mx-auto mb-8 md:mb-10 font-normal leading-relaxed">
+                Replay up to 20 years of historical deep candle data across Crypto, Forex, and Global Equities. Experience ultra-advanced analytics, multi-timeframe engines, and unlimited simulation sessions.
+            </p>
+
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-md mx-auto mb-16_ md:mb-20">
+                <button onclick="handleHeroCTA()" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-white text-brand-dark font-display font-semibold hover:bg-zinc-200 transition-all transform hover:-translate-y-0.5 shadow-xl flex items-center justify-center gap-3 min-h-[48px]">
+                    Launch Free Sandbox <i class="fa-solid fa-arrow-right text-xs"></i>
+                </button>
+                <a href="#markets" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-zinc-900/60 border border-white/10 text-zinc-300 font-display font-semibold hover:bg-zinc-800/80 transition-all flex items-center justify-center gap-2 backdrop-blur-sm min-h-[48px]">
+                    Explore Raw Data
+                </a>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 p-6 rounded-2xl glass-card text-left max-w-5xl mx-auto divide-y sm:divide-y-0 md:divide-x divide-white/5">
+                <div class="pb-4 sm:pb-0">
+                    <div class="text-2xl lg:text-3xl font-display font-bold text-white">20+ Years</div>
+                    <div class="text-xs text-zinc-500 mt-1 uppercase tracking-wider">Historical Depth</div>
+                </div>
+                <div class="pt-4 sm:pt-0 sm:pl-4 md:pl-6">
+                    <div class="text-2xl lg:text-3xl font-display font-bold text-brand-accent">0% Fees</div>
+                    <div class="text-xs text-zinc-500 mt-1 uppercase tracking-wider">No Hidden Subscriptions</div>
+                </div>
+                <div class="pt-4 md:pt-0 md:pl-4 lg:pl-6">
+                    <div class="text-2xl lg:text-3xl font-display font-bold text-brand-purple">Unlimited</div>
+                    <div class="text-xs text-zinc-500 mt-1 uppercase tracking-wider">Session Replays</div>
+                </div>
+                <div class="pt-4 md:pt-0 md:pl-4 lg:pl-6">
+                    <div class="text-2xl lg:text-3xl font-display font-bold text-brand-success">70%+ Reward</div>
+                    <div class="text-xs text-zinc-500 mt-1 uppercase tracking-wider">Algo Conversion Program</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="user-dashboard-area" class="hidden rounded-3xl p-4 sm:p-8 border border-white/5 bg-zinc-950/20 backdrop-blur-md scroll-animate opacity-0 translate-y-8 transition-all duration-700 ease-out">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+                <div>
+                    <h2 class="font-display font-bold text-2xl text-white">Your Terminal Control</h2>
+                    <p class="text-sm text-zinc-400 mt-1">Manage running simulations and historical pipelines directly.</p>
+                </div>
+                <div>
+                    <button onclick="handleNewSession()" class="w-full sm:w-auto px-4 py-3 rounded-xl bg-gradient-to-r from-brand-accent to-brand-purple text-white font-medium text-sm shadow-md hover:opacity-90 transition-all flex items-center justify-center gap-2 min-h-[48px]">
+                        <i class="fa-solid fa-plus text-xs"></i> Create New Session
+                    </button>
+                </div>
+            </div>
+
+            <div id="my-sessions" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="p-5 rounded-2xl glass-card relative overflow-hidden group flex flex-col justify-between">
+                    <div class="absolute top-0 right-0 bg-brand-accent/20 text-brand-accent text-[10px] uppercase font-bold tracking-widest px-3 py-1 rounded-bl-xl">Active Replay</div>
+                    <div class="flex items-center gap-3 mb-4 pt-2">
+                        <div class="p-2.5 rounded-xl bg-amber-500/10 text-amber-500 font-bold text-xs">XAUUSD</div>
+                        <div>
+                            <h4 class="font-bold text-white text-sm">Gold Multi-Timeframe</h4>
+                            <span class="text-xs text-zinc-500">M1 to D1 Pipeline</span>
+                        </div>
+                    </div>
+                    <div class="space-y-2 border-y border-white/5 py-3 my-3 text-xs">
+                        <div class="flex justify-between"><span class="text-zinc-500">Simulation Progress:</span><span class="text-zinc-300 font-mono">42% (Year 2018)</span></div>
+                        <div class="flex justify-between"><span class="text-zinc-500">Executed Trades:</span><span class="text-zinc-300 font-mono">184 orders</span></div>
+                        <div class="flex justify-between"><span class="text-zinc-500">Current Win Rate:</span><span class="text-brand-success font-mono font-bold">74.2%</span></div>
+                    </div>
+                    <div class="flex items-center justify-between mt-2 pt-2">
+                        <span class="text-[11px] text-zinc-500"><i class="fa-regular fa-clock"></i> Edited 2h ago</span>
+                        <button onclick="handleNewSession()" class="px-4 py-2 rounded-lg bg-zinc-800 text-white text-xs font-medium hover:bg-zinc-700 transition-all min-h-[38px]">Resume Replay</button>
+                    </div>
+                </div>
+
+                <div class="p-5 rounded-2xl glass-card relative overflow-hidden group flex flex-col justify-between">
+                    <div class="absolute top-0 right-0 bg-zinc-800 text-zinc-400 text-[10px] uppercase font-bold tracking-widest px-3 py-1 rounded-bl-xl">Completed</div>
+                    <div class="flex items-center gap-3 mb-4 pt-2">
+                        <div class="p-2.5 rounded-xl bg-purple-500/10 text-purple-500 font-bold text-xs">BTCUSD</div>
+                        <div>
+                            <h4 class="font-bold text-white text-sm">Macro Cycle Trend Replay</h4>
+                            <span class="text-xs text-zinc-500">H4 Structural Sandbox</span>
+                        </div>
+                    </div>
+                    <div class="space-y-2 border-y border-white/5 py-3 my-3 text-xs">
+                        <div class="flex justify-between"><span class="text-zinc-500">Simulation Progress:</span><span class="text-zinc-300 font-mono">100% (10 Year Sweep)</span></div>
+                        <div class="flex justify-between"><span class="text-zinc-500">Executed Trades:</span><span class="text-zinc-300 font-mono">59 orders</span></div>
+                        <div class="flex justify-between"><span class="text-zinc-500">Current Win Rate:</span><span class="text-brand-purple font-mono font-bold">52.1%</span></div>
+                    </div>
+                    <div class="flex items-center justify-between mt-2 pt-2">
+                        <span class="text-[11px] text-zinc-500"><i class="fa-regular fa-clock"></i> Completed May 28</span>
+                        <button onclick="handleNewSession()" class="px-4 py-2 rounded-lg bg-zinc-900 border border-white/5 text-zinc-400 text-xs font-medium hover:text-white transition-all min-h-[38px]">View Analytics</button>
+                    </div>
+                </div>
+
+                <div class="p-5 rounded-2xl bg-gradient-to-br from-brand-accent/10 to-brand-purple/10 border border-brand-accent/20 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center gap-2 text-brand-purple font-display font-bold text-sm mb-2">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i> 70%+ Win Rate Reward Activated
+                        </div>
+                        <p class="text-xs text-zinc-400 leading-relaxed">
+                            Your **XAUUSD** workspace holds a verified tracking metric of **74.2%**. You qualify to convert this strategy blueprint into a functional algorithmic automation bot.
+                        </p>
+                    </div>
+                    <button onclick="alert('Compiling verified win-rate loops into logic schemas... Option ready.')" class="w-full mt-4 py-2.5 rounded-xl bg-gradient-to-r from-brand-accent to-brand-purple text-white font-medium text-xs shadow-md hover:shadow-brand-accent/20 transition-all text-center min-h-[40px]">
+                        Convert Strategy To Trading Bot
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section id="features" class="py-4 scroll-animate opacity-0 translate-y-8 transition-all duration-700 ease-out">
+            <div class="text-center max-w-3xl mx-auto mb-12 md:mb-16">
+                <h2 class="font-display font-bold text-3xl sm:text-5xl text-white mb-4">Engineered For Accuracy. Built For Freedom.</h2>
+                <p class="text-zinc-400 text-sm sm:text-base">Everything you expect from luxury retail backtesting architecture, without the predatory paywalls.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+                <div class="p-6 md:p-8 rounded-2xl glass-card transition-all">
+                    <div class="h-12 w-12 rounded-xl bg-brand-accent/10 text-brand-accent flex items-center justify-center text-xl mb-6">
+                        <i class="fa-solid fa-bolt"></i>
+                    </div>
+                    <h3 class="font-display font-bold text-xl text-white mb-2">Zero Lag. No Ads.</h3>
+                    <p class="text-zinc-400 text-sm leading-relaxed">
+                        We don't pollute your screen real estate or processing tracks with commercial banner ads. Enjoy a clean, responsive canvas workspace optimized for pure historical charts.
+                    </p>
+                </div>
+                <div class="p-6 md:p-8 rounded-2xl glass-card transition-all">
+                    <div class="h-12 w-12 rounded-xl bg-brand-purple/10 text-brand-purple flex items-center justify-center text-xl mb-6">
+                        <i class="fa-solid fa-chart-pie"></i>
+                    </div>
+                    <h3 class="font-display font-bold text-xl text-white mb-2">Ultra Analytics Suite</h3>
+                    <p class="text-zinc-400 text-sm leading-relaxed">
+                        Deep statistical analysis modules including maximum peak drawdown, mathematical asset expectancy models, consecutive trailing metrics, and specialized performance factors.
+                    </p>
+                </div>
+                <div class="p-6 md:p-8 rounded-2xl glass-card transition-all">
+                    <div class="h-12 w-12 rounded-xl bg-brand-success/10 text-brand-success flex items-center justify-center text-xl mb-6">
+                        <i class="fa-solid fa-layer-group"></i>
+                    </div>
+                    <h3 class="font-display font-bold text-xl text-white mb-2">Multi-Timeframe Pipelines</h3>
+                    <p class="text-zinc-400 text-sm leading-relaxed">
+                        Track dynamic macro cycles concurrently. Seamlessly map micro sub-minute tick movements alongside daily and structural trend directions.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section id="automation" class="py-12 px-4 sm:px-8 bg-gradient-to-b from-brand-card to-brand-dark rounded-3xl border border-white/5 relative overflow-hidden scroll-animate opacity-0 translate-y-8 transition-all duration-700 ease-out backdrop-blur-sm">
+            <div class="absolute top-0 right-0 w-96 h-96 bg-brand-purple/10 rounded-full blur-3xl pointer-events-none"></div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+                <div class="lg:col-span-7 space-y-4">
+                    <div class="inline-block text-xs uppercase font-bold tracking-widest text-brand-purple px-3 py-1 bg-brand-purple/10 rounded-full">Exclusive Platform Feature</div>
+                    <h2 class="font-display font-bold text-2xl sm:text-4xl lg:text-5xl text-white leading-tight">
+                        Turn Proven Manual Edge <br class="hidden sm:inline">Into An <span class="bg-gradient-to-r from-brand-purple to-brand-accent bg-clip-text text-transparent">Automated Algo Bot</span>
+                    </h2>
+                    <p class="text-zinc-400 text-sm sm:text-base leading-relaxed">
+                        We celebrate strategic discipline. Execute and record any setup rule sequence that holds an audited simulation win rate **above 70%** inside our performance matrices, and our server unlocks a complimentary automated trading bot generation script.
+                    </p>
+                </div>
+
+                <div class="lg:col-span-5 bg-zinc-900/40 p-5 sm:p-6 rounded-2xl border border-white/10 shadow-2xl relative backdrop-blur-md">
+                    <div class="flex items-center justify-between mb-6">
+                        <span class="text-xs font-mono text-zinc-500">COMPILER CORE v1.04</span>
+                        <span class="px-2 py-0.5 rounded text-[10px] bg-brand-success/20 text-brand-success font-bold tracking-wider">PASSED INTEGRITY</span>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div>
+                            <div class="flex justify-between text-xs mb-1">
+                                <span class="text-zinc-400">Strategy Success Metric</span>
+                                <span class="text-brand-success font-bold">74.2% Win Rate</span>
+                            </div>
+                            <div class="w-full bg-zinc-800 h-2 rounded-full overflow-hidden">
+                                <div class="bg-gradient-to-r from-brand-accent to-brand-success h-full" style="width: 74.2%"></div>
+                            </div>
+                        </div>
+
+                        <div class="p-4 rounded-xl bg-brand-dark/80 border border-white/5 space-y-2 text-xs font-mono overflow-x-auto no-scrollbar">
+                            <div class="text-zinc-500">// Auto-Bot Conversion Script</div>
+                            <div class="text-purple-400">const <span class="text-blue-400">BacktestCore</span> = require(<span class="text-emerald-400">'./engine'</span>);</div>
+                            <div class="text-zinc-300">if (candle.close > ema200 && rsi &lt; 30) {</div>
+                            <div class="text-emerald-500">    order({ action: 'BUY', tracking: true });</div>
+                            <div class="text-zinc-300">}</div>
+                        </div>
+
+                        <button onclick="alert('Run a manual backtest strategy above a 70% tracked win-rate to trigger code export.')" class="w-full py-3.5 rounded-xl bg-white text-brand-dark font-display font-bold text-sm tracking-wide hover:bg-zinc-200 transition-all min-h-[48px]">
+                            Unlock Automated Script Generation
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="markets" class="py-4 scroll-animate opacity-0 translate-y-8 transition-all duration-700 ease-out">
+            <div class="flex flex-col lg:flex-row lg:items-end justify-between mb-10 gap-4">
+                <div>
+                    <span class="text-xs font-bold text-brand-accent uppercase tracking-widest">Unrivaled Historical Data Pool</span>
+                    <h2 class="font-display font-bold text-3xl sm:text-5xl text-white mt-2">Comprehensive Data Coverage</h2>
+                </div>
+                <p class="text-zinc-400 max-w-md text-sm sm:text-base">
+                    Access high-density financial feeds instantly. Zero rate throttles, no chunk limitations, and zero premium data licensing costs.
+                </p>
+            </div>
+
+            <div class="flex items-center gap-2 border-b border-white/5 pb-4 mb-8 overflow-x-auto no-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0">
+                <button onclick="switchMarketTab('crypto')" id="tab-crypto" class="tab-btn px-5 py-2.5 rounded-xl text-sm font-medium transition-all bg-white text-brand-dark font-display whitespace-nowrap min-h-[40px]">Cryptocurrency (10+ Yrs)</button>
+                <button onclick="switchMarketTab('forex')" id="tab-forex" class="tab-btn px-5 py-2.5 rounded-xl text-sm font-medium transition-all text-zinc-400 hover:text-white font-display whitespace-nowrap min-h-[40px]">Forex Spot (20+ Yrs)</button>
+                <button onclick="switchMarketTab('shares')" id="tab-shares" class="tab-btn px-5 py-2.5 rounded-xl text-sm font-medium transition-all text-zinc-400 hover:text-white font-display whitespace-nowrap min-h-[40px]">Share Market (15+ Yrs)</button>
+            </div>
+
+            <div id="market-grid-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"></div>
+        </section>
+
+        <section id="pricing" class="py-4 relative scroll-animate opacity-0 translate-y-8 transition-all duration-700 ease-out">
+            <div class="text-center max-w-2xl mx-auto mb-12">
+                <h2 class="font-display font-bold text-3xl sm:text-5xl text-white mb-4">No Plans. No Fees.</h2>
+                <p class="text-zinc-400 text-sm sm:text-base">Reliable quantitative toolsets should be structured as open public assets accessible to every trader tier.</p>
+            </div>
+
+            <div class="max-w-md mx-auto p-6 sm:p-8 rounded-3xl bg-gradient-to-b from-zinc-950 to-brand-dark border-2 border-brand-accent/40 shadow-2xl relative backdrop-blur-md">
+                <div class="absolute top-0 right-1/2 translate-x-1/2 -translate-y-1/2 bg-brand-accent text-white font-display text-xs font-bold tracking-widest px-4 py-1.5 rounded-full uppercase whitespace-nowrap">
+                    Public Good License
+                </div>
+
+                <div class="text-center mb-6 pt-2">
+                    <h3 class="font-display font-bold text-xl text-white">Full Access Sandbox</h3>
+                    <div class="text-5xl font-display font-bold text-white mt-4">$0 <span class="text-xs sm:text-sm font-sans text-zinc-500 font-normal block sm:inline mt-1">/ lifetime absolute</span></div>
+                </div>
+
+                <hr class="border-white/5 my-6">
+
+                <ul class="space-y-4 text-sm text-zinc-300 mb-8">
+                    <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-success flex-shrink-0"></i> Crypto, Forex & Stocks Feeds Included</li>
+                    <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-success flex-shrink-0"></i> 10 to 20-Year Candlestick Track Depth</li>
+                    <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-success flex-shrink-0"></i> Unlimited Active Replay Environments</li>
+                    <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-success flex-shrink-0"></i> Ultra Advanced Strategy Statistics Modules</li>
+                </ul>
+
+                <button onclick="handleHeroCTA()" class="w-full py-4 rounded-xl bg-gradient-to-r from-brand-accent to-brand-purple text-white font-display font-bold text-center tracking-wide hover:opacity-90 transition-all shadow-lg shadow-brand-accent/20 min-h-[48px]">
+                    Get Instant Sandbox Access
+                </button>
+            </div>
+        </section>
+
+        <section id="articles" class="py-4 scroll-animate opacity-0 translate-y-8 transition-all duration-700 ease-out">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-10 gap-4">
+                <div>
+                    <h2 class="font-display font-bold text-3xl text-white">Engineering Library</h2>
+                    <p class="text-zinc-400 text-sm mt-1">Technical write-ups regarding curve-fitting errors, platform mechanics, and simulation mathematics.</p>
+                </div>
+                <div>
+                    <button onclick="alert('Article archival feeds launching shortly.')" class="inline-flex items-center gap-2 text-sm font-medium text-brand-accent hover:text-white transition-colors min-h-[44px]">
+                        View All Articles <i class="fa-solid fa-chevron-right text-xs"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+                <article class="rounded-2xl border border-white/5 overflow-hidden group hover:border-white/10 transition-all bg-zinc-950/20 backdrop-blur-sm">
+                    <div class="h-40 sm:h-48 bg-zinc-950 flex items-center justify-center p-6 border-b border-white/5">
+                        <i class="fa-solid fa-bezier-curve text-5xl text-brand-accent/15 group-hover:scale-110 transition-transform duration-300"></i>
+                    </div>
+                    <div class="p-5 sm:p-6">
+                        <div class="text-[10px] sm:text-xs text-brand-accent font-mono mb-2">QUANTITATIVE MODELING</div>
+                        <h4 class="font-display font-bold text-base sm:text-lg text-white mb-2 group-hover:text-brand-accent transition-colors">Avoiding Curve Fitting in Deep Historical Runs</h4>
+                        <p class="text-zinc-400 text-xs sm:text-sm leading-relaxed mb-4">How to cleanly segregate historical market ticks into out-of-sample fields to avoid false strategy parameters.</p>
+                        <span class="text-xs text-zinc-500">Read: 6 mins</span>
+                    </div>
+                </article>
+
+                <article class="rounded-2xl border border-white/5 overflow-hidden group hover:border-white/10 transition-all bg-zinc-950/20 backdrop-blur-sm">
+                    <div class="h-40 sm:h-48 bg-zinc-950 flex items-center justify-center p-6 border-b border-white/5">
+                        <i class="fa-solid fa-bolt-lightning text-5xl text-brand-purple/15 group-hover:scale-110 transition-transform duration-300"></i>
+                    </div>
+                    <div class="p-5 sm:p-6">
+                        <div class="text-[10px] sm:text-xs text-brand-purple font-mono mb-2">ENGINE ARCHITECTURE</div>
+                        <h4 class="font-display font-bold text-base sm:text-lg text-white mb-2 group-hover:text-brand-purple transition-colors">Multi-Timeframe Candle Synchronization Core</h4>
+                        <p class="text-zinc-400 text-xs sm:text-sm leading-relaxed mb-4">A look into how our processing engine seamlessly threads fine sub-minute tick pools into high-level candlestick models.</p>
+                        <span class="text-xs text-zinc-500">Read: 9 mins</span>
+                    </div>
+                </article>
+
+                <article class="rounded-2xl border border-white/5 overflow-hidden group hover:border-white/10 transition-all bg-zinc-950/20 backdrop-blur-sm">
+                    <div class="h-40 sm:h-48 bg-zinc-950 flex items-center justify-center p-6 border-b border-white/5">
+                        <i class="fa-solid fa-shield-halved text-5xl text-brand-success/15 group-hover:scale-110 transition-transform duration-300"></i>
+                    </div>
+                    <div class="p-5 sm:p-6">
+                        <div class="text-[10px] sm:text-xs text-brand-success font-mono mb-2">SYSTEM METHODOLOGY</div>
+                        <h4 class="font-display font-bold text-base sm:text-lg text-white mb-2 group-hover:text-brand-success transition-colors">Understanding True Peak Drawdown Ratios</h4>
+                        <p class="text-zinc-400 text-xs sm:text-sm leading-relaxed mb-4">Why basic profit metrics mask major risks, and how assessing sequential losses protects asset base valuations.</p>
+                        <span class="text-xs text-zinc-500">Read: 5 mins</span>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <section id="about" class="py-4 scroll-animate opacity-0 translate-y-8 transition-all duration-700 ease-out">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-12 items-center">
+                <div class="space-y-4">
+                    <span class="text-xs font-bold text-brand-success uppercase tracking-widest">Our Shared Vision</span>
+                    <h2 class="font-display font-bold text-3xl sm:text-5xl text-white">Democratizing Systemic Backtesting Software</h2>
+                    <p class="text-zinc-400 text-sm sm:text-base leading-relaxed">
+                        We are a distributed collective of open-source software engineers and quantitative system traders. Throughout our careers, we grew deeply tired of seeing data companies extract high monthly fees for access to public, historical financial indices.
+                    </p>
+                </div>
+                <div class="p-6 sm:p-8 rounded-3xl glass-card space-y-6">
+                    <h3 class="font-display font-bold text-xl text-white">Platform Pillars</h3>
+                    <div class="flex items-start gap-4">
+                        <div class="p-2 rounded-lg bg-white/5 text-brand-accent mt-0.5 flex-shrink-0"><i class="fa-solid fa-infinity"></i></div>
+                        <div>
+                            <h5 class="text-white text-sm font-bold">Uncapped Compute Resources</h5>
+                            <p class="text-xs text-zinc-500 mt-0.5">Run data sweeps spanning multiple decade blocks without execution timeouts or performance throttling rules.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-4">
+                        <div class="p-2 rounded-lg bg-white/5 text-brand-purple mt-0.5 flex-shrink-0"><i class="fa-solid fa-eye-slash"></i></div>
+                        <div>
+                            <h5 class="text-white text-sm font-bold">Absolute Strategic Privacy</h5>
+                            <p class="text-xs text-zinc-500 mt-0.5">No internal analytics log your operations. Your indicator metrics, system strategies, and logic parameters remain secure inside your workspace sandbox.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="max-w-3xl mx-auto py-4 scroll-animate opacity-0 translate-y-8 transition-all duration-700 ease-out">
+            <div class="text-center mb-10">
+                <h2 class="font-display font-bold text-3xl text-white">Direct Terminal Intake</h2>
+                <p class="text-zinc-400 text-sm mt-1">Encountered an extraction error? Need custom ticker pools? Alert our core network directly.</p>
+            </div>
+
+            <form onsubmit="handleFormSubmission(event)" class="space-y-6 p-6 sm:p-8 rounded-3xl glass-card">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-xs uppercase font-medium tracking-wider text-zinc-400 mb-2">Your Identity</label>
+                        <input type="text" required class="w-full bg-zinc-900/60 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-brand-accent transition-all min-h-[48px]">
+                    </div>
+                    <div>
+                        <label class="block text-xs uppercase font-medium tracking-wider text-zinc-400 mb-2">Return Address (Email)</label>
+                        <input type="email" required class="w-full bg-zinc-900/60 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-brand-accent transition-all min-h-[48px]">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs uppercase font-medium tracking-wider text-zinc-400 mb-2">Pipeline Subject</label>
+                    <div class="relative">
+                        <select class="w-full bg-zinc-900/60 border border-white/10 rounded-xl px-4 py-3 text-sm text-zinc-300 focus:outline-none focus:border-brand-accent transition-all appearance-none min-h-[48px]">
+                            <option>Requesting New Asset Symbol Data Feed</option>
+                            <option>Bug Report: Slicer Server / Data Sync Pipelines</option>
+                            <option>Win-Rate Code Generator Inquiries</option>
+                            <option>General Engineering Feedback</option>
+                        </select>
+                        <div class="absolute inset-y-0 right-4 flex items-center pointer-events-none text-zinc-500">
+                            <i class="fa-solid fa-chevron-down text-xs"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs uppercase font-medium tracking-wider text-zinc-400 mb-2">Message Content</label>
+                    <textarea rows="4" required class="w-full bg-zinc-900/60 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-brand-accent transition-all resize-none" placeholder="Provide clear technical context or historical token metrics details..."></textarea>
+                </div>
+
+                <button type="submit" class="w-full py-4 rounded-xl bg-white text-brand-dark font-display font-bold text-sm tracking-wide hover:bg-zinc-200 transition-all text-center shadow-lg min-h-[48px]">
+                    Transmit Packet Info
+                </button>
+            </form>
+        </section>
+
+    </main>
+
+    <footer class="mt-24 border-t border-white/5 bg-zinc-950/40 backdrop-blur-sm relative z-10 py-12 text-zinc-500 text-xs">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-6 text-center sm:text-left">
+            <div class="flex flex-col sm:flex-row items-center gap-3">
+                <div class="h-6 w-6 rounded bg-zinc-900 flex items-center justify-center text-[10px] text-zinc-400 mb-2 sm:mb-0"><i class="fa-solid fa-chart-line"></i></div>
+                <span>© 2026 BacktestLab Pro. Open-source public good utility architecture.</span>
+            </div>
+            
+            <div class="flex flex-wrap items-center justify-center gap-6 text-zinc-400">
+                <a href="#features" class="hover:text-white transition-colors">Features</a>
+                <a href="#markets" class="hover:text-white transition-colors">Data</a>
+                <a href="#pricing" class="hover:text-white transition-colors">Zero-Fee License</a>
+                <a href="https://github.com" target="_blank" class="hover:text-white text-lg transition-colors"><i class="fa-brands fa-github"></i></a>
+            </div>
+        </div>
+    </footer>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
+        // Verified User Configurations 
         const firebaseConfig = {
             apiKey: "AIzaSyAensfI53w49Fd4A7Lz5_K9N1JOxZsW7Kk",
             authDomain: "backtestlabpro.firebaseapp.com",
@@ -31,689 +623,174 @@
             appId: "1:560146824734:web:5287d0ded3a1024e75780f"
         };
 
+        // Initialize App Operations
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
 
-        const dynamicCtas = document.querySelectorAll('.dynamic-route-cta');
-        const authNavDesk = document.getElementById('authNavDesk');
+        // Bind global window handles so original inline HTML button onclicks can hook into module paths
+        window.firebaseAuthInstance = auth;
+        window.firebaseSignOutAction = signOut;
 
-        // Monitor Auth state changes to dynamically rebuild navigation control buttons
+        // Monitor Auth Changes in Real-Time
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                // User is authenticated -> Render session management navigation commands
-                authNavDesk.innerHTML = `
-                    <a href="session.html" class="session-nav-link" style="color: var(--neon-emerald); font-weight:700;">+ New Session</a>
-                    <a href="my-sessions.html">My Saved Sessions</a>
-                    <button id="logoutBtn" class="nav-gate-btn" style="border-color: var(--neon-bear); color: #fff;">SIGN OUT</button>
-                `;
-
-                // Set click action for logout execution
-                document.getElementById("logoutBtn").onclick = () => {
-                    signOut(auth).then(() => window.location.reload());
-                };
-
-                // Re-route hero panel call to actions directly to the charting workspace
-                dynamicCtas.forEach(cta => {
-                    cta.innerText = "Launch Command Center";
-                    cta.onclick = (e) => {
-                        e.preventDefault();
-                        window.location.href = "session.html";
-                    };
-                });
+                // User is authenticated
+                window.updateAuthViewUI(true);
             } else {
-                // User is logged out -> Provide classic portal login triggers
-                authNavDesk.innerHTML = `
-                    <a href="#features">Core Features</a>
-                    <a href="#process">The Strategy Flow</a>
-                    <a href="#pricing">Why Free?</a>
-                    <a href="login.html" class="nav-gate-btn" id="authStatusIndicator">PORTAL LOGIN</a>
-                `;
-
-                dynamicCtas.forEach(cta => {
-                    cta.innerText = "Start Backtesting Free";
-                    cta.onclick = (e) => {
-                        e.preventDefault();
-                        window.location.href = "login.html";
-                    };
-                });
+                // User is signed out
+                window.updateAuthViewUI(false);
             }
+        });
+
+        // Set up the power button logout click action listener
+        document.getElementById('firebase-logout-btn').addEventListener('click', () => {
+            signOut(auth).then(() => {
+                alert('You have successfully signed out of your account session.');
+            }).catch((error) => {
+                console.error('Sign out error: ', error);
+            });
         });
     </script>
 
-    <style>
-        :root {
-            --bg-pure: #020408;
-            --bg-deep-gradient: radial-gradient(circle at 50% -20%, #0a1224 0%, #020408 70%);
-            --glass-card: rgba(6, 11, 22, 0.45);
-            --glass-card-hover: rgba(10, 18, 36, 0.7);
-            --neon-cyan: #00F0FF;
-            --neon-cyan-glow: rgba(0, 240, 255, 0.25);
-            --neon-emerald: #00FF94;
-            --neon-emerald-glow: rgba(0, 255, 148, 0.2);
-            --neon-bear: #FF3366;
-            --text-white: #FFFFFF;
-            --text-silver: #CBD5E1;
-            --text-slate: #64748B;
-            --border-line: rgba(255, 255, 255, 0.04);
-            --border-line-focus: rgba(0, 240, 255, 0.3);
-        }
-
-        * { box-sizing: border-box; scroll-behavior: smooth; }
-
-        body {
-            margin: 0;
-            padding: 0;
-            background-color: var(--bg-pure);
-            background-image: var(--bg-deep-gradient);
-            color: var(--text-white);
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        /* STRUCTURAL SCROLLBAR LAYOUT MODIFIER */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: var(--bg-pure); }
-        ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 3px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--neon-cyan); }
-
-        /* APPLICATION HEADER ELEMENT NAVIGATION DESK */
-        header {
-            position: fixed;
-            top: 0; left: 0; right: 0; height: 80px;
-            background: rgba(2, 4, 8, 0.7);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            border-bottom: 1px solid var(--border-line);
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 0 60px; z-index: 1000;
-        }
-
-        .brand-logo {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 20px; font-weight: 800; letter-spacing: 2px;
-            cursor: pointer; text-decoration: none; color: inherit;
-        }
-        .brand-logo span { color: var(--neon-cyan); text-shadow: 0 0 12px var(--neon-cyan-glow); }
-
-        nav { display: flex; align-items: center; gap: 35px; }
-        nav a {
-            color: var(--text-silver); text-decoration: none; font-size: 14px;
-            font-weight: 500; transition: color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        nav a:hover { color: var(--neon-cyan); }
-
-        .nav-gate-btn {
-            background: transparent; border: 1px solid var(--border-line);
-            color: var(--text-white); padding: 8px 18px; border-radius: 8px;
-            font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700;
-            cursor: pointer; transition: all 0.25s ease; text-decoration: none;
-        }
-        .nav-gate-btn:hover { border-color: var(--neon-cyan); background: rgba(0, 240, 255, 0.03); }
-
-        /* UNIVERSAL MARK-UP ELEMENTS */
-        .section-container { max-width: 1440px; margin: 0 auto; padding: 120px 60px; position: relative; }
-        
-        .badge-pill {
-            background: rgba(0, 240, 255, 0.05); border: 1px solid rgba(0, 240, 255, 0.15);
-            color: var(--neon-cyan); font-family: 'JetBrains Mono', monospace;
-            font-size: 11px; font-weight: 700; padding: 6px 14px; border-radius: 100px;
-            display: inline-block; margin-bottom: 25px; letter-spacing: 1px;
-            text-transform: uppercase; text-shadow: 0 0 10px rgba(0, 240, 255, 0.2);
-        }
-
-        .section-heading-centered { text-align: center; max-width: 800px; margin: 0 auto 80px auto; }
-        .section-heading-centered h2 { font-size: 44px; font-weight: 800; letter-spacing: -1px; margin: 0 0 15px 0; }
-        .section-heading-centered p { color: var(--text-slate); font-size: 17px; line-height: 1.6; margin: 0; }
-
-        /* PRIMARY ACTION TRIGGER BUTTON TYPES */
-        .cta-btn-primary {
-            background: linear-gradient(90deg, #00F0FF 0%, #0072FF 100%); color: #020408;
-            padding: 18px 36px; border: none; border-radius: 10px; font-weight: 800; font-size: 16px;
-            cursor: pointer; display: inline-flex; align-items: center; justify-content: center;
-            box-shadow: 0 4px 30px rgba(0, 240, 255, 0.25); text-decoration: none;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .cta-btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 35px rgba(0, 240, 255, 0.45); }
-
-        .cta-btn-secondary {
-            background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-line);
-            color: var(--text-white); padding: 18px 36px; border-radius: 10px; font-weight: 700; font-size: 16px;
-            cursor: pointer; display: inline-flex; align-items: center; justify-content: center;
-            text-decoration: none; transition: all 0.25s ease;
-        }
-        .cta-btn-secondary:hover { background: rgba(255, 255, 255, 0.07); border-color: rgba(255, 255, 255, 0.2); }
-
-        /* MODULE 1: THE CORE HERO ARENA STAGE */
-        .hero-stage-layout {
-            padding-top: 180px; padding-bottom: 140px;
-            display: grid; grid-template-columns: 1.1fr 1fr; gap: 40px; align-items: center;
-        }
-
-        .hero-content h1 { font-size: 62px; font-weight: 800; line-height: 1.05; letter-spacing: -2px; margin: 0 0 20px 0; }
-        .hero-content h1 span { background: linear-gradient(90deg, #FFFFFF 30%, var(--neon-cyan) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .hero-content p { color: var(--text-silver); font-size: 18px; line-height: 1.6; margin: 0 0 35px 0; max-width: 620px; }
-
-        .trust-array-line {
-            display: flex; align-items: center; gap: 24px; margin-top: 40px;
-            padding-top: 30px; border-top: 1px solid var(--border-line);
-        }
-        .trust-array-item {
-            display: flex; align-items: center; gap: 8px; font-family: 'JetBrains Mono', monospace;
-            font-size: 12px; color: var(--text-slate); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
-        }
-        .trust-array-item svg { color: var(--neon-cyan); filter: drop-shadow(0 0 5px var(--neon-cyan-glow)); }
-
-        /* RUNNING FLOATING RUN CONFIG ITEMS */
-        .hero-visual-matrix { position: relative; display: flex; justify-content: center; align-items: center; }
-        
-        .glow-back-element {
-            position: absolute; width: 450px; height: 450px; border-radius: 50%;
-            background: radial-gradient(circle, rgba(0,240,255,0.06) 0%, transparent 65%);
-            filter: blur(40px); z-index: 1; pointer-events: none;
-        }
-
-        .dashboard-canvas-mock {
-            background: var(--glass-card); border: 1px solid var(--border-line);
-            border-radius: 20px; width: 100%; padding: 24px; backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px); z-index: 2; box-shadow: 0 40px 80px rgba(0,0,0,0.7);
-            position: relative; display: flex; flex-direction: column; gap: 20px;
-        }
-
-        .canvas-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-line); padding-bottom: 15px; }
-        .canvas-title { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--neon-cyan); font-weight: 700; display: flex; align-items: center; gap: 8px; }
-        .canvas-pulse { width: 6px; height: 6px; background-color: var(--neon-emerald); border-radius: 50%; box-shadow: 0 0 10px var(--neon-emerald); }
-
-        .mock-chart-window { width: 100%; height: 280px; background: rgba(2,4,8,0.5); border-radius: 12px; border: 1px solid rgba(255,255,255,0.02); overflow: hidden; position: relative; }
-        
-        /* FLOATING COMPONENT LAYERS BLOCK */
-        .floating-stat-tag {
-            position: absolute; background: rgba(8, 15, 30, 0.85); border: 1px solid var(--border-line-focus);
-            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-radius: 10px; padding: 12px 18px;
-            box-shadow: 0 15px 30px rgba(0,0,0,0.5); z-index: 10; display: flex; flex-direction: column; gap: 4px;
-            transition: transform 0.3s ease;
-        }
-        .floating-stat-tag:hover { transform: translateY(-4px) scale(1.02); border-color: var(--neon-cyan); }
-        
-        .ft-1 { top: -20px; left: -30px; }
-        .ft-2 { bottom: 40px; right: -25px; border-color: rgba(0, 255, 148, 0.3); }
-        .ft-3 { bottom: -25px; left: 40px; }
-
-        .ft-lbl { font-size: 10px; font-family: 'JetBrains Mono', monospace; color: var(--text-slate); text-transform: uppercase; letter-spacing: 1px; }
-        .ft-val { font-size: 18px; font-family: 'JetBrains Mono', monospace; font-weight: 700; }
-
-        /* MODULE 2: VALUE PROP POSITIONING MATRIX */
-        .value-props-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
-        
-        .prop-card-wrapper {
-            background: var(--glass-card); border: 1px solid var(--border-line); border-radius: 16px;
-            padding: 35px; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            position: relative; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .prop-card-wrapper::before {
-            content: ''; position: absolute; inset: 0; border-radius: 16px; padding: 1px;
-            background: linear-gradient(180deg, rgba(255,255,255,0.04), transparent);
-            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none;
-        }
-        .prop-card-wrapper:hover {
-            transform: translateY(-5px); border-color: rgba(0, 240, 255, 0.2);
-            background: var(--glass-card-hover); box-shadow: 0 20px 40px rgba(0,240,255,0.02);
-        }
-
-        .prop-card-icon {
-            width: 42px; height: 42px; border-radius: 8px; background: rgba(255,255,255,0.02);
-            border: 1px solid var(--border-line); color: var(--neon-cyan); display: flex;
-            justify-content: center; align-items: center; margin-bottom: 25px;
-            filter: drop-shadow(0 0 8px rgba(0, 240, 255, 0.1));
-        }
-
-        .prop-card-wrapper h3 { font-size: 20px; font-weight: 700; margin: 0 0 10px 0; letter-spacing: -0.3px; }
-        .prop-card-wrapper p { color: var(--text-silver); font-size: 14px; line-height: 1.5; margin: 0; }
-
-        /* MODULE 3: PROOF SIGNALS AND COMMUNITY METRICS */
-        .social-proof-wrapper {
-            background: rgba(4, 8, 16, 0.4); border-top: 1px solid var(--border-line); border-bottom: 1px solid var(--border-line);
-            padding: 80px 0; margin: 40px 0;
-        }
-
-        .proof-metrics-strip {
-            display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px; text-align: center; margin-bottom: 8px;
-        }
-        .metric-strip-card h4 { font-family: 'JetBrains Mono', monospace; font-size: 42px; font-weight: 700; color: var(--text-white); margin: 0 0 8px 0; letter-spacing: -1px; }
-        .metric-strip-card h4 span { color: var(--neon-cyan); }
-        .metric-strip-card p { color: var(--text-slate); font-size: 12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 1.5px; margin: 0; }
-
-        .quotes-editorial-layout {
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 80px;
-        }
-        .quote-editorial-card {
-            background: var(--glass-card); border: 1px solid var(--border-line); border-radius: 12px; padding: 30px;
-            font-style: italic; color: var(--text-silver); line-height: 1.6; font-size: 15px; position: relative;
-        }
-        .quote-editorial-card::after {
-            content: "”"; position: absolute; top: 15px; right: 25px; font-size: 60px; color: rgba(255,255,255,0.03);
-            font-family: serif; line-height: 1;
-        }
-        .quote-author { font-style: normal; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--neon-cyan); text-transform: uppercase; letter-spacing: 1px; margin-top: 20px; display: block; }
-
-        /* MODULE 4: ARCHITECTURAL STEP FLOW */
-        .process-flow-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; position: relative; }
-        .process-flow-row::before {
-            content: ''; position: absolute; top: 55px; left: 10%; right: 10%; height: 1px;
-            background: linear-gradient(90deg, transparent, var(--border-line) 20%, var(--border-line) 80%, transparent);
-            z-index: 1;
-        }
-        .process-step-node { display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; z-index: 2; }
-        
-        .step-circle-badge {
-            width: 50px; height: 50px; border-radius: 50%; background: #060b16; border: 2px solid var(--border-line);
-            display: flex; justify-content: center; align-items: center; font-family: 'JetBrains Mono', monospace;
-            font-size: 16px; font-weight: 700; color: var(--neon-cyan); margin-bottom: 25px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.8); transition: border-color 0.25s ease;
-        }
-        .process-step-node:hover .step-circle-badge { border-color: var(--neon-cyan); box-shadow: 0 0 15px rgba(0, 240, 255, 0.15); }
-
-        .process-step-node h3 { font-size: 18px; font-weight: 700; margin: 0 0 10px 0; }
-        .process-step-node p { color: var(--text-slate); font-size: 14px; line-height: 1.5; margin: 0; max-width: 280px; }
-
-        .process-footer-note { text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--text-slate); margin-top: 60px; text-transform: uppercase; letter-spacing: 1px; }
-
-        /* MODULE 5: COMPETITIVE COMPLIANCE */
-        .matrix-split-container { display: grid; grid-template-columns: 1fr 1.2fr; gap: 60px; align-items: start; }
-        
-        .matrix-feature-bullet-list { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 35px; }
-        .feature-bullet-item { display: flex; align-items: center; gap: 12px; font-size: 15px; color: var(--text-silver); }
-        .feature-bullet-item svg { color: var(--neon-emerald); flex-shrink: 0; }
-
-        .comparison-table-wrapper {
-            background: var(--glass-card); border: 1px solid var(--border-line); border-radius: 16px;
-            overflow: hidden; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-        }
-        .comp-grid-row { display: grid; grid-template-columns: 1.5fr 1fr 1fr; padding: 18px 24px; border-bottom: 1px solid var(--border-line); align-items: center; }
-        .comp-grid-row.hdr-row { background: rgba(255,255,255,0.01); font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700; color: var(--text-slate); text-transform: uppercase; letter-spacing: 1px; }
-        .comp-grid-row:last-child { border-bottom: none; }
-        
-        .comp-cell-feature { font-size: 14px; font-weight: 600; }
-        .comp-cell-platform { font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 700; color: var(--neon-emerald); text-shadow: 0 0 10px rgba(0, 255, 148, 0.1); }
-        .comp-cell-competitor { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--text-slate); }
-
-        /* MODULE 6: FINAL CTA TERMINATION CLOSURE */
-        .termination-gradient-panel {
-            background: linear-gradient(180deg, rgba(6, 12, 24, 0.8) 0%, rgba(2, 4, 8, 1) 100%);
-            border: 1px solid var(--border-line-focus); border-radius: 24px; padding: 80px 40px;
-            text-align: center; position: relative; overflow: hidden;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.8);
-        }
-        .termination-gradient-panel::before {
-            content: ''; position: absolute; top: 0; left: 25%; right: 25%; height: 1px;
-            background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
-        }
-
-        .termination-gradient-panel h2 { font-size: 48px; font-weight: 800; letter-spacing: -1.5px; margin: 0 0 15px 0; }
-        .termination-gradient-panel p { color: var(--text-silver); font-size: 18px; max-width: 650px; margin: 0 auto 40px auto; line-height: 1.6; }
-
-        /* LIVE TICKER ANIMATED FOOTER STRIP */
-        .ticker-tape-container {
-            position: absolute; bottom: 0; left: 0; right: 0; height: 35px;
-            background: rgba(2,4,8,0.9); border-top: 1px solid var(--border-line);
-            display: flex; align-items: center; overflow: hidden; pointer-events: none;
-        }
-        .ticker-infinite-track {
-            display: flex; gap: 50px; padding-left: 50px;
-            animation: tapeShift 25s linear infinite; white-space: nowrap;
-        }
-        .ticker-node { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
-        .tick-bull { color: var(--neon-emerald); }
-        .tick-bear { color: var(--neon-bear); }
-
-        @keyframes tapeShift {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
-        }
-
-        footer { border-top: 1px solid var(--border-line); background: #010204; padding: 40px 60px; text-align: center; }
-        .footer-brand { font-family: 'JetBrains Mono', monospace; font-size: 14px; font-weight: 700; color: var(--text-slate); margin-bottom: 12px; }
-        .footer-brand span { color: var(--neon-cyan); }
-        .footer-disclaimer { max-width: 900px; margin: 0 auto; color: #334155; font-size: 11px; line-height: 1.6; text-align: center; }
-    </style>
-</head>
-<body>
-
-    <header>
-        <a href="index.html" class="brand-logo">BACKTES<span>TLABPRO</span></a>
-        <nav id="authNavDesk">
-            <a href="#features">Core Features</a>
-            <a href="#process">The Strategy Flow</a>
-            <a href="#pricing">Why Free?</a>
-            <a href="login.html" class="nav-gate-btn">PORTAL LOGIN</a>
-        </nav>
-    </header>
-
-    <section class="section-container hero-stage-layout">
-        <div class="hero-content">
-            <div class="badge-pill">Institutional Access Matrix</div>
-            <h1>Backtest Any Trading Strategy — <span>Completely Free</span></h1>
-            <p>Unlimited strategy testing, AI-powered analytics, mentorship, and 20 years of historical market data — built for traders who want real results without paying thousands.</p>
-            
-            <div style="display: flex; gap: 16px; align-items: center;">
-                <button class="cta-btn-primary dynamic-route-cta">Start Backtesting Free</button>
-                <a href="#features" class="cta-btn-secondary">See Performance Analytics</a>
-            </div>
-
-            <div class="trust-array-line">
-                <div class="trust-array-item">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                    No Subscriptions
-                </div>
-                <div class="trust-array-item">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                    No Hidden Fees
-                </div>
-                <div class="trust-array-item">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                    No Trial Limits
-                </div>
-            </div>
-        </div>
-
-        <div class="hero-visual-matrix">
-            <div class="glow-back-element"></div>
-            
-            <div class="floating-stat-tag ft-1">
-                <span class="ft-lbl">Historical Horizon</span>
-                <span class="ft-val" style="color: var(--neon-cyan);">20 Years Data</span>
-            </div>
-            <div class="floating-stat-tag ft-2">
-                <span class="ft-lbl">Strategy Verification Edge</span>
-                <span class="ft-val" style="color: var(--neon-emerald);">74.2% Win Rate</span>
-            </div>
-            <div class="floating-stat-tag ft-3">
-                <span class="ft-lbl">Processing Latency</span>
-                <span class="ft-val" style="color: white;">Unlimited Runs</span>
-            </div>
-
-            <div class="dashboard-canvas-mock">
-                <div class="canvas-header">
-                    <div class="canvas-title"><div class="canvas-pulse"></div>XAUUSD, M5 // CORE_SIMULATION_ARRAY</div>
-                    <span style="font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--text-slate);">RAM VECTOR ENGINE</span>
-                </div>
-                <div class="mock-chart-window">
-                    <canvas id="heroDynamicChart"></canvas>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="social-proof-wrapper">
-        <div class="section-container" style="padding: 0 60px;">
-            <div class="proof-metrics-strip">
-                <div class="metric-strip-card">
-                    <h4>420M<span>+</span></h4>
-                    <p>Candlesticks Processed</p>
-                </div>
-                <div class="metric-strip-card">
-                    <h4>185K<span>+</span></h4>
-                    <p>Strategies Optimized</p>
-                </div>
-                <div class="metric-strip-card">
-                    <h4>0.00<span>$</span></h4>
-                    <p>Subscription Overhead</p>
-                </div>
-                <div class="metric-strip-card">
-                    <h4>14.6<span>%</span></h4>
-                    <p>Average R:R Optimization</p>
-                </div>
-            </div>
-
-            <div class="quotes-editorial-layout">
-                <div class="quote-editorial-card">
-                    "Finally, a platform that doesn’t lock basic features behind an aggressive corporate paywall."
-                    <span class="quote-author">// Quantitative Commodity Alpha Trader</span>
-                </div>
-                <div class="quote-editorial-card">
-                    "The analytics metrics alone feel like a $500/month institucional tier bloomberg terminal workspace configuration."
-                    <span class="quote-author">// FX Volatility Fund Analyst</span>
-                </div>
-                <div class="quote-editorial-card">
-                    "I structurally evaluated 3 detailed years of complex strategy tracking data models inside a single weekend."
-                    <span class="quote-author">// Retail Strategy Scaling Practitioner</span>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="features" class="section-container">
-        <div class="section-heading-centered">
-            <div class="badge-pill">Operational Parameters</div>
-            <h2>Professional Grade Trading Research Without The Complexity</h2>
-            <p>We eliminate capital payload limitations. Access structural alpha computation workflows on robust market depth models instantly.</p>
-        </div>
-
-        <div class="value-props-grid">
-            <div class="prop-card-wrapper">
-                <div class="prop-card-icon">🎛️</div>
-                <h3>Unlimited Backtesting</h3>
-                <p>Test as many strategies as your target matrices require. No daily operation bounds, execution throttles, or history processing metrics capped.</p>
-            </div>
-            <div class="prop-card-wrapper">
-                <div class="prop-card-icon">🧬</div>
-                <h3>20 Years of Market Data</h3>
-                <p>Train, stress-test, and isolate strategies across multiple decade intervals of real, raw historical market volatility logs.</p>
-            </div>
-            <div class="prop-card-wrapper">
-                <div class="prop-card-icon">🧠</div>
-                <h3>AI Performance Analytics</h3>
-                <p>Isolate structural win rates, drawdowns, math factor distributions, behavior patterns, and optimization parameters effortlessly.</p>
-            </div>
-            <div class="prop-card-wrapper">
-                <div class="prop-card-icon">🎓</div>
-                <h3>Free Mentorship & Guidance</h3>
-                <p>Learn structural execution management directly from senior volatility analysts to upgrade processing loops continuously.</p>
-            </div>
-            <div class="prop-card-wrapper">
-                <div class="prop-card-icon">👥</div>
-                <h3>Beginners & Professionals</h3>
-                <p>Optimized interface logic is highly simple for evolving practitioners yet intensely deep for advanced quant engineers.</p>
-            </div>
-            <div class="prop-card-wrapper">
-                <div class="prop-card-icon">⚡</div>
-                <h3>Lightning Fast Execution</h3>
-                <p>Get computed trade data breakdowns back in fractional seconds using advanced web-worker multi-threaded compilers.</p>
-            </div>
-        </div>
-    </section>
-
-    <section id="process" class="section-container">
-        <div class="section-heading-centered">
-            <div class="badge-pill">Execution Matrix Pipeline</div>
-            <h2>Three Steps to Algorithmic Mastery</h2>
-        </div>
-
-        <div class="process-flow-row">
-            <div class="process-step-node">
-                <div class="step-circle-badge">01</div>
-                <h3>Configure Strategy Mapping</h3>
-                <p>Upload raw tracking vectors or click custom condition triggers to profile your market entry parameters cleanly.</p>
-            </div>
-            <div class="process-step-node">
-                <div class="step-circle-badge">02</div>
-                <h3>Run Backtest Instantly</h3>
-                <p>Launch the cloud parsing array engine to replay multi-timeframe candle data logs at high speeds.</p>
-            </div>
-            <div class="process-step-node">
-                <div class="step-circle-badge">03</div>
-                <h3>Analyze & Improve Logs</h3>
-                <p>Review comprehensive diagnostic risk reports, win distributions, and equity graphs to adapt parameters.</p>
-            </div>
-        </div>
-        <div class="process-footer-note">Professional-grade trading research without the complexity.</div>
-    </section>
-
-    <section id="pricing" class="section-container">
-        <div class="matrix-split-container">
-            <div>
-                <div class="badge-pill" style="border-color: var(--neon-emerald-glow); color:var(--neon-emerald);">Zero Capital Overhead</div>
-                <h2 style="font-size: 40px; font-weight: 800; margin: 0 0 20px 0; letter-spacing: -1px;">Everything Included.<br><span style="color:var(--neon-emerald)">Free Forever.</span></h2>
-                <p style="color: var(--text-silver); line-height: 1.6; font-size: 16px; margin: 0 0 30px 0;">We don't monetize core utility toolings. Access complete deep performance verification features natively without premium tier walls.</p>
-                
-                <div class="matrix-feature-bullet-list">
-                    <div class="feature-bullet-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>Unlimited Sessions</div>
-                    <div class="feature-bullet-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>Historical Market Data</div>
-                    <div class="feature-bullet-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>Unlimited Strategies</div>
-                    <div class="feature-bullet-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>Comprehensive Strategy Reports</div>
-                    <div class="feature-bullet-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>Full Analytics Package</div>
-                    <div class="feature-bullet-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>Mentorship Deck Access</div>
-                </div>
-            </div>
-
-            <div class="comparison-table-wrapper">
-                <div class="comp-grid-row hdr-row">
-                    <div>Capability Metric</div>
-                    <div>PureBacktest</div>
-                    <div>Competitors</div>
-                </div>
-                <div class="comp-grid-row">
-                    <div class="comp-cell-feature">20-Year Tick History</div>
-                    <div class="comp-cell-platform">UNLIMITED FREE</div>
-                    <div class="comp-cell-competitor">$120/mo Premium Tier</div>
-                </div>
-                <div class="comp-grid-row">
-                    <div class="comp-cell-feature">Simultaneous Session Runs</div>
-                    <div class="comp-cell-platform">UNLIMITED FREE</div>
-                    <div class="comp-cell-competitor">Capped at 3 Logs</div>
-                </div>
-                <div class="comp-grid-row">
-                    <div class="comp-cell-feature">AI Quantitative Metrics</div>
-                    <div class="comp-cell-platform">INCLUDED FREE</div>
-                    <div class="comp-cell-competitor">Add-On Package ($50/mo)</div>
-                </div>
-                <div class="comp-grid-row">
-                    <div class="comp-cell-feature">Hidden Maintenance Fees</div>
-                    <div class="comp-cell-platform">NONE</div>
-                    <div class="comp-cell-competitor">Subscription Bounds</div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="section-container" style="margin-bottom: 100px;">
-        <div class="termination-gradient-panel">
-            <h2>Stop Paying For Basic Trading Tools</h2>
-            <p>Get institutional-level backtesting, analytics, and professional trading guidance — completely free.</p>
-            <button class="cta-btn-primary dynamic-route-cta">Start Backtesting Now</button>
-
-            <div class="ticker-tape-container">
-                <div class="ticker-infinite-track">
-                    <div class="ticker-node">XAUUSD <span class="tick-bull">+1.24%</span></div>
-                    <div class="ticker-node">EURUSD <span class="tick-bear">-0.45%</span></div>
-                    <div class="ticker-node">GBPUSD <span class="tick-bull">+0.82%</span></div>
-                    <div class="ticker-node">USDCAD <span class="tick-bear">-0.12%</span></div>
-                    <div class="ticker-node">USDJPY <span class="tick-bull">+2.15%</span></div>
-                    <div class="ticker-node">BTCUSD <span class="tick-bull">+4.67%</span></div>
-                    <div class="ticker-node">XAUUSD <span class="tick-bull">+1.24%</span></div>
-                    <div class="ticker-node">EURUSD <span class="tick-bear">-0.45%</span></div>
-                    <div class="ticker-node">GBPUSD <span class="tick-bull">+0.82%</span></div>
-                    <div class="ticker-node">USDCAD <span class="tick-bear">-0.12%</span></div>
-                    <div class="ticker-node">USDJPY <span class="tick-bull">+2.15%</span></div>
-                    <div class="ticker-node">BTCUSD <span class="tick-bull">+4.67%</span></div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <footer>
-        <div class="footer-brand">PURE<span>BACKTEST</span> // STRATEGIC EDGE PLATFORMS</div>
-        <p class="footer-disclaimer">
-            Risk Disclosure Statement: Simulation performance results possess operational limitations. Virtual track processing outcomes do not mirror active liquidity execution patterns or slip variances. Simulated strategies do not guarantee net execution stability across production equity pools. Protect your risk protocols.
-        </p>
-    </footer>
-
     <script>
-        const canvas = document.getElementById('heroDynamicChart');
-        const ctx = canvas.getContext('2d');
-        const dataNodes = [];
+        let currentAuthStatusGlobal = false;
 
-        function forceCanvasSizing() {
-            if(!canvas) return;
-            canvas.width = canvas.parentElement.clientWidth;
-            canvas.height = 280;
+        const marketDataRepository = {
+            crypto: [
+                { ticker: 'BTCUSD', range: '10 Years', src: 'Binance / Coinbase Archival Feed' },
+                { ticker: 'ETHUSD', range: '9 Years', src: 'Kraken Institutional Pool' },
+                { ticker: 'SOLUSD', range: '6 Years', src: 'Serum / Sol Liquidity Matrix' },
+                { ticker: 'XRPUSD', range: '10 Years', src: 'Bitstamp Historical Core' }
+            ],
+            forex: [
+                { ticker: 'EURUSD', range: '20 Years', src: 'Dukascopy Premium Pool' },
+                { ticker: 'XAUUSD', range: '20 Years', src: 'London Bullion Spot Feed' },
+                { ticker: 'GBPUSD', range: '20 Years', src: 'FXCM Historical Archive' },
+                { ticker: 'USDJPY', range: '20 Years', src: 'OANDA Data Pipelines' }
+            ],
+            shares: [
+                { ticker: 'SPY (S&P 500)', range: '15 Years', src: 'CBOE / Nasdaq TotalView Feed' },
+                { ticker: 'QQQ (Nasdaq)', range: '15 Years', src: 'Nasdaq Historical Archive' },
+                { ticker: 'AAPL (Apple)', range: '15 Years', src: 'NYSE / TradeTape Pool' },
+                { ticker: 'NVDA (NVIDIA)', range: '12 Years', src: 'NYSE Institutional Feed' }
+            ]
+        };
+
+        window.addEventListener('DOMContentLoaded', () => {
+            setupMobileMenuLogic();
+            switchMarketTab('crypto');
+            initializeScrollAnimations();
+        });
+
+        function initializeScrollAnimations() {
+            const animationTargets = document.querySelectorAll('.scroll-animate');
+            const animationObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('reveal-active');
+                        animationObserver.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+            animationTargets.forEach(target => animationObserver.observe(target));
         }
-        window.addEventListener('resize', forceCanvasSizing);
-        forceCanvasSizing();
 
-        let pricingBasis = 2000;
-        for(let i=0; i<45; i++) {
-            let movement = (Math.random() - 0.46) * 16;
-            let o = pricingBasis;
-            let c = pricingBasis + movement;
-            let h = Math.max(o, c) + Math.random() * 4;
-            let l = Math.min(o, c) - Math.random() * 4;
-            dataNodes.push({ o, h, l, c });
-            pricingBasis = c;
-        }
+        function setupMobileMenuLogic() {
+            const menuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
 
-        function paintArenaChart() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            const spacePad = 20;
-            const w = canvas.width - spacePad * 2;
-            const h = canvas.height - spacePad * 2;
-
-            const limits = dataNodes.map(d => d.h);
-            const baselines = dataNodes.map(d => d.l);
-            const topMax = Math.max(...limits);
-            const lowMin = Math.min(...baselines);
-            const deltaRange = topMax - lowMin || 1;
-
-            const unitWidth = w / dataNodes.length;
-            const unitGaps = unitWidth * 0.35;
-
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.02)';
-            ctx.lineWidth = 1;
-            for(let j = 1; j < 5; j++) {
-                let targetLineY = spacePad + (h / 5) * j;
-                ctx.beginPath();
-                ctx.moveTo(spacePad, targetLineY);
-                ctx.lineTo(canvas.width - spacePad, targetLineY);
-                ctx.stroke();
-            }
-
-            dataNodes.forEach((node, idx) => {
-                const targetX = spacePad + idx * unitWidth;
-                const posOpen = spacePad + h - ((node.o - lowMin) / deltaRange) * h;
-                const posClose = spacePad + h - ((node.c - lowMin) / deltaRange) * h;
-                const posHigh = spacePad + h - ((node.h - lowMin) / deltaRange) * h;
-                const posLow = spacePad + h - ((node.l - lowMin) / deltaRange) * h;
-
-                const isBullState = node.c >= node.o;
-                ctx.strokeStyle = isBullState ? '#00FF94' : '#FF3366';
-                ctx.fillStyle = isBullState ? 'rgba(0, 255, 148, 0.9)' : 'rgba(255, 51, 102, 0.9)';
-                ctx.lineWidth = 1.5;
-
-                ctx.beginPath();
-                ctx.moveTo(targetX + unitWidth / 2, posHigh);
-                ctx.lineTo(targetX + unitWidth / 2, posLow);
-                ctx.stroke();
-
-                const candleBlockHeight = Math.abs(posClose - posOpen) || 2;
-                ctx.fillRect(targetX + unitGaps / 2, Math.min(posOpen, posClose), unitWidth - unitGaps, candleBlockHeight);
+            menuBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+                const isOpen = !mobileMenu.classList.contains('hidden');
+                menuBtn.innerHTML = isOpen ? `<i class="fa-solid fa-xmark"></i>` : `<i class="fa-solid fa-bars-staggered"></i>`;
             });
         }
 
-        setInterval(() => {
-            dataNodes.shift();
-            let precedingClose = dataNodes[dataNodes.length - 1].c;
-            let movement = (Math.random() - 0.46) * 16;
-            let o = precedingClose;
-            let c = precedingClose + movement;
-            let h = Math.max(o, c) + Math.random() * 4;
-            let l = Math.min(o, c) - Math.random() * 4;
-            dataNodes.push({ o, h, l, c });
-            paintArenaChart();
-        }, 800);
+        // Triggered by the Firebase state module dynamically
+        window.updateAuthViewUI = function(isLoggedIn) {
+            currentAuthStatusGlobal = isLoggedIn;
+            const loggedOutBar = document.getElementById('logged-out-actions');
+            const loggedInBar = document.getElementById('logged-in-actions');
+            const userDashboard = document.getElementById('user-dashboard-area');
+            const mobileAuthBox = document.getElementById('mobile-auth-placeholder');
 
-        setTimeout(paintArenaChart, 100);
+            if (isLoggedIn) {
+                loggedOutBar.classList.add('hidden');
+                loggedInBar.classList.remove('hidden');
+                userDashboard.classList.remove('hidden');
+                
+                mobileAuthBox.innerHTML = `
+                    <a href="#my-sessions" class="block w-full text-center py-3.5 rounded-xl border border-white/10 text-white bg-zinc-900 min-h-[48px]">My Sessions</a>
+                    <a href="#new-session" class="block w-full text-center py-3.5 rounded-xl bg-gradient-to-r from-brand-accent to-brand-purple text-white font-medium min-h-[48px]">New Session</a>
+                    <button onclick="window.firebaseSignOutAction(window.firebaseAuthInstance)" class="block w-full text-center text-zinc-500 text-xs pt-2 min-h-[34px]">Log Out</button>
+                `;
+            } else {
+                loggedOutBar.classList.remove('hidden');
+                loggedInBar.classList.add('hidden');
+                userDashboard.classList.add('hidden');
+
+                mobileAuthBox.innerHTML = `
+                    <button onclick="triggerAuthFlow()" class="block w-full text-zinc-400 py-3 text-left font-medium min-h-[44px]">Sign In</button>
+                    <button onclick="triggerAuthFlow()" class="block w-full py-3.5 rounded-xl bg-white text-brand-dark font-medium text-center min-h-[48px]">Get Free Account</button>
+                `;
+            }
+        }
+
+        function triggerAuthFlow() {
+// Locate the click handler function throwing this message and change it to:
+window.location.href = "login.html";        }
+
+        function handleHeroCTA() {
+            if (!currentAuthStatusGlobal) {
+                triggerAuthFlow();
+            } else {
+                handleNewSession();
+            }
+        }
+
+        function handleNewSession() {
+            alert('SYSTEM ACTION:\nOpening workspace configuration modal panels... Choose a ticker index parameters map to initialize your sandbox candle replay.');
+        }
+
+        function switchMarketTab(activeTabKey) {
+            const tabs = document.querySelectorAll('.tab-btn');
+            tabs.forEach(btn => {
+                btn.classList.remove('bg-white', 'text-brand-dark');
+                btn.classList.add('text-zinc-400', 'hover:text-white');
+            });
+
+            const chosenTabElement = document.getElementById(`tab-${activeTabKey}`);
+            if (chosenTabElement) {
+                chosenTabElement.classList.remove('text-zinc-400', 'hover:text-white');
+                chosenTabElement.classList.add('bg-white', 'text-brand-dark');
+            }
+
+            const targetContainer = document.getElementById('market-grid-container');
+            targetContainer.innerHTML = '';
+
+            marketDataRepository[activeTabKey].forEach(item => {
+                const cardNode = document.createElement('div');
+                cardNode.className = 'p-5 rounded-2xl glass-card transition-all flex flex-col justify-between backdrop-blur-sm';
+                cardNode.innerHTML = `
+                    <div>
+                        <div class="text-xs font-mono text-brand-accent font-bold mb-1">M1 TO D1 SYNCED</div>
+                        <h4 class="font-display font-bold text-lg text-white">${item.ticker}</h4>
+                    </div>
+                    <div class="mt-6">
+                        <div class="text-xs text-zinc-400 font-medium"><i class="fa-solid fa-database text-[10px] text-zinc-600 mr-1"></i> Data Stream:</div>
+                        <div class="text-[11px] text-zinc-500 truncate">${item.src}</div>
+                        <div class="mt-2 inline-block px-2 py-0.5 rounded text-[10px] font-mono bg-brand-success/10 text-brand-success font-bold">${item.range} Depth</div>
+                    </div>
+                `;
+                targetContainer.appendChild(cardNode);
+            });
+        }
+
+        function handleFormSubmission(event) {
+            event.preventDefault();
+            alert('Packet payload transmitted successfully over secure application channels!');
+            event.target.reset();
+        }
     </script>
 </body>
 </html>

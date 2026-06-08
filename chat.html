@@ -5,10 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Automation Assistant - Backtest Lab Pro</title>
 
-<!-- Import Inter font for professional dashboard typography -->
+<!-- Google Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- Firebase Compat SDKs -->
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
 <style>
 * {
@@ -19,7 +24,7 @@
 }
 
 body {
-    background: #060814; /* Deep trading dashboard dark theme background */
+    background: #060814;
     color: #f3f4f6;
     height: 100vh;
     overflow: hidden;
@@ -27,7 +32,6 @@ body {
     flex-direction: column;
 }
 
-/* Premium Navigation Bar matching backtestlabpro.com style */
 .navbar {
     height: 65px;
     background: #0b0f19;
@@ -86,7 +90,18 @@ body {
     background: rgba(59, 130, 246, 0.1);
 }
 
-/* Application Layout Structure */
+.user-tier-selector {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 6px;
+    padding: 4px 8px;
+    color: #a5b4fc;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    outline: none;
+}
+
 .main {
     display: flex;
     flex: 1;
@@ -94,7 +109,6 @@ body {
     background: #060814;
 }
 
-/* Main Chat Section */
 .chat-section {
     flex: 1;
     display: flex;
@@ -129,7 +143,6 @@ body {
     gap: 20px;
 }
 
-/* Custom Scrollbar Styling */
 .chat-messages::-webkit-scrollbar, .sidebar::-webkit-scrollbar {
     width: 6px;
 }
@@ -141,7 +154,6 @@ body {
     border-radius: 4px;
 }
 
-/* Chat Bubbles UI */
 .message {
     max-width: 70%;
     padding: 16px 20px;
@@ -149,7 +161,7 @@ body {
     line-height: 1.6;
     font-size: 14px;
     white-space: pre-wrap;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
 .ai {
@@ -167,7 +179,144 @@ body {
     border-top-right-radius: 2px;
 }
 
-/* Chat Bottom Action Area */
+.options-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.option-btn {
+    background: #111827;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: #d1d5db;
+    padding: 10px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.option-btn:hover {
+    border-color: #3b82f6;
+    color: #ffffff;
+    background: rgba(59, 130, 246, 0.05);
+}
+
+.pricing-showcase {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-top: 16px;
+    max-width: 550px;
+}
+
+.price-card {
+    background: #060814;
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 10px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+}
+
+.price-title {
+    font-weight: 600;
+    font-size: 14px;
+    color: #ffffff;
+}
+
+.price-tag {
+    font-size: 20px;
+    font-weight: 700;
+    color: #10b981;
+    margin: 6px 0;
+}
+
+.price-desc {
+    font-size: 12px;
+    color: #9ca3af;
+    line-height: 1.4;
+    margin-bottom: 12px;
+}
+
+.price-link-btn {
+    background: #2563eb;
+    color: white;
+    text-align: center;
+    padding: 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+/* Guard Shield Screens */
+.cooldown-screen {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    text-align: center;
+    padding: 40px;
+    background: #060814;
+}
+
+.cooldown-timer {
+    font-size: 48px;
+    font-weight: 700;
+    color: #ef4444;
+    margin: 20px 0;
+    font-variant-numeric: tabular-nums;
+}
+
+/* Auth Guard Modal View */
+.auth-gate-overlay {
+    display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #060814;
+    z-index: 1000;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 30px;
+}
+
+.auth-card {
+    background: #0b0f19;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 40px;
+    border-radius: 16px;
+    max-width: 440px;
+    width: 100%;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+}
+
+.auth-btn {
+    background: #2563eb;
+    color: #ffffff;
+    border: none;
+    padding: 12px 24px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 24px;
+    transition: background 0.2s ease;
+}
+
+.auth-btn:hover {
+    background: #1d4ed8;
+}
+
 .input-container {
     padding: 24px 32px;
     background: #060814;
@@ -182,7 +331,6 @@ body {
     border-radius: 12px;
     border: 1px solid rgba(255, 255, 255, 0.06);
     align-items: center;
-    transition: border-color 0.2s ease;
 }
 
 .input-area:focus-within {
@@ -204,7 +352,7 @@ body {
 }
 
 .input-area input:disabled {
-    opacity: 0.5;
+    opacity: 0.4;
     cursor: not-allowed;
 }
 
@@ -218,11 +366,6 @@ body {
     color: white;
     font-weight: 500;
     font-size: 14px;
-    transition: background 0.2s ease;
-}
-
-.input-area button:hover:not(:disabled) {
-    background: #1d4ed8;
 }
 
 .input-area button:disabled {
@@ -231,7 +374,6 @@ body {
     cursor: not-allowed;
 }
 
-/* Context/Status Panel Sidebar */
 .sidebar {
     width: 360px;
     border-left: 1px solid rgba(255, 255, 255, 0.04);
@@ -259,22 +401,34 @@ body {
     display: flex;
     align-items: center;
     gap: 6px;
-    background: rgba(16, 185, 129, 0.1);
-    color: #10b981;
+    background: rgba(59, 130, 246, 0.1);
+    color: #3b82f6;
     padding: 6px 12px;
     border-radius: 6px;
     font-size: 12px;
     font-weight: 500;
 }
 
+.status.ai-mode {
+    background: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+}
+
+.status.locked {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+}
+
 .status-dot {
     width: 6px;
     height: 6px;
-    background: #10b981;
+    background: #3b82f6;
     border-radius: 50%;
 }
 
-/* Strategic Parameters Data Board */
+.status.ai-mode .status-dot { background: #10b981; }
+.status.locked .status-dot { background: #ef4444; }
+
 .info-card {
     background: #060814;
     border: 1px solid rgba(255, 255, 255, 0.04);
@@ -309,74 +463,39 @@ body {
 .value {
     font-size: 14px;
     font-weight: 500;
-    color: #9ca3af;
+    color: #6b7280;
 }
 
-/* Active Highlight for updated parameters */
 .value.set {
     color: #3b82f6;
     font-weight: 600;
 }
 
-/* Interactive Assist Chips */
-.suggestions {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.suggestions-title {
-    font-size: 12px;
-    color: #4b5563;
-    font-weight: 500;
-    text-transform: uppercase;
-}
-
-.chips-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-}
-
-.chip {
-    padding: 8px 14px;
-    border-radius: 8px;
-    background: #060814;
-    border: 1px solid rgba(255, 255, 255, 0.04);
-    color: #9ca3af;
-    cursor: pointer;
-    font-size: 13px;
-    font-weight: 500;
-    transition: all 0.2s ease;
-}
-
-.chip:hover {
-    color: #ffffff;
-    border-color: #3b82f6;
-    background: rgba(59, 130, 246, 0.05);
-}
-
-/* Responsive Structural Media Rules */
 @media(max-width:960px){
-    .sidebar {
-        display: none;
-    }
-    .message {
-        max-width: 85%;
-    }
-    .nav-links {
-        display: none;
-    }
+    .sidebar { display: none; }
+    .message { max-width: 85%; }
+    .nav-links { display: none; }
 }
 </style>
 </head>
 
 <body>
 
-<!-- Header Navigation Elements -->
+<!-- Mandatory Authentication Gate Guard Screen -->
+<div class="auth-gate-overlay" id="authGate">
+    <div class="auth-card">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 16px;">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+        </svg>
+        <h2 style="color: #ffffff; font-size: 20px; font-weight: 600; margin-bottom: 8px;">Authentication Required</h2>
+        <p style="color: #9ca3af; font-size: 14px; line-height: 1.5;">Please sign in to your account to build, optimize, and export your production trading strategies.</p>
+        <button class="auth-btn" onclick="triggerFallbackRedirect()">Go to Login Page</button>
+    </div>
+</div>
+
 <nav class="navbar">
     <div class="logo-container">
-        <!-- SVG Financial Vector Trend Logo Graphic -->
         <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <line x1="18" y1="20" x2="18" y2="10"></line>
             <line x1="12" y1="20" x2="12" y2="4"></line>
@@ -389,48 +508,68 @@ body {
         <a href="#">Home</a>
         <a href="#">Backtester</a>
         <a href="#" class="active">Bot Development</a>
-        <a href="#">Blog</a>
+        <select class="user-tier-selector" id="tierSelector" onchange="toggleUserPlanTier()">
+            <option value="free">Account Status: Free Plan</option>
+            <option value="paid">Account Status: Premium / Paid</option>
+        </select>
     </div>
 </nav>
 
-<!-- System Main Interactive Container Grid -->
-<div class="main">
+<div class="main" id="appMainLayout" style="display: none;">
 
-    <div class="chat-section">
+    <!-- Active Conversational Workspace -->
+    <div class="chat-section" id="activeChatWrapper">
         <div class="chat-header">
             <h1>Automation Assistant</h1>
-            <p>Describe your rules to instantly compile system components and workflow configurations.</p>
+            <p id="assistant-mode-desc">Guided Setup Phase: Let's lock in your baseline infrastructure requirements.</p>
         </div>
 
         <div class="chat-messages" id="chat">
-            <div class="message ai">Hello 👋
-
-I can help collect the requirements for your trading automation project.
-
-Please describe your strategy in as much detail as possible.</div>
+            <div class="message ai" id="step-msg-0">
+                Hello 👋 Welcome to Backtest Lab Pro Automation. 
+                
+                Let's setup your project framework first. Which **Target Platform** do you want to build this trading bot for?
+                <div class="options-container" id="options-step-0">
+                    <button class="option-btn" onclick="handleHardcodedChoice('platform', 'TradingView (Pine Script)')">TradingView (Pine Script)</button>
+                    <button class="option-btn" onclick="handleHardcodedChoice('platform', 'MetaTrader 5 (MQL5)')">MetaTrader 5 (MQL5)</button>
+                    <button class="option-btn" onclick="handleHardcodedChoice('platform', 'Custom Bot (Node.js/Python)')">Custom Bot (Node.js/Python)</button>
+                </div>
+            </div>
         </div>
 
         <div class="input-container">
             <div class="input-area">
                 <input
                     id="messageInput"
-                    placeholder="Describe strategy setup (e.g., 'Execute TradingView Bot on XAUUSD M1 chart')..."
-                    onkeydown="if(event.key === 'Enter') sendMessage()"
+                    placeholder="Input disabled during Guided Form setup phase..."
+                    disabled
+                    onkeydown="if(event.key === 'Enter') checkAndProcessInput()"
                 >
-                <button id="sendButton" onclick="sendMessage()">
-                    Send Message
+                <button id="sendButton" onclick="checkAndProcessInput()" disabled>
+                    Send
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Live Execution Status Board Matrix Panels -->
+    <!-- Rate Limits Cooldown Screen Component -->
+    <div class="cooldown-screen" id="cooldownOverlay">
+        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        <h2 style="margin-top: 24px; font-size: 24px;">Free Session Limit Reached</h2>
+        <p style="color: #6b7280; max-width: 400px; margin-top: 8px; line-height: 1.5;">You have completed your free blueprint optimization session. Free evaluation slots reopen every 120 minutes per profile.</p>
+        <div class="cooldown-timer" id="countdownClock">120:00</div>
+        <p style="font-size: 13px; color: #9ca3af;">Want to skip the wait times and develop unlimited trading bots? <a href="/services" style="color:#3b82f6; text-decoration: none; font-weight:600;">Upgrade to a Service Plan &rarr;</a></p>
+    </div>
+
     <aside class="sidebar">
         <div class="sidebar-header">
-            <h2>System Config</h2>
-            <div class="status">
+            <h2>Configuration Matrix</h2>
+            <div class="status" id="status-badge">
                 <div class="status-dot"></div>
-                Assistant Active
+                <span id="status-text">Guided Form</span>
             </div>
         </div>
 
@@ -464,15 +603,10 @@ Please describe your strategy in as much detail as possible.</div>
                 <div class="label">Risk Management</div>
                 <div class="value" id="val-risk">Waiting...</div>
             </div>
-        </div>
 
-        <div class="suggestions">
-            <div class="suggestions-title">Quick Settings</div>
-            <div class="chips-grid">
-                <div class="chip" onclick="selectSuggestion('TradingView Bot')">TradingView Bot</div>
-                <div class="chip" onclick="selectSuggestion('MT5 EA')">MT5 EA</div>
-                <div class="chip" onclick="selectSuggestion('Crypto Bot')">Crypto Bot</div>
-                <div class="chip" onclick="selectSuggestion('Binance Automation')">Binance Automation</div>
+            <div class="info-item" id="delivery-row" style="display: none;">
+                <div class="label">Delivery Channel</div>
+                <div class="value" id="val-delivery" style="color: #10b981;">Not Picked</div>
             </div>
         </div>
     </aside>
@@ -480,56 +614,353 @@ Please describe your strategy in as much detail as possible.</div>
 </div>
 
 <script>
-// Groq LLM API Configuration Matrix Block
-const GROQ_API_KEY = "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";
-const messagesHistory = [
-    {
-        role: "system",
-        content: `You are the Automation Assistant for Backtest Lab Pro. Your goal is to guide the user step-by-step to extract requirements for building their trading bot.
-        
-        At the end of EVERY response, you MUST output a structured JSON block summarizing what you know so far. This JSON block will be hidden from the UI but used to fill out the side panel fields dynamically.
-        
-        Use this EXACT text marker format at the very end of your response text:
-        ---DATA---
-        {
-            "platform": "Value or 'Not Set'",
-            "market": "Value or 'Not Set'",
-            "timeframe": "Value or 'Not Set'",
-            "entry_rules": "Value or 'Waiting...'",
-            "exit_rules": "Value or 'Waiting...'",
-            "risk_management": "Value or 'Waiting...'"
-        }
-        
-        Keep your conversational text response concise, helpful, and professional.`
-    },
-    {
-        role: "assistant",
-        content: "Hello 👋\n\nI can help collect the requirements for your trading automation project.\n\nPlease describe your strategy in as much detail as possible."
-    }
-];
+// Provided Firebase Application Architecture 
+const firebaseConfig = {
+    apiKey: "AIzaSyAensfI53w49Fd4A7Lz5_K9N1JOxZsW7Kk",
+    authDomain: "backtestlabpro.firebaseapp.com",
+    projectId: "backtestlabpro",
+    storageBucket: "backtestlabpro.firebasestorage.app",
+    messagingSenderId: "560146824734",
+    appId: "1:560146824734:web:5287d0ded3a1024e75780f"
+};
 
-let currentSidebarData = {
+// Initialize Firebase App
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+const auth = firebase.auth();
+
+// Engine State Properties
+const GROQ_API_KEY = "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";
+let currentStep = 0; 
+let currentEngineMode = "form"; 
+let userPlanTier = "free";     
+let dynamicOptimizationStage = 0; 
+
+let currentUserId = null;
+let chatSessionId = null;
+
+let sessionData = {
     platform: "Not Set",
     market: "Not Set",
     timeframe: "Not Set",
     entry_rules: "Waiting...",
     exit_rules: "Waiting...",
-    risk_management: "Waiting..."
+    risk_management: "Waiting...",
+    delivery_method: "Not Picked"
 };
 
-async function sendMessage(){
+let messagesHistory = [];
+
+const guidedQuestions = [
+    {
+        field: "market",
+        text: "Excellent choice. Now, what **Market Sector / Financial Asset** will this system run on?",
+        options: ["Crypto (Binance/Bybit)", "Forex (XAUUSD / Majors)", "Indices (NAS100 / US30)", "Stocks"]
+    },
+    {
+        field: "timeframe",
+        text: "Understood. What is the execution **Base Timeframe** for processing technical charting data?",
+        options: ["M1 (1-Minute)", "M5 (5-Minutes)", "H1 (1-Hour)", "D1 (Daily Multi-Timeframe)"]
+    }
+];
+
+// Auth Observer Implementation
+auth.onAuthStateChanged((user) => {
+    if (user) {
+        currentUserId = user.uid;
+        // Mount App Layout Components and Disable Gate
+        document.getElementById("authGate").style.display = "none";
+        document.getElementById("appMainLayout").style.display = "flex";
+        
+        // Seed initial greeting message so the historical document is accurate
+        messagesHistory = [{
+            role: "assistant",
+            content: "Hello 👋 Welcome to Backtest Lab Pro Automation.\n\nLet's setup your project framework first. Which Target Platform do you want to build this trading bot for?"
+        }];
+        
+        // TARGET PATH CONVERTED TO 'chats' SUBCOLLECTION
+        chatSessionId = db.collection("users").doc(currentUserId).collection("chats").doc().id;
+        
+        // Execute operational system initialization
+        checkCooldownTimerLockState();
+        syncChatToFirestore();
+    } else {
+        currentUserId = null;
+        chatSessionId = null;
+        // Unlogged configuration fallback
+        document.getElementById("authGate").style.display = "flex";
+        document.getElementById("appMainLayout").style.display = "none";
+    }
+});
+
+// Generates a fully organized, highly-readable plaintext document transcript for Firestore console
+function generateReadableTranscript() {
+    let textDoc = "==================================================\n";
+    textDoc += "       BACKTEST LAB PRO - BOT SESSION BLUEPRINT     \n";
+    textDoc += "==================================================\n\n";
+    textDoc += `[CONFIGURATION MATRIX]\n`;
+    textDoc += `• Platform: ${sessionData.platform}\n`;
+    textDoc += `• Market: ${sessionData.market}\n`;
+    textDoc += `• Base Timeframe: ${sessionData.timeframe}\n`;
+    textDoc += `• Strategy Entry Rules: ${sessionData.entry_rules}\n`;
+    textDoc += `• Strategy Exit Rules: ${sessionData.exit_rules}\n`;
+    textDoc += `• Risk Parameters Management: ${sessionData.risk_management}\n`;
+    textDoc += `• Secure File Delivery Channel: ${sessionData.delivery_method}\n\n`;
+    textDoc += "==================================================\n";
+    textDoc += "               COMPLETE DIALOGUE LOG               \n";
+    textDoc += "==================================================\n";
+
+    messagesHistory.forEach(msg => {
+        if (msg.role === "system") return; // Keep internal system rules out of user text doc
+        
+        let speaker = msg.role === "user" ? "USER" : "AI ASSISTANT";
+        // Filter out JSON block metadata splits from final text view
+        let cleanContent = msg.content.split("---DATA---")[0].trim();
+        
+        textDoc += `\n[${speaker}]:\n${cleanContent}\n`;
+        textDoc += "--------------------------------------------------\n";
+    });
+
+    return textDoc;
+}
+
+// RESTRENGTHENED SYNCING ENGINE: Completely maps all subcollection paths to 'chats' folder structures
+async function syncChatToFirestore() {
+    if (!currentUserId || !chatSessionId) return;
+    try {
+        // Location 1: Inside the nested users collection path -> Changed from sessions to 'chats'
+        await db.collection("users").doc(currentUserId).collection("chats").doc(chatSessionId).set({
+            sessionData: sessionData,
+            currentStep: currentStep,
+            engineMode: currentEngineMode,
+            optimizationStage: dynamicOptimizationStage,
+            lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+        }, { merge: true });
+
+        // Location 2: ROOT-LEVEL COLLECTION 'chats' -> Entirely separate top-level global directory folder
+        await db.collection("chats").doc(chatSessionId).set({
+            userId: currentUserId, 
+            messagesHistory: messagesHistory,
+            readableTranscript: generateReadableTranscript(), 
+            lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+        }, { merge: true });
+
+    } catch (error) {
+        console.error("Firestore root-level collection separation syncing failure: ", error);
+    }
+}
+
+function triggerFallbackRedirect() {
+    alert("Redirecting to login portal context framework...");
+}
+
+function checkCooldownTimerLockState() {
+    if (!currentUserId) return;
+    const activeLockoutTime = localStorage.getItem(`backtestlab_cooldown_expiry_${currentUserId}`);
+    if (activeLockoutTime) {
+        const remainingMs = parseInt(activeLockoutTime) - Date.now();
+        if (remainingMs > 0) {
+            document.getElementById("activeChatWrapper").style.display = "none";
+            document.getElementById("cooldownOverlay").style.display = "flex";
+            startCountdownClockTicker(remainingMs);
+        } else {
+            localStorage.removeItem(`backtestlab_cooldown_expiry_${currentUserId}`);
+        }
+    }
+}
+
+function startCountdownClockTicker(msDuration) {
+    const clock = document.getElementById("countdownClock");
+    
+    function updateClock() {
+        if (!currentUserId) return;
+        const now = Date.now();
+        const future = parseInt(localStorage.getItem(`backtestlab_cooldown_expiry_${currentUserId}`));
+        const diff = future - now;
+
+        if (diff <= 0) {
+            localStorage.removeItem(`backtestlab_cooldown_expiry_${currentUserId}`);
+            location.reload();
+            return;
+        }
+
+        const totalSecs = Math.floor(diff / 1000);
+        const mins = Math.floor(totalSecs / 60);
+        const secs = totalSecs % 60;
+        
+        clock.innerText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        setTimeout(updateClock, 1000);
+    }
+    updateClock();
+}
+
+function toggleUserPlanTier() {
+    userPlanTier = document.getElementById("tierSelector").value;
+}
+
+function handleHardcodedChoice(field, value) {
+    sessionData[field] = value;
+    const uiId = "val-" + field;
+    document.getElementById(uiId).innerText = value;
+    document.getElementById(uiId).classList.add("set");
+
+    const oldOptions = document.getElementById(`options-step-${currentStep}`);
+    if(oldOptions) oldOptions.remove();
+
+    const chat = document.getElementById("chat");
+    const userDiv = document.createElement("div");
+    userDiv.className = "message user";
+    userDiv.innerText = `${value}`;
+    chat.appendChild(userDiv);
+    
+    messagesHistory.push({ role: "user", content: value });
+
+    if (currentStep < guidedQuestions.length) {
+        const nextQuestion = guidedQuestions[currentStep];
+        currentStep++;
+
+        const aiDiv = document.createElement("div");
+        aiDiv.className = "message ai";
+        aiDiv.innerHTML = `${nextQuestion.text}
+            <div class="options-container" id="options-step-${currentStep}">
+                ${nextQuestion.options.map(opt => `<button class="option-btn" onclick="handleHardcodedChoice('${nextQuestion.field}', '${opt}')">${opt}</button>`).join('')}
+            </div>`;
+        chat.appendChild(aiDiv);
+        
+        messagesHistory.push({ role: "assistant", content: nextQuestion.text });
+        
+        chat.scrollTop = chat.scrollHeight;
+        syncChatToFirestore();
+    } else {
+        initializeAIEngineMode();
+    }
+}
+
+function initializeAIEngineMode() {
+    currentEngineMode = "ai";
+    const chat = document.getElementById("chat");
+    
+    document.getElementById("messageInput").disabled = false;
+    document.getElementById("messageInput").placeholder = "Describe strategy parameters...";
+    document.getElementById("sendButton").disabled = false;
+    
+    document.getElementById("assistant-mode-desc").innerText = "AI Consultation Phase: Designing execution triggers, multi-timeframe candle rules, and risk configurations.";
+    const badge = document.getElementById("status-badge");
+    badge.className = "status ai-mode";
+    document.getElementById("status-text").innerText = "AI Assistant Online";
+
+    messagesHistory.push({
+        role: "system",
+        content: `You are the Automation Assistant for Backtest Lab Pro.
+        Locked Settings: Platform: ${sessionData.platform}, Asset: ${sessionData.market}, Timeframe: ${sessionData.timeframe}.
+        Your goal is to extract Entry Rules, Exit Rules, and Risk Management specifications from user input.
+        
+        Keep your messaging highly professional. At the end of EVERY response, include the strict JSON syntax update mapping block behind this text divider:
+        ---DATA---
+        {
+            "entry_rules": "Summarized entry or 'Waiting...'",
+            "exit_rules": "Summarized exit or 'Waiting...'",
+            "risk_management": "Summarized risk metrics or 'Waiting...'"
+        }`
+    });
+
+    const firstAIPrompt = `Great! Infrastructure properties have been successfully saved into your Configuration Matrix:\n\n• **Platform**: ${sessionData.platform}\n• **Market**: ${sessionData.market}\n• **Base Timeframe**: ${sessionData.timeframe}\n\nNow, let's look at the strategy logic. Can you describe your **Entry Rules**? For example, do you use specific indicator cross-overs, chart patterns, or multi-timeframe candle close conditions?`;
+    
+    messagesHistory.push({ role: "assistant", content: firstAIPrompt });
+    
+    const aiDiv = document.createElement("div");
+    aiDiv.className = "message ai";
+    aiDiv.innerText = firstAIPrompt;
+    chat.appendChild(aiDiv);
+    chat.scrollTop = chat.scrollHeight;
+    syncChatToFirestore();
+}
+
+function checkAndProcessInput() {
+    if (currentEngineMode !== "ai") return;
+
+    const input = document.getElementById("messageInput");
+    const text = input.value.trim();
+    if (!text) return;
+
+    const lowercaseText = text.toLowerCase();
+    
+    if (lowercaseText.includes("code") || lowercaseText.includes("file") || lowercaseText.includes("bot script") || lowercaseText.includes("download")) {
+        triggerDirectFileRequestFallback(text);
+    } else {
+        sendAIMessage(text);
+    }
+}
+
+function triggerDirectFileRequestFallback(userInputText) {
+    const chat = document.getElementById("chat");
+    const input = document.getElementById("messageInput");
+
+    const userDiv = document.createElement("div");
+    userDiv.className = "message user";
+    userDiv.innerText = userInputText;
+    chat.appendChild(userDiv);
+    input.value = "";
+    
+    messagesHistory.push({ role: "user", content: userInputText });
+
+    const fallbackResponseText = "When our bot developers finish building and verifying your script system, they will transmit the functional code files directly to you.\n\nPlease select your preferred messenger application platform to safely receive the files:";
+
+    const aiDiv = document.createElement("div");
+    aiDiv.className = "message ai";
+    aiDiv.innerHTML = `When our bot developers finish building and verifying your script system, they will transmit the functional code files directly to you. 
+    
+    Please select your preferred messenger application platform to safely receive the files:
+    <div class="options-container" id="delivery-options-block">
+        <button class="option-btn" style="border-color:#25d366" onclick="setDeliveryMethod('WhatsApp')">WhatsApp Messenger</button>
+        <button class="option-btn" style="border-color:#0088cc" onclick="setDeliveryMethod('Telegram')">Telegram Channels</button>
+        <button class="option-btn" style="border-color:#ea4335" onclick="setDeliveryMethod('Gmail')">Gmail Address</button>
+    </div>`;
+    
+    messagesHistory.push({ role: "assistant", content: fallbackResponseText });
+    
+    chat.appendChild(aiDiv);
+    chat.scrollTop = chat.scrollHeight;
+    syncChatToFirestore();
+}
+
+function setDeliveryMethod(method) {
+    sessionData.delivery_method = method;
+    document.getElementById("delivery-row").style.display = "flex";
+    document.getElementById("val-delivery").innerText = method;
+
+    const block = document.getElementById("delivery-options-block");
+    if (block) block.remove();
+
+    const chat = document.getElementById("chat");
+    const userDiv = document.createElement("div");
+    userDiv.className = "message user";
+    userDiv.innerText = `Receive via ${method}`;
+    chat.appendChild(userDiv);
+    
+    messagesHistory.push({ role: "user", content: `Receive via ${method}` });
+
+    const confirmationText = `Channel saved successfully! Channel selected: ${method}. Continuing data collection loop...`;
+    const aiDiv = document.createElement("div");
+    aiDiv.className = "message ai";
+    aiDiv.innerText = confirmationText;
+    chat.appendChild(aiDiv);
+    
+    messagesHistory.push({ role: "assistant", content: confirmationText });
+    
+    chat.scrollTop = chat.scrollHeight;
+    syncChatToFirestore();
+}
+
+async function sendAIMessage(text) {
     const input = document.getElementById("messageInput");
     const button = document.getElementById("sendButton");
-    const text = input.value.trim();
-
-    if(!text) return;
 
     input.disabled = true;
     button.disabled = true;
 
     const chat = document.getElementById("chat");
 
-    // Render message to user terminal interface
     const userDiv = document.createElement("div");
     userDiv.className = "message user";
     userDiv.innerText = text;
@@ -539,10 +970,9 @@ async function sendMessage(){
     input.value = "";
     messagesHistory.push({ role: "user", content: text });
 
-    // Instantiation placeholder pending stream pipeline resolution
     const aiDiv = document.createElement("div");
     aiDiv.className = "message ai";
-    aiDiv.innerText = "Analyzing configurations...";
+    aiDiv.innerText = "Analyzing strategy logic details...";
     chat.appendChild(aiDiv);
     chat.scrollTop = chat.scrollHeight;
 
@@ -560,9 +990,7 @@ async function sendMessage(){
             })
         });
 
-        if (!response.ok) {
-            throw new Error(`HTTP Error Status: ${response.status}`);
-        }
+        if (!response.ok) throw new Error("API Interruption");
 
         const data = await response.json();
         const fullContent = data.choices[0].message.content;
@@ -573,49 +1001,200 @@ async function sendMessage(){
         if (fullContent.includes("---DATA---")) {
             const parts = fullContent.split("---DATA---");
             cleanText = parts[0].trim();
-            const jsonString = parts[1].trim();
-
+            
             try {
-                const extractedJson = JSON.parse(jsonString);
-                updateSidebarUI(extractedJson);
-            } catch (e) {
-                console.error("Failed parsing structured text chunk segment execution:", e);
+                const extractedJson = JSON.parse(parts[1].trim());
+                updateStrategicUIFields(extractedJson);
+            } catch(e) {
+                console.error("Data Extraction Error:", e);
             }
         }
 
         aiDiv.innerText = cleanText;
 
     } catch (error) {
-        console.error("Groq Network Transaction Execution Failure:", error);
-        aiDiv.innerText = "An execution error occurred while processing system definitions. Please try resending your setup.";
+        aiDiv.innerText = "Network transmission failed. Please clarify your last rule criteria.";
     } finally {
         input.disabled = false;
         button.disabled = false;
         input.focus();
         chat.scrollTop = chat.scrollHeight;
+        
+        checkSessionCompletion();
+        syncChatToFirestore();
     }
 }
 
-function updateSidebarUI(data) {
-    const fields = ['platform', 'market', 'timeframe', 'entry_rules', 'exit_rules', 'risk_management'];
-    
-    fields.forEach(field => {
-        const uiElement = document.getElementById(`val-${field.replace('_', '')}`);
-        const defaultValue = field.includes('rules') || field.includes('management') ? "Waiting..." : "Not Set";
+function updateStrategicUIFields(data) {
+    const strategicFields = ['entry_rules', 'exit_rules', 'risk_management'];
+    strategicFields.forEach(field => {
+        const targetId = `val-${field.split('_')[0]}`;
+        const uiElement = document.getElementById(targetId);
         
-        if (data[field] && data[field] !== defaultValue) {
-            currentSidebarData[field] = data[field];
+        if (data[field] && data[field] !== "Waiting...") {
+            sessionData[field] = data[field];
             uiElement.innerText = data[field];
-            uiElement.classList.add('set'); // Apply visual highlight accent color
+            uiElement.classList.add('set');
         }
     });
 }
 
-function selectSuggestion(value) {
-    const input = document.getElementById("messageInput");
-    input.value = `I want to build a ${value}`;
-    sendMessage();
+function checkSessionCompletion() {
+    if (
+        sessionData.entry_rules !== "Waiting..." &&
+        sessionData.exit_rules !== "Waiting..." &&
+        sessionData.risk_management !== "Waiting..."
+    ) {
+        if (dynamicOptimizationStage === 0) {
+            injectOptimizationConsultPhase();
+        }
+    }
 }
+
+function injectOptimizationConsultPhase() {
+    dynamicOptimizationStage = 1;
+    const chat = document.getElementById("chat");
+    
+    const optimizationText = `I have logged your baseline logic systems! However, to protect your capital from live drawdowns, our engineering team highly recommends adding institutional guards.\n\nWould you like to inject any of these safeguards into your bot blueprint configuration?`;
+
+    const adviseDiv = document.createElement("div");
+    adviseDiv.className = "message ai";
+    adviseDiv.innerHTML = `I have logged your baseline logic systems! However, to protect your capital from live drawdowns, our engineering team highly recommends adding institutional guards.
+    
+    Would you like to inject any of these safeguards into your bot blueprint configuration?
+    <div class="options-container" id="optimization-guards-block">
+        <button class="option-btn" onclick="applyGuardSelection('Add Trailing Stop Loss')">+ Add Trailing Stop Loss Line</button>
+        <button class="option-btn" onclick="applyGuardSelection('Restrict Maximum Daily Trades')">+ Restrict Maximum Daily Trades</button>
+        <button class="option-btn" onclick="applyGuardSelection('Add Trading Session Constraints')">+ Add Time Session Constraints</button>
+        <button class="option-btn" style="background: rgba(255,255,255,0.02)" onclick="applyGuardSelection('Keep Core Rules Only')">Skip Custom Protections</button>
+    </div>`;
+    
+    messagesHistory.push({ role: "assistant", content: optimizationText });
+    
+    chat.appendChild(adviseDiv);
+    chat.scrollTop = chat.scrollHeight;
+    syncChatToFirestore();
+}
+
+function applyGuardSelection(chosenGuard) {
+    const chat = document.getElementById("chat");
+    const oldBlock = document.getElementById("optimization-guards-block");
+    if(oldBlock) oldBlock.remove();
+
+    const userDiv = document.createElement("div");
+    userDiv.className = "message user";
+    userDiv.innerText = chosenGuard;
+    chat.appendChild(userDiv);
+    
+    messagesHistory.push({ role: "user", content: chosenGuard });
+
+    if(chosenGuard !== 'Keep Core Rules Only') {
+        const riskField = document.getElementById("val-risk");
+        riskField.innerText = riskField.innerText + ` (${chosenGuard})`;
+    }
+
+    dynamicOptimizationStage = 2;
+    
+    const offerConfirmationText = `Your complete strategy setup is now verified, balanced, and perfectly optimized for automated development!\n\nTo begin compiling your functional code file assets, a service plan layer must be active. **Would you like me to display our current development packages and tier features here?**`;
+
+    const finalConfirmDiv = document.createElement("div");
+    finalConfirmDiv.className = "message ai";
+    finalConfirmDiv.innerHTML = `Your complete strategy setup is now verified, balanced, and perfectly optimized for automated development! 
+    
+    To begin compiling your functional code file assets, a service plan layer must be active. **Would you like me to display our current development packages and tier features here?**
+    <div class="options-container" id="permission-pitch-block">
+        <button class="option-btn" style="border-color: #10b981; color: #10b981;" onclick="handleServicePlanPitchPermission(true)">Yes, Show Services</button>
+        <button class="option-btn" style="border-color: #ef4444; color: #ef4444;" onclick="handleServicePlanPitchPermission(false)">No, Not Now</button>
+    </div>`;
+    
+    messagesHistory.push({ role: "assistant", content: offerConfirmationText });
+    
+    chat.appendChild(finalConfirmDiv);
+    chat.scrollTop = chat.scrollHeight;
+    syncChatToFirestore();
+}
+
+function handleServicePlanPitchPermission(userGrantedConsent) {
+    const block = document.getElementById("permission-pitch-block");
+    if(block) block.remove();
+
+    const chat = document.getElementById("chat");
+    const userDiv = document.createElement("div");
+    userDiv.className = "message user";
+    userDiv.innerText = userGrantedConsent ? "Yes, show services" : "No, not now";
+    chat.appendChild(userDiv);
+    
+    messagesHistory.push({ role: "user", content: userGrantedConsent ? "Yes, show services" : "No, not now" });
+
+    currentEngineMode = "locked";
+    const input = document.getElementById("messageInput");
+    input.disabled = true;
+    input.placeholder = "Session completed. Interface locked.";
+    document.getElementById("sendButton").disabled = true;
+
+    document.getElementById("assistant-mode-desc").innerText = "Session Wrapped Up. Your configuration requirements have been logged.";
+    const badge = document.getElementById("status-badge");
+    badge.className = "status locked";
+    document.getElementById("status-text").innerText = "Session Closed";
+
+    const responseDiv = document.createElement("div");
+    responseDiv.className = "message ai";
+
+    let finalSystemOutputText = "";
+
+    if (userGrantedConsent) {
+        if (userPlanTier === "paid") {
+            finalSystemOutputText = `### System Blueprint Sent to Engineers! 🚀\n\nYour complete technical specifications are in our production queues. Since you hold a Premium Account, developers will build and dispatch the bot code files directly to your chosen network channel. Thank you for choosing Backtest Lab Pro!`;
+            responseDiv.innerHTML = `### System Blueprint Sent to Engineers! 🚀
+            
+Your complete technical specifications are in our production queues. Since you hold a **Premium Account**, developers will build and dispatch the bot code files directly to your chosen network channel. Thank you for choosing Backtest Lab Pro!`;
+        } else {
+            finalSystemOutputText = `### Backtest Lab Pro Services Matrix 📊\n\nStandard Bot Pack ($149): Full script structure source file.\nPro Laboratory Suite ($299): Includes advanced multi-timeframe matrix filters.`;
+            responseDiv.innerHTML = `### Backtest Lab Pro Services Matrix 📊
+
+Excellent! Below is a brief overview of our engineering packages. You can explore complete technical parameters on our primary [Services Hub Page](/services).
+
+<div class="pricing-showcase">
+    <div class="price-card">
+        <div class="price-title">Standard Bot Pack</div>
+        <div class="price-tag">$149</div>
+        <div class="price-desc">Full script structure source file, single target compilation, standard strategy optimizer settings wrapper access.</div>
+        <a href="/services" class="price-link-btn">Unlock Bot Code</a>
+    </div>
+    <div class="price-card" style="border-color: #3b82f6;">
+        <div class="price-title">Pro Laboratory Suite</div>
+        <div class="price-tag">$299</div>
+        <div class="price-desc">Includes advanced multi-timeframe matrix filters, historical dashboard backtester engine plugins, and high-frequency VPS configs.</div>
+        <a href="/services" class="price-link-btn" style="background: #3b82f6;">Upgrade Pro Plan</a>
+    </div>
+</div>
+\nThank you for framing your strategy assets with us! Once a service package is secured, your coded scripts compile instantly.`;
+            
+            engageFreeUserTimeLockout();
+        }
+    } else {
+        finalSystemOutputText = `Understood. We have safely archived your automation parameters. Whenever you're ready to compile your bot script files, just head over to our official Services Page to activate your pipeline. Thank you for consulting with Backtest Lab Pro!`;
+        responseDiv.innerHTML = `Understood. We have safely archived your automation parameters. Whenever you're ready to compile your bot script files, just head over to our official [Services Page](/services) to activate your pipeline. Thank you for consulting with Backtest Lab Pro!`;
+        
+        if (userPlanTier === "free") {
+            engageFreeUserTimeLockout();
+        }
+    }
+
+    messagesHistory.push({ role: "assistant", content: finalSystemOutputText });
+
+    chat.appendChild(responseDiv);
+    chat.scrollTop = chat.scrollHeight;
+    syncChatToFirestore();
+}
+
+function engageFreeUserTimeLockout() {
+    if (!currentUserId) return;
+    const twoHoursInMs = 120 * 60 * 1000;
+    const expiryTimestamp = Date.now() + twoHoursInMs;
+    localStorage.setItem(`backtestlab_cooldown_expiry_${currentUserId}`, expiryTimestamp.toString());
+}
+
 </script>
 
 </body>

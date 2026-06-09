@@ -1,228 +1,548 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <title>PureBacktest - Create Session</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #0b0e14;
-            color: #d1d4dc;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-        }
+<meta charset="UTF-8">
+<title>PureBacktest - Create Session</title>
 
-        .box {
-            width: 420px;
-            background: #131722;
-            padding: 30px;
-            border-radius: 8px;
-            border: 1px solid #2a2e39;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-            position: relative;
-        }
+<style>
 
-        h2 {
-            margin-top: 0;
-            color: #fff;
-            font-weight: 500;
-            text-align: center;
-        }
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
 
-        label {
-            display: block;
-            margin-top: 15px;
-            font-size: 12px;
-            color: #787b86;
-            text-transform: uppercase;
-        }
+body{
+    font-family:'Segoe UI',sans-serif;
+    background:#0b0e14;
+    color:#d1d4dc;
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:30px;
+}
 
-        input, select, button {
-            width: 100%;
-            padding: 12px;
-            margin-top: 5px;
-            background: #1e222d;
-            border: 1px solid #363a45;
-            color: white;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
+.container{
+    width:1200px;
+    background:#131722;
+    border:1px solid #2a2e39;
+    border-radius:18px;
+    overflow:hidden;
+    box-shadow:0 20px 60px rgba(0,0,0,.5);
+}
 
-        input:focus, select:focus {
-            border-color: #2962ff;
-            outline: none;
-        }
+.topBar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:20px 30px;
+    border-bottom:1px solid #2a2e39;
+}
 
-        .launchBtn {
-            background: #2962ff;
-            border: none;
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 25px;
-            transition: background 0.2s;
-        }
+.brand{
+    font-size:24px;
+    font-weight:700;
+    color:white;
+}
 
-        .launchBtn:hover {
-            background: #1e4bd8;
-        }
+.userArea{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
 
-        .hint {
-            font-size: 11px;
-            color: #5d606b;
-            margin-top: 4px;
-        }
+.profile{
+    width:42px;
+    height:42px;
+    border-radius:50%;
+    background:#2962ff;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    color:white;
+    font-weight:bold;
+}
 
-        .topUser {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+.logoutBtn{
+    background:#ef4444;
+    color:white;
+    border:none;
+    padding:10px 15px;
+    border-radius:8px;
+    cursor:pointer;
+}
 
-        .profile {
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            background: #22c55e;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            color: white;
-        }
+.main{
+    display:grid;
+    grid-template-columns:1.4fr 0.9fr;
+}
 
-        .logoutBtn {
-            background: #ef4444;
-            border: none;
-            color: white;
-            padding: 8px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            width: auto;
-        }
+.leftPanel{
+    padding:25px;
+    border-right:1px solid #2a2e39;
+}
 
-        .userEmail {
-            font-size: 11px;
-            color: #787b86;
-            margin-top: 5px;
-            text-align: center;
-        }
-    </style>
+.rightPanel{
+    padding:25px;
+}
+
+.sectionTitle{
+    color:white;
+    font-size:20px;
+    margin-bottom:15px;
+}
+
+.searchBox{
+    width:100%;
+    background:#1e222d;
+    border:1px solid #363a45;
+    color:white;
+    padding:14px;
+    border-radius:10px;
+    margin-bottom:15px;
+}
+
+.searchBox:focus{
+    outline:none;
+    border-color:#2962ff;
+}
+
+.categories{
+    display:flex;
+    gap:8px;
+    margin-bottom:20px;
+}
+
+.cat{
+    flex:1;
+    border:none;
+    background:#1e222d;
+    color:#999;
+    padding:10px;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+.cat.active{
+    background:#2962ff;
+    color:white;
+}
+
+.pairGrid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:10px;
+    max-height:520px;
+    overflow-y:auto;
+}
+
+.pairCard{
+    background:#1a1f2b;
+    border:1px solid #303648;
+    border-radius:12px;
+    padding:14px;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.pairCard:hover{
+    border-color:#2962ff;
+    transform:translateY(-2px);
+}
+
+.pairCard.selected{
+    border-color:#2962ff;
+    box-shadow:0 0 20px rgba(41,98,255,.3);
+}
+
+.pairName{
+    color:white;
+    font-weight:600;
+}
+
+.pairType{
+    margin-top:5px;
+    font-size:11px;
+    color:#888;
+}
+
+label{
+    display:block;
+    margin-top:15px;
+    margin-bottom:6px;
+    font-size:12px;
+    color:#888;
+    text-transform:uppercase;
+}
+
+input,
+select{
+    width:100%;
+    padding:13px;
+    background:#1e222d;
+    border:1px solid #363a45;
+    color:white;
+    border-radius:8px;
+}
+
+input:focus,
+select:focus{
+    outline:none;
+    border-color:#2962ff;
+}
+
+.hint{
+    margin-top:6px;
+    color:#666;
+    font-size:11px;
+}
+
+.summary{
+    margin-top:20px;
+    background:#1a1f2b;
+    border:1px solid #303648;
+    border-radius:12px;
+    padding:15px;
+}
+
+.summaryRow{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:10px;
+}
+
+.summaryRow:last-child{
+    margin-bottom:0;
+}
+
+.launchBtn{
+    width:100%;
+    margin-top:25px;
+    border:none;
+    background:#2962ff;
+    color:white;
+    padding:16px;
+    border-radius:10px;
+    font-size:16px;
+    font-weight:700;
+    cursor:pointer;
+}
+
+.launchBtn:hover{
+    background:#1f51df;
+}
+
+.userEmail{
+    font-size:12px;
+    color:#777;
+    margin-top:6px;
+}
+
+</style>
 </head>
 <body>
 
-<div class="box">
-    <div class="topUser">
-        <div id="profileLogo" class="profile">U</div>
-        <button id="logoutBtn" class="logoutBtn">Logout</button>
+<div class="container">
+
+    <div class="topBar">
+
+        <div>
+            <div class="brand">BacktestLabPro</div>
+        </div>
+
+       
+
     </div>
 
-    <h2>New Replay Session</h2>
-    <div id="userEmail" class="userEmail">Loading user...</div>
+    <div class="main">
 
-    <label>Trading Pair</label>
-    <select id="symbol">
-        <option value="XAUUSD">XAUUSD (Gold)</option>
-        <option value="GBPUSD">GBPUSD</option>
-        <option value="EURUSD">EURUSD</option>
-        <option value="USDJPY">USDJPY</option>
-        <option value="GBPJPY">GBPJPY</option>
-    </select>
+        <div class="leftPanel">
 
-    <label>History Beginning (Pre-load Data)</label>
-    <input type="date" id="from" value="2025-01-14">
-    <div class="hint">How far back the chart data starts.</div>
+            <div class="sectionTitle">
+                Select Trading Instrument
+            </div>
 
-    <label>Replay Start Point</label>
-    <input type="date" id="start" value="2025-02-16">
-    <div class="hint">The specific date where the candles begin to play.</div>
+            <input
+                id="pairSearch"
+                class="searchBox"
+                placeholder="Search symbol..."
+            >
 
-    <label>Backtest End Date</label>
-    <input type="date" id="to" value="2025-08-13">
+            <div class="categories">
 
-    <label>Initial Speed</label>
-    <select id="speed">
-        <option value="1000">1x (1 sec/candle)</option>
-        <option value="500" selected>2x</option>
-        <option value="100">10x</option>
-    </select>
+                <button class="cat active" data-cat="all">All</button>
+                <button class="cat" data-cat="forex">Forex</button>
+                <button class="cat" data-cat="crypto">Crypto</button>
+                <button class="cat" data-cat="indices">Indices</button>
+                <button class="cat" data-cat="metals">Metals</button>
 
-    <button class="launchBtn" onclick="go()">Launch Terminal</button>
+            </div>
+
+            <div id="pairGrid" class="pairGrid"></div>
+
+        </div>
+
+        <div class="rightPanel">
+
+            <div class="sectionTitle">
+                Replay Settings
+            </div>
+
+            <label>History Beginning</label>
+            <input type="date" id="from" value="2025-01-14">
+            <div class="hint">
+                How far back chart data begins.
+            </div>
+
+            <label>Replay Start Point</label>
+            <input type="date" id="start" value="2025-02-16">
+            <div class="hint">
+                Candle playback starts here.
+            </div>
+
+            <label>Backtest End Date</label>
+            <input type="date" id="to" value="2025-08-13">
+
+            <label>Initial Speed</label>
+
+            <select id="speed">
+                <option value="1000">1x</option>
+                <option value="500" selected>2x</option>
+                <option value="250">4x</option>
+                <option value="100">10x</option>
+            </select>
+
+            <div class="summary">
+
+                <div class="summaryRow">
+                    <span>Symbol</span>
+                    <span id="pvPair">XAUUSD</span>
+                </div>
+
+                <div class="summaryRow">
+                    <span>Replay Start</span>
+                    <span id="pvStart">2025-02-16</span>
+                </div>
+
+                <div class="summaryRow">
+                    <span>End Date</span>
+                    <span id="pvEnd">2025-08-13</span>
+                </div>
+
+            </div>
+
+            <button class="launchBtn" onclick="go()">
+                Launch Replay Session
+            </button>
+
+        </div>
+
+    </div>
+
 </div>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+<script>
 
-const firebaseConfig = {
-    apiKey: "AIzaSyAensfI53w49Fd4A7Lz5_K9N1JOxZsW7Kk",
-    authDomain: "backtestlabpro.firebaseapp.com",
-    projectId: "backtestlabpro",
-    storageBucket: "backtestlabpro.firebasestorage.app",
-    messagingSenderId: "560146824734",
-    appId: "1:560146824734:web:5287d0ded3a1024e75780f",
-    measurementId: "G-YY82TZ1ZG7"
-};
+const symbols = [
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+{symbol:"XAUUSD",type:"metals"},
+{symbol:"XAGUSD",type:"metals"},
 
-const logoutBtn = document.getElementById("logoutBtn");
-const profileLogo = document.getElementById("profileLogo");
-const userEmail = document.getElementById("userEmail");
+{symbol:"EURUSD",type:"forex"},
+{symbol:"GBPUSD",type:"forex"},
+{symbol:"USDJPY",type:"forex"},
+{symbol:"GBPJPY",type:"forex"},
+{symbol:"EURJPY",type:"forex"},
+{symbol:"EURGBP",type:"forex"},
+{symbol:"EURCAD",type:"forex"},
+{symbol:"EURCHF",type:"forex"},
+{symbol:"USDCAD",type:"forex"},
+{symbol:"AUDUSD",type:"forex"},
+{symbol:"NZDUSD",type:"forex"},
 
-onAuthStateChanged(auth, (user) => {
-    if (user) {
-        profileLogo.innerText = user.email[0].toUpperCase();
-        userEmail.innerText = user.email;
-        
-        // Ensure UID and Email are cached for the save function in chart.html
-        localStorage.setItem("user_uid", user.uid);
-        localStorage.setItem("user_email", user.email);
-    } else {
-        alert("Please login first");
-        window.location.href = "index.html";
-    }
+{symbol:"BTCUSD",type:"crypto"},
+{symbol:"ETHUSDT",type:"crypto"},
+{symbol:"BNBUSDT",type:"crypto"},
+{symbol:"DOGEUSDT",type:"crypto"},
+{symbol:"XRPUSDT",type:"crypto"},
+{symbol:"TRXUSDT",type:"crypto"},
+
+{symbol:"NASDAQ",type:"indices"},
+{symbol:"US30_MT5",type:"indices"},
+{symbol:"US500",type:"indices"}
+
+];
+
+let selectedPair = "XAUUSD";
+
+const grid = document.getElementById("pairGrid");
+const search = document.getElementById("pairSearch");
+
+function renderPairs(category="all",term=""){
+
+    grid.innerHTML="";
+
+    symbols
+    .filter(x=>{
+
+        const cat =
+            category==="all" ||
+            x.type===category;
+
+        const txt =
+            x.symbol
+            .toLowerCase()
+            .includes(term.toLowerCase());
+
+        return cat && txt;
+
+    })
+    .forEach(pair=>{
+
+        const card =
+            document.createElement("div");
+
+        card.className="pairCard";
+
+        if(pair.symbol===selectedPair)
+            card.classList.add("selected");
+
+        card.innerHTML=`
+            <div class="pairName">${pair.symbol}</div>
+            <div class="pairType">${pair.type}</div>
+        `;
+
+        card.onclick=()=>{
+
+            selectedPair=pair.symbol;
+
+            renderPairs(
+                document.querySelector(".cat.active")
+                .dataset.cat,
+                search.value
+            );
+
+            updatePreview();
+        };
+
+        grid.appendChild(card);
+
+    });
+}
+
+renderPairs();
+
+document
+.querySelectorAll(".cat")
+.forEach(btn=>{
+
+    btn.onclick=()=>{
+
+        document
+        .querySelectorAll(".cat")
+        .forEach(x=>x.classList.remove("active"));
+
+        btn.classList.add("active");
+
+        renderPairs(
+            btn.dataset.cat,
+            search.value
+        );
+
+    };
+
 });
 
-logoutBtn.addEventListener("click", async () => {
-    await signOut(auth);
-    localStorage.clear();
-    window.location.href = "index.html";
+search.addEventListener("input",()=>{
+
+    renderPairs(
+        document.querySelector(".cat.active").dataset.cat,
+        search.value
+    );
+
 });
+
+function updatePreview(){
+
+    document.getElementById("pvPair").innerText =
+        selectedPair;
+
+    document.getElementById("pvStart").innerText =
+        document.getElementById("start").value;
+
+    document.getElementById("pvEnd").innerText =
+        document.getElementById("to").value;
+}
+
+document
+.getElementById("start")
+.addEventListener("change",updatePreview);
+
+document
+.getElementById("to")
+.addEventListener("change",updatePreview);
+
+updatePreview();
+
 </script>
 
 <script>
-function go() {
-    const symbol = document.getElementById("symbol").value;
-    const from = document.getElementById("from").value;
-    const to = document.getElementById("to").value;
-    const start = document.getElementById("start").value;
-    const speed = document.getElementById("speed").value;
 
-    // Validation
-    if (new Date(start) < new Date(from)) {
-        alert("Replay Start cannot be earlier than History Beginning!");
+function go(){
+
+    const symbol = selectedPair;
+
+    const from =
+        document.getElementById("from").value;
+
+    const start =
+        document.getElementById("start").value;
+
+    const to =
+        document.getElementById("to").value;
+
+    const speed =
+        document.getElementById("speed").value;
+
+    if(new Date(start) < new Date(from)){
+
+        alert(
+            "Replay Start cannot be earlier than History Beginning!"
+        );
+
         return;
     }
 
-    /* IMPORTANT: Save 'start' as 'initial'. 
-       The chart.html looks for localStorage.getItem("initial") to know where to begin the replay.
-    */
-    localStorage.setItem("symbol", symbol);
-    localStorage.setItem("from", from);     // History data begins here
-    localStorage.setItem("initial", start);  // Replay simulation begins here
-    localStorage.setItem("to", to);         // Backtest ends here
-    localStorage.setItem("speed", speed);
+    localStorage.setItem(
+        "symbol",
+        symbol
+    );
 
-    window.location.href = "chart.html";
+    localStorage.setItem(
+        "from",
+        from
+    );
+
+    localStorage.setItem(
+        "initial",
+        start
+    );
+
+    localStorage.setItem(
+        "to",
+        to
+    );
+
+    localStorage.setItem(
+        "speed",
+        speed
+    );
+
+    window.location.href =
+        "chart.html";
 }
+
 </script>
 
 </body>

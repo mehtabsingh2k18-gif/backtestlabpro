@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bot Development - BacktestLabPro</title>
+    
+    <!-- External Icon Modules Integration -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
         /* --- BRAND THEME & RESET --- */
         * {
@@ -34,7 +38,7 @@
             overflow-x: hidden;
         }
 
-        /* --- EXACT MATCH NAVBAR FROM IMAGE_01BADA.PNG --- */
+        /* --- NAVBAR STRUCTURAL BACKBONE --- */
         .navbar {
             background-color: #0b0e11;
             border-bottom: 1px solid rgba(255, 255, 255, 0.06);
@@ -53,6 +57,7 @@
             align-items: center;
             gap: 10px;
             text-decoration: none;
+            flex-shrink: 0;
         }
 
         .brand-icon-box {
@@ -79,7 +84,7 @@
         .nav-menu {
             display: flex;
             align-items: center;
-            gap: 28px;
+            gap: 24px;
             list-style: none;
         }
 
@@ -160,6 +165,7 @@
             text-decoration: none;
             transition: opacity 0.2s ease;
             box-shadow: 0 4px 12px rgba(77, 94, 247, 0.2);
+            cursor: pointer;
         }
 
         .btn-new-session:hover {
@@ -180,7 +186,201 @@
             color: var(--accent-red);
         }
 
-        /* --- GLOBAL LAYOUT ELEMENTS --- */
+        /* --- PREVENT ASYNC AUTH FLASH TIMING RULES --- */
+        .auth-hidden {
+            opacity: 0 !important;
+            pointer-events: none !important;
+            visibility: hidden !important;
+        }
+        
+        .auth-visible {
+            opacity: 1 !important;
+            pointer-events: auto !important;
+            visibility: visible !important;
+            transition: opacity 0.2s ease-in-out;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* --- USER ACCOUNT TOOLBAR PROFILE MENU MATRIX --- */
+        .profile-dropdown-wrapper {
+            position: relative;
+            margin-left: 4px;
+        }
+
+        .profile-menu-trigger-btn {
+            background: linear-gradient(135deg, #503bf5, #863bf5);
+            border: none;
+            padding: 1px;
+            border-radius: 12px;
+            cursor: pointer;
+            width: 38px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s ease;
+        }
+
+        .profile-menu-trigger-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .profile-menu-trigger-inner {
+            background-color: #0b0e11;
+            width: 100%;
+            height: 100%;
+            border-radius: 11px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+        }
+
+        .profile-menu-trigger-inner:hover {
+            color: #ffffff;
+        }
+
+        .profile-overlay-dialog-box {
+            position: absolute;
+            right: 0;
+            top: 48px;
+            background-color: #14171c;
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 16px;
+            width: 260px;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.6);
+            z-index: 1100;
+            text-align: left;
+        }
+
+        .profile-box-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .profile-box-avatar {
+            width: 36px;
+            height: 36px;
+            background-color: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-blue);
+        }
+
+        .profile-box-meta {
+            overflow: hidden;
+        }
+
+        .profile-box-name {
+            font-size: 13px;
+            font-weight: 700;
+            color: #ffffff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .profile-box-email {
+            font-size: 11px;
+            color: var(--text-muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .btn-logout {
+            width: 100%;
+            padding: 9px;
+            background-color: var(--bg-main);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-muted);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-logout:hover {
+            color: var(--accent-red);
+            border-color: rgba(246, 70, 93, 0.3);
+            background-color: rgba(246, 70, 93, 0.05);
+        }
+
+        /* --- MOBILE INTERACTIVE COMPONENT LAYER --- */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 22px;
+            cursor: pointer;
+            padding: 8px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mobile-menu-btn:hover {
+            color: #ffffff;
+        }
+
+        .mobile-menu {
+            display: none;
+            background-color: rgba(11, 14, 17, 0.98);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            position: absolute;
+            top: 76px;
+            left: 0;
+            width: 100%;
+            padding: 20px 24px;
+            z-index: 999;
+            flex-direction: column;
+            gap: 14px;
+            box-shadow: 0 15px 25px rgba(0,0,0,0.5);
+            max-h: calc(100vh - 76px);
+            overflow-y: auto;
+        }
+
+        .mobile-menu a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 600;
+            padding: 10px 4px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .mobile-menu a:hover, .mobile-menu a.active {
+            color: #ffffff;
+        }
+
+        .mobile-auth-placeholder {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 10px;
+            padding-top: 10px;
+        }
+
+        /* --- GLOBAL LAYOUT DESIGN CANVAS ELEMENTS --- */
         section {
             padding: 80px 24px;
             display: flex;
@@ -210,7 +410,7 @@
             margin: 0 auto;
         }
 
-        /* --- BUTTONS --- */
+        /* --- ACTIONABLE CONTROLS & BUTTON CLASSES --- */
         .btn-group {
             display: flex;
             gap: 16px;
@@ -220,12 +420,12 @@
 
         .btn {
             padding: 14px 28px;
-            border-radius: 4px;
+            border-radius: 8px;
             font-size: 15px;
             font-weight: 600;
             cursor: pointer;
             text-decoration: none;
-            transition: opacity 0.2s ease;
+            transition: opacity 0.2s ease, transform 0.15s ease;
             text-align: center;
         }
 
@@ -242,10 +442,11 @@
         }
 
         .btn:hover {
-            opacity: 0.9;
+            opacity: 0.93;
+            transform: translateY(-1px);
         }
 
-        /* --- HERO SECTION --- */
+        /* --- HERO INTRO FEATURE SECTION --- */
         .hero-section {
             background: radial-gradient(circle at top right, rgba(59, 102, 245, 0.08), transparent 40%);
             padding: 100px 24px;
@@ -267,7 +468,7 @@
             margin: 0 auto 40px auto;
         }
 
-        /* --- TRUST SECTION --- */
+        /* --- DEEP DATA TRUST BOX FRAME --- */
         .trust-section {
             background-color: var(--bg-card);
             border-top: 1px solid var(--border-color);
@@ -299,7 +500,7 @@
             color: var(--text-muted);
         }
 
-        /* --- BIG IDEA & COMPATIBILITY SECTION --- */
+        /* --- MULTI-SPLIT PLATFORM GRID BLOCKS --- */
         .split-layout {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -330,7 +531,7 @@
             background-color: var(--bg-card);
             border: 1px solid var(--border-color);
             padding: 14px;
-            border-radius: 4px;
+            border-radius: 6px;
             font-size: 14px;
         }
 
@@ -347,7 +548,7 @@
             font-weight: bold;
         }
 
-        /* --- REPORT WIDGET --- */
+        /* --- REPORT COMPATIBILITY MATRIX WIDGET --- */
         .report-widget {
             background-color: var(--bg-card);
             border: 1px solid var(--border-color);
@@ -402,10 +603,10 @@
             font-weight: 600;
         }
 
-        /* --- GRID CARDS (WHAT WE BUILD / WHY AUTOMATE) --- */
+        /* --- CUSTOM MATRIX SOLUTION CARDS GRID --- */
         .card-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 24px;
         }
 
@@ -413,7 +614,7 @@
             background-color: var(--bg-card);
             border: 1px solid var(--border-color);
             padding: 32px;
-            border-radius: 6px;
+            border-radius: 8px;
             transition: transform 0.2s ease, border-color 0.2s ease;
             text-decoration: none;
             display: block;
@@ -421,7 +622,7 @@
 
         .card:hover {
             border-color: var(--accent-blue);
-            transform: translateY(-2px);
+            transform: translateY(-3px);
         }
 
         .card h3 {
@@ -436,10 +637,10 @@
             line-height: 1.6;
         }
 
-        /* --- SERVICES & PRICING PLANS MODULE --- */
+        /* --- COMPREHENSIVE SERVICE PLANS PRICING LAYOUT --- */
         .pricing-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
             gap: 24px;
         }
 
@@ -536,7 +737,7 @@
             background-color: rgba(255, 255, 255, 0.02);
             border: 1px dashed var(--border-color);
             padding: 12px;
-            border-radius: 4px;
+            border-radius: 6px;
             text-align: center;
             font-size: 13px;
             color: var(--text-muted);
@@ -546,10 +747,10 @@
             color: var(--text-main);
         }
 
-        /* --- PROCESS TIMELINE --- */
+        /* --- FRAMEWORK EXECUTION PROCESS TIMELINE --- */
         .process-timeline {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 24px;
             position: relative;
         }
@@ -558,7 +759,7 @@
             background-color: var(--bg-card);
             border: 1px solid var(--border-color);
             padding: 24px;
-            border-radius: 6px;
+            border-radius: 8px;
             position: relative;
         }
 
@@ -576,7 +777,7 @@
             color: var(--text-main);
         }
 
-        /* --- FAQ AREA --- */
+        /* --- FAQ SECTION INTEGRITY MODULE --- */
         .faq-layout {
             max-width: 800px;
             margin: 0 auto;
@@ -588,7 +789,7 @@
         .faq-item {
             background-color: var(--bg-card);
             border: 1px solid var(--border-color);
-            border-radius: 6px;
+            border-radius: 8px;
             padding: 24px;
         }
 
@@ -603,7 +804,7 @@
             font-size: 14px;
         }
 
-        /* --- FOOTER --- */
+        /* --- APPLICATION PLATFORM FOOTER CONTROLS --- */
         .footer {
             background-color: var(--bg-card);
             border-top: 1px solid var(--border-color);
@@ -630,20 +831,32 @@
             color: var(--text-main);
         }
 
-        /* --- RESPONSIVE DESIGN --- */
+        /* --- MOBILE RESPONSIVE ADAPTATION STYLES SHEET --- */
         @media (max-width: 1024px) {
             .navbar {
-                padding: 0 16px;
+                padding: 0 20px;
             }
             .nav-menu {
-                gap: 14px;
+                gap: 16px;
             }
         }
 
         @media (max-width: 900px) {
+            .navbar {
+                height: 70px;
+            }
+            .nav-menu, .nav-right-actions {
+                display: none !important;
+            }
+            .mobile-menu-btn {
+                display: flex !important;
+            }
             .split-layout {
                 grid-template-columns: 1fr;
-                gap: 40px;
+                gap: 48px;
+            }
+            .hero-section {
+                padding: 70px 20px;
             }
             .hero-content h1 {
                 font-size: 34px;
@@ -655,16 +868,26 @@
                 flex-direction: column;
                 gap: 16px;
                 text-align: center;
+                padding: 32px 20px;
             }
-            .nav-menu {
-                display: none;
+            section {
+                padding: 60px 20px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .pricing-grid, .card-grid, .analyze-list {
+                grid-template-columns: 1fr;
+            }
+            .report-widget {
+                padding: 20px;
             }
         }
     </style>
 </head>
 <body>
 
-    <!-- NAVBAR MATCHING IMAGE_01BADA.PNG -->
+    <!-- NAVBAR INTERACTIVE CONTROL MATRIX -->
     <nav class="navbar">
         <a href="chatnowpage" class="nav-left-brand">
             <div class="brand-icon-box">
@@ -675,35 +898,79 @@
             <span class="brand-text">BacktestLab<span>.pro</span></span>
         </a>
 
+        <!-- Desktop Navigation Actions Matrix -->
         <ul class="nav-menu">
-            <li><a href="chatnowpage">Features</a></li>
-            <li><a href="chatnowpage">Data&#10;Coverage</a></li>
-            <li><a href="chatnowpage" class="active">Bot&#10;Automation</a></li>
-            <li><a href="chatnowpage">Articles</a></li>
-            <li><a href="chatnowpage">About&#10;Us</a></li>
+            <li><a href="index.html#features">Features</a></li>
+            <li><a href="index.html#markets">Data&#10;Coverage</a></li>
+            <li><a href="bot_automation.html" class="active">Bot&#10;Automation</a></li>
+            <li><a href="index.html#articles">Articles</a></li>
+            <li><a href="index.html#about">About&#10;Us</a></li>
             <li class="pricing-container">
-                <a href="chatnowpage">Pricing</a>
+                <a href="#pricing">Pricing</a>
                 <span class="badge-free">Free</span>
             </li>
-            <li><a href="chatnowpage">Contact</a></li>
+            <li><a href="index.html#contact">Contact</a></li>
         </ul>
 
-        <div class="nav-right-actions">
-            <a href="chatnowpage" class="btn-my-sessions">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
-                </svg>
-                My Sessions
-            </a>
-            <a href="chatnowpage" class="btn-new-session">
-                <span style="font-size: 16px; font-weight: bold; margin-right: 2px;">+</span> New Session
-            </a>
-            <a href="chatnowpage" class="nav-power-btn">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path>
-                    <line x1="12" y1="2" x2="12" y2="12"></line>
-                </svg>
-            </a>
+        <!-- Desktop Authentication Actions Container -->
+        <div id="desktop-auth-container" class="nav-right-actions auth-hidden">
+            <div id="logged-out-actions" class="hidden" style="display: flex; align-items: center; gap: 16px;">
+                <button onclick="triggerAuthFlow()" style="background: none; border: none; color: var(--text-muted); font-size: 13px; font-weight: 600; cursor: pointer; transition: color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--text-muted)'">Sign In</button>
+                <button onclick="triggerAuthFlow()" class="btn-new-session" style="padding: 9px 18px;">Get Free Account</button>
+            </div>
+            
+            <div id="logged-in-actions" class="hidden" style="display: flex; align-items: center; gap: 14px;">
+                <a href="my-sessions.html" class="btn-my-sessions">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                    My Sessions
+                </a>
+                <a href="session.html" class="btn-new-session">
+                    <span style="font-size: 16px; font-weight: bold; margin-right: 2px;">+</span> New Session
+                </a>
+                
+                <div class="profile-dropdown-wrapper" id="profile-dropdown-wrapper">
+                    <button id="profile-menu-trigger-btn" class="profile-menu-trigger-btn" title="View Account Profile">
+                        <div class="profile-menu-trigger-inner">
+                            <i class="fa-solid fa-user"></i>
+                        </div>
+                    </button>
+
+                    <div id="profile-overlay-dialog-box" class="profile-overlay-dialog-box hidden">
+                        <div class="profile-box-header">
+                            <div class="profile-box-avatar">
+                                <i class="fa-solid fa-user"></i>
+                            </div>
+                            <div class="profile-box-meta">
+                                <h5 id="profile-box-name" class="profile-box-name">Trader Pro</h5>
+                                <p id="profile-box-email" class="profile-box-email">sandbox@backtestlabpro.com</p>
+                            </div>
+                        </div>
+
+                        <button id="firebase-logout-btn" class="btn-logout">
+                            <i class="fa-solid fa-power-off"></i> Sign Out
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Responsive Hamburger Action Key -->
+        <button id="mobile-menu-btn" class="mobile-menu-btn">
+            <i class="fa-solid fa-bars-staggered"></i>
+        </button>
+
+        <!-- Responsive Mobile Slideout Container -->
+        <div id="mobile-menu" class="mobile-menu">
+            <a href="index.html#features">Features</a>
+            <a href="index.html#markets">Data Coverage</a>
+            <a href="bot_automation.html" class="active">Bot Automation</a>
+            <a href="index.html#articles">Articles</a>
+            <a href="index.html#about">About Us</a>
+            <a href="#pricing">Pricing <span class="badge-free">Free</span></a>
+            <a href="index.html#contact">Contact</a>
+            <div id="mobile-auth-placeholder" class="mobile-auth-placeholder auth-hidden"></div>
         </div>
     </nav>
 
@@ -713,13 +980,165 @@
             <h1>Turn Proven Trading Strategies<br>Into Automated Systems</h1>
             <p>Backtesting identifies opportunities. Automation helps execute them consistently. We review your strategy, evaluate automation compatibility, and build custom trading systems designed around your rules.</p>
             <div class="btn-group">
-                <a href="chatnowpage" class="btn btn-primary">Request Automation Review</a>
-                <a href="chatnowpage" class="btn btn-secondary">Start Backtesting First</a>
+                <a href="session.html" class="btn btn-primary">Request Automation Review</a>
+                <a href="index.html" class="btn btn-secondary">Start Backtesting First</a>
             </div>
         </div>
     </section>
-->
-    <section>
+
+    <!-- SERVICES & PRICING PLANS MODULE -->
+    <section id="pricing">
+        <div class="container">
+            <div class="section-header">
+                <h2>Simple & Transparent Pricing</h2>
+                <p>Professional deployment models scaling precisely from strategy analysis up to complete algorithmic operations.</p>
+            </div>
+            <div class="pricing-grid">
+                
+                <!-- SERVICE 1 -->
+                <a href="session.html" class="pricing-card">
+                    <span class="plan-num">Service 1</span>
+                    <h3>Automation Review</h3>
+                    <div class="plan-price">Free</div>
+                    
+                    <div class="plan-details-section">
+                        <div class="plan-details-title">Includes</div>
+                        <ul class="plan-list">
+                            <li>Strategy discussion</li>
+                            <li>Feasibility check</li>
+                            <li>Development estimate</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="plan-delivery">Delivery Time: <strong>24–48 hours</strong></div>
+                </a>
+
+                <!-- SERVICE 2 -->
+                <a href="session.html" class="pricing-card">
+                    <span class="plan-num">Service 2</span>
+                    <h3>Simple Bot Development</h3>
+                    <div class="plan-price">$299 – $499</div>
+                    
+                    <div class="plan-details-section" style="margin-bottom: 14px;">
+                        <div class="plan-details-title">Examples</div>
+                        <ul class="plan-list" style="color: var(--text-muted); font-size: 13px; margin-bottom: 12px;">
+                            <li>EMA Cross</li>
+                            <li>RSI Strategy</li>
+                            <li>MACD Strategy</li>
+                            <li>Simple TradingView Automation</li>
+                        </ul>
+                    </div>
+
+                    <div class="plan-details-section">
+                        <div class="plan-details-title">Includes</div>
+                        <ul class="plan-list">
+                            <li>Development</li>
+                            <li>Testing</li>
+                            <li>Delivery</li>
+                            <li>30-day bug support</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="plan-delivery">Delivery Time: <strong>3–7 days</strong></div>
+                </a>
+
+                <!-- SERVICE 3 -->
+                <a href="session.html" class="pricing-card">
+                    <span class="plan-num">Service 3</span>
+                    <h3>Standard Bot Development</h3>
+                    <div class="plan-price">$699 – $1499</div>
+                    
+                    <div class="plan-details-section" style="margin-bottom: 14px;">
+                        <div class="plan-details-title">Examples</div>
+                        <ul class="plan-list" style="color: var(--text-muted); font-size: 13px; margin-bottom: 12px;">
+                            <li>Multiple indicators</li>
+                            <li>Multi-condition entries</li>
+                            <li>Multi-timeframe filters</li>
+                            <li>Advanced risk management</li>
+                        </ul>
+                    </div>
+
+                    <div class="plan-details-section">
+                        <div class="plan-details-title">Includes</div>
+                        <ul class="plan-list">
+                            <li>Development</li>
+                            <li>Testing</li>
+                            <li>Delivery</li>
+                            <li>30-day bug support</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="plan-delivery">Delivery Time: <strong>1–3 weeks</strong></div>
+                </a>
+
+                <!-- SERVICE 4 -->
+                <a href="session.html" class="pricing-card">
+                    <span class="plan-num">Service 4</span>
+                    <h3>Advanced Custom Automation</h3>
+                    <div class="plan-price">Custom Quote <span style="display:block; font-size:12px; margin-top:4px;">Usually: $1500+</span></div>
+                    
+                    <div class="plan-details-section">
+                        <div class="plan-details-title">Examples</div>
+                        <ul class="plan-list" style="color: var(--text-muted); font-size: 13px;">
+                            <li>ICT / SMC Architecture</li>
+                            <li>Custom indicators</li>
+                            <li>Complex trade management</li>
+                            <li>Multi-market systems</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="plan-delivery" style="margin-top: 24px;">Delivery Time: <strong>2–6 weeks</strong></div>
+                </a>
+
+                <!-- SERVICE 5 -->
+                <a href="session.html" class="pricing-card">
+                    <span class="plan-num">Service 5</span>
+                    <h3>VPS Setup</h3>
+                    <div class="plan-price">$49 <span>one-time</span></div>
+                    
+                    <div class="plan-details-section">
+                        <div class="plan-details-title">Includes</div>
+                        <ul class="plan-list">
+                            <li>VPS setup</li>
+                            <li>Bot installation</li>
+                            <li>Broker/exchange connection</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="plan-delivery">Delivery Time: <strong>1 day</strong></div>
+                </a>
+
+                <!-- SERVICE 6 -->
+                <a href="session.html" class="pricing-card">
+                    <span class="plan-num">Service 6</span>
+                    <h3>Maintenance Plan</h3>
+                    <div class="plan-price">$29<span>/month</span></div>
+                    
+                    <div class="plan-details-section" style="margin-bottom: 14px;">
+                        <div class="plan-details-title">Includes</div>
+                        <ul class="plan-list">
+                            <li>Bug fixes</li>
+                            <li>Monitoring</li>
+                            <li>Minor updates</li>
+                        </ul>
+                    </div>
+
+                    <div class="plan-details-section">
+                        <div class="plan-details-title" style="color: var(--accent-red);">Not Included</div>
+                        <ul class="plan-list not-included" style="color: var(--text-muted);">
+                            <li>New features</li>
+                            <li>New strategy logic</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="plan-delivery">Delivery Time: <strong>Ongoing Framework</strong></div>
+                </a>
+
+            </div>
+        </div>
+    </section>
+    <!-- STRATEGY LIMITATIONS REVIEW PANEL -->
+    <section style="border-top: 1px solid var(--border-color);">
         <div class="container split-layout">
             <div class="idea-content">
                 <h2>Not Every Strategy Can Be Automated</h2>
@@ -767,162 +1186,8 @@
                 </div>
                 
                 <div style="margin-top: 24px;">
-                    <a href="session.html" class="btn btn-primary" style="display:inline-block; width:100%; text-align:center;">Request Compatibility Review</a>
+                    <a href="session.html" class="btn btn-primary" style="display:block; width:100%; text-align:center;">Request Compatibility Review</a>
                 </div>
-            </div>
-        </div>
-    </section>
-
-
-    <!-- SERVICES & PRICING PLANS MODULE -->
-    <section id="pricing">
-        <div class="container">
-            <div class="section-header">
-                <h2>Simple & Transparent Pricing</h2>
-                <p>Professional deployment models scaling precisely from strategy analysis up to complete algorithmic operations.</p>
-            </div>
-            <div class="pricing-grid">
-                
-                <!-- SERVICE 1 -->
-                <a href="chat.html" class="pricing-card">
-                    <span class="plan-num">Service 1</span>
-                    <h3>Automation Review</h3>
-                    <div class="plan-price">Free</div>
-                    
-                    <div class="plan-details-section">
-                        <div class="plan-details-title">Includes</div>
-                        <ul class="plan-list">
-                            <li>Strategy discussion</li>
-                            <li>Feasibility check</li>
-                            <li>Development estimate</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="plan-delivery">Delivery Time: <strong>24–48 hours</strong></div>
-                </a>
-
-                <!-- SERVICE 2 -->
-                <a href="chatnowpage" class="pricing-card">
-                    <span class="plan-num">Service 2</span>
-                    <h3>Simple Bot Development</h3>
-                    <div class="plan-price">$299 – $499</div>
-                    
-                    <div class="plan-details-section" style="margin-bottom: 14px;">
-                        <div class="plan-details-title">Examples</div>
-                        <ul class="plan-list" style="color: var(--text-muted); font-size: 13px; margin-bottom: 12px;">
-                            <li>EMA Cross</li>
-                            <li>RSI Strategy</li>
-                            <li>MACD Strategy</li>
-                            <li>Simple TradingView Automation</li>
-                        </ul>
-                    </div>
-
-                    <div class="plan-details-section">
-                        <div class="plan-details-title">Includes</div>
-                        <ul class="plan-list">
-                            <li>Development</li>
-                            <li>Testing</li>
-                            <li>Delivery</li>
-                            <li>30-day bug support</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="plan-delivery">Delivery Time: <strong>3–7 days</strong></div>
-                </a>
-
-                <!-- SERVICE 3 -->
-                <a href="chatnowpage" class="pricing-card">
-                    <span class="plan-num">Service 3</span>
-                    <h3>Standard Bot Development</h3>
-                    <div class="plan-price">$699 – $1499</div>
-                    
-                    <div class="plan-details-section" style="margin-bottom: 14px;">
-                        <div class="plan-details-title">Examples</div>
-                        <ul class="plan-list" style="color: var(--text-muted); font-size: 13px; margin-bottom: 12px;">
-                            <li>Multiple indicators</li>
-                            <li>Multi-condition entries</li>
-                            <li>Multi-timeframe filters</li>
-                            <li>Advanced risk management</li>
-                        </ul>
-                    </div>
-
-                    <div class="plan-details-section">
-                        <div class="plan-details-title">Includes</div>
-                        <ul class="plan-list">
-                            <li>Development</li>
-                            <li>Testing</li>
-                            <li>Delivery</li>
-                            <li>30-day bug support</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="plan-delivery">Delivery Time: <strong>1–3 weeks</strong></div>
-                </a>
-
-                <!-- SERVICE 4 -->
-                <a href="chatnowpage" class="pricing-card">
-                    <span class="plan-num">Service 4</span>
-                    <h3>Advanced Custom Automation</h3>
-                    <div class="plan-price">Custom Quote <span style="display:block; font-size:12px; margin-top:4px;">Usually: $1500+</span></div>
-                    
-                    <div class="plan-details-section">
-                        <div class="plan-details-title">Examples</div>
-                        <ul class="plan-list" style="color: var(--text-muted); font-size: 13px;">
-                            <li>ICT</li>
-                            <li>SMC</li>
-                            <li>Custom indicators</li>
-                            <li>Complex trade management</li>
-                            <li>Multi-market systems</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="plan-delivery" style="margin-top: 24px;">Delivery Time: <strong>2–6 weeks</strong></div>
-                </a>
-
-                <!-- SERVICE 5 -->
-                <a href="chatnowpage" class="pricing-card">
-                    <span class="plan-num">Service 5</span>
-                    <h3>VPS Setup</h3>
-                    <div class="plan-price">$49 <span>one-time</span></div>
-                    
-                    <div class="plan-details-section">
-                        <div class="plan-details-title">Includes</div>
-                        <ul class="plan-list">
-                            <li>VPS setup</li>
-                            <li>Bot installation</li>
-                            <li>Broker/exchange connection</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="plan-delivery">Delivery Time: <strong>1 day</strong></div>
-                </a>
-
-                <!-- SERVICE 6 -->
-                <a href="chatnowpage" class="pricing-card">
-                    <span class="plan-num">Service 6</span>
-                    <h3>Maintenance Plan</h3>
-                    <div class="plan-price">$29<span>/month</span></div>
-                    
-                    <div class="plan-details-section" style="margin-bottom: 14px;">
-                        <div class="plan-details-title">Includes</div>
-                        <ul class="plan-list">
-                            <li>Bug fixes</li>
-                            <li>Monitoring</li>
-                            <li>Minor updates</li>
-                        </ul>
-                    </div>
-
-                    <div class="plan-details-section">
-                        <div class="plan-details-title" style="color: var(--accent-red);">Not Included</div>
-                        <ul class="plan-list not-included" style="color: var(--text-muted);">
-                            <li>New features</li>
-                            <li>New strategy logic</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="plan-delivery">Delivery Time: <strong>Ongoing Framework</strong></div>
-                </a>
-
             </div>
         </div>
     </section>
@@ -936,27 +1201,27 @@
                 <p>Engineered systems mapped to exact execution protocols.</p>
             </div>
             <div class="card-grid">
-                <a href="che" class="card">
+                <a href="session.html" class="card">
                     <h3>TradingView Automation</h3>
                     <p>Convert TradingView alerts into automated trade execution workflows smoothly.</p>
                 </a>
-                <a href="chatnowpage" class="card">
+                <a href="session.html" class="card">
                     <h3>MT4 Automation</h3>
                     <p>Custom Expert Advisors built directly around your mechanical structural rules.</p>
                 </a>
-                <a href="chatnowpage" class="card">
+                <a href="session.html" class="card">
                     <h3>MT5 Automation</h3>
                     <p>Advanced automated trading systems with robust multi-asset capabilities for MetaTrader 5.</p>
                 </a>
-                <a href="chatnowpage" class="card">
+                <a href="session.html" class="card">
                     <h3>Crypto Trading Bots</h3>
                     <p>24/7 automated execution strategies deployed across supported asset exchanges.</p>
                 </a>
-                <a href="chatnowpage" class="card">
+                <a href="session.html" class="card">
                     <h3>API-Based Trading Systems</h3>
                     <p>Custom direct-to-broker integrations and low-latency algorithmic execution engines.</p>
                 </a>
-                <a href="chatnowpage" class="card">
+                <a href="session.html" class="card">
                     <h3>VPS Deployment</h3>
                     <p>Reliable cloud infrastructure configuration, hosting optimization, and active logic monitoring.</p>
                 </a>
@@ -965,33 +1230,33 @@
     </section>
 
     <!-- WHY AUTOMATE -->
-    <section style="background-color: var(--bg-card); border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color);">
+    <section style="background-color: var(--bg-card); border-bottom: 1px solid var(--border-color);">
         <div class="container">
             <div class="section-header">
                 <h2>When Automation Makes Sense</h2>
                 <p>The operational structural advantages of replacing human runtime actions with computational models.</p>
             </div>
             <div class="card-grid">
-                <a href="chatnowpage" class="card">
+                <div class="card">
                     <h3>Consistent Rule Execution</h3>
                     <p>Execution engines run operations exactly according to layout constraints without error or hesitation.</p>
-                </a>
-                <a href="chatnowpage" class="card">
+                </div>
+                <div class="card">
                     <h3>Reduced Emotional Trading</h3>
                     <p>Systematically avoid issues derived from trader fear, operational greed, and impulsive manual position shifts.</p>
-                </a>
-                <a href="chatnowpage" class="card">
+                </div>
+                <div class="card">
                     <h3>Faster Execution</h3>
                     <p>Order packets transmit immediately down processing channels the exact millisecond metrics cross critical values.</p>
-                </a>
-                <a href="chatnowpage" class="card">
+                </div>
+                <div class="card">
                     <h3>Continuous Monitoring</h3>
                     <p>Core trading logic scans chart setups seamlessly across global sessions without breaking manual shifts.</p>
-                </a>
-                <a href="chatnowpage" class="card">
+                </div>
+                <div class="card">
                     <h3>Scalability</h3>
                     <p>Simultaneously handle rule tracking layers across variant concurrent symbol tickers and multiple asset spaces.</p>
-                </a>
+                </div>
             </div>
         </div>
     </section>
@@ -1079,5 +1344,135 @@
         </ul>
     </footer>
 
+    <!-- FIREBASE ARCHITECTURE CORE LOGIC SCRIPTS MODULE -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+        // Verified Application Configurations Matrix
+        const firebaseConfig = {
+            apiKey: "AIzaSyAensfI53w49Fd4A7Lz5_K9N1JOxZsW7Kk",
+            authDomain: "backtestlabpro.firebaseapp.com",
+            projectId: "backtestlabpro",
+            storageBucket: "backtestlabpro.firebasestorage.app",
+            messagingSenderId: "560146824734",
+            appId: "1:560146824734:web:5287d0ded3a1024e75780f"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // Bind global handles to pass functional parameters safely outside runtime modules
+        window.firebaseAuthInstance = auth;
+        window.firebaseSignOutAction = signOut;
+
+        // Listen for active authentications asynchronously
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                const nameDisplay = document.getElementById('profile-box-name');
+                const emailDisplay = document.getElementById('profile-box-email');
+                
+                if (nameDisplay) nameDisplay.textContent = user.displayName || "Anonymous Trader";
+                if (emailDisplay) emailDisplay.textContent = user.email || "sandbox@backtestlabpro.com";
+
+                window.updateAuthViewUI(true);
+            } else {
+                window.updateAuthViewUI(false);
+            }
+        });
+
+        // Sign Out Listener
+        document.getElementById('firebase-logout-btn').addEventListener('click', () => {
+            signOut(auth).then(() => {
+                document.getElementById('profile-overlay-dialog-box').classList.add('hidden');
+                alert('You have successfully signed out of your account session.');
+            }).catch((error) => {
+                console.error('Sign out execution exception: ', error);
+            });
+        });
+    </script>
+
+    <!-- LOCAL INTERACTIVE ACTIONS SCRIPT CORE -->
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            setupMobileNavigationLogic();
+            setupProfileDropdownToggle();
+        });
+
+        function setupMobileNavigationLogic() {
+            const menuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+
+            menuBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('open');
+                const isOpen = mobileMenu.classList.contains('open');
+                menuBtn.innerHTML = isOpen ? `<i class="fa-solid fa-xmark"></i>` : `<i class="fa-solid fa-bars-staggered"></i>`;
+            });
+        }
+
+        function setupProfileDropdownToggle() {
+            const trigger = document.getElementById('profile-menu-trigger-btn');
+            const dialogBox = document.getElementById('profile-overlay-dialog-box');
+            const wrapper = document.getElementById('profile-dropdown-wrapper');
+
+            if (!trigger || !dialogBox || !wrapper) return;
+
+            trigger.addEventListener('click', (e) => {
+                e.stopPropagation();
+                dialogBox.classList.toggle('hidden');
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!wrapper.contains(e.target)) {
+                    dialogBox.classList.add('hidden');
+                }
+            });
+        }
+
+        // Asynchronous structural UI state pipeline updates
+        window.updateAuthViewUI = function(isLoggedIn) {
+            const desktopContainer = document.getElementById('desktop-auth-container');
+            const loggedOutBar = document.getElementById('logged-out-actions');
+            const loggedInBar = document.getElementById('logged-in-actions');
+            const mobileAuthBox = document.getElementById('mobile-auth-placeholder');
+
+            if (isLoggedIn) {
+                if (loggedOutBar) loggedOutBar.classList.add('hidden');
+                if (loggedInBar) loggedInBar.classList.remove('hidden');
+                
+                if (mobileAuthBox) {
+                    mobileAuthBox.innerHTML = `
+                        <a href="my-sessions.html">My Sessions <i class="fa-solid fa-folder-open" style="color:var(--accent-blue)"></i></a>
+                        <a href="session.html" style="background:linear-gradient(90deg, #4d5ef7, #8942f7); color:#fff; border-radius:8px; justify-content:center; gap:6px;">+ New Session</a>
+                        <button onclick="window.firebaseSignOutAction(window.firebaseAuthInstance)" class="btn-logout" style="margin-top:4px;">Sign Out</button>
+                    `;
+                }
+            } else {
+                if (loggedOutBar) loggedOutBar.classList.remove('hidden');
+                if (loggedInBar) loggedInBar.classList.add('hidden');
+
+                if (mobileAuthBox) {
+                    mobileAuthBox.innerHTML = `
+                        <button onclick="triggerAuthFlow()" style="background:none; border:1px solid var(--border-color); color:var(--text-main); padding:12px; border-radius:8px; font-weight:600; cursor:pointer;">Sign In</button>
+                        <button onclick="triggerAuthFlow()" style="background:linear-gradient(90deg, #4d5ef7, #8942f7); border:none; color:#fff; padding:12px; border-radius:8px; font-weight:600; cursor:pointer;">Get Free Account</button>
+                    `;
+                }
+            }
+
+            // Expose updated structural frames instantly to clean layout flashes
+            if (desktopContainer) {
+                desktopContainer.classList.remove('auth-hidden');
+                desktopContainer.classList.add('auth-visible');
+            }
+            if (mobileAuthBox) {
+                mobileAuthBox.classList.remove('auth-hidden');
+                mobileAuthBox.classList.add('auth-visible');
+            }
+        }
+
+        function triggerAuthFlow() {
+            window.location.href = "login.html";
+        }
+    </script>
 </body>
 </html>

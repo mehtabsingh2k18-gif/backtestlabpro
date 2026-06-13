@@ -379,7 +379,10 @@
             margin-top: 10px;
             padding-top: 10px;
         }
-
+/* Add this right below your .mobile-menu styles */
+.mobile-menu.open {
+    display: flex !important;
+}
         /* --- GLOBAL LAYOUT DESIGN CANVAS ELEMENTS --- */
         section {
             padding: 80px 24px;
@@ -842,12 +845,17 @@
         }
 
         @media (max-width: 900px) {
-            .navbar {
-                height: 70px;
-            }
-            .nav-menu, .nav-right-actions {
-                display: none !important;
-            }
+    .navbar {
+        height: 70px;
+    }
+    .nav-menu {
+        display: none !important; /* Only hide the standard desktop links list */
+    }
+    .nav-right-actions {
+        display: none; /* Let the browser gracefully remove the desktop auth tray */
+    }
+    /* ... rest of your rules */
+}
             .mobile-menu-btn {
                 display: flex !important;
             }
@@ -873,7 +881,6 @@
             section {
                 padding: 60px 20px;
             }
-        }
         
         @media (max-width: 480px) {
             .pricing-grid, .card-grid, .analyze-list {
@@ -889,7 +896,7 @@
 
     <!-- NAVBAR INTERACTIVE CONTROL MATRIX -->
     <nav class="navbar">
-        <a href="chatnowpage" class="nav-left-brand">
+        <a href="index.html" class="nav-left-brand">
             <div class="brand-icon-box">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
@@ -900,14 +907,11 @@
 
         <!-- Desktop Navigation Actions Matrix -->
         <ul class="nav-menu">
-            <li><a href="index.html#features">Features</a></li>
-            <li><a href="index.html#markets">Data&#10;Coverage</a></li>
+            <li><a href="index.html">Features</a></li>
+            <li><a href="index.html">Data&#10;Coverage</a></li>
             <li><a href="bot_automation.html" class="active">Bot&#10;Automation</a></li>
-            <li><a href="index.html#articles">Articles</a></li>
+            <li><a href="articles.html">Articles</a></li>
             <li><a href="index.html#about">About&#10;Us</a></li>
-            <li class="pricing-container">
-                <a href="#pricing">Pricing</a>
-                <span class="badge-free">Free</span>
             </li>
             <li><a href="index.html#contact">Contact</a></li>
         </ul>
@@ -963,12 +967,11 @@
 
         <!-- Responsive Mobile Slideout Container -->
         <div id="mobile-menu" class="mobile-menu">
-            <a href="index.html#features">Features</a>
-            <a href="index.html#markets">Data Coverage</a>
+            <a href="index.html">Features</a>
+            <a href="index.html">Data Coverage</a>
             <a href="bot_automation.html" class="active">Bot Automation</a>
-            <a href="index.html#articles">Articles</a>
+            <a href="articles.html">Articles</a>
             <a href="index.html#about">About Us</a>
-            <a href="#pricing">Pricing <span class="badge-free">Free</span></a>
             <a href="index.html#contact">Contact</a>
             <div id="mobile-auth-placeholder" class="mobile-auth-placeholder auth-hidden"></div>
         </div>

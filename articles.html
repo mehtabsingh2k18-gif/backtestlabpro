@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BacktestLab Pro | Insights & Articles</title>
+    
+    <!-- Google Analytics Tracking from index.html -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-V7SXCF9923"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-V7SXCF9923');
+    </script>
+
+    <!-- Tailwind Framework & Font / Icon Integrations -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            dark: '#050507',
+                            card: '#0c0c0e',
+                            accent: '#6366f1', // Indigo
+                            success: '#10b981', // Emerald Green
+                            purple: '#a855f7' // Purple
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #050507;
+            color: #f4f4f5;
+            overflow-x: hidden;
+        }
+        
+        /* Deep 3D glow background background gradients matching index.html */
+        .glow-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.15;
+            z-index: 0;
+            pointer-events: none;
+            will-change: transform;
+        }
+        @media (min-width: 768px) {
+            .glow-orb { filter: blur(140px); opacity: 0.18; }
+        }
+        
+        .glass-card {
+            background: rgba(12, 12, 14, 0.5);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        .glass-card:hover {
+            border-color: rgba(99, 102, 241, 0.3);
+            box-shadow: 0 0 40px rgba(99, 102, 241, 0.08);
+        }
+
+        .brand-icon-box {
+            width: 38px;
+            height: 38px;
+            background: linear-gradient(135deg, #503bf5, #863bf5);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .auth-hidden {
+            opacity: 0 !important;
+            pointer-events: none !important;
+            visibility: hidden !important;
+        }
+        .auth-visible {
+            opacity: 1 !important;
+            pointer-events: auto !important;
+            visibility: visible !important;
+            transition: opacity 0.2s ease-in-out;
+        }
+        
+        /* Custom layout rule for managing clamp ellipses */
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body class="font-sans antialiased relative">
+
+    <!-- Ambient Layer Glow Orbs -->
+    <div class="glow-orb w-[300px] h-[300px] md:w-[600px] md:h-[600px] bg-brand-accent top-[-100px] left-[-100px]"></div>
+    <div class="glow-orb w-[350px] h-[350px] md:w-[700px] md:h-[700px] bg-brand-purple top-[20%] right-[-150px]"></div>
+
+    <!-- EXACT NAVBAR ENTRY - TRANSFERRED VERBATIM -->
+    <header class="sticky top-0 z-50 w-full border-b border-white/5 bg-brand-dark/70 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full h-20 flex items-center justify-between">
+            <a href="index.html" class="flex items-center gap-3 group">
+                <div class="brand-icon-box">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                    </svg>
+                </div>
+                <span class="font-display font-bold text-lg text-white tracking-tight">BacktestLab<span class="text-brand-accent">.pro</span></span>
+            </a>
+
+            <nav class="hidden md:flex items-center gap-6 lg:gap-8 text-sm font-medium text-zinc-400">
+                <a href="index.html#features" class="hover:text-white transition-colors">Features</a>
+                <a href="index.html#markets" class="hover:text-white transition-colors">Data Coverage</a>
+                <a href="bot_automation.html" class="hover:text-white transition-colors">Bot Automation</a>
+                <a href="articles.html" class="hover:text-white text-white transition-colors">Articles</a>
+                <a href="index.html#about" class="hover:text-white transition-colors">About Us</a>
+                <a href="index.html#contact" class="hover:text-white transition-colors">Contact</a>
+            </nav>
+
+            <div id="desktop-auth-container" class="hidden md:flex items-center gap-4 auth-hidden">
+                <div id="logged-out-actions" class="hidden flex items-center gap-4">
+                    <button onclick="triggerAuthFlow()" class="text-sm font-medium text-zinc-400 hover:text-white transition-colors min-w-[44px]">Sign In</button>
+                    <button onclick="triggerAuthFlow()" class="text-sm font-medium bg-white text-brand-dark px-4 py-2.5 rounded-xl hover:bg-zinc-200 transition-all font-display shadow-lg">Get Free Account</button>
+                </div>
+                
+                <div id="logged-in-actions" class="hidden flex items-center gap-3 relative">
+                    <a href="my-sessions.html" class="text-sm font-medium text-zinc-300 hover:text-white border border-white/10 px-4 py-2.5 rounded-xl glass-card transition-all flex items-center gap-2">
+                        <i class="fa-solid fa-folder-open text-brand-accent"></i> My Sessions
+                    </a>
+                    <a href="session.html" class="text-sm font-medium bg-gradient-to-r from-brand-accent to-brand-purple text-white px-5 py-2.5 rounded-xl hover:opacity-90 transition-all font-display shadow-md flex items-center gap-2">
+                        <i class="fa-solid fa-plus text-xs"></i> New Session
+                    </a>
+                    
+                    <div class="relative ml-2" id="profile-dropdown-wrapper">
+                        <button id="profile-menu-trigger-btn" class="flex items-center justify-center h-10 w-10 rounded-xl bg-gradient-to-br from-brand-accent to-brand-purple p-[1px] focus:outline-none transition-transform hover:scale-105" title="View Account Profile">
+                            <div class="h-full w-full bg-brand-dark rounded-[11px] flex items-center justify-center text-zinc-300 hover:text-white">
+                                <i class="fa-solid fa-user text-sm"></i>
+                            </div>
+                        </button>
+
+                        <div id="profile-overlay-dialog-box" class="hidden absolute right-0 mt-3 w-64 rounded-2xl border border-white/10 bg-brand-dark/95 backdrop-blur-xl p-4 shadow-2xl z-50 text-left">
+                            <div class="flex items-center gap-3 mb-3">
+                                <div class="h-9 w-9 rounded-xl bg-white/5 flex items-center justify-center text-brand-accent border border-white/10 flex-shrink-0">
+                                    <i class="fa-solid fa-user text-sm"></i>
+                                </div>
+                                <div class="overflow-hidden">
+                                    <h5 id="profile-box-name" class="text-sm font-bold text-white font-display truncate">Trader Pro</h5>
+                                    <p id="profile-box-email" class="text-xs text-zinc-500 truncate">sandbox@backtestlabpro.com</p>
+                                </div>
+                            </div>
+
+                            <button id="firebase-logout-btn" class="w-full py-2 rounded-xl bg-zinc-900 border border-white/5 text-zinc-400 hover:text-red-400 hover:border-red-500/20 hover:bg-red-500/5 transition-all text-xs font-semibold flex items-center justify-center gap-2 font-display min-h-[36px]">
+                                <i class="fa-solid fa-power-off text-xs"></i> Sign Out
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button id="mobile-menu-btn" class="md:hidden text-zinc-400 hover:text-white text-2xl focus:outline-none p-2 min-w-[48px] min-h-[48px] flex items-center justify-end">
+                <i class="fa-solid fa-bars-staggered"></i>
+            </button>
+        </div>
+
+        <div id="mobile-menu" class="hidden md:hidden border-t border-white/5 bg-brand-dark/95 backdrop-blur-lg px-4 pt-4 pb-8 space-y-3 absolute w-full left-0 transition-all duration-300 shadow-2xl z-50 max-h-[calc(100vh-5rem)] overflow-y-auto">
+            <a href="index.html" class="block text-zinc-300 hover:text-white py-3 px-2 rounded-lg hover:bg-white/5 transition-colors">Home</a>
+            <a href="index.html#markets" class="block text-zinc-300 hover:text-white py-3 px-2 rounded-lg hover:bg-white/5 transition-colors">Data Coverage</a>
+            <a href="bot_automation.html" class="block text-zinc-300 hover:text-white py-3 px-2 rounded-lg hover:bg-white/5 transition-colors">Bot Automation</a>
+            <a href="articles.html" class="block text-zinc-300 hover:text-white py-3 px-2 rounded-lg hover:bg-white/5 transition-colors">Articles</a>
+            <a href="index.html#about" class="block text-zinc-300 hover:text-white py-3 px-2 rounded-lg hover:bg-white/5 transition-colors">About Us</a>
+            <a href="index.html#contact" class="block text-zinc-300 hover:text-white py-3 px-2 rounded-lg hover:bg-white/5 transition-colors">Contact</a>
+            <hr class="border-white/5 my-3">
+            <div id="mobile-auth-placeholder" class="space-y-3 pt-2 auth-hidden"></div>
+        </div>
+    </header>
+
+    <!-- Content Workspace Container Layout -->
+    <main class="relative z-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto my-12 space-y-12">
+        
+        <!-- Top Featured Spotlight Frame -->
+        <section class="p-6 md:p-10 rounded-2xl border border-white/5 bg-gradient-to-b from-brand-card to-brand-dark/40 relative overflow-hidden flex flex-col md:flex-row items-center gap-8" id="hero-block">
+            <!-- Loaded Programmatically via array index maps -->
+        </section>
+
+        <!-- Twin Flow Grid Columns Matrix -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            
+            <!-- Primary Column Feed Stream (8 Cols) -->
+            <div class="lg:col-span-8 space-y-6">
+                <h2 class="font-display font-bold text-2xl text-white flex items-center gap-3">
+                    <i class="fa-solid fa-newspaper text-brand-accent"></i> Recent Strategy Insights
+                </h2>
+                
+                <div class="space-y-4" id="articles-wrapper">
+                    <!-- Populated dynamically via Script mapping modules -->
+                </div>
+            </div>
+
+            <!-- Contextual Right Sidebar Widgets (4 Cols) -->
+            <aside class="lg:col-span-4 space-y-6">
+                
+                <!-- Category Filtering Tree Widget -->
+                <div class="p-6 rounded-2xl glass-card">
+                    <h3 class="font-display font-bold text-xs uppercase tracking-wider text-white border-b border-white/5 pb-3 mb-4">Categories</h3>
+                    <ul class="space-y-2.5 text-sm text-zinc-400">
+                        <li class="flex justify-between items-center cursor-pointer hover:text-brand-accent transition-colors">
+                            <span>Market Analysis</span><span class="text-xs bg-white/5 px-2.5 py-0.5 rounded-full text-zinc-500">12</span>
+                        </li>
+                        <li class="flex justify-between items-center cursor-pointer hover:text-brand-accent transition-colors">
+                            <span>Backtesting Guides</span><span class="text-xs bg-white/5 px-2.5 py-0.5 rounded-full text-zinc-500">8</span>
+                        </li>
+                        <li class="flex justify-between items-center cursor-pointer hover:text-brand-accent transition-colors">
+                            <span>Risk Management</span><span class="text-xs bg-white/5 px-2.5 py-0.5 rounded-full text-zinc-500">5</span>
+                        </li>
+                        <li class="flex justify-between items-center cursor-pointer hover:text-brand-accent transition-colors">
+                            <span>Crypto Outlook</span><span class="text-xs bg-white/5 px-2.5 py-0.5 rounded-full text-zinc-500">14</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Live Notification Platform Note -->
+                <div class="p-6 rounded-2xl border border-dashed border-white/10 bg-transparent flex gap-4 items-start">
+                    <i class="fa-solid fa-square-rss text-brand-accent text-xl mt-0.5"></i>
+                    <div>
+                        <h4 class="text-sm font-bold text-white mb-1">Automated Stream Logs</h4>
+                        <p class="text-xs text-zinc-500 leading-relaxed">New algorithmic breakdowns, performance models, and historical slice data logs deploy cleanly at market close daily.</p>
+                    </div>
+                </div>
+
+            </aside>
+        </div>
+    </main>
+
+    <!-- Global Application Footer Component matching original theme footprints -->
+    <footer class="mt-24 border-t border-white/5 bg-zinc-950/40 backdrop-blur-sm relative z-10 py-12 text-zinc-500 text-xs">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-6 text-center sm:text-left">
+            <div class="flex flex-col sm:flex-row items-center gap-3">
+                <div class="h-6 w-6 rounded bg-zinc-900 flex items-center justify-center text-[10px] text-zinc-400 mb-2 sm:mb-0"><i class="fa-solid fa-chart-line"></i></div>
+                <span>© 2026 BacktestLab Pro. Open-source public good utility architecture.</span>
+            </div>
+            
+            <div class="flex flex-wrap items-center justify-center gap-6 text-zinc-400">
+                <a href="index.html#features" class="hover:text-white transition-colors">Features</a>
+                <a href="index.html#markets" class="hover:text-white transition-colors">Data</a>
+                <a href="index.html#pricing" class="hover:text-white transition-colors">Zero-Fee License</a>
+                <a href="https://github.com" target="_blank" class="hover:text-white text-lg transition-colors"><i class="fa-brands fa-github"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Firebase System Pipeline Implementations from index.html -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAensfI53w49Fd4A7Lz5_K9N1JOxZsW7Kk",
+            authDomain: "backtestlabpro.firebaseapp.com",
+            projectId: "backtestlabpro",
+            storageBucket: "backtestlabpro.firebasestorage.app",
+            messagingSenderId: "560146824734",
+            appId: "1:560146824734:web:5287d0ded3a1024e75780f"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        window.firebaseAuthInstance = auth;
+        window.firebaseSignOutAction = signOut;
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                const nameDisplay = document.getElementById('profile-box-name');
+                const emailDisplay = document.getElementById('profile-box-email');
+                if (nameDisplay) nameDisplay.textContent = user.displayName || "Anonymous Trader";
+                if (emailDisplay) emailDisplay.textContent = user.email || "sandbox@backtestlabpro.com";
+                window.updateAuthViewUI(true);
+            } else {
+                window.updateAuthViewUI(false);
+            }
+        });
+
+        document.getElementById('firebase-logout-btn').addEventListener('click', () => {
+            signOut(auth).then(() => {
+                document.getElementById('profile-overlay-dialog-box').classList.add('hidden');
+                alert('You have successfully signed out of your account session.');
+            }).catch((error) => console.error('Sign out tracking error: ', error));
+        });
+    </script>
+
+    <!-- Global Layout Core Logic & Interface Handlers -->
+   <script>
+    let currentAuthStatusGlobal = false;
+
+    // 1. Updated Database Array with explicit 'url' parameters
+    const articlesDatabase = [
+        {
+            id: "art_4",
+            isFeatured: true, // This places it in the premium top slot
+            title: "Best Backtesting Software for Traders in 2026: A Complete Comparison",
+            excerpt: "An in-depth review comparing TradingView, MetaTrader, and Forex Tester workflows against modern cloud architectures to optimize your testing pipeline.",
+            category: "Product Review",
+            tagColor: "text-indigo-400 bg-indigo-500/10 border-indigo-500/20",
+            author: "BacktestLab Research",
+            date: "June 2026",
+            readTime: "8 min read",
+            icon: "fa-solid fa-chart-line text-brand-accent",
+            url: "articles/Best Backtesting Software for Traders in 2026.html" // Links directly to your new page
+        },
+        {
+            id: "art_1",
+            isFeatured: false,
+            title: "Deconstructive Blueprint: Backtesting 20+ Years of XAUUSD Macro Cycles",
+            excerpt: "An engineering look into multi-decade Gold algorithmic structures. Learn how to optimize data slice servers for parsing 20-year MT5 histories cleanly without triggering memory buffer exceptions.",
+            category: "Market Analysis",
+            tagColor: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20",
+            author: "Dev Team Core",
+            date: "Today",
+            readTime: "6 min read",
+            icon: "fa-solid fa-gem text-emerald-400",
+            url: "articles/xauusd-macro-cycles.html"
+        },
+        {
+            id: "art_2",
+            isFeatured: false,
+            title: "Handling Cryptocurrency Lifecycle Volatility Across 10-Year Streams",
+            excerpt: "Deep asset metrics tracking the evolution of liquidity depth across early BTC historical archives vs present spot setups.",
+            category: "Crypto Outlook",
+            tagColor: "text-amber-400 bg-amber-500/10 border-amber-500/20",
+            author: "Alex Rivers",
+            date: "Yesterday",
+            readTime: "4 min read",
+            icon: "fa-brands fa-bitcoin text-amber-500",
+            url: "articles/crypto-lifecycle-volatility.html"
+        },
+        {
+            id: "art_3",
+            isFeatured: false,
+            title: "Architecting Web-based Trading Replays: UI State Systems",
+            excerpt: "A direct structural blueprint handling high-frequency chart tick streams while maintaining fluid stop-loss dragging capabilities.",
+            category: "Backtesting Guides",
+            tagColor: "text-purple-400 bg-purple-500/10 border-purple-500/20",
+            author: "M. Kovac",
+            date: "2 days ago",
+            readTime: "9 min read",
+            icon: "fa-solid fa-code text-purple-400",
+            url: "articles/web-trading-replay-ui.html"
+        }
+    ];
+
+    window.addEventListener('DOMContentLoaded', () => {
+        setupMobileMenuLogic();
+        setupProfileDropdownToggle();
+        renderArticleHub();
+    });
+
+    window.triggerAuthFlow = function() { window.location.href = "login.html"; };
+
+    function setupMobileMenuLogic() {
+        const menuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            const isOpen = !mobileMenu.classList.contains('hidden');
+            menuBtn.innerHTML = isOpen ? `<i class="fa-solid fa-xmark"></i>` : `<i class="fa-solid fa-bars-staggered"></i>`;
+        });
+    }
+
+    function setupProfileDropdownToggle() {
+        const trigger = document.getElementById('profile-menu-trigger-btn');
+        const dialogBox = document.getElementById('profile-overlay-dialog-box');
+        const wrapper = document.getElementById('profile-dropdown-wrapper');
+
+        trigger.addEventListener('click', (e) => {
+            e.stopPropagation();
+            dialogBox.classList.toggle('hidden');
+        });
+        document.addEventListener('click', (e) => {
+            if (!wrapper.contains(e.target)) dialogBox.classList.add('hidden');
+        });
+    }
+
+    window.updateAuthViewUI = function(isLoggedIn) {
+        currentAuthStatusGlobal = isLoggedIn;
+        const desktopContainer = document.getElementById('desktop-auth-container');
+        const loggedOutBar = document.getElementById('logged-out-actions');
+        const loggedInBar = document.getElementById('logged-in-actions');
+        const mobileAuthBox = document.getElementById('mobile-auth-placeholder');
+
+        if (isLoggedIn) {
+            loggedOutBar.classList.add('hidden');
+            loggedInBar.classList.remove('hidden');
+            mobileAuthBox.innerHTML = `
+                <a href="my-sessions.html" class="block w-full text-center py-3.5 rounded-xl border border-white/10 text-white bg-zinc-900 min-h-[48px]">My Sessions</a>
+                <a href="session.html" class="block w-full text-center py-3.5 rounded-xl bg-gradient-to-r from-brand-accent to-brand-purple text-white font-medium min-h-[48px]">New Session</a>
+                <button onclick="window.firebaseSignOutAction(window.firebaseAuthInstance)" class="block w-full text-center text-zinc-500 text-xs pt-2 min-h-[34px]">Sign Out</button>
+            `;
+        } else {
+            loggedOutBar.classList.remove('hidden');
+            loggedInBar.classList.add('hidden');
+            mobileAuthBox.innerHTML = `
+                <button onclick="triggerAuthFlow()" class="block w-full text-zinc-400 py-3 text-left font-medium min-h-[44px]">Sign In</button>
+                <button onclick="triggerAuthFlow()" class="block w-full py-3.5 rounded-xl bg-white text-brand-dark font-medium text-center min-h-[48px]">Get Free Account</button>
+            `;
+        }
+
+        if (desktopContainer) {
+            desktopContainer.classList.remove('auth-hidden');
+            desktopContainer.classList.add('auth-visible');
+        }
+        if (mobileAuthBox) {
+            mobileAuthBox.classList.remove('auth-hidden');
+            mobileAuthBox.classList.add('auth-visible');
+        }
+    }
+
+    // 2. Upgraded Render Engine utilizing HTML5 anchor standard tracking links
+    function renderArticleHub() {
+        const heroBlock = document.getElementById('hero-block');
+        const wrapper = document.getElementById('articles-wrapper');
+
+        heroBlock.innerHTML = '';
+        wrapper.innerHTML = '';
+
+        articlesDatabase.forEach(art => {
+            if(art.isFeatured) {
+                // Wrap the text section in an anchor tag and add a "Read Full Review" interactive action element
+                heroBlock.innerHTML = `
+                    <div class="flex-1 space-y-4">
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-accent/10 border border-brand-accent/20 text-xs text-brand-accent font-medium">
+                            <span class="h-1.5 w-1.5 rounded-full bg-brand-accent animate-pulse"></span> Featured Breakdown
+                        </div>
+                        <a href="${art.url}" class="block group">
+                            <h1 class="font-display font-bold text-2xl md:text-4xl text-white tracking-tight leading-tight group-hover:text-brand-accent transition-colors duration-200">${art.title}</h1>
+                        </a>
+                        <p class="text-zinc-400 text-sm md:text-base leading-relaxed">${art.excerpt}</p>
+                        
+                        <div class="flex flex-wrap items-center justify-between gap-4 pt-2">
+                            <div class="flex items-center gap-3">
+                                <div class="h-10 w-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400">
+                                    <i class="fa-solid fa-user-shield text-sm"></i>
+                                </div>
+                                <div class="text-xs">
+                                    <h4 class="font-bold text-white">${art.author}</h4>
+                                    <p class="text-zinc-500 mt-0.5">${art.date} &bull; ${art.readTime}</p>
+                                </div>
+                            </div>
+                            <a href="${art.url}" class="text-xs font-semibold text-white bg-white/5 hover:bg-brand-accent border border-white/10 hover:border-brand-accent px-4 py-2 rounded-xl transition-all duration-200 flex items-center gap-2">
+                                Read Article <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <a href="${art.url}" class="w-full md:w-64 h-44 bg-brand-dark rounded-xl border border-white/5 flex flex-col justify-center items-center text-center p-4 gap-2 flex-shrink-0 hover:border-white/20 transition-colors group">
+                        <i class="${art.icon} text-4xl transition-transform group-hover:scale-110 duration-200"></i>
+                        <span class="text-[10px] font-mono tracking-widest text-zinc-500 uppercase mt-1">Quant Core</span>
+                    </a>
+                `;
+            } else {
+                // Changed standard 'div' block instantiation to semantic 'a' element tags for clean SEO navigation pipelines
+                const card = document.createElement('a');
+                card.href = art.url;
+                card.className = 'group p-5 rounded-2xl glass-card transition-all hover:border-white/20 flex flex-col md:flex-row gap-6 items-start md:items-center cursor-pointer';
+                card.innerHTML = `
+                    <div class="h-24 w-full md:w-32 rounded-xl bg-zinc-950 flex items-center justify-center text-3xl border border-white/5 flex-shrink-0 group-hover:bg-zinc-900 transition-colors">
+                        <i class="${art.icon} transition-transform group-hover:scale-105 duration-200"></i>
+                    </div>
+                    <div class="space-y-2 flex-1 w-full">
+                        <div class="flex items-center justify-between gap-4">
+                            <span class="text-[10px] font-semibold tracking-wider uppercase border px-2.5 py-0.5 rounded-md ${art.tagColor}">${art.category}</span>
+                            <span class="text-xs text-zinc-500">${art.date}</span>
+                        </div>
+                        <h3 class="font-display font-bold text-lg text-white group-hover:text-brand-accent transition-colors duration-200">${art.title}</h3>
+                        <p class="text-zinc-400 text-xs sm:text-sm line-clamp-2 leading-relaxed">${art.excerpt}</p>
+                        <div class="flex justify-between items-center pt-2 text-xs text-zinc-500">
+                            <span>By <b class="text-zinc-400">${art.author}</b></span>
+                            <span class="flex items-center gap-1 group-hover:text-white transition-colors">${art.readTime} <i class="fa-solid fa-chevron-right text-[9px] ml-0.5 transform group-hover:translate-x-0.5 transition-transform"></i></span>
+                        </div>
+                    </div>
+                `;
+                wrapper.appendChild(card);
+            }
+        });
+    }
+</script>

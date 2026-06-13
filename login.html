@@ -1,195 +1,352 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PureBacktest | Terminal Authentication Gateway</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PureBacktest | Secure Gateway</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
         :root {
-            --bg-pure: #020408;
-            --bg-deep-gradient: radial-gradient(circle at 50% -20%, #0a1224 0%, #020408 70%);
-            --glass-card: rgba(6, 11, 22, 0.45);
-            --border-line: rgba(255, 255, 255, 0.05);
+            --bg-pure: #030712;
+            --bg-gradient: radial-gradient(circle at 50% 0%, #0d1226 0%, #030712 100%);
+            --card-bg: #090f1d;
+            --border-line: rgba(255, 255, 255, 0.04);
             --neon-cyan: #00F0FF;
-            --neon-blue: #0072FF;
+            --brand-purple: #7C3AED;
             --text-white: #FFFFFF;
-            --text-slate: #64748B;
+            --text-slate: #94A3B8;
+            --text-muted: #475569;
             --neon-red: #FF3366;
         }
 
-        body {
-            margin: 0; padding: 0; background: var(--bg-pure); background-image: var(--bg-deep-gradient);
-            color: #E2E8F0; font-family: 'Plus Jakarta Sans', sans-serif; display: flex;
-            align-items: center; justify-content: center; min-height: 100vh; overflow-x: hidden;
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        /* Continuous Application Flashing Preloader Loading Loop Overlay */
-        .app-preloader { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #020408; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 999999; transition: opacity 0.4s ease, visibility 0.4s ease; }
-        .app-preloader.fade-out { opacity: 0; visibility: hidden; pointer-events: none; }
-        .loader-logo-container { display: flex; flex-direction: column; align-items: center; gap: 20px; animation: brandPulse 1.2s ease-in-out infinite; }
-        .logo-svg-wrapper { width: 100px; height: 100px; }
-        .loader-text { color: #ffffff; font-size: 22px; font-weight: 800; letter-spacing: -0.5px; }
-        .loader-text span { color: var(--neon-cyan); }
-        .loader-subtext { color: var(--text-slate); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; margin-top: -10px; }
+        body {
+            background: var(--bg-pure);
+            background-image: var(--bg-gradient);
+            color: #F8FAFC;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            padding: 20px;
+        }
 
-        @keyframes brandPulse {
-            0% { transform: scale(0.98); opacity: 0.4; filter: drop-shadow(0 0 0px rgba(0, 240, 255, 0)); }
-            50% { transform: scale(1.02); opacity: 1.0; filter: drop-shadow(0 0 15px rgba(0, 240, 255, 0.3)); }
-            100% { transform: scale(0.98); opacity: 0.4; filter: drop-shadow(0 0 0px rgba(0, 240, 255, 0)); }
+        /* Subtle background grid pattern */
+        body::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: linear-gradient(rgba(255,255,255,0.007) 1px, transparent 1px), 
+                              linear-gradient(90deg, rgba(255,255,255,0.007) 1px, transparent 1px);
+            background-size: 40px 40px;
+            background-position: center;
+            mask-image: radial-gradient(circle at 50% 50%, black, transparent 80%);
+            pointer-events: none;
+            z-index: 0;
         }
 
         .auth-card-wrapper {
-            width: 420px; background: var(--glass-card); border: 1px solid var(--border-line);
-            padding: 40px 35px; border-radius: 16px; box-shadow: 0 30px 70px rgba(0,0,0,0.6);
-            backdrop-filter: blur(20px); position: relative; overflow: hidden;
+            width: 100%;
+            max-width: 440px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-line);
+            padding: 40px 30px;
+            border-radius: 24px;
+            box-shadow: 0 40px 80px -20px rgba(0, 0, 0, 0.7), 
+                        inset 0 1px 0px rgba(255, 255, 255, 0.05);
+            position: relative;
+            z-index: 1;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
+            animation: cardEntrance 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
         }
 
-        .card-glow {
-            position: absolute; width: 200px; height: 200px; background: radial-gradient(circle, rgba(0,240,255,0.05) 0%, rgba(0,0,0,0) 70%);
-            top: -100px; left: -100px; pointer-events: none;
+        @keyframes cardEntrance {
+            0% { opacity: 0; transform: translateY(15px) scale(0.99); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
         }
 
-        .brand-logo-link { display: flex; align-items: center; justify-content: center; gap: 10px; text-decoration: none; margin-bottom: 10px; }
-        .brand-logo-svg { width: 36px; height: 36px; }
-        .logo-text { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; color: var(--text-white); }
+        .brand-header-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            margin-bottom: 24px;
+        }
+        
+        .brand-logo-badge {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 20px rgba(124, 58, 237, 0.3);
+            margin-bottom: 14px;
+        }
+
+        .logo-text { 
+            font-size: 24px; 
+            font-weight: 800; 
+            letter-spacing: -0.75px; 
+            color: var(--text-white); 
+        }
         .logo-text span { color: var(--neon-cyan); }
 
-        .form-subtitle { text-align: center; font-size: 13px; color: var(--text-slate); margin: 0 0 25px 0; font-weight: 500; }
-
-        /* Elite Psychology Quote Box Styling */
-        .psychology-quote-box {
-            background: rgba(0, 240, 255, 0.02);
-            border: 1px dashed rgba(0, 240, 255, 0.15);
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 25px;
+        .form-subtitle {
             text-align: center;
-            position: relative;
-        }
-        .psychology-quote-text {
             font-size: 13px;
-            line-height: 1.5;
-            color: #94A3B8;
-            font-weight: 500;
-            margin: 0;
-            font-style: italic;
-        }
-        .psychology-quote-text span {
-            color: var(--neon-cyan);
-            font-weight: 600;
-            font-style: normal;
+            color: var(--text-slate);
+            margin-top: -12px;
+            margin-bottom: 24px;
+            font-weight: 400;
+            opacity: 0.8;
+            line-height: 1.4;
         }
 
-        label { display: block; font-size: 11px; font-weight: 700; color: var(--text-slate); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin: 20px 0;
+        }
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .divider:not(:empty)::before { margin-right: 14px; }
+        .divider:not(:empty)::after { margin-left: 14px; }
+
+        .btn-google-oauth {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            color: var(--text-white);
+            padding: 14px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            font-family: inherit;
+            transition: all 0.2s ease;
+        }
+        
+        /* Interactive feedback variants adapted for desktop hover + mobile touch environments */
+        @media (hover: hover) {
+            .btn-google-oauth:hover {
+                background: rgba(255, 255, 255, 0.05);
+                border-color: rgba(255, 255, 255, 0.15);
+                transform: translateY(-1px);
+            }
+        }
+        .btn-google-oauth:active {
+            transform: translateY(1px);
+            background: rgba(255, 255, 255, 0.04);
+        }
+        .btn-google-oauth svg { width: 18px; height: 18px; flex-shrink: 0; }
+
+        label {
+            display: block;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-slate);
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            margin-bottom: 8px;
+        }
         
         .input-group-field { position: relative; margin-bottom: 20px; }
+        
         input {
-            width: 100%; background: rgba(3, 7, 18, 0.5); border: 1px solid var(--border-line);
-            color: var(--text-white); padding: 12px 16px; border-radius: 8px; box-sizing: border-box;
-            font-size: 14px; font-family: 'Plus Jakarta Sans', sans-serif; transition: all 0.2s ease; outline: none;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--text-white);
+            padding: 14px 16px;
+            border-radius: 12px;
+            font-size: 16px; /* Prevents auto-zoom scaling lock issues on Apple iOS Safari viewports */
+            font-family: inherit;
+            transition: all 0.2s ease;
+            outline: none;
         }
-        input:focus { border-color: var(--neon-cyan); background: rgba(3, 7, 18, 0.8); box-shadow: 0 0 15px rgba(0, 240, 255, 0.1); }
+        input:focus {
+            border-color: rgba(0, 240, 255, 0.4);
+            background: rgba(0, 0, 0, 0.4);
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.03);
+        }
         
         .error-message-banner {
-            background: rgba(255, 51, 102, 0.06); border: 1px solid rgba(255, 51, 102, 0.15);
-            color: var(--neon-red); font-size: 12px; font-weight: 600; padding: 10px 14px;
-            border-radius: 6px; margin-bottom: 20px; display: none; text-align: center;
+            background: rgba(255, 51, 102, 0.08);
+            border: 1px solid rgba(255, 51, 102, 0.2);
+            color: var(--neon-red);
+            font-size: 13px;
+            font-weight: 500;
+            padding: 12px 14px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+            line-height: 1.4;
         }
 
         .btn-submit-action {
-            width: 100%; background: linear-gradient(90deg, var(--neon-cyan) 0%, var(--neon-blue) 100%);
-            color: #020408; padding: 14px; border: none; border-radius: 8px; font-weight: 800;
-            font-size: 14px; cursor: pointer; letter-spacing: 0.5px; transition: all 0.2s ease;
-            box-shadow: 0 4px 20px rgba(0, 240, 255, 0.2); margin-top: 10px;
+            width: 100%;
+            background: linear-gradient(90deg, #00C6FF 0%, #0072FF 100%);
+            color: #ffffff;
+            padding: 15px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+            font-family: inherit;
+            transition: all 0.2s ease;
+            box-shadow: 0 8px 25px rgba(0, 114, 255, 0.2);
+            margin-top: 4px;
+            text-transform: uppercase;
         }
-        .btn-submit-action:hover { transform: translateY(-1px); box-shadow: 0 8px 25px rgba(0, 240, 255, 0.4); }
+        @media (hover: hover) {
+            .btn-submit-action:hover {
+                transform: translateY(-1px);
+                box-shadow: 0 12px 30px rgba(0, 114, 255, 0.35);
+                filter: brightness(1.05);
+            }
+        }
+        .btn-submit-action:active {
+            transform: translateY(1px);
+        }
 
-        .toggle-mode-panel { text-align: center; margin-top: 25px; font-size: 13px; color: var(--text-slate); }
-        .toggle-mode-panel span { color: var(--neon-cyan); font-weight: 600; cursor: pointer; text-decoration: none; margin-left: 5px; }
-        .toggle-mode-panel span:hover { text-decoration: underline; }
+        .toggle-mode-panel {
+            text-align: center;
+            margin-top: 28px;
+            font-size: 13px;
+            color: var(--text-slate);
+        }
+        .toggle-mode-panel span:last-child {
+            color: var(--neon-cyan);
+            font-weight: 600;
+            cursor: pointer;
+            margin-left: 4px;
+        }
+        .toggle-mode-panel span:last-child:hover {
+            text-decoration: underline;
+        }
+
+        .async-loading-bar {
+            position: absolute; top: 0; left: 0; width: 100%; height: 3px;
+            background: linear-gradient(90deg, var(--neon-cyan), #7C3AED);
+            transform: scaleX(0); transform-origin: left; transition: transform 0.4s ease;
+            display: none; border-radius: 24px 24px 0 0;
+        }
+        .auth-card-wrapper.loading .async-loading-bar {
+            display: block; animation: loopLoad 1.5s infinite linear;
+        }
+        @keyframes loopLoad {
+            0% { transform: translateX(-100%) scaleX(1); }
+            50% { transform: translateX(0%) scaleX(0.5); }
+            100% { transform: translateX(100%) scaleX(1); }
+        }
+
+        /* Responsive Mobile Layout Adjustments */
+        @media (max-width: 480px) {
+            body {
+                padding: 16px;
+                align-items: center; /* Center vertically on smaller heights, swap to flex-start if long headers overlap */
+            }
+            .auth-card-wrapper {
+                padding: 32px 20px;
+                border-radius: 20px;
+                box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            }
+            input {
+                padding: 12px 14px; /* Slightly tighter fields for mobile viewports */
+            }
+        }
     </style>
 </head>
 <body>
 
-<div id="appPreloader" class="app-preloader">
-    <div class="loader-logo-container">
-        <svg class="logo-svg-wrapper" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M38 25H62M43 25V42L22 73C20 76 22 80 26 80H74C78 80 80 76 78 73L57 42V25" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-            <rect x="34" y="56" width="3" height="12" fill="#00b0ff"/>
-            <path d="M35.5 52V72" stroke="#00b0ff" stroke-width="1.5" stroke-linecap="round"/>
-            <rect x="44" y="48" width="3" height="14" fill="#00b0ff"/>
-            <path d="M45.5 42V66" stroke="#00b0ff" stroke-width="1.5" stroke-linecap="round"/>
-            <rect x="54" y="42" width="3" height="16" fill="#00FF94"/>
-            <path d="M55.5 36V62" stroke="#00FF94" stroke-width="1.5" stroke-linecap="round"/>
-            <rect x="64" y="34" width="3" height="14" fill="#00FF94"/>
-            <path d="M65.5 28V52" stroke="#00FF94" stroke-width="1.5" stroke-linecap="round"/>
-            <circle cx="50" cy="72" r="10" fill="#020408" stroke="#00FF94" stroke-width="2.5"/>
-            <polygon points="48,68 55,72 48,76" fill="#00FF94"/>
-        </svg>
-        <div class="loader-text">Pure<span>Backtest</span></div>
-        <div class="loader-subtext">Quantifying Strategy Intelligence</div>
+<div class="auth-card-wrapper" id="authCard">
+    <div class="async-loading-bar"></div>
+
+    <div class="brand-header-group">
+        <div class="brand-logo-badge">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M3 12H7L10 4L14 20L17 12H21" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </div>
+        <div class="logo-text">BacktestLa<span>bPro</span></div>
     </div>
-</div>
-
-<div class="auth-card-wrapper">
-    <div class="card-glow"></div>
-
-    <a href="index.html" class="brand-logo-link">
-        <svg class="brand-logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M38 25H62M43 25V42L22 73C20 76 22 80 26 80H74C78 80 80 76 78 73L57 42V25" stroke="#ffffff" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
-            <rect x="34" y="56" width="3" height="12" fill="#00F0FF"/>
-            <path d="M35.5 52V72" stroke="#00F0FF" stroke-width="2" stroke-linecap="round"/>
-            <rect x="44" y="48" width="3" height="14" fill="#00F0FF"/>
-            <path d="M45.5 42V66" stroke="#00F0FF" stroke-width="2" stroke-linecap="round"/>
-            <rect x="54" y="42" width="3" height="16" fill="#00FF94"/>
-            <path d="M55.5 36V62" stroke="#00FF94" stroke-width="2" stroke-linecap="round"/>
-            <rect x="64" y="34" width="3" height="14" fill="#00FF94"/>
-            <path d="M65.5 28V52" stroke="#00FF94" stroke-width="2" stroke-linecap="round"/>
-            <circle cx="50" cy="72" r="9" fill="#020408" stroke="#00FF94" stroke-width="3"/>
-            <polygon points="47,68 54,72 47,76" fill="#00FF94"/>
-        </svg>
-        <div class="logo-text">Pure<span>Backtest</span></div>
-    </a>
     
     <div class="form-subtitle" id="authSubtitle">Access strategy replay control dashboard</div>
 
-    <div class="psychology-quote-box">
-        <p class="psychology-quote-text">
-            "Trading is the hardest way to make easy money. To conquer the numbers, you must first <span>eliminate the human</span>."
-        </p>
-    </div>
+    <button type="button" class="btn-google-oauth" onclick="handleGoogleSignIn()">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" fill="#FBBC05"/>
+            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+        </svg>
+        Continue with Google
+    </button>
+
+    <div class="divider">or</div>
 
     <div class="error-message-banner" id="errorBanner"></div>
 
     <form id="authForm" onsubmit="handleAuthSubmit(event)">
-        <label for="email">Network Email Address</label>
+        <label for="email">Email Address</label>
         <div class="input-group-field">
-            <input type="email" id="email" placeholder="name@domain.com" required>
+            <input type="email" id="email" placeholder="Enter your email" required>
         </div>
 
-        <label for="password">Security Password</label>
+        <label for="password">Password</label>
         <div class="input-group-field">
-            <input type="password" id="password" placeholder="••••••••••••" required>
+            <input type="password" id="password" placeholder="Enter your password" required>
         </div>
 
-        <button type="submit" class="btn-submit-action" id="submitBtn">SIGN IN GATEWAY</button>
+        <button type="submit" class="btn-submit-action" id="submitBtn">Sign In</button>
     </form>
 
     <div class="toggle-mode-panel">
-        <span id="toggleTextLabel">Need a deployment key?</span>
-        <span id="toggleLink" onclick="switchAuthMode()">Register Account</span>
+        <span id="toggleTextLabel">Need an account?</span>
+        <span id="toggleLink" onclick="switchAuthMode()">Register</span>
     </div>
 </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { 
+        getAuth, 
+        signInWithEmailAndPassword, 
+        createUserWithEmailAndPassword, 
+        onAuthStateChanged,
+        GoogleAuthProvider,
+        signInWithPopup 
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyAensfI53w49Fd4A7Lz5_K9N1JOxZsW7Kk",
@@ -203,13 +360,11 @@
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
+    const googleProvider = new GoogleAuthProvider();
 
     let currentMode = "login";
 
     onAuthStateChanged(auth, (user) => {
-        const preloader = document.getElementById("appPreloader");
-        if (preloader) preloader.classList.add("fade-out");
-
         if (user) {
             localStorage.setItem("user_uid", user.uid);
             localStorage.setItem("user_email", user.email);
@@ -229,15 +384,30 @@
         if (currentMode === "login") {
             currentMode = "register";
             subtitle.innerText = "Provision clean cloud node metrics tracking";
-            submitBtn.innerText = "CREATE ACCOUNT PORTAL";
-            toggleTextLabel.innerText = "Already validated?";
-            toggleLink.innerText = "Sign In instead";
+            submitBtn.innerText = "Register";
+            toggleTextLabel.innerText = "Already have an account?";
+            toggleLink.innerText = "Sign In";
         } else {
             currentMode = "login";
             subtitle.innerText = "Access strategy replay control dashboard";
-            submitBtn.innerText = "SIGN IN GATEWAY";
-            toggleTextLabel.innerText = "Need a deployment key?";
-            toggleLink.innerText = "Register Account";
+            submitBtn.innerText = "Sign In";
+            toggleTextLabel.innerText = "Need an account?";
+            toggleLink.innerText = "Register";
+        }
+    };
+
+    window.handleGoogleSignIn = async function() {
+        const card = document.getElementById("authCard");
+        const errorBanner = document.getElementById("errorBanner");
+        errorBanner.style.display = "none";
+        card.classList.add("loading");
+
+        try {
+            await signInWithPopup(auth, googleProvider);
+        } catch (error) {
+            card.classList.remove("loading");
+            errorBanner.style.display = "block";
+            errorBanner.innerText = error.message;
         }
     };
 
@@ -247,10 +417,10 @@
         const email = document.getElementById("email").value;
         const password = document.getElementById("password").value;
         const errorBanner = document.getElementById("errorBanner");
-        const preloader = document.getElementById("appPreloader");
+        const card = document.getElementById("authCard");
 
         errorBanner.style.display = "none";
-        if (preloader) preloader.classList.remove("fade-out");
+        card.classList.add("loading");
 
         try {
             if (currentMode === "login") {
@@ -259,21 +429,21 @@
                 await createUserWithEmailAndPassword(auth, email, password);
             }
         } catch (error) {
-            if (preloader) preloader.classList.add("fade-out");
+            card.classList.remove("loading");
             errorBanner.style.display = "block";
             
             switch (error.code) {
                 case "auth/invalid-credential":
-                    errorBanner.innerText = "Invalid authentication parameters provided. Check inputs.";
+                    errorBanner.innerText = "Invalid credentials provided. Check inputs.";
                     break;
                 case "auth/email-already-in-use":
-                    errorBanner.innerText = "The requested account coordinate mapping profile already exists.";
+                    errorBanner.innerText = "This email already exists.";
                     break;
                 case "auth/weak-password":
-                    errorBanner.innerText = "Security structural requirement unmet. Password must exceed 6 signs.";
+                    errorBanner.innerText = "Password must be at least 6 characters.";
                     break;
                 case "auth/invalid-email":
-                    errorBanner.innerText = "Malformed target network identification matrix layout.";
+                    errorBanner.innerText = "Malformed email address format.";
                     break;
                 default:
                     errorBanner.innerText = error.message;
@@ -283,4 +453,3 @@
 </script>
 </body>
 </html>
-

@@ -1,6 +1,15 @@
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 <head>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-YY82TZ1ZG7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-YY82TZ1ZG7');
+</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BacktestLab Pro | Free Institutional-Grade Backtesting Platform</title>
@@ -31,9 +40,9 @@
                         brand: {
                             dark: '#050507',
                             card: '#0c0c0e',
-                            accent: '#6366f1', // Indigo
-                            success: '#10b981', // Emerald Green
-                            purple: '#a855f7' // Purple
+                            accent: '#6366f1',
+                            success: '#10b981',
+                            purple: '#a855f7'
                         }
                     }
                 }
@@ -48,7 +57,6 @@
             overflow-x: hidden;
         }
         
-        /* Spline-style deep 3D glow background gradients */
         .glow-orb {
             position: absolute;
             border-radius: 50%;
@@ -61,7 +69,6 @@
             .glow-orb { filter: blur(140px); opacity: 0.18; }
         }
 
-        /* Abstract Chart Overlay background effect */
         .meaningful-bg-overlay {
             position: absolute;
             top: 0;
@@ -80,7 +87,6 @@
             .meaningful-bg-overlay { opacity: 0.25; min-height: 900px; }
         }
         
-        /* Glassmorphism card utilities */
         .glass-card {
             background: rgba(12, 12, 14, 0.5);
             backdrop-filter: blur(16px);
@@ -92,23 +98,12 @@
             box-shadow: 0 0 40px rgba(99, 102, 241, 0.08);
         }
 
-        /* Hide scrollbars but keep functionality */
-        .no-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-        .no-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-        /* Custom Reveal Animation States */
-        .scroll-animate {
-            will-change: transform, opacity;
-        }
-        .reveal-active {
-            opacity: 1 !important;
-            transform: translateY(0) !important;
-        }
+        .scroll-animate { will-change: transform, opacity; }
+        .reveal-active { opacity: 1 !important; transform: translateY(0) !important; }
+        
         .brand-icon-box {
             width: 38px;
             height: 38px;
@@ -120,18 +115,8 @@
             flex-shrink: 0;
         }
 
-        /* Prevent content flash before authentication checks complete */
-        .auth-hidden {
-            opacity: 0 !important;
-            pointer-events: none !important;
-            visibility: hidden !important;
-        }
-        .auth-visible {
-            opacity: 1 !important;
-            pointer-events: auto !important;
-            visibility: visible !important;
-            transition: opacity 0.2s ease-in-out;
-        }
+        .auth-hidden { opacity: 0 !important; pointer-events: none !important; visibility: hidden !important; }
+        .auth-visible { opacity: 1 !important; pointer-events: auto !important; visibility: visible !important; transition: opacity 0.2s ease-in-out; }
     </style>
 </head>
 <body class="font-sans antialiased relative">
@@ -139,43 +124,21 @@
     <div class="meaningful-bg-overlay flex items-center justify-center overflow-hidden">
         <svg width="1440" height="900" viewBox="0 0 1440 900" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full scale-110 md:scale-105 transform origin-top">
             <g stroke="rgba(255,255,255,0.03)" stroke-width="1">
-                <line x1="0" y1="150" x2="1440" y2="150" />
-                <line x1="0" y1="300" x2="1440" y2="300" />
-                <line x1="0" y1="450" x2="1440" y2="450" />
-                <line x1="0" y1="600" x2="1440" y2="600" />
+                <line x1="0" y1="150" x2="1440" y2="150" /><line x1="0" y1="300" x2="1440" y2="300" />
+                <line x1="0" y1="450" x2="1440" y2="450" /><line x1="0" y1="600" x2="1440" y2="600" />
                 <line x1="0" y1="750" x2="1440" y2="750" />
-                
-                <line x1="200" y1="0" x2="200" y2="900" />
-                <line x1="440" y1="0" x2="440" y2="900" />
-                <line x1="680" y1="0" x2="680" y2="900" />
-                <line x1="920" y1="0" x2="920" y2="900" />
+                <line x1="200" y1="0" x2="200" y2="900" /><line x1="440" y1="0" x2="440" y2="900" />
+                <line x1="680" y1="0" x2="680" y2="900" /><line x1="920" y1="0" x2="920" y2="900" />
                 <line x1="1160" y1="0" x2="1160" y2="900" />
             </g>
-
             <path d="M 100 700 Q 350 620 500 480 T 950 320 T 1350 120" stroke="url(#chart-gradient-accent)" stroke-width="3" stroke-linecap="round"/>
             <path d="M 100 750 Q 400 720 650 550 T 1100 400 T 1400 280" stroke="url(#chart-gradient-purple)" stroke-width="1.5" stroke-dasharray="6 6" opacity="0.6"/>
-
-            <g fill="rgba(239, 68, 68, 0.2)" stroke="rgba(239, 68, 68, 0.35)" stroke-width="1.5">
-                <rect x="345" y="580" width="10" height="40" rx="1"/> <line x1="350" y1="565" x2="350" y2="635"/>
-                <rect x="635" y="490" width="10" height="55" rx="1"/> <line x1="640" y1="470" x2="640" y2="560"/>
-                <rect x="915" y="340" width="10" height="30" rx="1"/> <line x1="920" y1="325" x2="920" y2="385"/>
-            </g>
-            <g fill="rgba(16, 185, 129, 0.2)" stroke="rgba(16, 185, 129, 0.35)" stroke-width="1.5">
-                <rect x="215" y="630" width="10" height="50" rx="1"/> <line x1="220" y1="610" x2="220" y2="695"/>
-                <rect x="475" y="450" width="10" height="70" rx="1"/> <line x1="480" y1="430" x2="480" y2="535"/>
-                <rect x="765" y="380" width="10" height="60" rx="1"/> <line x1="770" y1="360" x2="770" y2="455"/>
-                <rect x="1195" y="170" width="10" height="85" rx="1"/> <line x1="1200" y1="150" x2="1200" y2="270"/>
-            </g>
-
             <defs>
                 <linearGradient id="chart-gradient-accent" x1="0" y1="900" x2="1440" y2="0" gradientUnits="userSpaceOnUse">
-                    <stop offset="0%" stop-color="#6366f1" />
-                    <stop offset="50%" stop-color="#a855f7" />
-                    <stop offset="100%" stop-color="#10b981" />
+                    <stop offset="0%" stop-color="#6366f1" /><stop offset="50%" stop-color="#a855f7" /><stop offset="100%" stop-color="#10b981" />
                 </linearGradient>
                 <linearGradient id="chart-gradient-purple" x1="0" y1="900" x2="1440" y2="0" gradientUnits="userSpaceOnUse">
-                    <stop offset="10%" stop-color="#a855f7" />
-                    <stop offset="100%" stop-color="#6366f1" />
+                    <stop offset="10%" stop-color="#a855f7" /><stop offset="100%" stop-color="#6366f1" />
                 </linearGradient>
             </defs>
         </svg>
@@ -187,7 +150,7 @@
 
     <header class="sticky top-0 z-50 w-full border-b border-white/5 bg-brand-dark/70 backdrop-blur-md">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full h-20 flex items-center justify-between">
-            <a href="chatnowpage" class="flex items-center gap-3 group">
+            <a href="index.html" class="flex items-center gap-3 group">
                 <div class="brand-icon-box">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
@@ -205,7 +168,6 @@
                 <a href="#contact" class="hover:text-white transition-colors">Contact</a>
             </nav>
 
-            <!-- Added auth-hidden utility here to prevent layout flashes -->
             <div id="desktop-auth-container" class="hidden md:flex items-center gap-4 auth-hidden">
                 <div id="logged-out-actions" class="hidden flex items-center gap-4">
                     <button onclick="triggerAuthFlow()" class="text-sm font-medium text-zinc-400 hover:text-white transition-colors min-w-[44px]">Sign In</button>
@@ -221,7 +183,7 @@
                     </a>
                     
                     <div class="relative ml-2" id="profile-dropdown-wrapper">
-                        <button id="profile-menu-trigger-btn" class="flex items-center justify-center h-10 w-10 rounded-xl bg-gradient-to-br from-brand-accent to-brand-purple p-[1px] focus:outline-none transition-transform hover:scale-105" title="View Account Profile">
+                        <button id="profile-menu-trigger-btn" class="flex items-center justify-center h-10 w-10 rounded-xl bg-gradient-to-br from-brand-accent to-brand-purple p-[1px] focus:outline-none transition-transform hover:scale-105">
                             <div class="h-full w-full bg-brand-dark rounded-[11px] flex items-center justify-center text-zinc-300 hover:text-white">
                                 <i class="fa-solid fa-user text-sm"></i>
                             </div>
@@ -237,7 +199,6 @@
                                     <p id="profile-box-email" class="text-xs text-zinc-500 truncate">sandbox@backtestlabpro.com</p>
                                 </div>
                             </div>
-
                             <button id="firebase-logout-btn" class="w-full py-2 rounded-xl bg-zinc-900 border border-white/5 text-zinc-400 hover:text-red-400 hover:border-red-500/20 hover:bg-red-500/5 transition-all text-xs font-semibold flex items-center justify-center gap-2 font-display min-h-[36px]">
                                 <i class="fa-solid fa-power-off text-xs"></i> Sign Out
                             </button>
@@ -280,9 +241,9 @@
             </p>
 
             <div class="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-md mx-auto mb-16 md:mb-20">
-               <button onclick="window.location.href='session.html'" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-white text-brand-dark font-display font-semibold hover:bg-zinc-200 transition-all transform hover:-translate-y-0.5 shadow-xl flex items-center justify-center gap-3 min-h-[48px]">
-    Start Session <i class="fa-solid fa-arrow-right text-xs"></i>
-</button>
+                <button onclick="window.location.href='session.html'" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-white text-brand-dark font-display font-semibold hover:bg-zinc-200 transition-all transform hover:-translate-y-0.5 shadow-xl flex items-center justify-center gap-3 min-h-[48px]">
+                    Start Session <i class="fa-solid fa-arrow-right text-xs"></i>
+                </button>
                 <a href="#markets" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-zinc-900/60 border border-white/10 text-zinc-300 font-display font-semibold hover:bg-zinc-800/80 transition-all flex items-center justify-center gap-2 backdrop-blur-sm min-h-[48px]">
                     Explore Raw Data
                 </a>
@@ -312,10 +273,10 @@
         <section id="user-dashboard-area" class="py-4 hidden">
             <div class="max-w-3xl mx-auto mb-6">
                 <h2 class="font-display font-bold text-2xl text-white">Your Workspace Sandbox Tracks</h2>
-                <p class="text-zinc-400 text-sm">Pick up directly where you left your simulation data matrices.</p>
+                <p class="text-zinc-400 text-sm">Pick up directly where you left your live database simulation matrices.</p>
             </div>
             <div id="my-sessions" class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-                <!-- Programmatically filled by JS -->
+                <!-- Dynamically handles exactly 2 recent Firestore cards + 1 automation badge status block -->
             </div>
         </section>
 
@@ -380,10 +341,10 @@
                         <div>
                             <div class="flex justify-between text-xs mb-1">
                                 <span class="text-zinc-400">Strategy Success Metric</span>
-                                <span class="text-brand-success font-bold">74.2% Win Rate</span>
+                                <span id="automation-winrate-tag" class="text-zinc-500 font-bold">Checking database...</span>
                             </div>
                             <div class="w-full bg-zinc-800 h-2 rounded-full overflow-hidden">
-                                <div class="bg-gradient-to-r from-brand-accent to-brand-success h-full" style="width: 74.2%"></div>
+                                <div id="automation-progress-bar" class="bg-gradient-to-r from-brand-accent to-brand-success h-full transition-all duration-500" style="width: 0%"></div>
                             </div>
                         </div>
 
@@ -395,8 +356,8 @@
                             <div class="text-zinc-300">}</div>
                         </div>
 
-                        <button onclick="alert('Run a manual backtest strategy above a 70% tracked win-rate to trigger code export.')" class="w-full py-3.5 rounded-xl bg-white text-brand-dark font-display font-bold text-sm tracking-wide hover:bg-zinc-200 transition-all min-h-[48px]">
-                            Unlock Automated Script Generation
+                        <button id="automation-cta-btn" onclick="handleAutomateStrategyClick()" class="w-full py-3.5 rounded-xl bg-white text-brand-dark font-display font-bold text-sm tracking-wide hover:bg-zinc-200 transition-all min-h-[48px]">
+                            Check Automation Status
                         </button>
                     </div>
                 </div>
@@ -454,131 +415,6 @@
             </div>
         </section>
 
-        <section id="articles" class="py-4 scroll-animate opacity-0 translate-y-8 transition-all duration-700 ease-out">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-10 gap-4">
-                <div>
-                    <h2 class="font-display font-bold text-3xl text-white">Engineering Library</h2>
-                    <p class="text-zinc-400 text-sm mt-1">Technical write-ups regarding curve-fitting errors, platform mechanics, and simulation mathematics.</p>
-                </div>
-                <div>
-                    <button onclick="alert('Article archival feeds launching shortly.')" class="inline-flex items-center gap-2 text-sm font-medium text-brand-accent hover:text-white transition-colors min-h-[44px]">
-                        View All Articles <i class="fa-solid fa-chevron-right text-xs"></i>
-                    </button>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
-                <article class="rounded-2xl border border-white/5 overflow-hidden group hover:border-white/10 transition-all bg-zinc-950/20 backdrop-blur-sm">
-                    <div class="h-40 sm:h-48 bg-zinc-950 flex items-center justify-center p-6 border-b border-white/5">
-                        <i class="fa-solid fa-bezier-curve text-5xl text-brand-accent/15 group-hover:scale-110 transition-transform duration-300"></i>
-                    </div>
-                    <div class="p-5 sm:p-6">
-                        <div class="text-[10px] sm:text-xs text-brand-accent font-mono mb-2">QUANTITATIVE MODELING</div>
-                        <h4 class="font-display font-bold text-base sm:text-lg text-white mb-2 group-hover:text-brand-accent transition-colors">Avoiding Curve Fitting in Deep Historical Runs</h4>
-                        <p class="text-zinc-400 text-xs sm:text-sm leading-relaxed mb-4">How to cleanly segregate historical market ticks into out-of-sample fields to avoid false strategy parameters.</p>
-                        <span class="text-xs text-zinc-500">Read: 6 mins</span>
-                    </div>
-                </article>
-
-                <article class="rounded-2xl border border-white/5 overflow-hidden group hover:border-white/10 transition-all bg-zinc-950/20 backdrop-blur-sm">
-                    <div class="h-40 sm:h-48 bg-zinc-950 flex items-center justify-center p-6 border-b border-white/5">
-                        <i class="fa-solid fa-bolt-lightning text-5xl text-brand-purple/15 group-hover:scale-110 transition-transform duration-300"></i>
-                    </div>
-                    <div class="p-5 sm:p-6">
-                        <div class="text-[10px] sm:text-xs text-brand-purple font-mono mb-2">ENGINE ARCHITECTURE</div>
-                        <h4 class="font-display font-bold text-base sm:text-lg text-white mb-2 group-hover:text-brand-purple transition-colors">Multi-Timeframe Candle Synchronization Core</h4>
-                        <p class="text-zinc-400 text-xs sm:text-sm leading-relaxed mb-4">A look into how our processing engine seamlessly threads fine sub-minute tick pools into high-level candlestick models.</p>
-                        <span class="text-xs text-zinc-500">Read: 9 mins</span>
-                    </div>
-                </article>
-
-                <article class="rounded-2xl border border-white/5 overflow-hidden group hover:border-white/10 transition-all bg-zinc-950/20 backdrop-blur-sm">
-                    <div class="h-40 sm:h-48 bg-zinc-950 flex items-center justify-center p-6 border-b border-white/5">
-                        <i class="fa-solid fa-shield-halved text-5xl text-brand-success/15 group-hover:scale-110 transition-transform duration-300"></i>
-                    </div>
-                    <div class="p-5 sm:p-6">
-                        <div class="text-[10px] sm:text-xs text-brand-success font-mono mb-2">SYSTEM METHODOLOGY</div>
-                        <h4 class="font-display font-bold text-base sm:text-lg text-white mb-2 group-hover:text-brand-success transition-colors">Understanding True Peak Drawdown Ratios</h4>
-                        <p class="text-zinc-400 text-xs sm:text-sm leading-relaxed mb-4">Why basic profit metrics mask major risks, and how assessing sequential losses protects asset base valuations.</p>
-                        <span class="text-xs text-zinc-500">Read: 5 mins</span>
-                    </div>
-                </article>
-            </div>
-        </section>
-
-        <section id="about" class="py-4 scroll-animate opacity-0 translate-y-8 transition-all duration-700 ease-out">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-12 items-center">
-                <div class="space-y-4">
-                    <span class="text-xs font-bold text-brand-success uppercase tracking-widest">Our Shared Vision</span>
-                    <h2 class="font-display font-bold text-3xl sm:text-5xl text-white">Democratizing Systemic Backtesting Software</h2>
-                    <p class="text-zinc-400 text-sm sm:text-base leading-relaxed">
-                        We are a distributed collective of open-source software engineers and quantitative system traders. Throughout our careers, we grew deeply tired of seeing data companies extract high monthly fees for access to public, historical financial indices.
-                    </p>
-                </div>
-                <div class="p-6 sm:p-8 rounded-3xl glass-card space-y-6">
-                    <h3 class="font-display font-bold text-xl text-white">Platform Pillars</h3>
-                    <div class="flex items-start gap-4">
-                        <div class="p-2 rounded-lg bg-white/5 text-brand-accent mt-0.5 flex-shrink-0"><i class="fa-solid fa-infinity"></i></div>
-                        <div>
-                            <h5 class="text-white text-sm font-bold">Uncapped Compute Resources</h5>
-                            <p class="text-xs text-zinc-500 mt-0.5">Run data sweeps spanning multiple decade blocks without execution timeouts or performance throttling rules.</p>
-                        </div>
-                    </div>
-                    <div class="flex items-start gap-4">
-                        <div class="p-2 rounded-lg bg-white/5 text-brand-purple mt-0.5 flex-shrink-0"><i class="fa-solid fa-eye-slash"></i></div>
-                        <div>
-                            <h5 class="text-white text-sm font-bold">Absolute Strategic Privacy</h5>
-                            <p class="text-xs text-zinc-500 mt-0.5">No internal analytics log your operations. Your indicator metrics, system strategies, and logic parameters remain secure inside your workspace sandbox.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="contact" class="max-w-3xl mx-auto py-4 scroll-animate opacity-0 translate-y-8 transition-all duration-700 ease-out">
-            <div class="text-center mb-10">
-                <h2 class="font-display font-bold text-3xl text-white">Direct Terminal Intake</h2>
-                <p class="text-zinc-400 text-sm mt-1">Encountered an extraction error? Need custom ticker pools? Alert our core network directly.</p>
-            </div>
-
-            <form onsubmit="handleFormSubmission(event)" class="space-y-6 p-6 sm:p-8 rounded-3xl glass-card">
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    <div>
-                        <label class="block text-xs uppercase font-medium tracking-wider text-zinc-400 mb-2">Your Identity</label>
-                        <input type="text" required class="w-full bg-zinc-900/60 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-brand-accent transition-all min-h-[48px]">
-                    </div>
-                    <div>
-                        <label class="block text-xs uppercase font-medium tracking-wider text-zinc-400 mb-2">Return Address (Email)</label>
-                        <input type="email" required class="w-full bg-zinc-900/60 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-brand-accent transition-all min-h-[48px]">
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-xs uppercase font-medium tracking-wider text-zinc-400 mb-2">Pipeline Subject</label>
-                    <div class="relative">
-                        <select class="w-full bg-zinc-900/60 border border-white/10 rounded-xl px-4 py-3 text-sm text-zinc-300 focus:outline-none focus:border-brand-accent transition-all appearance-none min-h-[48px]">
-                            <option>Requesting New Asset Symbol Data Feed</option>
-                            <option>Bug Report: Slicer Server / Data Sync Pipelines</option>
-                            <option>Win-Rate Code Generator Inquiries</option>
-                            <option>General Engineering Feedback</option>
-                        </select>
-                        <div class="absolute inset-y-0 right-4 flex items-center pointer-events-none text-zinc-500">
-                            <i class="fa-solid fa-chevron-down text-xs"></i>
-                        </div>
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-xs uppercase font-medium tracking-wider text-zinc-400 mb-2">Message Content</label>
-                    <textarea rows="4" required class="w-full bg-zinc-900/60 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-brand-accent transition-all resize-none" placeholder="Provide clear technical context or historical token metrics details..."></textarea>
-                </div>
-
-                <button type="submit" class="w-full py-4 rounded-xl bg-white text-brand-dark font-display font-bold text-sm tracking-wide hover:bg-zinc-200 transition-all text-center shadow-lg min-h-[48px]">
-                    Transmit Packet Info
-                </button>
-            </form>
-        </section>
-
     </main>
 
     <footer class="mt-24 border-t border-white/5 bg-zinc-950/40 backdrop-blur-sm relative z-10 py-12 text-zinc-500 text-xs">
@@ -587,7 +423,6 @@
                 <div class="h-6 w-6 rounded bg-zinc-900 flex items-center justify-center text-[10px] text-zinc-400 mb-2 sm:mb-0"><i class="fa-solid fa-chart-line"></i></div>
                 <span>© 2026 BacktestLab Pro. Open-source public good utility architecture.</span>
             </div>
-            
             <div class="flex flex-wrap items-center justify-center gap-6 text-zinc-400">
                 <a href="#features" class="hover:text-white transition-colors">Features</a>
                 <a href="#markets" class="hover:text-white transition-colors">Data</a>
@@ -597,11 +432,12 @@
         </div>
     </footer>
 
+    <!-- Firebase Script Configurations Matched Exactly To Your Firestore Core Ledger Module -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-        // Verified User Configurations 
         const firebaseConfig = {
             apiKey: "AIzaSyAensfI53w49Fd4A7Lz5_K9N1JOxZsW7Kk",
             authDomain: "backtestlabpro.firebaseapp.com",
@@ -611,70 +447,89 @@
             appId: "1:560146824734:web:5287d0ded3a1024e75780f"
         };
 
-        // Initialize App Operations
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
+        const db = getFirestore(app);
 
-        // Bind global window handles so original inline HTML button onclicks can hook into module paths
         window.firebaseAuthInstance = auth;
         window.firebaseSignOutAction = signOut;
+        
+        window.userLiveSessionsList = [];
+        window.eligibleHighPerformingSession = null;
+        window.authenticatedUidGlobal = "";
 
-        // Monitor Auth Changes in Real-Time
-        onAuthStateChanged(auth, (user) => {
+        onAuthStateChanged(auth, async (user) => {
             if (user) {
-                // Update text components in profile dialog frame container
+                window.authenticatedUidGlobal = user.uid;
                 const nameDisplay = document.getElementById('profile-box-name');
                 const emailDisplay = document.getElementById('profile-box-email');
-                
                 if (nameDisplay) nameDisplay.textContent = user.displayName || "Anonymous Trader";
                 if (emailDisplay) emailDisplay.textContent = user.email || "sandbox@backtestlabpro.com";
 
+                await fetchRealFirestoreSessions(user.uid);
                 window.updateAuthViewUI(true);
             } else {
+                window.userLiveSessionsList = [];
+                window.eligibleHighPerformingSession = null;
+                window.authenticatedUidGlobal = "";
                 window.updateAuthViewUI(false);
             }
         });
 
-        // Set up the profile drawer log out controller node 
+        async function fetchRealFirestoreSessions(uid) {
+            try {
+                // Exact Firestore Collection path matching your document mappings
+                const sessionsRef = collection(db, "users", uid, "sessions");
+                const querySnapshot = await getDocs(sessionsRef);
+                
+                window.userLiveSessionsList = [];
+                window.eligibleHighPerformingSession = null;
+
+                querySnapshot.forEach((doc) => {
+                    const session = doc.data();
+                    
+                    // Direct property mapping from your database layout schema
+                    const rawWinrate = session.winrate || "0%";
+                    const numericWinrate = parseFloat(rawWinrate.replace('%', '')) || 0;
+                    
+                    const sessionObj = {
+                        id: doc.id,
+                        name: session.session_name || "Unnamed Replay Run",
+                        symbol: session.symbol || "N/A",
+                        timeframe: session.timeframe || "N/A",
+                        winrate: rawWinrate,
+                        numericWinRateValue: numericWinrate,
+                        profit: session.total_pl || "$0.00",
+                        balance: session.balance || "10000"
+                    };
+                    
+                    window.userLiveSessionsList.push(sessionObj);
+
+                    // Track down any qualified strategy session holding a metric >= 70%
+                    if (numericWinrate >= 70) {
+                        if (!window.eligibleHighPerformingSession || numericWinrate > window.eligibleHighPerformingSession.numericWinRateValue) {
+                            window.eligibleHighPerformingSession = sessionObj;
+                        }
+                    }
+                });
+
+                // Reverse sequence sorting to fetch newest entries first
+                window.userLiveSessionsList.reverse();
+
+            } catch (error) {
+                console.error("Error reading session configs from Firestore stream:", error);
+            }
+        }
+
         document.getElementById('firebase-logout-btn').addEventListener('click', () => {
             signOut(auth).then(() => {
-                // Instantly hide overlay box view on successful state teardown
                 document.getElementById('profile-overlay-dialog-box').classList.add('hidden');
-                alert('You have successfully signed out of your account session.');
-            }).catch((error) => {
-                console.error('Sign out error: ', error);
-            });
+            }).catch((error) => console.error('Sign out error: ', error));
         });
     </script>
 
     <script>
         let currentAuthStatusGlobal = false;
-
-        // Backend storage repository tracking real user simulation datasets
-        const userRealSessionsDataset = [
-            {
-                id: "sess_001",
-                ticker: "XAUUSD",
-                title: "Gold Multi-Timeframe",
-                pipeline: "M1 to D1 Pipeline",
-                progress: "42% (Year 2018)",
-                trades: "184 orders",
-                winRate: 74.2,
-                status: "Active Replay",
-                lastEdited: "Edited 2h ago"
-            },
-            {
-                id: "sess_002",
-                ticker: "EURUSD",
-                title: "Macro Cycle Trend Replay",
-                pipeline: "H4 Structural Sandbox",
-                progress: "100% (10 Year Sweep)",
-                trades: "59 orders",
-                winRate: 52.1,
-                status: "Completed",
-                lastEdited: "Completed May 28"
-            }
-        ];
 
         const marketDataRepository = {
             crypto: [
@@ -691,7 +546,7 @@
             ],
             shares: [
                 { ticker: 'SPY (S&P 500)', range: '15 Years', src: 'CBOE / Nasdaq TotalView Feed' },
-                { ticker: 'QQQ (Nasdaq)', range: '15 Years', src: 'Nasdaq Historical Archive' },
+                { ticker: 'QQQ (Nasdaq', range: '15 Years', src: 'Nasdaq Historical Archive' },
                 { ticker: 'AAPL (Apple)', range: '15 Years', src: 'NYSE / TradeTape Pool' },
                 { ticker: 'NVDA (NVIDIA)', range: '12 Years', src: 'NYSE Institutional Feed' }
             ]
@@ -720,7 +575,6 @@
         function setupMobileMenuLogic() {
             const menuBtn = document.getElementById('mobile-menu-btn');
             const mobileMenu = document.getElementById('mobile-menu');
-
             menuBtn.addEventListener('click', () => {
                 mobileMenu.classList.toggle('hidden');
                 const isOpen = !mobileMenu.classList.contains('hidden');
@@ -728,89 +582,119 @@
             });
         }
 
-        // Toggle Dialog visibility tracks on user click profiles
+        // Toggle visibility tracking rules for user profile nodes
         function setupProfileDropdownToggle() {
             const trigger = document.getElementById('profile-menu-trigger-btn');
             const dialogBox = document.getElementById('profile-overlay-dialog-box');
             const wrapper = document.getElementById('profile-dropdown-wrapper');
-
             trigger.addEventListener('click', (e) => {
                 e.stopPropagation();
                 dialogBox.classList.toggle('hidden');
             });
-
-            // Close layout if clicked outside the container block boundaries
             document.addEventListener('click', (e) => {
-                if (!wrapper.contains(e.target)) {
-                    dialogBox.classList.add('hidden');
-                }
+                if (!wrapper.contains(e.target)) dialogBox.classList.add('hidden');
             });
         }
 
-        // Programmatically render real database metrics to active template view tracks
+        // Dynamic rendering controller executing 2 Card splits + 1 Eligible Strategy state block
         function renderUserSessionsUI() {
             const container = document.getElementById('my-sessions');
             if (!container) return;
-            
             container.innerHTML = '';
 
-            // Find if any real session passes the required threshold criteria
-            const highestPerformingSession = userRealSessionsDataset.reduce((prev, current) => {
-                return (prev.winRate > current.winRate) ? prev : current;
-            }, { winRate: 0 });
+            const liveList = window.userLiveSessionsList || [];
+            const highSession = window.eligibleHighPerformingSession;
 
-            // 1. Map existing real data modules to structural DOM view elements
-            userRealSessionsDataset.forEach(session => {
-                const isHighWinRate = session.winRate > 70;
+            // Automation promo panel syncing engine references
+            const winrateTextTag = document.getElementById('automation-winrate-tag');
+            const winrateProgressBar = document.getElementById('automation-progress-bar');
+            const automationCtaBtn = document.getElementById('automation-cta-btn');
+
+            if (highSession) {
+                if(winrateTextTag) winrateTextTag.innerHTML = `<span class="text-brand-success font-bold">${highSession.winrate} (${highSession.symbol})</span>`;
+                if(winrateProgressBar) winrateProgressBar.style.width = `${highSession.numericWinRateValue}%`;
+                if(automationCtaBtn) automationCtaBtn.innerText = "Export Automated Script Now";
+            } else {
+                const topMetric = liveList.length > 0 ? Math.max(...liveList.map(s => s.numericWinRateValue)) : 0;
+                if(winrateTextTag) winrateTextTag.innerHTML = `<span class="text-brand-purple font-bold">${topMetric}% Peak Tracking</span>`;
+                if(winrateProgressBar) winrateProgressBar.style.width = `${topMetric}%`;
+                if(automationCtaBtn) automationCtaBtn.innerText = "Unlock Automated Script Generation";
+            }
+
+            if (liveList.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-1 md:col-span-3 p-8 rounded-2xl glass-card text-center space-y-4">
+                        <div class="text-zinc-500 text-3xl"><i class="fa-solid fa-folder-open"></i></div>
+                        <h4 class="font-bold text-white text-base">No active sandbox tracks discovered</h4>
+                        <p class="text-xs text-zinc-400 max-w-sm mx-auto">Launch a fresh manual candlestick environment layout to track metrics data blocks.</p>
+                        <a href="session.html" class="inline-flex items-center gap-2 px-5 py-2 rounded-xl bg-gradient-to-r from-brand-accent to-brand-purple text-white text-xs font-semibold shadow-md min-h-[38px]">
+                            Launch First Session
+                        </a>
+                    </div>
+                `;
+                return;
+            }
+
+            // Slice out exactly up to two elements for layout rendering properties
+            const recentTwoSessions = liveList.slice(0, 2);
+
+            recentTwoSessions.forEach(session => {
+                const isNegative = session.profit.includes("-");
+                const profitStyleClass = isNegative ? "text-red-500" : (session.profit !== "$0.00" ? "text-emerald-400" : "text-zinc-300");
+                
                 const card = document.createElement('div');
-                card.className = 'p-5 rounded-2xl glass-card relative overflow-hidden group flex flex-col justify-between';
+                card.className = 'p-5 rounded-2xl glass-card flex flex-col justify-between transition-all duration-200';
+                card.onclick = () => {
+                    window.location.href = `analytics.html?userId=${window.authenticatedUidGlobal}&sessionId=${session.id}`;
+                };
                 
                 card.innerHTML = `
-                    <div class="absolute top-0 right-0 ${isHighWinRate ? 'bg-brand-accent/20 text-brand-accent' : 'bg-zinc-800 text-zinc-400'} text-[10px] uppercase font-bold tracking-widest px-3 py-1 rounded-bl-xl">
-                        ${session.status}
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-cyan-500/10 text-cyan-400 border border-cyan-500/10 uppercase">${session.symbol}</span>
+                        <span class="text-[10px] font-mono font-bold text-zinc-500 bg-zinc-900 border border-white/5 px-1.5 py-0.5 rounded">${session.timeframe.toUpperCase()}</span>
                     </div>
-                    <div class="flex items-center gap-3 mb-4 pt-2">
-                        <div class="p-2.5 rounded-xl ${isHighWinRate ? 'bg-amber-500/10 text-amber-500' : 'bg-purple-500/10 text-purple-500'} font-bold text-xs">${session.ticker}</div>
-                        <div>
-                            <h4 class="font-bold text-white text-sm">${session.title}</h4>
-                            <span class="text-xs text-zinc-500">${session.pipeline}</span>
+                    <h3 class="text-white text-base font-bold tracking-tight mb-4 truncate">${session.name}</h3>
+                    
+                    <div class="grid grid-cols-3 gap-2 border-y border-white/5 py-3.5 my-2 text-left">
+                        <div class="flex flex-col">
+                            <span class="text-[9px] font-mono text-zinc-500 uppercase tracking-wider">Win Rate</span>
+                            <span class="text-xs font-mono font-bold text-emerald-400 mt-1">${session.winrate}</span>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-[9px] font-mono text-zinc-500 uppercase tracking-wider">Net P&L</span>
+                            <span class="text-xs font-mono font-bold ${profitStyleClass} mt-1">${session.profit}</span>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-[9px] font-mono text-zinc-500 uppercase tracking-wider">Balance</span>
+                            <span class="text-xs font-mono font-bold text-zinc-200 mt-1">$${Number(session.balance).toLocaleString()}</span>
                         </div>
                     </div>
-                    <div class="space-y-2 border-y border-white/5 py-3 my-3 text-xs">
-                        <div class="flex justify-between"><span class="text-zinc-500">Simulation Progress:</span><span class="text-zinc-300 font-mono">${session.progress}</span></div>
-                        <div class="flex justify-between"><span class="text-zinc-500">Executed Trades:</span><span class="text-zinc-300 font-mono">${session.trades}</span></div>
-                        <div class="flex justify-between"><span class="text-zinc-500">Current Win Rate:</span><span class="${isHighWinRate ? 'text-brand-success' : 'text-brand-purple'} font-mono font-bold">${session.winRate}%</span></div>
-                    </div>
-                    <div class="flex items-center justify-between mt-2 pt-2">
-                        <span class="text-[11px] text-zinc-500"><i class="fa-regular fa-clock"></i> ${session.lastEdited}</span>
-                        <button onclick="handleSessionAction('${session.id}')" class="px-4 py-2 rounded-lg bg-zinc-800 text-white text-xs font-medium hover:bg-zinc-700 transition-all min-h-[38px]">
-                            Resume Replay
-                        </button>
+                    
+                    <div class="text-[10px] font-mono font-bold text-zinc-500 uppercase tracking-wider flex items-center gap-1.5 pt-2 group-hover:text-cyan-400 transition-colors mt-auto">
+                        <span>VIEW DEEP METRICS</span>
+                        <svg class="w-3 h-3 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
                     </div>
                 `;
                 container.appendChild(card);
             });
 
-            // 2. Render targeted analytical preview evaluation panel card module
+            // Appended Strategy Automation Block Module Card Layout
             const evaluationCard = document.createElement('div');
-            evaluationCard.className = 'p-5 rounded-2xl bg-gradient-to-br from-brand-accent/10 to-brand-purple/10 border border-brand-accent/20 flex flex-col justify-between';
+            evaluationCard.className = 'p-5 rounded-2xl bg-gradient-to-br from-brand-accent/10 to-brand-purple/10 border border-brand-accent/20 flex flex-col justify-between text-left';
             
-            if (highestPerformingSession.winRate >= 70) {
+            if (highSession) {
                 evaluationCard.innerHTML = `
                     <div>
                         <div class="flex items-center gap-2 text-brand-success font-display font-bold text-sm mb-2">
-                            <i class="fa-solid fa-wand-magic-sparkles"></i> Automatic Preview Eligible
+                            <i class="fa-solid fa-wand-magic-sparkles"></i> Automation Eligible
                         </div>
                         <p class="text-xs text-zinc-400 leading-relaxed">
-                            Your workspace simulation track holding **${highestPerformingSession.ticker}** displays a verified win rate metric of <span class="text-brand-success font-bold">${highestPerformingSession.winRate}%</span>. You qualify to process this blueprint straight into terminal preview operations.
+                            Your workspace metrics entry **${highSession.symbol}** holds a verified win rate metric of <span class="text-brand-success font-bold">${highSession.winrate}</span>. You qualify to process this blueprint layout straight into automated script testing.
                         </p>
                     </div>
                     <div class="space-y-2 mt-4">
-                        <button onclick="openSessionAnalytics('${highestPerformingSession.id}')" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-brand-accent to-brand-purple text-white font-medium text-xs shadow-md hover:shadow-brand-accent/20 transition-all text-center min-h-[40px]">
+                        <button onclick="redirectToAnalyticPage('${highSession.id}')" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-brand-accent to-brand-purple text-white font-medium text-xs shadow-md hover:shadow-brand-accent/20 transition-all text-center min-h-[40px]">
                             See Automatic Preview of Strategy
-                        </button>
-                        <button onclick="window.location.hash = '#pricing'" class="w-full py-2 rounded-xl bg-zinc-900/60 border border-white/5 text-zinc-400 font-medium text-xs hover:text-white transition-all text-center min-h-[36px]">
-                            Automate Any Strategy (Pricing)
                         </button>
                     </div>
                 `;
@@ -821,15 +705,12 @@
                             <i class="fa-solid fa-lock text-xs"></i> Preview Threshold Locked
                         </div>
                         <p class="text-xs text-zinc-500 leading-relaxed">
-                            You need an active tracking metric performance win rate <span class="text-brand-purple font-bold">above 70%</span> to view instant automatic tracking loop script previews.
+                            You need an active tracking metric performance win rate value <span class="text-brand-purple font-bold">above 70%</span> inside your database tracks to view auto previews.
                         </p>
                     </div>
                     <div class="space-y-2 mt-4">
                         <button onclick="triggerWinRateAlert()" class="w-full py-2.5 rounded-xl bg-zinc-800 text-zinc-500 cursor-not-allowed font-medium text-xs text-center min-h-[40px]">
                             See Automatic Preview of Strategy
-                        </button>
-                        <button onclick="window.location.hash = '#pricing'" class="w-full py-2 rounded-xl bg-gradient-to-r from-brand-accent to-brand-purple text-white font-medium text-xs shadow-md hover:opacity-90 transition-all text-center min-h-[36px]">
-                            Automate Any Strategy (Pricing)
                         </button>
                     </div>
                 `;
@@ -837,19 +718,30 @@
             container.appendChild(evaluationCard);
         }
 
-        function triggerWinRateAlert() {
-            alert("Lock Exception:\nYou need a win rate above 70% to evaluate strategic layout scripts.");
+        function handleAutomateStrategyClick() {
+            if (!currentAuthStatusGlobal) {
+                triggerAuthFlow();
+                return;
+            }
+            if (window.eligibleHighPerformingSession) {
+                redirectToAnalyticPage(window.eligibleHighPerformingSession.id);
+            } else {
+                alert("Lock Restriction:\nNo session with a verified win rate above 70% was detected inside your Firebase profile tracks.");
+            }
         }
 
-        function openSessionAnalytics(sessionId) {
-            alert(`Opening Analytical Performance Pipeline Dashboard for workspace session tracking token identity: ${sessionId}`);
+        function redirectToAnalyticPage(sessionId) {
+            window.location.href = `analytics.html?userId=${window.authenticatedUidGlobal}&sessionId=${sessionId}`;
+        }
+
+        function triggerWinRateAlert() {
+            alert("Lock Exception:\nYou need an actual tracking session with a win rate above 70% to evaluate strategic previews.");
         }
 
         function handleSessionAction(id) {
-            alert(`Launching simulation core tracking nodes matching: ${id}`);
+            window.location.href = `session.html?id=${id}`;
         }
 
-        // Triggered by the Firebase state module dynamically
         window.updateAuthViewUI = function(isLoggedIn) {
             currentAuthStatusGlobal = isLoggedIn;
             const desktopContainer = document.getElementById('desktop-auth-container');
@@ -858,7 +750,6 @@
             const userDashboard = document.getElementById('user-dashboard-area');
             const mobileAuthBox = document.getElementById('mobile-auth-placeholder');
 
-            // Handle layouts based on status status
             if (isLoggedIn) {
                 loggedOutBar.classList.add('hidden');
                 loggedInBar.classList.remove('hidden');
@@ -869,7 +760,7 @@
                 mobileAuthBox.innerHTML = `
                    <a href="my-sessions.html" class="block w-full text-center py-3.5 rounded-xl border border-white/10 text-white bg-zinc-900 min-h-[48px]">My Sessions</a>
                    <a href="session.html" class="block w-full text-center py-3.5 rounded-xl bg-gradient-to-r from-brand-accent to-brand-purple text-white font-medium min-h-[48px]">New Session</a>
-                    <button onclick="window.firebaseSignOutAction(window.firebaseAuthInstance)" class="block w-full text-center text-zinc-500 text-xs pt-2 min-h-[34px]">Sign Out</button>
+                   <button onclick="window.firebaseSignOutAction(window.firebaseAuthInstance)" class="block w-full text-center text-zinc-500 text-xs pt-2 min-h-[34px]">Sign Out</button>
                 `;
             } else {
                 loggedOutBar.classList.remove('hidden');
@@ -882,7 +773,6 @@
                 `;
             }
 
-            // Unhide containers smoothly now that values are correct and verified
             if (desktopContainer) {
                 desktopContainer.classList.remove('auth-hidden');
                 desktopContainer.classList.add('auth-visible');
@@ -901,12 +791,8 @@
             if (!currentAuthStatusGlobal) {
                 triggerAuthFlow();
             } else {
-                handleNewSession();
+                window.location.href = 'session.html';
             }
-        }
-
-        function handleNewSession() {
-            alert('SYSTEM ACTION:\nOpening workspace configuration modal panels... Choose a ticker index parameters map to initialize your sandbox candle replay.');
         }
 
         function switchMarketTab(activeTabKey) {

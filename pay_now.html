@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Complete Purchase - Backtest Lab Pro</title>
+    <style>
+        body { background: #0b0e11; color: #eaecef; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .payment-card { background: #181a20; border: 1px solid #2b3139; padding: 40px; border-radius: 16px; text-align: center; width: 100%; max-width: 400px; }
+        h2 { color: #ffffff; }
+        .price { font-size: 32px; font-weight: 700; color: #0ecb81; margin: 20px 0; }
+    </style>
+</head>
+<body>
+
+<div class="payment-card">
+    <h2>Secure Checkout</h2>
+    <p>Simple Bot Development Plan</p>
+    <div class="price">$399</div>
+    
+    <div id="paypal-container-GYAN543ZWBGZU"></div>
+</div>
+
+<script src="https://www.paypal.com/sdk/js?client-id=BAAIxL6sY1nW3RpS7Zmal5r7JuDAMcnOA9x--pfWti7tCWNkveT_7mv50Mk6JdeALr1Eip-h0g7DRrituw&components=hosted-buttons&disable-funding=venmo&currency=USD"></script>
+<script>
+  paypal.HostedButtons({
+    hostedButtonId: "GYAN543ZWBGZU",
+  }).render("#paypal-container-GYAN543ZWBGZU")
+</script>
+
+</body>
+</html>

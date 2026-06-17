@@ -1,31 +1,59 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Processing...</title>
+    <meta charset="UTF-8">
+    <title>Verifying Payment...</title>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 </head>
-<body>
-    <p>Verifying payment...</p>
+<body style="background:#0b0e11; color:white; font-family:sans-serif; display:flex; justify-content:center; align-items:center; height:100vh; margin:0;">
+    
+    <div style="text-align:center;">
+        <h2 id="status">Verifying payment...</h2>
+        <p id="details" style="color:#848e9c;"></p>
+    </div>
 
     <script>
-        const firebaseConfig = { /* ... YOUR CONFIG ... */ };
+        const firebaseConfig = {
+            apiKey: "AIzaSyAensfI53w49Fd4A7Lz5_K9N1JOxZsW7Kk",
+            authDomain: "backtestlabpro.firebaseapp.com",
+            projectId: "backtestlabpro",
+            storageBucket: "backtestlabpro.firebasestorage.app",
+            messagingSenderId: "560146824734",
+            appId: "1:560146824734:web:5287d0ded3a1024e75780f"
+        };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
         const auth = firebase.auth();
 
+        const statusEl = document.getElementById('status');
+        const detailsEl = document.getElementById('details');
+
         auth.onAuthStateChanged(async (user) => {
             if (user) {
-                // Update Firestore immediately
-                await db.collection("users").doc(user.uid).update({
-                    isPaid: true,
-                    plan: "simple"
-                });
-                // Once updated, redirect to chat
-                window.location.href = "chat.html";
+                try {
+                    // Update user document to set paid status
+                    await db.collection("users").doc(user.uid).set({
+                        isPaid: true,
+                        planStatus: "paid",
+                        paymentDate: firebase.firestore.FieldValue.serverTimestamp()
+                    }, { merge: true });
+
+                    statusEl.innerText = "Access Unlocked!";
+                    detailsEl.innerText = "Redirecting to home page...";
+                    
+                    setTimeout(() => {
+                        window.location.href = "index.html";
+                    }, 1500);
+                } catch (error) {
+                    statusEl.innerText = "Database Error!";
+                    detailsEl.innerText = "Code: " + error.code;
+                    console.error("Firestore Error:", error);
+                }
             } else {
-                window.location.href = "login.html";
+                statusEl.innerText = "Authentication Error";
+                detailsEl.innerHTML = "No user found. Please <a href='login.html' style='color:#3b82f6;'>log in</a> to verify payment.";
             }
         });
     </script>

@@ -37,34 +37,28 @@
                 return;
             }
 
-            // Capture sessionId from the URL (e.g., success.html?sessionId=xyz123)
             const urlParams = new URLSearchParams(window.location.search);
-            const sessionId = urlParams.get('sessionId');
+            const txId = urlParams.get('tx');
 
-            if (!sessionId) {
+            if (!txId) {
                 statusEl.innerText = "Error: Invalid Request";
-                detailsEl.innerText = "No session identifier provided.";
                 return;
             }
 
             try {
-                // Target the specific session sub-collection document
+                // Store payment status in a separate 'plan' collection
                 await db.collection("users").doc(user.uid)
-                        .collection("sessions").doc(sessionId).set({
+                        .collection("plan").doc("current").set({
                     isPaid: true,
                     planStatus: "paid",
+                    lastPaymentTx: txId,
                     paymentDate: firebase.firestore.FieldValue.serverTimestamp()
                 }, { merge: true });
 
                 statusEl.innerText = "Access Unlocked!";
-                detailsEl.innerText = "Redirecting to home page...";
-                
-                setTimeout(() => {
-                    window.location.href = "index.html";
-                }, 1500);
+                setTimeout(() => { window.location.href = "index.html"; }, 1500);
             } catch (error) {
                 statusEl.innerText = "Database Error!";
-                detailsEl.innerText = "Code: " + error.code;
                 console.error("Firestore Error:", error);
             }
         });

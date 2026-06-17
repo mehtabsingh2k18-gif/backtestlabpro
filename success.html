@@ -31,29 +31,41 @@
         const detailsEl = document.getElementById('details');
 
         auth.onAuthStateChanged(async (user) => {
-            if (user) {
-                try {
-                    // Update user document to set paid status
-                    await db.collection("users").doc(user.uid).set({
-                        isPaid: true,
-                        planStatus: "paid",
-                        paymentDate: firebase.firestore.FieldValue.serverTimestamp()
-                    }, { merge: true });
-
-                    statusEl.innerText = "Access Unlocked!";
-                    detailsEl.innerText = "Redirecting to home page...";
-                    
-                    setTimeout(() => {
-                        window.location.href = "index.html";
-                    }, 1500);
-                } catch (error) {
-                    statusEl.innerText = "Database Error!";
-                    detailsEl.innerText = "Code: " + error.code;
-                    console.error("Firestore Error:", error);
-                }
-            } else {
+            if (!user) {
                 statusEl.innerText = "Authentication Error";
-                detailsEl.innerHTML = "No user found. Please <a href='login.html' style='color:#3b82f6;'>log in</a> to verify payment.";
+                detailsEl.innerHTML = "No user found. Please <a href='login.html' style='color:#3b82f6;'>log in</a>.";
+                return;
+            }
+
+            // Capture sessionId from the URL (e.g., success.html?sessionId=xyz123)
+            const urlParams = new URLSearchParams(window.location.search);
+            const sessionId = urlParams.get('sessionId');
+
+            if (!sessionId) {
+                statusEl.innerText = "Error: Invalid Request";
+                detailsEl.innerText = "No session identifier provided.";
+                return;
+            }
+
+            try {
+                // Target the specific session sub-collection document
+                await db.collection("users").doc(user.uid)
+                        .collection("sessions").doc(sessionId).set({
+                    isPaid: true,
+                    planStatus: "paid",
+                    paymentDate: firebase.firestore.FieldValue.serverTimestamp()
+                }, { merge: true });
+
+                statusEl.innerText = "Access Unlocked!";
+                detailsEl.innerText = "Redirecting to home page...";
+                
+                setTimeout(() => {
+                    window.location.href = "index.html";
+                }, 1500);
+            } catch (error) {
+                statusEl.innerText = "Database Error!";
+                detailsEl.innerText = "Code: " + error.code;
+                console.error("Firestore Error:", error);
             }
         });
     </script>

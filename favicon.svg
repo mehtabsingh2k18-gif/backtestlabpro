@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <!-- The Backtest Loop Arrow forming the Flask Body -->
+  <path d="M13,4 L19,4 M16,4 L16,10 C21,11 26,14 26,20 C26,26 21,29 16,29 C10,29 6,25 6,19 C6,15 9,12 13,11" 
+        fill="none" 
+        stroke="#6366f1" 
+        stroke-width="3.5" 
+        stroke-linecap="round" 
+        stroke-linejoin="round" />
+        
+  <!-- The Bold Return Arrowhead (Signaling Backtesting/History) -->
+  <path d="M10,14 L13,11 L10,8" 
+        fill="none" 
+        stroke="#6366f1" 
+        stroke-width="3.5" 
+        stroke-linecap="round" 
+        stroke-linejoin="round" />
+
+  <!-- A Sharp, High-Contrast Trading Candlestick Right in the Center -->
+  <path d="M16,14 L16,23 M16,16 L16,21" 
+        fill="none" 
+        stroke="#06b6d4" 
+        stroke-width="4" 
+        stroke-linecap="round" />
+</svg>

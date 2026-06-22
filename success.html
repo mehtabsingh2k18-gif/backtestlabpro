@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Verifying Payment...</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
@@ -31,35 +33,29 @@
         const detailsEl = document.getElementById('details');
 
         auth.onAuthStateChanged(async (user) => {
-            if (!user) {
+            if (user) {
+                try {
+                    // Update user document to set paid status
+                    await db.collection("users").doc(user.uid).set({
+                        isPaid: true,
+                        planStatus: "paid",
+                        paymentDate: firebase.firestore.FieldValue.serverTimestamp()
+                    }, { merge: true });
+
+                    statusEl.innerText = "Access Unlocked!";
+                    detailsEl.innerText = "Redirecting to home page...";
+                    
+                    setTimeout(() => {
+                        window.location.href = "index.html";
+                    }, 1500);
+                } catch (error) {
+                    statusEl.innerText = "Database Error!";
+                    detailsEl.innerText = "Code: " + error.code;
+                    console.error("Firestore Error:", error);
+                }
+            } else {
                 statusEl.innerText = "Authentication Error";
-                detailsEl.innerHTML = "No user found. Please <a href='login.html' style='color:#3b82f6;'>log in</a>.";
-                return;
-            }
-
-            const urlParams = new URLSearchParams(window.location.search);
-            const txId = urlParams.get('tx');
-
-            if (!txId) {
-                statusEl.innerText = "Error: Invalid Request";
-                return;
-            }
-
-            try {
-                // Store payment status in a separate 'plan' collection
-                await db.collection("users").doc(user.uid)
-                        .collection("plan").doc("current").set({
-                    isPaid: true,
-                    planStatus: "paid",
-                    lastPaymentTx: txId,
-                    paymentDate: firebase.firestore.FieldValue.serverTimestamp()
-                }, { merge: true });
-
-                statusEl.innerText = "Access Unlocked!";
-                setTimeout(() => { window.location.href = "index.html"; }, 1500);
-            } catch (error) {
-                statusEl.innerText = "Database Error!";
-                console.error("Firestore Error:", error);
+                detailsEl.innerHTML = "No user found. Please <a href='login.html' style='color:#3b82f6;'>log in</a> to verify payment.";
             }
         });
     </script>

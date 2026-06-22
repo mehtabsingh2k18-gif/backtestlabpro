@@ -3,11 +3,200 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BACKTESTLABPRO | Saved Replay Sessions</title>
+    <title>BACKTESTLABPRO Core Quantum Ledger Suite</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <style>
+        :root {
+            --bg-pure: #030712;
+            --bg-panel: rgba(11, 15, 25, 0.65);
+            --bg-panel-solid: #0b0f19;
+            --glass-border: rgba(255, 255, 255, 0.05);
+            --glass-glow-cyan: rgba(6, 182, 212, 0.15);
+            --glass-glow-purple: rgba(147, 51, 234, 0.12);
+            
+            /* Quant Strategy Palette */
+            --neon-cyan: #06b6d4;
+            --neon-emerald: #10b981;
+            --neon-bear: #ef4444;
+            --neon-warning: #f59e0b;
+            --neon-purple: #a855f7;
+            
+            /* Text Tones */
+            --text-pure: #ffffff;
+            --text-silver: #f3f4f6;
+            --text-slate: #9ca3af;
+            --text-muted: #4b5563;
+        }
+
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            margin: 0; padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-pure);
+            background-image: 
+                radial-gradient(circle at 50% -20%, rgba(147, 51, 234, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 0% 0%, rgba(147, 51, 234, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 100% 100%, rgba(6, 182, 212, 0.05) 0%, transparent 40%);
+            color: var(--text-pure);
+            font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+            letter-spacing: -0.01em;
+            line-height: 1.4;
+        }
+
+        .font-mono {
+            font-family: 'JetBrains Mono', ui-monospace, monospace;
+        }
+
+        /* Institutional Fixed Navigation Bar */
+        header {
+            position: fixed; top: 0; left: 0; right: 0; height: 64px;
+            background: rgba(3, 7, 18, 0.8); backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--glass-border);
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 24px; z-index: 2000;
+        }
+
+        .brand-container {
+            display: flex; align-items: center; gap: 12px;
+        }
+        .brand-logo {
+            font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 16px; font-weight: 800; letter-spacing: 2px;
+            text-decoration: none; color: var(--text-pure); display: flex; align-items: center; gap: 6px;
+        }
+        .brand-logo span { color: var(--neon-cyan); }
+        .platform-badge {
+            background: rgba(168,85,247,0.1);
+            border: 1px solid rgba(168,85,247,0.2); border-radius: 4px;
+            font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 9px; padding: 2px 6px; color: var(--neon-purple); font-weight: 700;
+        }
+
+        .action-control-group {
+            display: flex; align-items: center; gap: 8px;
+        }
+        .nav-back-btn {
+            background: rgba(255, 255, 255, 0.03); border: 1px solid var(--glass-border);
+            color: var(--text-silver); padding: 6px 12px; border-radius: 6px;
+            font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.15s ease;
+            display: flex; align-items: center; gap: 6px; text-decoration: none;
+        }
+        .nav-back-btn:hover {
+            border-color: var(--neon-cyan); background: rgba(6, 182, 212, 0.05); color: #fff;
+        }
+
+        .icon-svg {
+            width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+        }
+
+        /* Workspace Framework */
+        .workspace-container {
+            width: 100%; max-width: 1600px; margin: 0 auto; padding: 104px 24px 40px 24px;
+            display: flex; flex-direction: column; gap: 32px;
+        }
+
+        /* Hero Header Section */
+        .page-heading-panel {
+            background: var(--bg-panel); border: 1px solid var(--glass-border);
+            border-radius: 16px; padding: 32px; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+            position: relative;
+        }
+        .page-heading-panel h1 {
+            font-size: 32px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 8px;
+            background: linear-gradient(135deg, #fff 60%, var(--text-slate));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .page-heading-panel p {
+            color: var(--text-slate); font-size: 14px; max-width: 800px; line-height: 1.5;
+        }
+
+        /* Dynamic Engine Loading State */
+        #loadingIndicator {
+            font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 12px; color: var(--neon-cyan);
+            text-align: center; padding: 60px 0; background: var(--bg-panel); border: 1px solid var(--glass-border);
+            border-radius: 16px; display: flex; align-items: center; justify-content: center; gap: 8px;
+        }
+
+        /* Grid Pattern Housing Matrix Card Nodes */
+        .sessions-matrix-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 20px;
+        }
+
+        .session-entry-card {
+            background: var(--bg-panel); border: 1px solid var(--glass-border); border-radius: 16px;
+            padding: 24px; backdrop-filter: blur(8px); cursor: pointer;
+            display: flex; flex-direction: column; gap: 16px;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .session-entry-card:hover {
+            transform: translateY(-2px); border-color: rgba(6, 182, 212, 0.3);
+            background: rgba(11, 15, 25, 0.8); box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .card-meta-header { display: flex; justify-content: space-between; align-items: center; }
+        .asset-pill {
+            background: rgba(6, 182, 212, 0.1); border: 1px solid rgba(6, 182, 212, 0.2);
+            color: var(--neon-cyan); font-family: 'JetBrains Mono', ui-monospace, monospace;
+            font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 4px;
+        }
+        .timeframe-badge { 
+            font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 10px; 
+            color: var(--text-slate); font-weight: 700; background: rgba(255,255,255,0.03);
+            border: 1px solid var(--glass-border); padding: 2px 6px; border-radius: 4px;
+        }
+
+        .session-display-title { font-size: 18px; font-weight: 700; color: var(--text-pure); letter-spacing: -0.01em; }
+
+        .session-metrics-distribution {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
+            border-top: 1px solid var(--glass-border); border-bottom: 1px solid var(--glass-border);
+            padding: 16px 0;
+        }
+        .m-box { display: flex; flex-direction: column; gap: 4px; }
+        .m-lbl { font-size: 9px; font-family: 'JetBrains Mono', ui-monospace, monospace; color: var(--text-slate); text-transform: uppercase; }
+        .m-val { font-size: 13px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-weight: 700; color: var(--text-silver); }
+        
+        .metric-pos { color: var(--neon-emerald) !important; }
+        .metric-neg { color: var(--neon-bear) !important; }
+
+        .card-footer-anchor {
+            font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 10px; color: var(--text-slate);
+            font-weight: 700; text-transform: uppercase; display: flex; align-items: center; gap: 4px;
+            transition: color 0.15s ease; margin-top: auto;
+        }
+        .session-entry-card:hover .card-footer-anchor { color: var(--neon-cyan); }
+
+        /* Empty State Layout Fallbacks */
+        .empty-state-message {
+            grid-column: 1 / -1; text-align: center; padding: 60px 20px; background: var(--bg-panel);
+            border: 1px dashed rgba(255,255,255,0.08); border-radius: 16px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;
+        }
+        .empty-state-message h3 { font-size: 16px; font-weight: 700; text-transform: uppercase; color: var(--text-pure); letter-spacing: 0.5px;}
+        .empty-state-message p { color: var(--text-slate); font-size: 13px; max-width: 420px; line-height: 1.4; margin-bottom: 8px;}
+        
+        .cta-btn-primary {
+            background: linear-gradient(135deg, rgba(147, 51, 234, 0.2), rgba(6, 182, 212, 0.2));
+            border: 1px solid rgba(147, 51, 234, 0.4); color: var(--text-pure);
+            padding: 8px 20px; border-radius: 8px; font-weight: 700; font-size: 12px;
+            cursor: pointer; transition: all 0.15s ease; text-decoration: none;
+            display: inline-flex; align-items: center; gap: 6px;
+        }
+        .cta-btn-primary:hover { border-color: var(--neon-cyan); background: rgba(6, 182, 212, 0.1); transform: translateY(-1px); }
+
+        @media (min-width: 1024px) {
+            header { padding: 0 40px; }
+            .workspace-container { padding: 104px 40px 40px 40px; }
+        }
+    </style>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -32,13 +221,11 @@
 
         onAuthStateChanged(auth, async (user) => {
             if (!user) {
-                // If user is unauthenticated, throw them out to the portal log
                 window.location.href = "login.html";
                 return;
             }
 
             try {
-                // Fetch all documents from /users/{userId}/sessions/
                 const sessionsRef = collection(db, "users", user.uid, "sessions");
                 const querySnapshot = await getDocs(sessionsRef);
                 
@@ -49,7 +236,10 @@
                         <div class="empty-state-message">
                             <h3>No Backtest Run Logs Found</h3>
                             <p>You haven't preserved any trading sessions yet. Open the charting terminal to commit your data layers.</p>
-                            <a href="chart.html" class="cta-btn-primary" style="display:inline-flex; text-decoration:none; margin-top:20px;">Launch Terminal</a>
+                            <a href="chart.html" class="cta-btn-primary">
+                                <svg class="icon-svg" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                                <span>LAUNCH TERMINAL</span>
+                            </a>
                         </div>
                     `;
                     return;
@@ -59,7 +249,6 @@
                     const session = doc.data();
                     const sessionId = doc.id;
                     
-                    // Parse text labels safely to adapt to layout requirements
                     const name = session.session_name || "Unnamed Replay Run";
                     const symbol = session.symbol || "N/A";
                     const timeframe = session.timeframe || "N/A";
@@ -70,11 +259,9 @@
                     const isNegative = profit.includes("-");
                     const profitStyleClass = isNegative ? "metric-neg" : (profit !== "$0.00" ? "metric-pos" : "");
 
-                    // Generate a glass document interface card matching site theme
                     const card = document.createElement("div");
                     card.className = "session-entry-card";
                     card.onclick = () => {
-                        // Forward parameters over to the analytics viewing setup
                         window.location.href = `analytics.html?userId=${user.uid}&sessionId=${sessionId}`;
                     };
 
@@ -95,11 +282,14 @@
                                 <span class="m-val ${profitStyleClass}">${profit}</span>
                             </div>
                             <div class="m-box">
-                                <span class="m-lbl">Ending Balance</span>
+                                <span class="m-lbl">Balance</span>
                                 <span class="m-val">$${Number(balance).toLocaleString()}</span>
                             </div>
                         </div>
-                        <div class="card-footer-anchor">View Deep Analytics Metrics →</div>
+                        <div class="card-footer-anchor">
+                            <span>VIEW DEEP METRICS</span>
+                            <svg class="icon-svg" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                        </div>
                     `;
                     
                     gridContainer.appendChild(card);
@@ -107,143 +297,36 @@
 
             } catch (error) {
                 console.error("Error reading session configuration matrices:", error);
-                loadingIndicator.innerText = "Error pulling database layers. Verify connection variables.";
+                loadingIndicator.innerHTML = `<span style="color:var(--neon-bear)">[EXCEPTIONAL HALT]: Error pulling database layers. Verify connection variables.</span>`;
             }
         });
     </script>
-
-    <style>
-        :root {
-            --bg-pure: #020408;
-            --bg-deep-gradient: radial-gradient(circle at 50% -20%, #0a1224 0%, #020408 70%);
-            --glass-card: rgba(6, 11, 22, 0.45);
-            --glass-card-hover: rgba(10, 18, 36, 0.7);
-            --neon-cyan: #00F0FF;
-            --neon-cyan-glow: rgba(0, 240, 255, 0.25);
-            --neon-emerald: #00FF94;
-            --neon-bear: #FF3366;
-            --text-white: #FFFFFF;
-            --text-silver: #CBD5E1;
-            --text-slate: #64748B;
-            --border-line: rgba(255, 255, 255, 0.04);
-            --border-line-focus: rgba(0, 240, 255, 0.3);
-        }
-
-        body {
-            margin: 0; padding: 0;
-            background-color: var(--bg-pure);
-            background-image: var(--bg-deep-gradient);
-            color: var(--text-white);
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            min-height: 100vh;
-        }
-
-        header {
-            position: fixed; top: 0; left: 0; right: 0; height: 80px;
-            background: rgba(2, 4, 8, 0.7); backdrop-filter: blur(24px);
-            border-bottom: 1px solid var(--border-line);
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 0 60px; z-index: 1000;
-        }
-
-        .brand-logo {
-            font-family: 'JetBrains Mono', monospace; font-size: 20px; font-weight: 800; letter-spacing: 2px;
-            text-decoration: none; color: inherit;
-        }
-        .brand-logo span { color: var(--neon-cyan); }
-
-        .nav-back-btn {
-            background: rgba(255,255,255,0.03); border: 1px solid var(--border-line);
-            color: var(--text-white); padding: 8px 18px; border-radius: 8px;
-            font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700;
-            cursor: pointer; transition: all 0.25s ease; text-decoration: none;
-        }
-        .nav-back-btn:hover { border-color: var(--neon-cyan); background: rgba(0, 240, 255, 0.03); }
-
-        .workspace-container {
-            max-width: 1200px; margin: 0 auto; padding: 140px 40px 60px 40px;
-        }
-
-        .page-heading { margin-bottom: 40px; }
-        .page-heading h1 { font-size: 36px; font-weight: 800; tracking: -1px; margin: 0 0 8px 0; }
-        .page-heading p { color: var(--text-slate); font-size: 16px; margin: 0; }
-
-        #loadingIndicator {
-            font-family: 'JetBrains Mono', monospace; font-size: 14px; color: var(--neon-cyan);
-            text-align: center; padding: 60px 0;
-        }
-
-        /* GRID PATTERN HOUSING SAVED RUN LOGS */
-        .sessions-matrix-grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 24px;
-        }
-
-        .session-entry-card {
-            background: var(--glass-card); border: 1px solid var(--border-line); border-radius: 16px;
-            padding: 24px; backdrop-filter: blur(20px); cursor: pointer;
-            position: relative; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .session-entry-card:hover {
-            transform: translateY(-4px); border-color: var(--border-line-focus);
-            background: var(--glass-card-hover); box-shadow: 0 15px 30px rgba(0,0,0,0.4);
-        }
-
-        .card-meta-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-        .asset-pill {
-            background: rgba(0, 240, 255, 0.06); color: var(--neon-cyan); font-family: 'JetBrains Mono', monospace;
-            font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 6px; border: 1px solid rgba(0,240,255,0.15);
-        }
-        .timeframe-badge { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-slate); font-weight: 700; }
-
-        .session-display-title { font-size: 18px; font-weight: 700; margin: 0 0 20px 0; color: #fff; line-height: 1.3; }
-
-        .session-metrics-distribution {
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
-            border-top: 1px solid var(--border-line); border-bottom: 1px solid var(--border-line);
-            padding: 14px 0; margin-bottom: 16px;
-        }
-        .m-box { display: flex; flex-direction: column; gap: 4px; }
-        .m-lbl { font-size: 10px; font-family: 'JetBrains Mono', monospace; color: var(--text-slate); text-transform: uppercase; }
-        .m-val { font-size: 14px; font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #fff; }
-        
-        .metric-pos { color: var(--neon-emerald) !important; }
-        .metric-neg { color: var(--neon-bear) !important; }
-
-        .card-footer-anchor {
-            font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-slate);
-            font-weight: 700; text-transform: uppercase; transition: color 0.2s ease;
-        }
-        .session-entry-card:hover .card-footer-anchor { color: var(--neon-cyan); }
-
-        .empty-state-message {
-            grid-column: 1 / -1; text-align: center; padding: 80px 20px; background: var(--glass-card);
-            border: 1px dashed var(--border-line); border-radius: 16px;
-        }
-        .empty-state-message h3 { font-size: 20px; font-weight: 700; margin: 0 0 10px 0; }
-        .empty-state-message p { color: var(--text-slate); font-size: 14px; margin: 0; }
-        
-        .cta-btn-primary {
-            background: linear-gradient(90deg, #00F0FF 0%, #0072FF 100%); color: #020408;
-            padding: 12px 24px; border: none; border-radius: 8px; font-weight: 800; font-size: 14px;
-            cursor: pointer; box-shadow: 0 4px 20px rgba(0, 240, 255, 0.25); transition: all 0.2s ease;
-        }
-        .cta-btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 25px rgba(0, 240, 255, 0.45); }
-    </style>
 </head>
 <body>
 
     <header>
-        <a href="index.html" class="brand-logo">BACKTESTL<span>ABPRO</span></a>
-        <a href="index.html" class="nav-back-btn">← RETURN HOME</a>
+        <div class="brand-container">
+            <a href="index.html" class="brand-logo">BACKTESTLABPRO<span></span></a>
+            <div class="platform-badge font-mono">QUANT CORE v4.2</div>
+        </div>
+        <div class="action-control-group">
+            <a href="index.html" class="nav-back-btn">
+                <svg class="icon-svg" viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                <span class="font-mono">RETURN HOME</span>
+            </a>
+        </div>
     </header>
 
     <main class="workspace-container">
-        <div class="page-heading">
+        <div class="page-heading-panel">
             <h1>Your Backtesting Ledger</h1>
-            <p>Select any historical replay run below to parse structural win metrics, track historical equity growth, or log execution patterns.</p>
+            <p>Select any historical replay run below to parse structural win metrics, track historical equity growth curves, or log systemic engine execution patterns.</p>
         </div>
 
-        <div id="loadingIndicator">Querying Firestore Session Streams...</div>
+        <div id="loadingIndicator">
+            <svg class="icon-svg" style="animation: pulse-glow 1s infinite alternate;" viewBox="0 0 24 24"><line x1="12" y1="2" x2="12" y2="6"></line><line x1="12" y1="18" x2="12" y2="22"></line><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line><line x1="2" y1="12" x2="6" y2="12"></line><line x1="18" y1="12" x2="22" y2="12"></line><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></svg>
+            <span>QUERYING FIRESTORE SESSION STREAMS...</span>
+        </div>
 
         <div id="sessionsGrid" class="sessions-matrix-grid"></div>
     </main>

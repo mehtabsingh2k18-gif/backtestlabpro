@@ -46,16 +46,22 @@
                     detailsEl.innerText = "Redirecting to home page...";
                     
                     setTimeout(() => {
-                        // Redirect the parent window that opened this pop-up
-                        if (window.opener && !window.opener.closed) {
-                            window.opener.location.href = "index.html";
+                        // Force break out of all frames/pop-ups to load directly in the main viewport
+                        if (window.top && window.top !== window) {
+                            window.top.location.href = "index.html";
+                        } else if (window.opener && !window.opener.closed) {
+                            // Fallback 1: Target the parent window if it was a standard popup
+                            try {
+                                window.opener.location.href = "index.html";
+                                window.close();
+                            } catch (e) {
+                                // If cross-origin restrictions block opener modification, fallback to direct redirect
+                                window.location.href = "index.html";
+                            }
                         } else {
-                            // Fallback if parent window is closed or missing
+                            // Fallback 2: Standard redirect within the current window frame
                             window.location.href = "index.html";
-                            return;
                         }
-                        // Close this pop-up window automatically
-                        window.close();
                     }, 1500);
                 } catch (error) {
                     statusEl.innerText = "Database Error!";

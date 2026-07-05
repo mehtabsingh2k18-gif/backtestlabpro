@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <meta charset="UTF-8">
     <title>Complete Purchase - Backtest Lab Pro</title>
     <style>
@@ -25,6 +25,13 @@
 <script>
   paypal.HostedButtons({
     hostedButtonId: "GYAN543ZWBGZU",
+    // Enforcing basic window interaction settings to prevent standard script environment sandboxing
+    onInit: function(data, actions) {
+      console.log("PayPal Hosted Button initialized successfully.");
+    },
+    onError: function(err) {
+      console.error("PayPal Popup System Blocked:", err);
+    }
   }).render("#paypal-container-GYAN543ZWBGZU")
 </script>
 

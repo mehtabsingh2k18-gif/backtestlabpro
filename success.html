@@ -46,7 +46,16 @@
                     detailsEl.innerText = "Redirecting to home page...";
                     
                     setTimeout(() => {
-                        window.location.href = "index.html";
+                        // Redirect the parent window that opened this pop-up
+                        if (window.opener && !window.opener.closed) {
+                            window.opener.location.href = "index.html";
+                        } else {
+                            // Fallback if parent window is closed or missing
+                            window.location.href = "index.html";
+                            return;
+                        }
+                        // Close this pop-up window automatically
+                        window.close();
                     }, 1500);
                 } catch (error) {
                     statusEl.innerText = "Database Error!";

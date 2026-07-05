@@ -43,25 +43,20 @@
                     }, { merge: true });
 
                     statusEl.innerText = "Access Unlocked!";
-                    detailsEl.innerText = "Redirecting to home page...";
+                    detailsEl.innerText = "Redirecting main window...";
                     
                     setTimeout(() => {
-                        // Force break out of all frames/pop-ups to load directly in the main viewport
-                        if (window.top && window.top !== window) {
-                            window.top.location.href = "index.html";
-                        } else if (window.opener && !window.opener.closed) {
-                            // Fallback 1: Target the parent window if it was a standard popup
-                            try {
-                                window.opener.location.href = "index.html";
-                                window.close();
-                            } catch (e) {
-                                // If cross-origin restrictions block opener modification, fallback to direct redirect
-                                window.location.href = "index.html";
-                            }
+                        // Check if the parent main window is still open
+                        if (window.opener && !window.opener.closed) {
+                            // Change the URL of your original full-sized browser tab
+                            window.opener.location.href = "https://backtestlabpro.com";
                         } else {
-                            // Fallback 2: Standard redirect within the current window frame
-                            window.location.href = "index.html";
+                            // Fallback to opening a normal, fresh tab if the main window was lost
+                            window.open("https://backtestlabpro.com", "_blank");
                         }
+                        
+                        // Instantly close the small validation window
+                        window.close();
                     }, 1500);
                 } catch (error) {
                     statusEl.innerText = "Database Error!";

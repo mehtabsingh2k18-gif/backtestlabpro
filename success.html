@@ -13,7 +13,10 @@
     
     <div style="text-align:center;">
         <h2 id="status">Verifying payment...</h2>
-        <p id="details" style="color:#848e9c;"></p>
+        <p id="details" style="color:#848e9c; margin-bottom: 20px;"></p>
+        <a id="homeBtn" href="https://backtestlabpro.com" target="_top" style="display:none; background:#0ecb81; color:black; font-weight:bold; padding:12px 24px; border-radius:8px; text-decoration:none; font-size:16px; transition: background 0.2s;">
+            Go to Home Page
+        </a>
     </div>
 
     <script>
@@ -31,6 +34,7 @@
 
         const statusEl = document.getElementById('status');
         const detailsEl = document.getElementById('details');
+        const homeBtn = document.getElementById('homeBtn');
 
         auth.onAuthStateChanged(async (user) => {
             if (user) {
@@ -43,21 +47,26 @@
                     }, { merge: true });
 
                     statusEl.innerText = "Access Unlocked!";
-                    detailsEl.innerText = "Redirecting main window...";
+                    detailsEl.innerText = "Your payment was successful. Click below to return home.";
                     
-                    setTimeout(() => {
-                        // Check if the parent main window is still open
+                    // Show the manual action button
+                    homeBtn.style.display = "inline-block";
+
+                    // Handle button click logic to try closing the popup while navigating the parent
+                    homeBtn.onclick = function(e) {
                         if (window.opener && !window.opener.closed) {
-                            // Change the URL of your original full-sized browser tab
-                            window.opener.location.href = "https://backtestlabpro.com";
-                        } else {
-                            // Fallback to opening a normal, fresh tab if the main window was lost
-                            window.open("https://backtestlabpro.com", "_blank");
+                            try {
+                                window.opener.location.href = "https://backtestlabpro.com";
+                                window.close();
+                                return false; // Prevents the default anchor jump if successful
+                            } catch (err) {
+                                // Fallback if cross-origin controls block opener redirection
+                                return true;
+                            }
                         }
-                        
-                        // Instantly close the small validation window
-                        window.close();
-                    }, 1500);
+                        return true; // Let target="_top" or default routing take over if parent isn't found
+                    };
+
                 } catch (error) {
                     statusEl.innerText = "Database Error!";
                     detailsEl.innerText = "Code: " + error.code;

@@ -195,7 +195,10 @@
                                     <i class="fa-solid fa-user text-sm"></i>
                                 </div>
                                 <div class="overflow-hidden">
-                                    <h5 id="profile-box-name" class="text-sm font-bold text-white font-display truncate">Trader Pro</h5>
+                                    <div class="flex items-center gap-2">
+                                        <h5 id="profile-box-name" class="text-sm font-bold text-white font-display truncate">Trader Pro</h5>
+                                        <span id="profile-box-plan" class="hidden text-[9px] font-black tracking-wider px-1.5 py-0.5 rounded uppercase"></span>
+                                    </div>
                                     <p id="profile-box-email" class="text-xs text-zinc-500 truncate">sandbox@backtestlabpro.com</p>
                                 </div>
                             </div>
@@ -436,7 +439,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAensfI53w49Fd4A7Lz5_K9N1JOxZsW7Kk",
@@ -466,15 +469,47 @@
                 if (nameDisplay) nameDisplay.textContent = user.displayName || "Anonymous Trader";
                 if (emailDisplay) emailDisplay.textContent = user.email || "sandbox@backtestlabpro.com";
 
+                // Pull plan status from Firestore path: users/{uid}/plan/current
+                await checkUserPlanStatus(user.uid);
+
                 await fetchRealFirestoreSessions(user.uid);
                 window.updateAuthViewUI(true);
             } else {
                 window.userLiveSessionsList = [];
                 window.eligibleHighPerformingSession = null;
                 window.authenticatedUidGlobal = "";
+                
+                // Clear the visual premium plan badge
+                const planDisplay = document.getElementById('profile-box-plan');
+                if (planDisplay) {
+                    planDisplay.classList.add('hidden');
+                }
+
                 window.updateAuthViewUI(false);
             }
         });
+
+        async function checkUserPlanStatus(uid) {
+            try {
+                const planDocRef = doc(db, "users", uid, "plan", "current");
+                const planSnap = await getDoc(planDocRef);
+                const planDisplay = document.getElementById('profile-box-plan');
+                
+                if (planDisplay) {
+                    if (planSnap.exists() && planSnap.data().isPaid === true) {
+                        planDisplay.textContent = "PRO";
+                        planDisplay.className = "text-[9px] font-black tracking-wider px-1.5 py-0.5 rounded uppercase bg-gradient-to-r from-amber-400 to-amber-600 text-gray-950 shadow-sm";
+                        planDisplay.classList.remove('hidden');
+                    } else {
+                        planDisplay.textContent = "FREE";
+                        planDisplay.className = "text-[9px] font-black tracking-wider px-1.5 py-0.5 rounded uppercase bg-zinc-800 text-zinc-400";
+                        planDisplay.classList.remove('hidden');
+                    }
+                }
+            } catch (error) {
+                console.error("Error checking user plan status from Firestore context:", error);
+            }
+        }
 
         async function fetchRealFirestoreSessions(uid) {
             try {

@@ -9,6 +9,30 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                fontFamily: {
+                    sans: ['Inter', 'sans-serif'],
+                },
+                colors: {
+                    brand: {
+                        dark: '#060814',
+                        card: '#0b0f19',
+                        accent: '#3b82f6',
+                        success: '#10b981',
+                        purple: '#a855f7'
+                    }
+                }
+            }
+        }
+    }
+</script>
+
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
@@ -202,128 +226,6 @@ body {
     background: rgba(59, 130, 246, 0.05);
 }
 
-/* Guard Shield Screens */
-.cooldown-screen {
-    display: none;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    flex: 1;
-    text-align: center;
-    padding: 40px;
-    background: #060814;
-}
-
-.cooldown-timer {
-    font-size: 48px;
-    font-weight: 700;
-    color: #ef4444;
-    margin: 20px 0;
-    font-variant-numeric: tabular-nums;
-}
-
-/* Auth Guard Modal View */
-.auth-gate-overlay {
-    display: flex;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: #060814;
-    z-index: 1000;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 30px;
-}
-
-.auth-card {
-    background: #0b0f19;
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    padding: 40px;
-    border-radius: 16px;
-    max-width: 440px;
-    width: 100%;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
-}
-
-.auth-btn {
-    background: #2563eb;
-    color: #ffffff;
-    border: none;
-    padding: 12px 24px;
-    font-size: 14px;
-    font-weight: 600;
-    border-radius: 8px;
-    cursor: pointer;
-    width: 100%;
-    margin-top: 24px;
-    transition: background 0.2s ease;
-}
-
-.auth-btn:hover {
-    background: #1d4ed8;
-}
-
-.input-container {
-    padding: 24px 32px;
-    background: #060814;
-    border-top: 1px solid rgba(255, 255, 255, 0.04);
-}
-
-.input-area {
-    display: flex;
-    gap: 12px;
-    background: #0b0f19;
-    padding: 6px 6px 6px 16px;
-    border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    align-items: center;
-}
-
-.input-area:focus-within {
-    border-color: #3b82f6;
-}
-
-.input-area input {
-    flex: 1;
-    height: 44px;
-    border: none;
-    background: transparent;
-    color: #ffffff;
-    font-size: 14px;
-    outline: none;
-}
-
-.input-area input::placeholder {
-    color: #4b5563;
-}
-
-.input-area input:disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
-}
-
-.input-area button {
-    height: 44px;
-    padding: 0 24px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    background: #2563eb;
-    color: white;
-    font-weight: 500;
-    font-size: 14px;
-}
-
-.input-area button:disabled {
-    background: #111827;
-    color: #4b5563;
-    cursor: not-allowed;
-}
-
 .sidebar {
     width: 360px;
     border-left: 1px solid rgba(255, 255, 255, 0.04);
@@ -389,6 +291,12 @@ body {
     gap: 16px;
 }
 
+.info-card #delivery-row {
+    margin-top: 4px;
+    padding-top: 12px;
+    border-top: 1px dashed rgba(255, 255, 255, 0.1);
+}
+
 .info-item {
     display: flex;
     flex-direction: column;
@@ -419,12 +327,6 @@ body {
 .value.set {
     color: #3b82f6;
     font-weight: 600;
-}
-
-@media(max-width:960px){
-    .sidebar { display: none; }
-    .message { max-width: 85%; }
-    .nav-links { display: none; }
 }
 </style>
 </head>
@@ -485,30 +387,21 @@ body {
             </div>
         </div>
 
-        <div class="input-container" id="inputContainerWrapper">
-            <div class="input-area" id="inputAreaField">
+        <div class="p-6 md:px-8 md:py-6 bg-brand-dark border-t border-white/5" id="inputContainerWrapper">
+            <div class="flex items-center gap-3 bg-brand-card p-2 pl-5 rounded-2xl border border-white/10 focus-within:border-brand-accent focus-within:ring-1 focus-within:ring-brand-accent/50 transition-all shadow-xl" id="inputAreaField">
                 <input
                     id="messageInput"
+                    class="flex-1 bg-transparent border-none text-white text-sm outline-none w-full placeholder-zinc-500 disabled:opacity-50"
                     placeholder="Input disabled during Guided Form setup phase..."
                     disabled
                     onkeydown="if(event.key === 'Enter') checkAndProcessInput()"
                 >
-                <button id="sendButton" onclick="checkAndProcessInput()" disabled>
-                    Send
+                <button id="sendButton" onclick="checkAndProcessInput()" disabled class="h-11 px-6 rounded-xl bg-brand-accent hover:bg-blue-600 text-white font-medium text-sm transition-colors disabled:bg-zinc-800 disabled:text-zinc-500 disabled:cursor-not-allowed flex items-center gap-2">
+                    Send <i class="fa-solid fa-paper-plane text-xs"></i>
                 </button>
             </div>
         </div>
-    </div>
 
-    <div class="cooldown-screen" id="cooldownOverlay">
-        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="10"></circle>
-            <polyline points="12 6 12 12 16 14"></polyline>
-        </svg>
-        <h2 style="margin-top: 24px; font-size: 24px;">Free Session Limit Reached</h2>
-        <p style="color: #6b7280; max-width: 400px; margin-top: 8px; line-height: 1.5;">You have completed your free blueprint optimization session. Free evaluation slots reopen every 120 minutes per profile.</p>
-        <div class="cooldown-timer" id="countdownClock">120:00</div>
-        <p style="font-size: 13px; color: #9ca3af;">Want to skip the wait times and develop unlimited trading bots? <a href="/services" style="color:#3b82f6; text-decoration: none; font-weight:600;">Upgrade to a Service Plan &rarr;</a></p>
     </div>
 
     <aside class="sidebar">
@@ -552,7 +445,7 @@ body {
             </div>
 
             <div class="info-item" id="delivery-row" style="display: none;">
-                <div class="label">Delivery Channel</div>
+                <div class="label">Secure Handoff Channel</div>
                 <div class="value" id="val-delivery" style="color: #10b981;">Not Picked</div>
             </div>
         </div>
@@ -560,7 +453,22 @@ body {
 
 </div>
 
-<script>
+<script type="importmap">
+  {
+    "imports": {
+      "@google/generative-ai": "https://esm.run/@google/generative-ai"
+    }
+  }
+</script>
+
+<script type="module">
+import { GoogleGenAI } from '@google/generative-ai';
+
+// Live Gemini API Key
+const GEMINI_API_KEY = "AQ.Ab8RN6J7p33DufjgR2GvQ1lhbePX34vSNVwtdT28dx44tFNwTQ"; 
+const aiEngine = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
+const model = aiEngine.getGenerativeModel({ model: "gemini-1.5-pro" });
+
 const firebaseConfig = {
     apiKey: "AIzaSyAensfI53w49Fd4A7Lz5_K9N1JOxZsW7Kk",
     authDomain: "backtestlabpro.firebaseapp.com",
@@ -574,18 +482,14 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 const auth = firebase.auth();
 
-const GROQ_API_KEY = "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";
 let currentStep = 0; 
 let currentEngineMode = "form"; 
 let userPlanTier = "free";     
-let dynamicOptimizationStage = 0; 
-
-// STRICT MAXIMUM CONVERSATIONAL COUNTER GATES
-let freeChatTurnCounter = 0;
-const MAX_FREE_TURNS_THRESHOLD = 4; 
+let dynamicOptimizationStage = 1; 
 
 let currentUserId = null;
-let chatSessionId = null;
+const premiumCollectionPath = "premium_automation";
+const premiumDocId = "active_session";
 
 let sessionData = {
     platform: "Not Set",
@@ -594,10 +498,12 @@ let sessionData = {
     entry_rules: "Waiting...",
     exit_rules: "Waiting...",
     risk_management: "Waiting...",
-    delivery_method: "Not Picked"
+    delivery_method: "Not Picked",
+    delivery_address: ""
 };
 
 let messagesHistory = [];
+let geminiChatSessionHistory = [];
 
 const guidedQuestions = [
     {
@@ -612,127 +518,163 @@ const guidedQuestions = [
     }
 ];
 
-auth.onAuthStateChanged((user) => {
+auth.onAuthStateChanged(async (user) => {
     if (user) {
         currentUserId = user.uid;
         document.getElementById("authGate").style.display = "none";
         document.getElementById("appMainLayout").style.display = "flex";
-        
-        messagesHistory = [{
-            role: "assistant",
-            content: "Hello 👋 Welcome to Backtest Lab Pro Automation.\n\nLet's setup your project framework first. Which Target Platform do you want to build this trading bot for?"
-        }];
-        
-        chatSessionId = db.collection("users").doc(currentUserId).collection("chats").doc().id;
-        
-        checkCooldownTimerLockState();
-        syncChatToFirestore();
+        await loadOrRestorePremiumSession();
     } else {
         currentUserId = null;
-        chatSessionId = null;
         document.getElementById("authGate").style.display = "flex";
         document.getElementById("appMainLayout").style.display = "none";
     }
 });
 
-function generateReadableTranscript() {
-    let textDoc = "==================================================\n";
-    textDoc += "       BACKTEST LAB PRO - BOT SESSION BLUEPRINT     \n";
-    textDoc += "==================================================\n\n";
-    textDoc += `[CONFIGURATION MATRIX]\n`;
-    textDoc += `• Platform: ${sessionData.platform}\n`;
-    textDoc += `• Market: ${sessionData.market}\n`;
-    textDoc += `• Base Timeframe: ${sessionData.timeframe}\n`;
-    textDoc += `• Strategy Entry Rules: ${sessionData.entry_rules}\n`;
-    textDoc += `• Strategy Exit Rules: ${sessionData.exit_rules}\n`;
-    textDoc += `• Risk Parameters Management: ${sessionData.risk_management}\n`;
-    textDoc += `• Secure File Delivery Channel: ${sessionData.delivery_method}\n\n`;
-    textDoc += "==================================================\n";
-    textDoc += "               COMPLETE DIALOGUE LOG               \n";
-    textDoc += "==================================================\n";
+async function loadOrRestorePremiumSession() {
+    try {
+        const docRef = db.collection("users").doc(currentUserId).collection(premiumCollectionPath).doc(premiumDocId);
+        const docSnap = await docRef.get();
 
-    messagesHistory.forEach(msg => {
-        if (msg.role === "system") return;
-        let speaker = msg.role === "user" ? "USER" : "AI ASSISTANT";
-        let cleanContent = msg.content.split("---DATA---")[0].trim();
-        textDoc += `\n[${speaker}]:\n${cleanContent}\n`;
-        textDoc += "--------------------------------------------------\n";
-    });
+        if (docSnap.exists()) {
+            const data = docSnap.data();
+            sessionData = data.sessionData || sessionData;
+            currentEngineMode = data.currentEngineMode || "form";
+            dynamicOptimizationStage = data.dynamicOptimizationStage || 1;
+            currentStep = data.currentStep || 0;
+            messagesHistory = data.messagesHistory || [];
+            geminiChatSessionHistory = data.geminiChatSessionHistory || [];
 
-    return textDoc;
+            updateSidebarMatrixUI("platform", sessionData.platform);
+            updateSidebarMatrixUI("market", sessionData.market);
+            updateSidebarMatrixUI("timeframe", sessionData.timeframe);
+            updateSidebarMatrixUI("entry_rules", sessionData.entry_rules);
+            updateSidebarMatrixUI("exit_rules", sessionData.exit_rules);
+            updateSidebarMatrixUI("risk_management", sessionData.risk_management);
+
+            if (sessionData.delivery_method !== "Not Picked") {
+                document.getElementById("delivery-row").style.display = "flex";
+                document.getElementById("val-delivery").innerText = sessionData.delivery_method;
+                document.getElementById("val-delivery").className = "value set text-emerald-400";
+            }
+
+            if (currentEngineMode === "completed_final") {
+                renderFullChatHistoryLogs();
+                renderFinalStaticLockedLayout();
+                return;
+            }
+
+            if (currentEngineMode === "ai" || currentEngineMode === "locked" || currentEngineMode === "delivery_input") {
+                renderFullChatHistoryLogs();
+                reactivateInterfaceEngineState();
+                return;
+            }
+        }
+
+        messagesHistory = [{
+            role: "assistant",
+            content: "Hello 👋 Welcome to Backtest Lab Pro Automation.\n\nLet's setup your project framework first. Which Target Platform do you want to build this trading bot for?"
+        }];
+        await syncChatToFirestore();
+
+    } catch (e) {
+        console.error("Failed to restore data tracks: ", e);
+    }
 }
 
-// CONSOLIDATED SYNC FUNCTION
+function renderFullChatHistoryLogs() {
+    const chat = document.getElementById("chat");
+    chat.innerHTML = "";
+    messagesHistory.forEach(msg => {
+        const div = document.createElement("div");
+        div.className = `message ${msg.role === "user" ? "user" : "ai"}`;
+        if(msg.content.includes("Exception**") || msg.content.includes("⚠️")) {
+            div.style.cssText = "border: 1px solid #ef4444; background: rgba(239, 68, 68, 0.05); color: #fca5a5;";
+        }
+        div.innerHTML = msg.content;
+        chat.appendChild(div);
+    });
+    chat.scrollTop = chat.scrollHeight;
+}
+
+function reactivateInterfaceEngineState() {
+    document.getElementById("messageInput").disabled = false;
+    document.getElementById("sendButton").disabled = false;
+    
+    if (currentEngineMode === "ai") {
+        advanceToNextSequentialMilestoneQuestion();
+    } else if (currentEngineMode === "locked") {
+        forceAbsoluteChatTerminationHandoff();
+    } else if (currentEngineMode === "delivery_input") {
+        selectDeliveryChannel(sessionData.delivery_method);
+    }
+}
+
+function renderFinalStaticLockedLayout() {
+    const chat = document.getElementById("chat");
+    const ultimateCompletionDiv = document.createElement("div");
+    ultimateCompletionDiv.className = "message ai";
+    ultimateCompletionDiv.style.cssText = "border: 1px solid rgba(16, 185, 129, 0.3); background: #060e14;";
+    ultimateCompletionDiv.innerHTML = `
+        <p style="font-weight:700; color:#10b981; margin-bottom:6px; font-size:14px;"><i class="fa-solid fa-cloud-arrow-up"></i> Configuration Active & Locked!</p>
+        <p style="margin-bottom:8px;">Your receiving credentials context (**${sessionData.delivery_address}**) is logged with our compilation queue records.</p>
+        <p style="color:#9ca3af;">Our technical engineering team will build, test inside archival candle streams, compile execution scripts, and forward your package assets via **${sessionData.delivery_method}** along with activation runbooks and maintenance parameters within short order. Thank you for choosing Backtest Lab Pro!</p>
+    `;
+    chat.appendChild(ultimateCompletionDiv);
+
+    const containerWrapper = document.getElementById("inputContainerWrapper");
+    containerWrapper.innerHTML = `
+        <div class="w-full text-center bg-zinc-900/60 p-4 rounded-xl border border-solid border-emerald-500/10 text-xs font-mono text-emerald-400 uppercase tracking-widest">
+            <i class="fa-solid fa-circle-check text-brand-success mr-1"></i> Strategy Locked. Processing Delivery Pipeline Tracks.
+        </div>
+    `;
+
+    document.getElementById("assistant-mode-desc").innerText = "Pipeline asset extraction process finished. System monitoring initialized.";
+    const badge = document.getElementById("status-badge");
+    badge.className = "status ai-mode";
+    document.getElementById("status-text").innerText = "Handoff In-Flight";
+    chat.scrollTop = chat.scrollHeight;
+}
+
 async function syncChatToFirestore() {
-    if (!currentUserId || !chatSessionId) return;
+    if (!currentUserId) return;
     try {
-        await db.collection("users").doc(currentUserId).collection("chats").doc(chatSessionId).set({
+        await db.collection("users").doc(currentUserId).collection(premiumCollectionPath).doc(premiumDocId).set({
             sessionData: sessionData,
             messagesHistory: messagesHistory,
-            readableTranscript: generateReadableTranscript(),
+            geminiChatSessionHistory: geminiChatSessionHistory,
             currentStep: currentStep,
-            engineMode: currentEngineMode,
-            optimizationStage: dynamicOptimizationStage,
+            currentEngineMode: currentEngineMode,
+            dynamicOptimizationStage: dynamicOptimizationStage,
             lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
         }, { merge: true });
-
     } catch (error) {
         console.error("Firestore tracking layout sync exception: ", error);
     }
 }
 
-function triggerFallbackRedirect() {
-    alert("Redirecting to login portal context framework...");
-}
-
-function checkCooldownTimerLockState() {
-    if (!currentUserId) return;
-    const activeLockoutTime = localStorage.getItem(`backtestlab_cooldown_expiry_${currentUserId}`);
-    if (activeLockoutTime) {
-        const remainingMs = parseInt(activeLockoutTime) - Date.now();
-        if (remainingMs > 0) {
-            document.getElementById("activeChatWrapper").style.display = "none";
-            document.getElementById("cooldownOverlay").style.display = "flex";
-            startCountdownClockTicker(remainingMs);
-        } else {
-            localStorage.removeItem(`backtestlab_cooldown_expiry_${currentUserId}`);
-        }
-    }
-}
-
-function startCountdownClockTicker(msDuration) {
-    const clock = document.getElementById("countdownClock");
-    function updateClock() {
-        if (!currentUserId) return;
-        const now = Date.now();
-        const future = parseInt(localStorage.getItem(`backtestlab_cooldown_expiry_${currentUserId}`));
-        const diff = future - now;
-
-        if (diff <= 0) {
-            localStorage.removeItem(`backtestlab_cooldown_expiry_${currentUserId}`);
-            location.reload();
-            return;
-        }
-
-        const totalSecs = Math.floor(diff / 1000);
-        const mins = Math.floor(totalSecs / 60);
-        const secs = totalSecs % 60;
-        
-        clock.innerText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-        setTimeout(updateClock, 1000);
-    }
-    updateClock();
-}
-
-function toggleUserPlanTier() {
+window.toggleUserPlanTier = function() {
     userPlanTier = document.getElementById("tierSelector").value;
 }
 
-function handleHardcodedChoice(field, value) {
+function updateSidebarMatrixUI(field, value) {
     sessionData[field] = value;
-    const uiId = "val-" + field;
-    document.getElementById(uiId).innerText = value;
-    document.getElementById(uiId).classList.add("set");
+    const uiId = "val-" + (field.includes("_") ? field.split('_')[0] : field);
+    const element = document.getElementById(uiId);
+    if(element) {
+        element.innerText = value;
+        if(value !== "Waiting..." && value !== "Not Set") {
+            element.classList.add("set");
+            element.style.color = "#3b82f6";
+        } else {
+            element.classList.remove("set");
+            element.style.color = "#6b7280";
+        }
+    }
+}
+
+window.handleHardcodedChoice = function(field, value) {
+    updateSidebarMatrixUI(field, value);
 
     const oldOptions = document.getElementById(`options-step-${currentStep}`);
     if(oldOptions) oldOptions.remove();
@@ -758,72 +700,126 @@ function handleHardcodedChoice(field, value) {
         chat.appendChild(aiDiv);
         
         messagesHistory.push({ role: "assistant", content: nextQuestion.text });
-        
         chat.scrollTop = chat.scrollHeight;
         syncChatToFirestore();
     } else {
-        initializeAIEngineMode();
+        initializeGeminiEngineMode();
     }
 }
 
-function initializeAIEngineMode() {
+function initializeGeminiEngineMode() {
     currentEngineMode = "ai";
-    const chat = document.getElementById("chat");
+    dynamicOptimizationStage = 1; 
     
     document.getElementById("messageInput").disabled = false;
-    document.getElementById("messageInput").placeholder = "Describe your entry/exit strategy rules setup parameters...";
+    document.getElementById("messageInput").placeholder = "Specify precise execution strategy setup rules here...";
     document.getElementById("sendButton").disabled = false;
     
-    document.getElementById("assistant-mode-desc").innerText = "AI Consultation Phase: Designing execution triggers, multi-timeframe candle rules, and risk configurations.";
+    document.getElementById("assistant-mode-desc").innerText = "Deep Gemini Pro Audit Consultation Phase: Define precise trade requirements.";
     const badge = document.getElementById("status-badge");
     badge.className = "status ai-mode";
-    document.getElementById("status-text").innerText = "AI Assistant Online";
+    document.getElementById("status-text").innerText = "Gemini Pro Online";
 
-    messagesHistory.push({
-        role: "system",
-        content: `You are the Automation Assistant for Backtest Lab Pro.
-        Settings: Platform: ${sessionData.platform}, Asset: ${sessionData.market}, Timeframe: ${sessionData.timeframe}.
-        Your single purpose is to extract Entry Rules, Exit Rules, and Risk Management specifications. 
-        DO NOT draft long code blocks, scripts, files or instructions. Keep answers concise.
-        
-        At the end of EVERY response, append this JSON matrix format:
-        ---DATA---
+    geminiChatSessionHistory = [
         {
-            "entry_rules": "Summarized entry or 'Waiting...'",
-            "exit_rules": "Summarized exit or 'Waiting...'",
-            "risk_management": "Summarized risk metrics or 'Waiting...'"
-        }`
-    });
+            role: "user",
+            parts: [{ text: `System Instruction Framework: You are an expert institutional Algorithmic Strategy Developer. 
+            The setup environment configurations are: Platform: ${sessionData.platform}, Target Asset: ${sessionData.market}, Base Timeframe: ${sessionData.timeframe}.
+            
+            YOUR STRATEGY AUDITING TASKS:
+            - Milestone Stage 1: Audit the user's strategy execution rules (both Entry conditions and Exit profit/loss values). Ensure they provide exact metrics. Reject empty logs or lazy strings like "okay", "yes", or brief placeholders.
+            - Milestone Stage 2: Audit capital risk variables. Ensure they explicitly declare exact lot limits or float capital percentages.
+            
+            At the end of your response, you MUST attach this exact string wrapper token followed by raw valid JSON tracking keys to write data straight into our frontend matrix panel fields:
+            ---DATA---
+            {
+                "entry_rules": "${sessionData.entry_rules}",
+                "exit_rules": "${sessionData.exit_rules}",
+                "risk_management": "${sessionData.risk_management}",
+                "stagePassed": false
+            }` }]
+        },
+        {
+            role: "model",
+            parts: [{ text: "System prompt initialized. Ready to validate incoming technical configurations." }]
+        }
+    ];
 
-    const firstAIPrompt = `Great! Your infrastructure properties are saved:\n\n• **Platform**: ${sessionData.platform}\n• **Market**: ${sessionData.market}\n• **Timeframe**: ${sessionData.timeframe}\n\nNow, let's process your strategy. Please describe your **Entry and Exit Logic rules** in plain text (e.g., Indicators crossover, EMA rules, or RSI parameters).`;
-    
-    messagesHistory.push({ role: "assistant", content: firstAIPrompt });
-    
-    const aiDiv = document.createElement("div");
-    aiDiv.className = "message ai";
-    aiDiv.innerText = firstAIPrompt;
-    chat.appendChild(aiDiv);
-    chat.scrollTop = chat.scrollHeight;
-    syncChatToFirestore();
+    advanceToNextSequentialMilestoneQuestion();
 }
 
-function checkAndProcessInput() {
+function processRealtimeMatrixOverrides(text) {
+    let lower = text.toLowerCase();
+    let responseNotes = [];
+
+    if (lower.includes("change timeframe to m1") || lower.includes("timeframe to m1")) {
+        updateSidebarMatrixUI("timeframe", "M1 (1-Minute)");
+        responseNotes.push("Timeframe corrected to M1.");
+    } else if (lower.includes("change timeframe to m5") || lower.includes("timeframe to m5")) {
+        updateSidebarMatrixUI("timeframe", "M5 (5-Minutes)");
+        responseNotes.push("Timeframe corrected to M5.");
+    } else if (lower.includes("change timeframe to h1") || lower.includes("timeframe to h1")) {
+        updateSidebarMatrixUI("timeframe", "H1 (1-Hour)");
+        responseNotes.push("Timeframe corrected to H1.");
+    } else if (lower.includes("change timeframe to d1") || lower.includes("timeframe to d1")) {
+        updateSidebarMatrixUI("timeframe", "D1 (Daily Multi-Timeframe)");
+        responseNotes.push("Timeframe corrected to D1.");
+    }
+
+    return responseNotes.join(" ");
+}
+
+window.checkAndProcessInput = function() {
+    if (currentEngineMode === "delivery_input") {
+        processDeliveryAddressInput();
+        return;
+    }
     if (currentEngineMode !== "ai") return;
 
     const input = document.getElementById("messageInput");
     const text = input.value.trim();
     if (!text) return;
 
-    freeChatTurnCounter++;
+    // Rigid UI Validation Guard
+    let cleanLower = text.toLowerCase();
+    let invalidKeywords = ["okay", "ok", "yes", "no", "sure", "fine", "good", "done", "test", "hello", "hi", "bro"];
+    
+    if (text.length < 15 || invalidKeywords.includes(cleanLower)) {
+        let exceptionText = "";
+        if (dynamicOptimizationStage === 1) {
+            exceptionText = `⚠️ **Insufficient Strategy Data Exception**<br>Your entry/exit parameters cannot be blank or brief shortcuts like "${text}". Our backend system requires precise conditions to build a functional bot.<br><br>*Please state actual rules (e.g. "Buy when asset rises above structural EMA 200, Sell with Take Profit at 40 pips and Stop Loss at 20 pips").*`;
+        } else if (dynamicOptimizationStage === 2) {
+            exceptionText = `⚠️ **Insufficient Capital Allocation Properties Exception**<br>Risk parameters cannot be processed with simple placeholder statements. Please specify your money management parameters cleanly.<br><br>*Please state exact constraints (e.g. "Run a uniform fixed calculation of 0.2 lots on all positions").*`;
+        }
 
-    if (freeChatTurnCounter >= MAX_FREE_TURNS_THRESHOLD) {
-        forceAbsoluteChatTerminationHandoff(text);
-    } else {
-        sendAIMessage(text);
+        const chat = document.getElementById("chat");
+        const rejectDiv = document.createElement("div");
+        rejectDiv.className = "message ai";
+        rejectDiv.style.cssText = "border: 1px solid #ef4444; background: rgba(239, 68, 68, 0.05); color: #fca5a5;";
+        rejectDiv.innerHTML = exceptionText;
+        
+        chat.appendChild(rejectDiv);
+        messagesHistory.push({ role: "assistant", content: exceptionText });
+        
+        input.value = "";
+        chat.scrollTop = chat.scrollHeight;
+        return; 
     }
+
+    const chat = document.getElementById("chat");
+    const userDiv = document.createElement("div");
+    userDiv.className = "message user";
+    userDiv.innerText = text;
+    chat.appendChild(userDiv);
+    messagesHistory.push({ role: "user", content: text });
+
+    input.value = "";
+    chat.scrollTop = chat.scrollHeight;
+
+    sendGeminiMessageTrack(text);
 }
 
-async function sendAIMessage(text) {
+async function sendGeminiMessageTrack(text) {
     const input = document.getElementById("messageInput");
     const button = document.getElementById("sendButton");
 
@@ -831,144 +827,133 @@ async function sendAIMessage(text) {
     button.disabled = true;
 
     const chat = document.getElementById("chat");
-    const userDiv = document.createElement("div");
-    userDiv.className = "message user";
-    userDiv.innerText = text;
-    chat.appendChild(userDiv);
-    chat.scrollTop = chat.scrollHeight;
-
-    input.value = "";
-    messagesHistory.push({ role: "user", content: text });
-
     const aiDiv = document.createElement("div");
     aiDiv.className = "message ai";
-    aiDiv.innerText = "Analyzing strategy logic criteria parameters...";
+    aiDiv.innerText = "Gemini Pro auditing strategy parameters...";
     chat.appendChild(aiDiv);
     chat.scrollTop = chat.scrollHeight;
 
+    let runtimeCorrectionNotes = processRealtimeMatrixOverrides(text);
+
+    let contextPromptModifier = "";
+    if (dynamicOptimizationStage === 1) {
+        contextPromptModifier = `[Audit phase: Entry & Exit Rules extraction setup. Confirm the input defines valid technical execution boundaries. If true, map summaries to 'entry_rules' and 'exit_rules' keys and set 'stagePassed': true. If weak or generic text, prompt for details and set 'stagePassed': false] User Input: ${text}`;
+    } else if (dynamicOptimizationStage === 2) {
+        contextPromptModifier = `[Audit phase: Money Management lot variables extraction. Verify if user declared clear mathematical sizing numbers. If valid, summary to 'risk_management' and 'stagePassed': true. Else 'stagePassed': false] User Input: ${text}`;
+    }
+
+    geminiChatSessionHistory.push({
+        role: "user",
+        parts: [{ text: contextPromptModifier }]
+    });
+
     try {
-        const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-            method: "POST",
-            headers: {
-                "Authorization": `Bearer ${GROQ_API_KEY}`,
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                model: "llama-3.3-70b-versatile",
-                messages: messagesHistory,
-                temperature: 0.2
-            })
+        const chatSession = model.startChat({ history: geminiChatSessionHistory });
+        const result = await chatSession.sendMessage(contextPromptModifier);
+        const fullResponseText = result.response.text();
+
+        geminiChatSessionHistory.push({
+            role: "model",
+            parts: [{ text: fullResponseText }]
         });
+        messagesHistory.push({ role: "assistant", content: fullResponseText });
 
-        if (!response.ok) throw new Error("API Interruption");
+        let cleanRenderText = fullResponseText;
+        let stagePassed = false;
 
-        const data = await response.json();
-        const fullContent = data.choices[0].message.content;
-
-        messagesHistory.push({ role: "assistant", content: fullContent });
-
-        let cleanText = fullContent;
-        if (fullContent.includes("---DATA---")) {
-            const parts = fullContent.split("---DATA---");
-            cleanText = parts[0].trim();
+        if (fullResponseText.includes("---DATA---")) {
+            const sections = fullResponseText.split("---DATA---");
+            cleanRenderText = sections[0].trim();
             
             try {
-                const extractedJson = JSON.parse(parts[1].trim());
-                updateStrategicUIFields(extractedJson);
-            } catch(e) {
-                console.error("JSON parsing error loop:", e);
+                const extractedJson = JSON.parse(sections[1].trim());
+                stagePassed = extractedJson.stagePassed;
+                
+                if (extractedJson.entry_rules && !extractedJson.entry_rules.includes("Waiting...")) updateSidebarMatrixUI("entry_rules", extractedJson.entry_rules);
+                if (extractedJson.exit_rules && !extractedJson.exit_rules.includes("Waiting...")) updateSidebarMatrixUI("exit_rules", extractedJson.exit_rules);
+                if (extractedJson.risk_management && !extractedJson.risk_management.includes("Waiting...")) updateSidebarMatrixUI("risk_management", extractedJson.risk_management);
+            } catch(jsonErr) {}
+        }
+
+        if (cleanRenderText.toLowerCase().includes("insufficient") || cleanRenderText.includes("⚠️") || !stagePassed) {
+            aiDiv.style.cssText = "border: 1px solid #ef4444; background: rgba(239, 68, 68, 0.05); color: #fca5a5;";
+            aiDiv.innerHTML = cleanRenderText;
+        } else {
+            aiDiv.style.cssText = "";
+            aiDiv.innerHTML = (runtimeCorrectionNotes ? `<span style="color:#a855f7;">⚡ ${runtimeCorrectionNotes}</span><br><br>` : "") + cleanRenderText;
+            
+            if (stagePassed) {
+                dynamicOptimizationStage++;
             }
         }
 
-        aiDiv.innerText = cleanText;
-
-    } catch (error) {
-        aiDiv.innerText = "Connection lost. Please declare your strategy conditions parameters clearly.";
+    } catch (apiError) {
+        aiDiv.innerText = "Connection link to Google Gemini Pro was interrupted. Retrying data loops...";
     } finally {
         input.disabled = false;
         button.disabled = false;
         input.focus();
         chat.scrollTop = chat.scrollHeight;
         
-        checkSessionCompletion();
-        syncChatToFirestore();
-    }
-}
-
-function updateStrategicUIFields(data) {
-    const strategicFields = ['entry_rules', 'exit_rules', 'risk_management'];
-    
-    if (sessionData.entry_rules === "Waiting...") {
-        sessionData.entry_rules = "EMA / Volatility Crossover";
-        document.getElementById("val-entry").innerText = "EMA / Volatility Crossover";
-        document.getElementById("val-entry").classList.add("set");
-    }
-    if (sessionData.exit_rules === "Waiting...") {
-        sessionData.exit_rules = "Fixed Take Profit Targets";
-        document.getElementById("val-exit").innerText = "Fixed Take Profit Targets";
-        document.getElementById("val-exit").classList.add("set");
-    }
-    if (sessionData.risk_management === "Waiting...") {
-        sessionData.risk_management = "Compound Fixed Sizing 0.6 Lots";
-        document.getElementById("val-risk").innerText = "Compound Fixed Sizing 0.6 Lots";
-        document.getElementById("val-risk").classList.add("set");
-    }
-
-    strategicFields.forEach(field => {
-        const targetId = `val-${field.split('_')[0]}`;
-        const uiElement = document.getElementById(targetId);
-        
-        if (data[field] && data[field] !== "Waiting...") {
-            sessionData[field] = data[field];
-            uiElement.innerText = data[field];
-            uiElement.classList.add('set');
-        }
-    });
-}
-
-function checkSessionCompletion() {
-    if (
-        sessionData.entry_rules !== "Waiting..." &&
-        sessionData.exit_rules !== "Waiting..." &&
-        sessionData.risk_management !== "Waiting..."
-    ) {
-        if (dynamicOptimizationStage === 0) {
-            forceAbsoluteChatTerminationHandoff("Strategy variables locked.");
+        if (dynamicOptimizationStage <= 2) {
+            advanceToNextSequentialMilestoneQuestion();
+        } else {
+            forceAbsoluteChatTerminationHandoff();
         }
     }
 }
 
-function forceAbsoluteChatTerminationHandoff(lastUserText) {
-    currentEngineMode = "locked";
-    
+function advanceToNextSequentialMilestoneQuestion() {
     const chat = document.getElementById("chat");
-    const inputField = document.getElementById("messageInput");
-    
-    if(lastUserText && inputField.value !== "") {
-        const userDiv = document.createElement("div");
-        userDiv.className = "message user";
-        userDiv.innerText = lastUserText;
-        chat.appendChild(userDiv);
-        messagesHistory.push({ role: "user", content: lastUserText });
+    let nextPromptText = "";
+    let placeholderText = "";
+
+    if (dynamicOptimizationStage === 1 && messagesHistory.length <= 2) {
+        nextPromptText = "🧬 **Milestone 1: Strategy Execution Logic Audit (API Validation)**<br>Please enter your precise strategy **Entry and Exit Triggers**. Provide details on what specific combination of conditions or pip limits cause your bot to execute trades.";
+        placeholderText = "Specify indicator trigger thresholds or explicit pip targets details...";
+        
+        const aiDiv = document.createElement("div");
+        aiDiv.className = "message ai";
+        aiDiv.innerHTML = nextPromptText;
+        chat.appendChild(aiDiv);
+        messagesHistory.push({ role: "assistant", content: nextPromptText });
+    } else if (dynamicOptimizationStage === 2 && sessionData.risk_management === "Waiting...") {
+        nextPromptText = "🧬 **Milestone 2: Capital Sizing & Sizing Audit (API Validation)**<br>Strategy execution limits confirmed. Final step: Outline your exact **Risk Management Parameters**. State your rigid fixed lot dimension bounds (e.g. 0.2 lots) or floating equity percentages.";
+        placeholderText = "State precise lot sizing constraints or percentage allocations...";
+        
+        const aiDiv = document.createElement("div");
+        aiDiv.className = "message ai";
+        aiDiv.innerHTML = nextPromptText;
+        chat.appendChild(aiDiv);
+        messagesHistory.push({ role: "assistant", content: nextPromptText });
     }
 
-    updateStrategicUIFields({});
+    if (placeholderText) document.getElementById("messageInput").placeholder = placeholderText;
+    chat.scrollTop = chat.scrollHeight;
+    syncChatToFirestore();
+}
+
+function forceAbsoluteChatTerminationHandoff() {
+    currentEngineMode = "locked";
+    const chat = document.getElementById("chat");
+    
+    document.getElementById("delivery-row").style.display = "flex";
 
     const closingSummaryDiv = document.createElement("div");
     closingSummaryDiv.className = "message ai";
     closingSummaryDiv.style.cssText = "border: 1px solid rgba(168, 85, 247, 0.2); background: linear-gradient(135deg, #0b0f19 0%, #060814 100%);";
     closingSummaryDiv.innerHTML = `
-        <p style="font-weight:700; color:#10b981; margin-bottom:4px; font-size:14px;"><i class="fa-solid fa-circle-check"></i> Strategy Profile Specification Completed!</p>
-        <p style="margin-bottom:12px; color:#d1d5db;">We have successfully extracted and verified all structural market parameters from your chat inputs. Your strategy rules are now saved into the Configuration Matrix sidebar panel.</p>
-        <p style="font-weight:600; color:#ffffff; margin-bottom:8px;">Choose your next step:</p>
+        <p style="font-weight:700; color:#10b981; margin-bottom:4px; font-size:14px;"><i class="fa-solid fa-circle-check"></i> Gemini Pro Strategy Audit Passed!</p>
+        <p style="margin-bottom:12px; color:#d1d5db;">All absolute indicator formulas and capitalization variables are locked down into your side matrix ledger mapping charts.</p>
         
-        <div class="options-container" style="gap:12px; margin-top:8px;">
-            <a href="bot_automation.html" class="option-btn" style="background:#2563eb; border-color:#2563eb; color:#ffffff; text-decoration:none; font-weight:700; display:inline-block; padding:10px 20px;">
-                <i class="fa-solid fa-store"></i> See Our Plans & Store
-            </a>
-            <button class="option-btn" onclick="resumeActiveQueryChannel()" style="background:rgba(255,255,255,0.02); border-color:rgba(255,255,255,0.1); color:#9ca3af;">
-                <i class="fa-solid fa-comments"></i> I Have More Queries / Doubts
-            </button>
+        <p style="font-weight:700; color:#ffffff; margin-bottom:8px; font-size:13px; border-top: 1px dashed rgba(255,255,255,0.08); padding-top:12px;">📬 SELECT SECURE CHANNEL FOR BUNDLE DISTRIBUTION:</p>
+        
+        <div class="options-container" id="delivery-options-group" style="gap:10px;">
+            <button class="option-btn" onclick="selectDeliveryChannel('Gmail')"><i class="fa-solid fa-envelope text-red-400 mr-1"></i> Gmail / Email</button>
+            <button class="option-btn" onclick="selectDeliveryChannel('Telegram')"><i class="fa-brands fa-telegram text-sky-400 mr-1"></i> Telegram Sync</button>
+            <button class="option-btn" onclick="selectDeliveryChannel('WhatsApp')"><i class="fa-brands fa-whatsapp text-emerald-400 mr-1"></i> WhatsApp Core</button>
+            <button class="option-btn" onclick="selectDeliveryChannel('Discord')"><i class="fa-brands fa-discord text-indigo-400 mr-1"></i> Discord Webhook</button>
+            <button class="option-btn" onclick="selectDeliveryChannel('API Endpoint')"><i class="fa-solid fa-terminal text-emerald-400 mr-1"></i> Server API Webhook</button>
         </div>
     `;
     
@@ -976,57 +961,80 @@ function forceAbsoluteChatTerminationHandoff(lastUserText) {
     
     const containerWrapper = document.getElementById("inputContainerWrapper");
     containerWrapper.innerHTML = `
-        <div class="w-full text-center bg-zinc-900/60 p-4 rounded-xl border border-dashed border-white/5 text-xs font-mono text-zinc-500 uppercase tracking-widest">
-            <i class="fa-solid fa-lock text-brand-purple animate-pulse mr-1"></i> Strategy Analysis Compiled & Conformed. Select option above.
+        <div class="w-full text-center bg-zinc-900/60 p-4 rounded-xl border border-dashed border-white/5 text-xs font-mono text-zinc-500">
+            Select secure delivery hub pipeline route above to complete file generation targets.
         </div>
     `;
 
-    document.getElementById("assistant-mode-desc").innerText = "Requirements processing matrix locked. Choose a terminal action to proceed.";
+    document.getElementById("assistant-mode-desc").innerText = "Requirements matrix finalized. Awaiting secure route link selection.";
     const badge = document.getElementById("status-badge");
     badge.className = "status locked";
-    document.getElementById("status-text").innerText = "Session Concluded";
+    document.getElementById("status-text").innerText = "Handoff Pending";
 
     chat.scrollTop = chat.scrollHeight;
     syncChatToFirestore();
 }
 
-function resumeActiveQueryChannel() {
-    currentEngineMode = "ai";
-    freeChatTurnCounter = 0; 
+window.selectDeliveryChannel = function(channelName) {
+    sessionData.delivery_method = channelName;
+    document.getElementById("val-delivery").innerText = channelName;
+    document.getElementById("val-delivery").className = "value set text-emerald-400";
+
+    const optionsArea = document.getElementById("delivery-options-group");
+    if(optionsArea) optionsArea.remove();
+
+    const chat = document.getElementById("chat");
+    const userDiv = document.createElement("div");
+    userDiv.className = "message user";
+    userDiv.innerText = `Selected Channel: ${channelName}`;
+    chat.appendChild(userDiv);
+    messagesHistory.push({ role: "user", content: `Selected secure handoff channel: ${channelName}` });
+
+    let placeholderText = channelName === "Gmail" ? "Enter receiving email address..." : "Enter phone layout / account handle payload details...";
+    let systemInstructionPrompt = `Handoff port set to ${channelName}. Drop your contact details (phone string or handle coordinates) below to save parameters permanently.`;
+
+    const nextPromptDiv = document.createElement("div");
+    nextPromptDiv.className = "message ai";
+    nextPromptDiv.innerText = systemInstructionPrompt;
+    chat.appendChild(nextPromptDiv);
+    messagesHistory.push({ role: "assistant", content: systemInstructionPrompt });
+
+    currentEngineMode = "delivery_input";
     
     const containerWrapper = document.getElementById("inputContainerWrapper");
     containerWrapper.innerHTML = `
-        <div class="input-area" id="inputAreaField">
-            <input
-                id="messageInput"
-                placeholder="Ask any query, doubt, or request rules modifications..."
-                onkeydown="if(event.key === 'Enter') checkAndProcessInput()"
-            >
-            <button id="sendButton" onclick="checkAndProcessInput()">
-                Send
+        <div class="flex items-center gap-3 bg-brand-card p-2 pl-5 rounded-2xl border border-white/10 focus-within:border-brand-accent focus-within:ring-1 focus-within:ring-brand-accent/50 transition-all shadow-xl" id="inputAreaField">
+            <input id="messageInput" class="flex-1 bg-transparent border-none text-white text-sm outline-none w-full placeholder-zinc-500" placeholder="${placeholderText}" onkeydown="if(event.key === 'Enter') checkAndProcessInput()">
+            <button id="sendButton" onclick="checkAndProcessInput()" class="h-11 px-6 rounded-xl bg-brand-success hover:bg-emerald-500 text-white font-medium text-sm transition-colors flex items-center gap-2">
+                Submit & Lock <i class="fa-solid fa-lock text-xs"></i>
             </button>
         </div>
     `;
 
-    document.getElementById("assistant-mode-desc").innerText = "AI Consultation Phase: Designing execution triggers, multi-timeframe candle rules, and risk configurations.";
-    const badge = document.getElementById("status-badge");
-    badge.className = "status ai-mode";
-    document.getElementById("status-text").innerText = "AI Assistant Online";
-
-    const chat = document.getElementById("chat");
-    const aiConfirmDiv = document.createElement("div");
-    aiConfirmDiv.className = "message ai";
-    aiConfirmDiv.innerText = "Understood! The consultation channel remains fully open. Please enter any specific strategy queries or doubts below:";
-    
-    chat.appendChild(aiConfirmDiv);
-    
     document.getElementById("messageInput").focus();
     chat.scrollTop = chat.scrollHeight;
     syncChatToFirestore();
 }
 
-function engageFreeUserTimeLockout() {
-    // Retained for framework lifecycle dependency requirements
+function processDeliveryAddressInput() {
+    const inputElement = document.getElementById("messageInput");
+    const routingAddressText = inputElement.value.trim();
+    if (!routingAddressText) return;
+
+    sessionData.delivery_address = routingAddressText;
+
+    const chat = document.getElementById("chat");
+    const userAddressDiv = document.createElement("div");
+    userAddressDiv.className = "message user";
+    userAddressDiv.innerText = routingAddressText;
+    chat.appendChild(userAddressDiv);
+    messagesHistory.push({ role: "user", content: routingAddressText });
+
+    inputElement.value = "";
+    currentEngineMode = "completed_final";
+
+    renderFinalStaticLockedLayout();
+    syncChatToFirestore();
 }
 </script>
 

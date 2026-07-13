@@ -14,7 +14,7 @@
     <div style="text-align:center;">
         <h2 id="status">Verifying payment...</h2>
         <p id="details" style="color:#848e9c; margin-bottom: 20px;"></p>
-        <a id="homeBtn" href="https://backtestlabpro.com" target="_top" style="display:none; background:#0ecb81; color:black; font-weight:bold; padding:12px 24px; border-radius:8px; text-decoration:none; font-size:16px; transition: background 0.2s;">
+        <a id="homeBtn" href="https://backtestlabpro.com" style="display:none; background:#0ecb81; color:black; font-weight:bold; padding:12px 24px; border-radius:8px; text-decoration:none; font-size:16px; transition: background 0.2s;">
             Go to Home Page
         </a>
     </div>
@@ -47,24 +47,46 @@
                     }, { merge: true });
 
                     statusEl.innerText = "Access Unlocked!";
-                    detailsEl.innerText = "Your payment was successful. Click below to return home.";
+                    detailsEl.innerText = "Your payment was successful. Redirecting...";
                     
-                    // Show the manual action button
+                    // Show manual action button as a backup option
                     homeBtn.style.display = "inline-block";
 
-                    // Handle button click logic to try closing the popup while navigating the parent
+                    // AUTOMATIC REDIRECT WORKAROUND
+                    setTimeout(() => {
+                        let redirected = false;
+
+                        // 1. Try to redirect the parent tab/window if it exists
+                        if (window.opener && !window.opener.closed) {
+                            try {
+                                window.opener.location.href = "https://backtestlabpro.com";
+                                window.close(); // Close this popup window automatically
+                                redirected = true;
+                            } catch (crossOriginError) {
+                                // Cross-origin security blocked us (e.g., localhost vs backtestlabpro.com)
+                                console.log("Cross-origin opener redirect blocked, falling back to window redirect...");
+                            }
+                        }
+
+                        // 2. Fallback: If we couldn't redirect the parent tab, redirect THIS window instead
+                        if (!redirected) {
+                            window.location.replace("https://backtestlabpro.com");
+                        }
+                    }, 2000);
+
+                    // Manual button fallback handler
                     homeBtn.onclick = function(e) {
                         if (window.opener && !window.opener.closed) {
                             try {
                                 window.opener.location.href = "https://backtestlabpro.com";
                                 window.close();
-                                return false; // Prevents the default anchor jump if successful
+                                return false;
                             } catch (err) {
-                                // Fallback if cross-origin controls block opener redirection
-                                return true;
+                                // ignore cross-origin error and fall through to default redirect
                             }
                         }
-                        return true; // Let target="_top" or default routing take over if parent isn't found
+                        window.location.href = "https://backtestlabpro.com";
+                        return true;
                     };
 
                 } catch (error) {

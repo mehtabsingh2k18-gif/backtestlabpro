@@ -469,7 +469,7 @@
                 if (nameDisplay) nameDisplay.textContent = user.displayName || "Anonymous Trader";
                 if (emailDisplay) emailDisplay.textContent = user.email || "sandbox@backtestlabpro.com";
 
-                // Pull plan status from Firestore path: users/{uid}/plan/current
+                // UPDATED: Pull plan status from the root user document layout path: users/{uid}
                 await checkUserPlanStatus(user.uid);
 
                 await fetchRealFirestoreSessions(user.uid);
@@ -491,12 +491,13 @@
 
         async function checkUserPlanStatus(uid) {
             try {
-                const planDocRef = doc(db, "users", uid, "plan", "current");
-                const planSnap = await getDoc(planDocRef);
+                // FIXED: Now references the exact path from your second screenshot: users/{uid}
+                const userDocRef = doc(db, "users", uid);
+                const userSnap = await getDoc(userDocRef);
                 const planDisplay = document.getElementById('profile-box-plan');
                 
                 if (planDisplay) {
-                    if (planSnap.exists() && planSnap.data().isPaid === true) {
+                    if (userSnap.exists() && userSnap.data().isPaid === true) {
                         planDisplay.textContent = "PRO";
                         planDisplay.className = "text-[9px] font-black tracking-wider px-1.5 py-0.5 rounded uppercase bg-gradient-to-r from-amber-400 to-amber-600 text-gray-950 shadow-sm";
                         planDisplay.classList.remove('hidden');

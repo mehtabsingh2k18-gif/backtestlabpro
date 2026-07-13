@@ -2,21 +2,113 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Verifying Payment...</title>
+    <title>Payment Successful - Backtest Lab Pro</title>
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
 
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-</head>
-<body style="background:#0b0e11; color:white; font-family:sans-serif; display:flex; justify-content:center; align-items:center; height:100vh; margin:0;">
     
-    <div style="text-align:center;">
-        <h2 id="status">Verifying subscription...</h2>
-        <p id="details" style="color:#848e9c; margin-bottom: 20px;"></p>
-        <a id="homeBtn" href="https://backtestlabpro.com" style="display:none; background:#0ecb81; color:black; font-weight:bold; padding:12px 24px; border-radius:8px; text-decoration:none; font-size:16px; transition: background 0.2s;">
-            Go to Home Page
-        </a>
+    <style>
+        body {
+            background: #0b0e11;
+            color: white;
+            font-family: 'Inter', sans-serif, system-ui;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .success-card {
+            background: #181a20;
+            border: 1px solid #2b3139;
+            padding: 40px;
+            border-radius: 16px;
+            text-align: center;
+            max-width: 480px;
+            width: 90%;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        .icon-container {
+            margin-bottom: 24px;
+        }
+        .success-icon {
+            width: 64px;
+            height: 64px;
+            background: rgba(14, 203, 129, 0.1);
+            border-radius: 50%;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            color: #0ecb81;
+        }
+        h2 {
+            margin: 0 0 12px 0;
+            font-size: 28px;
+            font-weight: 700;
+        }
+        p {
+            color: #848e9c;
+            font-size: 16px;
+            line-height: 1.6;
+            margin: 0 0 32px 0;
+        }
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .btn {
+            display: block;
+            padding: 14px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            box-sizing: border-box;
+        }
+        .btn-primary {
+            background: #0ecb81;
+            color: #0b0e11;
+        }
+        .btn-primary:hover {
+            background: #0bba74;
+        }
+        .btn-secondary {
+            background: transparent;
+            color: #eaecef;
+            border: 1px solid #474f59;
+        }
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: #848e9c;
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="success-card">
+        <div class="icon-container">
+            <div class="success-icon" id="statusIcon">
+                <!-- SVG Checkmark Spinner Placeholder -->
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            </div>
+        </div>
+        
+        <h2 id="status">Verifying Payment...</h2>
+        <p id="details">Please hold tight while we securely update your institutional workspace access parameters.</p>
+        
+        <div class="btn-group" id="actionGroup" style="display: none;">
+            <a id="homeBtn" href="https://backtestlabpro.com" class="btn btn-primary">
+                Launch Platform & Start Testing
+            </a>
+            <!-- Link this button to your support center, Discord, or live chat portal -->
+            <a id="chatBtn" href="https://backtestlabpro.com/support" class="btn btn-secondary">
+                Contact Live Support Chat
+            </a>
+        </div>
     </div>
 
     <script>
@@ -34,7 +126,9 @@
 
         const statusEl = document.getElementById('status');
         const detailsEl = document.getElementById('details');
+        const actionGroup = document.getElementById('actionGroup');
         const homeBtn = document.getElementById('homeBtn');
+        const chatBtn = document.getElementById('chatBtn');
 
         auth.onAuthStateChanged(async (user) => {
             if (user) {
@@ -46,30 +140,47 @@
                         paymentDate: firebase.firestore.FieldValue.serverTimestamp()
                     }, { merge: true });
 
-                    statusEl.innerText = "Access Unlocked!";
-                    detailsEl.innerText = "Your subscription was activated successfully. Redirecting you home...";
+                    // Upgrade to professional, premium message
+                    statusEl.innerText = "Payment Confirmed";
+                    detailsEl.innerText = "Thank you for subscribing to Backtest Lab Pro. Your professional bot testing toolkit has been fully provisioned. You may now return to the main environment or open a support dialog.";
                     
-                    // Show manual backup button
-                    homeBtn.style.display = "inline-block";
+                    // Reveal the premium option layout panel
+                    actionGroup.style.display = "flex";
 
-                    // Clean full-screen history replace to clear the payment screens from history stack
-                    setTimeout(() => {
-                        window.location.replace("https://backtestlabpro.com");
-                    }, 2000);
-
-                    homeBtn.onclick = function(e) {
-                        window.location.href = "https://backtestlabpro.com";
+                    // Handle window closures cleanly if they came from an explicitly captured pop-up instance
+                    const handleNavigation = function(targetUrl) {
+                        if (window.opener && !window.opener.closed) {
+                            try {
+                                window.opener.location.href = targetUrl;
+                                window.close();
+                                return false;
+                            } catch (err) {
+                                // fallback logic handled natively below
+                            }
+                        }
+                        window.location.href = targetUrl;
                         return true;
                     };
 
+                    homeBtn.onclick = function(e) {
+                        e.preventDefault();
+                        handleNavigation("https://backtestlabpro.com");
+                    };
+
+                    chatBtn.onclick = function(e) {
+                        // Change this endpoint string to your contact/chat layout if different
+                        e.preventDefault();
+                        handleNavigation("https://backtestlabpro.com/support");
+                    };
+
                 } catch (error) {
-                    statusEl.innerText = "Database Error!";
-                    detailsEl.innerText = "Code: " + error.code;
-                    console.error("Firestore Error:", error);
+                    statusEl.innerText = "Verification Delayed";
+                    detailsEl.innerText = "Your payment was processed, but database updates ran into an issue (Code: " + error.code + "). Please contact live support immediately.";
+                    actionGroup.style.display = "flex";
                 }
             } else {
-                statusEl.innerText = "Authentication Error";
-                detailsEl.innerHTML = "No user found. Please <a href='login.html' style='color:#3b82f6;'>log in</a> to verify your account.";
+                statusEl.innerText = "Authentication Missing";
+                detailsEl.innerHTML = "We couldn't link this transaction to your profile. Please <a href='login.html' style='color:#3b82f6; text-decoration:none;'>log back into your account</a> to re-verify.";
             }
         });
     </script>

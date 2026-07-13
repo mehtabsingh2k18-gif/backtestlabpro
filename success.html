@@ -47,44 +47,17 @@
                     }, { merge: true });
 
                     statusEl.innerText = "Access Unlocked!";
-                    detailsEl.innerText = "Your payment was successful. Redirecting...";
+                    detailsEl.innerText = "Your payment was successful. Redirecting you to the platform...";
                     
-                    // Show manual action button as a backup option
+                    // Show fallback button
                     homeBtn.style.display = "inline-block";
 
-                    // AUTOMATIC REDIRECT WORKAROUND
+                    // CLEAN DIRECT REDIRECT: Moves the main window browser timeline straight home
                     setTimeout(() => {
-                        let redirected = false;
-
-                        // 1. Try to redirect the parent tab/window if it exists
-                        if (window.opener && !window.opener.closed) {
-                            try {
-                                window.opener.location.href = "https://backtestlabpro.com";
-                                window.close(); // Close this popup window automatically
-                                redirected = true;
-                            } catch (crossOriginError) {
-                                // Cross-origin security blocked us (e.g., localhost vs backtestlabpro.com)
-                                console.log("Cross-origin opener redirect blocked, falling back to window redirect...");
-                            }
-                        }
-
-                        // 2. Fallback: If we couldn't redirect the parent tab, redirect THIS window instead
-                        if (!redirected) {
-                            window.location.replace("https://backtestlabpro.com");
-                        }
+                        window.location.replace("https://backtestlabpro.com");
                     }, 2000);
 
-                    // Manual button fallback handler
                     homeBtn.onclick = function(e) {
-                        if (window.opener && !window.opener.closed) {
-                            try {
-                                window.opener.location.href = "https://backtestlabpro.com";
-                                window.close();
-                                return false;
-                            } catch (err) {
-                                // ignore cross-origin error and fall through to default redirect
-                            }
-                        }
                         window.location.href = "https://backtestlabpro.com";
                         return true;
                     };

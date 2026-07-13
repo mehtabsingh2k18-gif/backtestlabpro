@@ -12,7 +12,7 @@
 <body style="background:#0b0e11; color:white; font-family:sans-serif; display:flex; justify-content:center; align-items:center; height:100vh; margin:0;">
     
     <div style="text-align:center;">
-        <h2 id="status">Verifying payment...</h2>
+        <h2 id="status">Verifying subscription...</h2>
         <p id="details" style="color:#848e9c; margin-bottom: 20px;"></p>
         <a id="homeBtn" href="https://backtestlabpro.com" style="display:none; background:#0ecb81; color:black; font-weight:bold; padding:12px 24px; border-radius:8px; text-decoration:none; font-size:16px; transition: background 0.2s;">
             Go to Home Page
@@ -47,12 +47,12 @@
                     }, { merge: true });
 
                     statusEl.innerText = "Access Unlocked!";
-                    detailsEl.innerText = "Your payment was successful. Redirecting you to the platform...";
+                    detailsEl.innerText = "Your subscription was activated successfully. Redirecting you home...";
                     
-                    // Show fallback button
+                    // Show manual backup button
                     homeBtn.style.display = "inline-block";
 
-                    // CLEAN DIRECT REDIRECT: Moves the main window browser timeline straight home
+                    // Clean full-screen history replace to clear the payment screens from history stack
                     setTimeout(() => {
                         window.location.replace("https://backtestlabpro.com");
                     }, 2000);
@@ -69,7 +69,7 @@
                 }
             } else {
                 statusEl.innerText = "Authentication Error";
-                detailsEl.innerHTML = "No user found. Please <a href='login.html' style='color:#3b82f6;'>log in</a> to verify payment.";
+                detailsEl.innerHTML = "No user found. Please <a href='login.html' style='color:#3b82f6;'>log in</a> to verify your account.";
             }
         });
     </script>

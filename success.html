@@ -5,6 +5,7 @@
     <title>Payment Successful - Backtest Lab Pro</title>
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
 
+    <!-- Firebase SDK Legacy Architecture Configuration Compatibility Layer -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
@@ -92,7 +93,6 @@
     <div class="success-card">
         <div class="icon-container">
             <div class="success-icon" id="statusIcon">
-                <!-- SVG Checkmark Spinner Placeholder -->
                 <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
             </div>
         </div>
@@ -104,7 +104,6 @@
             <a id="homeBtn" href="https://backtestlabpro.com" class="btn btn-primary">
                 Launch Platform & Start Testing
             </a>
-            <!-- Link this button to your support center, Discord, or live chat portal -->
             <a id="chatBtn" href="https://backtestlabpro.com/support" class="btn btn-secondary">
                 Contact Live Support Chat
             </a>
@@ -130,9 +129,17 @@
         const homeBtn = document.getElementById('homeBtn');
         const chatBtn = document.getElementById('chatBtn');
 
-        // Extract the paid amount from URL parameter (?amount=XXX)
+        // Extract PayPal token from the URL context parameter block
         const urlParams = new URLSearchParams(window.location.search);
-        const paidAmount = urlParams.get('amount') || "unknown";
+        const paypalButtonId = urlParams.get('hosted_button_id');
+        
+        // Dynamic valuation lookups dependent on localized incoming hostedButtonId strings
+        let paidAmount = "unknown";
+        if (paypalButtonId === "USVACKY4BVR5A") {
+            paidAmount = "399";  // Simple Bot Plan
+        } else if (paypalButtonId === "8LGE5JN33V32C") {
+            paidAmount = "599";  // Standard Bot Plan
+        }
 
         auth.onAuthStateChanged(async (user) => {
             if (user) {
@@ -173,7 +180,6 @@
                     };
 
                     chatBtn.onclick = function(e) {
-                        // Change this endpoint string to your contact/chat layout if different
                         e.preventDefault();
                         handleNavigation("https://backtestlabpro.com/support");
                     };

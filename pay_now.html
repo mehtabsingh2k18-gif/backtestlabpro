@@ -18,21 +18,31 @@
     <p>Simple Bot Development Plan</p>
     <div class="price">$399</div>
     
-    <div id="paypal-container-GYAN543ZWBGZU"></div>
+    <!-- Your New Sandbox Simple Bot Button Container -->
+    <div id="paypal-container-3R2KSNWVUKLD4"></div>
 </div>
 
+<!-- Your Sandbox PayPal SDK Script -->
 <script src="https://www.paypal.com/sdk/js?client-id=BAAIxL6sY1nW3RpS7Zmal5r7JuDAMcnOA9x--pfWti7tCWNkveT_7mv50Mk6JdeALr1Eip-h0g7DRrituw&components=hosted-buttons&disable-funding=venmo&currency=USD"></script>
+
 <script>
   paypal.HostedButtons({
-    hostedButtonId: "GYAN543ZWBGZU",
-    // Enforcing basic window interaction settings to prevent standard script environment sandboxing
+    hostedButtonId: "3R2KSNWVUKLD4",
+    style: {
+        layout: 'vertical'
+    },
     onInit: function(data, actions) {
-      console.log("PayPal Hosted Button initialized successfully.");
+      console.log("PayPal Sandbox Hosted Button initialized successfully.");
+    },
+    onApprove: function(data, actions) {
+      console.log("Payment approved!");
+      // Fallback local routing
+      window.location.href = "https://backtestlabpro.com/success_simple.html";
     },
     onError: function(err) {
-      console.error("PayPal Popup System Blocked:", err);
+      console.error("PayPal Sandbox Error:", err);
     }
-  }).render("#paypal-container-GYAN543ZWBGZU")
+  }).render("#paypal-container-3R2KSNWVUKLD4")
 </script>
 
 </body>

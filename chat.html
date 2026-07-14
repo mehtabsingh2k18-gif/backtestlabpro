@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
 
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
@@ -438,9 +438,9 @@ body {
             <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
             <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
         </svg>
-        <h2 style="color: #ffffff; font-size: 20px; font-weight: 600; margin-bottom: 8px;">Authentication Required</h2>
-        <p style="color: #9ca3af; font-size: 14px; line-height: 1.5;">Please sign in to your account to build, optimize, and export your production trading strategies.</p>
-        <button class="auth-btn" onclick="triggerFallbackRedirect()">Go to Login Page</button>
+        <h2 style="color: #ffffff; font-size: 20px; font-weight: 600; margin-bottom: 8px;">Authentication Sandbox</h2>
+        <p style="color: #9ca3af; font-size: 14px; line-height: 1.5;">Enter the playground interface dashboard area to begin compiling rules structure cycles.</p>
+        <button class="auth-btn" onclick="document.getElementById('authGate').style.display='none'; document.getElementById('appMainLayout').style.display='flex'; checkCooldownOnLoad();">Open Strategy Workspace</button>
     </div>
 </div>
 
@@ -507,12 +507,12 @@ body {
             <polyline points="12 6 12 12 16 14"></polyline>
         </svg>
         <h2 style="margin-top: 24px; font-size: 24px;">Free Session Limit Reached</h2>
-        <p style="color: #6b7280; max-width: 400px; margin-top: 8px; line-height: 1.5;">You have completed your free blueprint optimization session. Free evaluation slots reopen every 120 minutes per profile.</p>
-        <div class="cooldown-timer" id="countdownClock">120:00</div>
+        <p style="color: #6b7280; max-width: 400px; margin-top: 8px; line-height: 1.5;">You have completed your free blueprint optimization session. Free evaluation slots reopen every 15 minutes per profile.</p>
+        <div class="cooldown-timer" id="countdownClock">15:00</div>
         <p style="font-size: 13px; color: #9ca3af;">Want to skip the wait times and develop unlimited trading bots? <a href="/services" style="color:#3b82f6; text-decoration: none; font-weight:600;">Upgrade to a Service Plan &rarr;</a></p>
     </div>
 
-    <aside class="sidebar">
+    <aside class="sidebar" id="appSidebar">
         <div class="sidebar-header">
             <h2>Configuration Matrix</h2>
             <div class="status" id="status-badge">
@@ -551,42 +551,23 @@ body {
                 <div class="label">Risk Management</div>
                 <div class="value" id="val-risk">Waiting...</div>
             </div>
-
-            <div class="info-item" id="delivery-row" style="display: none;">
-                <div class="label">Delivery Channel</div>
-                <div class="value" id="val-delivery" style="color: #10b981;">Not Picked</div>
-            </div>
         </div>
     </aside>
 
 </div>
 
 <script>
-const firebaseConfig = {
-    apiKey: "AIzaSyAensfI53w49Fd4A7Lz5_K9N1JOxZsW7Kk",
-    authDomain: "backtestlabpro.firebaseapp.com",
-    projectId: "backtestlabpro",
-    storageBucket: "backtestlabpro.firebasestorage.app",
-    messagingSenderId: "560146824734",
-    appId: "1:560146824734:web:5287d0ded3a1024e75780f"
-};
+const db = { collection: () => ({ doc: () => ({ collection: () => ({ doc: () => ({ set: async () => {} }) }) }) }) };
 
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-const auth = firebase.auth();
+const BACKEND_API_URL = "http://localhost:5000/api/chat";
 
-const GROQ_API_KEY = "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";
 let currentStep = 0; 
 let currentEngineMode = "form"; 
-let userPlanTier = "free";     
-let dynamicOptimizationStage = 0; 
+let userPlanTier = "free";      
+let cooldownIntervalId = null;
 
-// STRICT MAXIMUM CONVERSATIONAL COUNTER GATES
-let freeChatTurnCounter = 0;
-const MAX_FREE_TURNS_THRESHOLD = 4; 
-
-let currentUserId = null;
-let chatSessionId = null;
+let currentUserId = "sandbox_user";
+let chatSessionId = "sandbox_session";
 
 let sessionData = {
     platform: "Not Set",
@@ -594,8 +575,7 @@ let sessionData = {
     timeframe: "Not Set",
     entry_rules: "Waiting...",
     exit_rules: "Waiting...",
-    risk_management: "Waiting...",
-    delivery_method: "Not Picked"
+    risk_management: "Waiting..."
 };
 
 let messagesHistory = [];
@@ -613,120 +593,53 @@ const guidedQuestions = [
     }
 ];
 
-auth.onAuthStateChanged((user) => {
-    if (user) {
-        currentUserId = user.uid;
-        document.getElementById("authGate").style.display = "none";
-        document.getElementById("appMainLayout").style.display = "flex";
-        
-        messagesHistory = [{
-            role: "assistant",
-            content: "Hello 👋 Welcome to Backtest Lab Pro Automation.\n\nLet's setup your project framework first. Which Target Platform do you want to build this trading bot for?"
-        }];
-        
-        chatSessionId = db.collection("users").doc(currentUserId).collection("chats").doc().id;
-        
-        checkCooldownTimerLockState();
-        syncChatToFirestore();
-    } else {
-        currentUserId = null;
-        chatSessionId = null;
-        document.getElementById("authGate").style.display = "flex";
-        document.getElementById("appMainLayout").style.display = "none";
-    }
+window.addEventListener('DOMContentLoaded', () => {
+    document.getElementById("authGate").style.display = "flex";
 });
 
-function generateReadableTranscript() {
-    let textDoc = "==================================================\n";
-    textDoc += "       BACKTEST LAB PRO - BOT SESSION BLUEPRINT     \n";
-    textDoc += "==================================================\n\n";
-    textDoc += `[CONFIGURATION MATRIX]\n`;
-    textDoc += `• Platform: ${sessionData.platform}\n`;
-    textDoc += `• Market: ${sessionData.market}\n`;
-    textDoc += `• Base Timeframe: ${sessionData.timeframe}\n`;
-    textDoc += `• Strategy Entry Rules: ${sessionData.entry_rules}\n`;
-    textDoc += `• Strategy Exit Rules: ${sessionData.exit_rules}\n`;
-    textDoc += `• Risk Parameters Management: ${sessionData.risk_management}\n`;
-    textDoc += `• Secure File Delivery Channel: ${sessionData.delivery_method}\n\n`;
-    textDoc += "==================================================\n";
-    textDoc += "               COMPLETE DIALOGUE LOG               \n";
-    textDoc += "==================================================\n";
-
-    messagesHistory.forEach(msg => {
-        if (msg.role === "system") return;
-        let speaker = msg.role === "user" ? "USER" : "AI ASSISTANT";
-        let cleanContent = msg.content.split("---DATA---")[0].trim();
-        textDoc += `\n[${speaker}]:\n${cleanContent}\n`;
-        textDoc += "--------------------------------------------------\n";
-    });
-
-    return textDoc;
-}
-
-// CONSOLIDATED SYNC FUNCTION
-async function syncChatToFirestore() {
-    if (!currentUserId || !chatSessionId) return;
-    try {
-        await db.collection("users").doc(currentUserId).collection("chats").doc(chatSessionId).set({
-            sessionData: sessionData,
-            messagesHistory: messagesHistory,
-            readableTranscript: generateReadableTranscript(),
-            currentStep: currentStep,
-            engineMode: currentEngineMode,
-            optimizationStage: dynamicOptimizationStage,
-            lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
-        }, { merge: true });
-
-    } catch (error) {
-        console.error("Firestore tracking layout sync exception: ", error);
-    }
-}
-
-function triggerFallbackRedirect() {
-    alert("Redirecting to login portal context framework...");
-}
-
-function checkCooldownTimerLockState() {
-    if (!currentUserId) return;
-    const activeLockoutTime = localStorage.getItem(`backtestlab_cooldown_expiry_${currentUserId}`);
-    if (activeLockoutTime) {
-        const remainingMs = parseInt(activeLockoutTime) - Date.now();
-        if (remainingMs > 0) {
-            document.getElementById("activeChatWrapper").style.display = "none";
-            document.getElementById("cooldownOverlay").style.display = "flex";
-            startCountdownClockTicker(remainingMs);
+// Checks if a cooldown is saved in localStorage when entering the workspace
+function checkCooldownOnLoad() {
+    if (userPlanTier === "paid") return;
+    
+    const cooldownEnd = localStorage.getItem("freeChatCooldownEnd");
+    if (cooldownEnd) {
+        const timeLeft = parseInt(cooldownEnd) - Date.now();
+        if (timeLeft > 0) {
+            triggerCooldownScreen(timeLeft);
         } else {
-            localStorage.removeItem(`backtestlab_cooldown_expiry_${currentUserId}`);
+            localStorage.removeItem("freeChatCooldownEnd");
         }
     }
-}
-
-function startCountdownClockTicker(msDuration) {
-    const clock = document.getElementById("countdownClock");
-    function updateClock() {
-        if (!currentUserId) return;
-        const now = Date.now();
-        const future = parseInt(localStorage.getItem(`backtestlab_cooldown_expiry_${currentUserId}`));
-        const diff = future - now;
-
-        if (diff <= 0) {
-            localStorage.removeItem(`backtestlab_cooldown_expiry_${currentUserId}`);
-            location.reload();
-            return;
-        }
-
-        const totalSecs = Math.floor(diff / 1000);
-        const mins = Math.floor(totalSecs / 60);
-        const secs = totalSecs % 60;
-        
-        clock.innerText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-        setTimeout(updateClock, 1000);
-    }
-    updateClock();
 }
 
 function toggleUserPlanTier() {
     userPlanTier = document.getElementById("tierSelector").value;
+    
+    if (userPlanTier === "paid") {
+        // Break out of cooldown lock immediately if user updates to paid tier
+        if (cooldownIntervalId) clearInterval(cooldownIntervalId);
+        localStorage.removeItem("freeChatCooldownEnd");
+        
+        document.getElementById("cooldownOverlay").style.display = "none";
+        document.getElementById("activeChatWrapper").style.display = "flex";
+        document.getElementById("appSidebar").style.display = "flex";
+        
+        currentEngineMode = "ai";
+        document.getElementById("assistant-mode-desc").innerText = "AI Consultation Phase: Designing execution triggers, multi-timeframe candle rules, and risk configurations.";
+        const badge = document.getElementById("status-badge");
+        badge.className = "status ai-mode";
+        document.getElementById("status-text").innerText = "AI Assistant Online";
+        
+        const containerWrapper = document.getElementById("inputContainerWrapper");
+        containerWrapper.innerHTML = `
+            <div class="input-area" id="inputAreaField">
+                <input id="messageInput" placeholder="Describe your parameters adjustment adjustments...">
+                <button id="sendButton" onclick="checkAndProcessInput()">Send</button>
+            </div>
+        `;
+    } else {
+        checkCooldownOnLoad();
+    }
 }
 
 function handleHardcodedChoice(field, value) {
@@ -744,7 +657,7 @@ function handleHardcodedChoice(field, value) {
     userDiv.innerText = `${value}`;
     chat.appendChild(userDiv);
     
-    messagesHistory.push({ role: "user", content: value });
+    messagesHistory.push({ role: "user", parts: [{ text: value }] });
 
     if (currentStep < guidedQuestions.length) {
         const nextQuestion = guidedQuestions[currentStep];
@@ -758,10 +671,8 @@ function handleHardcodedChoice(field, value) {
             </div>`;
         chat.appendChild(aiDiv);
         
-        messagesHistory.push({ role: "assistant", content: nextQuestion.text });
-        
+        messagesHistory.push({ role: "model", parts: [{ text: nextQuestion.text }] });
         chat.scrollTop = chat.scrollHeight;
-        syncChatToFirestore();
     } else {
         initializeAIEngineMode();
     }
@@ -772,7 +683,7 @@ function initializeAIEngineMode() {
     const chat = document.getElementById("chat");
     
     document.getElementById("messageInput").disabled = false;
-    document.getElementById("messageInput").placeholder = "Describe your entry/exit strategy rules setup parameters...";
+    document.getElementById("messageInput").placeholder = "Explain your strategy logic (e.g. entry rules)...";
     document.getElementById("sendButton").disabled = false;
     
     document.getElementById("assistant-mode-desc").innerText = "AI Consultation Phase: Designing execution triggers, multi-timeframe candle rules, and risk configurations.";
@@ -780,32 +691,15 @@ function initializeAIEngineMode() {
     badge.className = "status ai-mode";
     document.getElementById("status-text").innerText = "AI Assistant Online";
 
-    messagesHistory.push({
-        role: "system",
-        content: `You are the Automation Assistant for Backtest Lab Pro.
-        Settings: Platform: ${sessionData.platform}, Asset: ${sessionData.market}, Timeframe: ${sessionData.timeframe}.
-        Your single purpose is to extract Entry Rules, Exit Rules, and Risk Management specifications. 
-        DO NOT draft long code blocks, scripts, files or instructions. Keep answers concise.
-        
-        At the end of EVERY response, append this JSON matrix format:
-        ---DATA---
-        {
-            "entry_rules": "Summarized entry or 'Waiting...'",
-            "exit_rules": "Summarized exit or 'Waiting...'",
-            "risk_management": "Summarized risk metrics or 'Waiting...'"
-        }`
-    });
-
-    const firstAIPrompt = `Great! Your infrastructure properties are saved:\n\n• **Platform**: ${sessionData.platform}\n• **Market**: ${sessionData.market}\n• **Timeframe**: ${sessionData.timeframe}\n\nNow, let's process your strategy. Please describe your **Entry and Exit Logic rules** in plain text (e.g., Indicators crossover, EMA rules, or RSI parameters).`;
+    const firstAIPrompt = `Great! Infrastructure properties saved. Let's begin building the matrix.\n\nPlease describe your custom **Entry rules** to start setup configurations.`;
     
-    messagesHistory.push({ role: "assistant", content: firstAIPrompt });
+    messagesHistory.push({ role: "model", parts: [{ text: firstAIPrompt }] });
     
     const aiDiv = document.createElement("div");
     aiDiv.className = "message ai";
     aiDiv.innerText = firstAIPrompt;
     chat.appendChild(aiDiv);
     chat.scrollTop = chat.scrollHeight;
-    syncChatToFirestore();
 }
 
 function checkAndProcessInput() {
@@ -815,13 +709,7 @@ function checkAndProcessInput() {
     const text = input.value.trim();
     if (!text) return;
 
-    freeChatTurnCounter++;
-
-    if (freeChatTurnCounter >= MAX_FREE_TURNS_THRESHOLD) {
-        forceAbsoluteChatTerminationHandoff(text);
-    } else {
-        sendAIMessage(text);
-    }
+    sendAIMessage(text);
 }
 
 async function sendAIMessage(text) {
@@ -839,34 +727,37 @@ async function sendAIMessage(text) {
     chat.scrollTop = chat.scrollHeight;
 
     input.value = "";
-    messagesHistory.push({ role: "user", content: text });
+    messagesHistory.push({ role: "user", parts: [{ text: text }] });
 
     const aiDiv = document.createElement("div");
     aiDiv.className = "message ai";
-    aiDiv.innerText = "Analyzing strategy logic criteria parameters...";
+    aiDiv.innerText = "Analyzing strategy logic parameters context structure...";
     chat.appendChild(aiDiv);
     chat.scrollTop = chat.scrollHeight;
 
     try {
-        const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+        const response = await fetch(BACKEND_API_URL, {
             method: "POST",
             headers: {
-                "Authorization": `Bearer ${GROQ_API_KEY}`,
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                model: "llama-3.3-70b-versatile",
-                messages: messagesHistory,
-                temperature: 0.2
+                messagesHistory: messagesHistory,
+                platform: sessionData.platform,
+                market: sessionData.market,
+                timeframe: sessionData.timeframe,
+                entry_rules: sessionData.entry_rules,
+                exit_rules: sessionData.exit_rules,
+                risk_management: sessionData.risk_management
             })
         });
 
-        if (!response.ok) throw new Error("API Interruption");
+        if (!response.ok) throw new Error("Backend system mapping proxy disruption loop");
 
         const data = await response.json();
-        const fullContent = data.choices[0].message.content;
+        const fullContent = data.text;
 
-        messagesHistory.push({ role: "assistant", content: fullContent });
+        messagesHistory.push({ role: "model", parts: [{ text: fullContent }] });
 
         let cleanText = fullContent;
         if (fullContent.includes("---DATA---")) {
@@ -877,49 +768,38 @@ async function sendAIMessage(text) {
                 const extractedJson = JSON.parse(parts[1].trim());
                 updateStrategicUIFields(extractedJson);
             } catch(e) {
-                console.error("JSON parsing error loop:", e);
+                console.error("Data block synchronization match exception:", e);
             }
         }
 
         aiDiv.innerText = cleanText;
 
+        // If AI gives final review text, trigger the locked view and the 15-minute timer
+        if (cleanText.toLowerCase().includes("buy the pro plan")) {
+            setTimeout(() => {
+                forceAbsoluteChatTerminationHandoff();
+            }, 1000);
+        }
+
     } catch (error) {
-        aiDiv.innerText = "Connection lost. Please declare your strategy conditions parameters clearly.";
+        console.error("Fetch Exception Handshake Loop:", error);
+        aiDiv.innerText = "Connection alert framework: Ensure your local Node server backend execution instance is running on port 5000.";
     } finally {
         input.disabled = false;
         button.disabled = false;
         input.focus();
         chat.scrollTop = chat.scrollHeight;
-        
-        checkSessionCompletion();
-        syncChatToFirestore();
     }
 }
 
 function updateStrategicUIFields(data) {
     const strategicFields = ['entry_rules', 'exit_rules', 'risk_management'];
     
-    if (sessionData.entry_rules === "Waiting...") {
-        sessionData.entry_rules = "EMA / Volatility Crossover";
-        document.getElementById("val-entry").innerText = "EMA / Volatility Crossover";
-        document.getElementById("val-entry").classList.add("set");
-    }
-    if (sessionData.exit_rules === "Waiting...") {
-        sessionData.exit_rules = "Fixed Take Profit Targets";
-        document.getElementById("val-exit").innerText = "Fixed Take Profit Targets";
-        document.getElementById("val-exit").classList.add("set");
-    }
-    if (sessionData.risk_management === "Waiting...") {
-        sessionData.risk_management = "Compound Fixed Sizing 0.6 Lots";
-        document.getElementById("val-risk").innerText = "Compound Fixed Sizing 0.6 Lots";
-        document.getElementById("val-risk").classList.add("set");
-    }
-
     strategicFields.forEach(field => {
         const targetId = `val-${field.split('_')[0]}`;
         const uiElement = document.getElementById(targetId);
         
-        if (data[field] && data[field] !== "Waiting...") {
+        if (data[field] && data[field] !== "Waiting..." && data[field] !== "pending" && data[field].trim() !== "") {
             sessionData[field] = data[field];
             uiElement.innerText = data[field];
             uiElement.classList.add('set');
@@ -927,48 +807,32 @@ function updateStrategicUIFields(data) {
     });
 }
 
-function checkSessionCompletion() {
-    if (
-        sessionData.entry_rules !== "Waiting..." &&
-        sessionData.exit_rules !== "Waiting..." &&
-        sessionData.risk_management !== "Waiting..."
-    ) {
-        if (dynamicOptimizationStage === 0) {
-            forceAbsoluteChatTerminationHandoff("Strategy variables locked.");
-        }
-    }
-}
-
-function forceAbsoluteChatTerminationHandoff(lastUserText) {
+function forceAbsoluteChatTerminationHandoff() {
     currentEngineMode = "locked";
     
     const chat = document.getElementById("chat");
-    const inputField = document.getElementById("messageInput");
-    
-    if(lastUserText && inputField.value !== "") {
-        const userDiv = document.createElement("div");
-        userDiv.className = "message user";
-        userDiv.innerText = lastUserText;
-        chat.appendChild(userDiv);
-        messagesHistory.push({ role: "user", content: lastUserText });
-    }
-
-    updateStrategicUIFields({});
-
     const closingSummaryDiv = document.createElement("div");
     closingSummaryDiv.className = "message ai";
-    closingSummaryDiv.style.cssText = "border: 1px solid rgba(168, 85, 247, 0.2); background: linear-gradient(135deg, #0b0f19 0%, #060814 100%);";
+    closingSummaryDiv.style.cssText = "border: 2px solid #2563eb; background: #0b0f19; box-shadow: 0 0 15px rgba(37,99,235,0.15);";
+    
     closingSummaryDiv.innerHTML = `
-        <p style="font-weight:700; color:#10b981; margin-bottom:4px; font-size:14px;"><i class="fa-solid fa-circle-check"></i> Strategy Profile Specification Completed!</p>
-        <p style="margin-bottom:12px; color:#d1d5db;">We have successfully extracted and verified all structural market parameters from your chat inputs. Your strategy rules are now saved into the Configuration Matrix sidebar panel.</p>
-        <p style="font-weight:600; color:#ffffff; margin-bottom:8px;">Choose your next step:</p>
+        <p style="font-weight:700; color:#10b981; margin-bottom:6px; font-size:15px;">🏁 Strategy Matrix Profiling Completed!</p>
+        <p style="margin-bottom:12px; color:#d1d5db;">Awesome! We have captured your target structural parameters layout into the ledger framework configuration:</p>
+        
+        <ul style="margin-left: 18px; margin-bottom: 16px; color: #a5b4fc; font-size: 13px; line-height: 1.6;">
+            <li><strong>Target Eco-System:</strong> ${sessionData.platform}</li>
+            <li><strong>Instrument Profile Layer:</strong> ${sessionData.market} (${sessionData.timeframe})</li>
+            <li><strong>Technical Strategy Entry Trigger:</strong> ${sessionData.entry_rules}</li>
+            <li><strong>Execution Exit Conditions:</strong> ${sessionData.exit_rules}</li>
+            <li><strong>Risk Portfolio Metrics:</strong> ${sessionData.risk_management}</li>
+        </ul>
+        
+        <p style="margin-bottom:12px; font-weight:600; color:#ffffff;">🔒 Ready to Compile Production Files?</p>
+        <p style="margin-bottom:16px; color:#9ca3af; font-size:13px;">Free session limits provide workspace logic mapping dashboards but do not include script configuration exports. Unlock a workspace license package to immediately generate your plug-and-play functional bot scripts.</p>
         
         <div class="options-container" style="gap:12px; margin-top:8px;">
-            <a href="bot_automation.html" class="option-btn" style="background:#2563eb; border-color:#2563eb; color:#ffffff; text-decoration:none; font-weight:700; display:inline-block; padding:10px 20px;">
-                <i class="fa-solid fa-store"></i> See Our Plans & Store
-            </a>
-            <button class="option-btn" onclick="resumeActiveQueryChannel()" style="background:rgba(255,255,255,0.02); border-color:rgba(255,255,255,0.1); color:#9ca3af;">
-                <i class="fa-solid fa-comments"></i> I Have More Queries / Doubts
+            <button class="option-btn" style="background:#2563eb; border-color:#2563eb; color:#ffffff; font-weight:700; padding:10px 20px;" onclick="alert('Redirecting to secure premium checkout portal matrix...')">
+                🚀 Purchase Pro License & Download Scripts
             </button>
         </div>
     `;
@@ -977,8 +841,8 @@ function forceAbsoluteChatTerminationHandoff(lastUserText) {
     
     const containerWrapper = document.getElementById("inputContainerWrapper");
     containerWrapper.innerHTML = `
-        <div class="w-full text-center bg-zinc-900/60 p-4 rounded-xl border border-dashed border-white/5 text-xs font-mono text-zinc-500 uppercase tracking-widest">
-            <i class="fa-solid fa-lock text-brand-purple animate-pulse mr-1"></i> Strategy Analysis Compiled & Conformed. Select option above.
+        <div style="text-align:center; background:#111827; padding:18px; border-radius:12px; border:1px dashed rgba(255,255,255,0.08); color:#9ca3af; font-size:13px; font-weight:500;">
+            🔒 Architecture extraction conformed. Upgrade workspace tier to unlock compilation outputs.
         </div>
     `;
 
@@ -986,48 +850,58 @@ function forceAbsoluteChatTerminationHandoff(lastUserText) {
     const badge = document.getElementById("status-badge");
     badge.className = "status locked";
     document.getElementById("status-text").innerText = "Session Concluded";
-
     chat.scrollTop = chat.scrollHeight;
-    syncChatToFirestore();
+
+    // Save a 15-minute cooldown timestamp to localStorage if they are a free user
+    if (userPlanTier === "free") {
+        const cooldownDuration = 15 * 60 * 1000; // 15 minutes in milliseconds
+        const endTimestamp = Date.now() + cooldownDuration;
+        localStorage.setItem("freeChatCooldownEnd", endTimestamp);
+        
+        // Wait 5 seconds to let them look at the summary, then present the cooldown shield screen
+        setTimeout(() => {
+            triggerCooldownScreen(cooldownDuration);
+        }, 5000);
+    }
 }
 
-function resumeActiveQueryChannel() {
-    currentEngineMode = "ai";
-    freeChatTurnCounter = 0; 
-    
-    const containerWrapper = document.getElementById("inputContainerWrapper");
-    containerWrapper.innerHTML = `
-        <div class="input-area" id="inputAreaField">
-            <input
-                id="messageInput"
-                placeholder="Ask any query, doubt, or request rules modifications..."
-                onkeydown="if(event.key === 'Enter') checkAndProcessInput()"
-            >
-            <button id="sendButton" onclick="checkAndProcessInput()">
-                Send
-            </button>
-        </div>
-    `;
+// Switches UI screen elements to show the countdown state
+function triggerCooldownScreen(durationMs) {
+    if (userPlanTier === "paid") return;
 
-    document.getElementById("assistant-mode-desc").innerText = "AI Consultation Phase: Designing execution triggers, multi-timeframe candle rules, and risk configurations.";
-    const badge = document.getElementById("status-badge");
-    badge.className = "status ai-mode";
-    document.getElementById("status-text").innerText = "AI Assistant Online";
+    document.getElementById("activeChatWrapper").style.display = "none";
+    document.getElementById("appSidebar").style.display = "none";
+    document.getElementById("cooldownOverlay").style.display = "flex";
 
-    const chat = document.getElementById("chat");
-    const aiConfirmDiv = document.createElement("div");
-    aiConfirmDiv.className = "message ai";
-    aiConfirmDiv.innerText = "Understood! The consultation channel remains fully open. Please enter any specific strategy queries or doubts below:";
-    
-    chat.appendChild(aiConfirmDiv);
-    
-    document.getElementById("messageInput").focus();
-    chat.scrollTop = chat.scrollHeight;
-    syncChatToFirestore();
-}
+    let remainingTime = durationMs;
 
-function engageFreeUserTimeLockout() {
-    // Retained for framework lifecycle dependency requirements
+    if (cooldownIntervalId) clearInterval(cooldownIntervalId);
+
+    function updateClockDisplay() {
+        if (remainingTime <= 0) {
+            clearInterval(cooldownIntervalId);
+            localStorage.removeItem("freeChatCooldownEnd");
+            
+            // Re-open chat interface windows completely
+            document.getElementById("cooldownOverlay").style.display = "none";
+            document.getElementById("activeChatWrapper").style.display = "flex";
+            document.getElementById("appSidebar").style.display = "flex";
+            
+            // Reload page to reset data state safely
+            window.location.reload();
+            return;
+        }
+
+        const minutes = Math.floor(remainingTime / 60000);
+        const seconds = Math.floor((remainingTime % 60000) / 1000);
+        document.getElementById("countdownClock").innerText = 
+            `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        
+        remainingTime -= 1000;
+    }
+
+    updateClockDisplay();
+    cooldownIntervalId = setInterval(updateClockDisplay, 1000);
 }
 </script>
 

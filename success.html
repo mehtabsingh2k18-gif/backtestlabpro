@@ -130,13 +130,18 @@
         const homeBtn = document.getElementById('homeBtn');
         const chatBtn = document.getElementById('chatBtn');
 
+        // Extract the paid amount from URL parameter (?amount=XXX)
+        const urlParams = new URLSearchParams(window.location.search);
+        const paidAmount = urlParams.get('amount') || "unknown";
+
         auth.onAuthStateChanged(async (user) => {
             if (user) {
                 try {
-                    // Update user document to set paid status
+                    // Update user document to set paid status along with amount paid
                     await db.collection("users").doc(user.uid).set({
                         isPaid: true,
                         planStatus: "paid",
+                        amountPaid: paidAmount,
                         paymentDate: firebase.firestore.FieldValue.serverTimestamp()
                     }, { merge: true });
 

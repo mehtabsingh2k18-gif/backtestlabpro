@@ -89,16 +89,15 @@ body {
     background: rgba(59, 130, 246, 0.1);
 }
 
-.user-tier-selector {
-    background: rgba(255,255,255,0.03);
-    border: 1px solid rgba(255,255,255,0.08);
+.user-tier-badge {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 6px;
-    padding: 4px 8px;
+    padding: 6px 12px;
     color: #a5b4fc;
     font-size: 12px;
     font-weight: 600;
-    cursor: pointer;
-    outline: none;
+    user-select: none;
 }
 
 .main {
@@ -458,10 +457,8 @@ body {
         <a href="index.html">Home</a>
         <a href="session.html">Backtester</a>
         <a href="bot_automation.html" class="active">Bot Development</a>
-        <select class="user-tier-selector" id="tierSelector" onchange="toggleUserPlanTier()">
-            <option value="free">Account Status: Free Plan</option>
-            <option value="paid">Account Status: Premium / Paid</option>
-        </select>
+        <!-- Swapped dropdown logic with fixed text layout description -->
+        <span class="user-tier-badge">Account Status: Free Plan</span>
     </div>
 </nav>
 
@@ -563,7 +560,7 @@ const BACKEND_API_URL = "http://localhost:5000/api/chat";
 
 let currentStep = 0; 
 let currentEngineMode = "form"; 
-let userPlanTier = "free";      
+const userPlanTier = "free";      
 let cooldownIntervalId = null;
 
 let currentUserId = "sandbox_user";
@@ -597,10 +594,7 @@ window.addEventListener('DOMContentLoaded', () => {
     document.getElementById("authGate").style.display = "flex";
 });
 
-// Checks if a cooldown is saved in localStorage when entering the workspace
 function checkCooldownOnLoad() {
-    if (userPlanTier === "paid") return;
-    
     const cooldownEnd = localStorage.getItem("freeChatCooldownEnd");
     if (cooldownEnd) {
         const timeLeft = parseInt(cooldownEnd) - Date.now();
@@ -609,36 +603,6 @@ function checkCooldownOnLoad() {
         } else {
             localStorage.removeItem("freeChatCooldownEnd");
         }
-    }
-}
-
-function toggleUserPlanTier() {
-    userPlanTier = document.getElementById("tierSelector").value;
-    
-    if (userPlanTier === "paid") {
-        // Break out of cooldown lock immediately if user updates to paid tier
-        if (cooldownIntervalId) clearInterval(cooldownIntervalId);
-        localStorage.removeItem("freeChatCooldownEnd");
-        
-        document.getElementById("cooldownOverlay").style.display = "none";
-        document.getElementById("activeChatWrapper").style.display = "flex";
-        document.getElementById("appSidebar").style.display = "flex";
-        
-        currentEngineMode = "ai";
-        document.getElementById("assistant-mode-desc").innerText = "AI Consultation Phase: Designing execution triggers, multi-timeframe candle rules, and risk configurations.";
-        const badge = document.getElementById("status-badge");
-        badge.className = "status ai-mode";
-        document.getElementById("status-text").innerText = "AI Assistant Online";
-        
-        const containerWrapper = document.getElementById("inputContainerWrapper");
-        containerWrapper.innerHTML = `
-            <div class="input-area" id="inputAreaField">
-                <input id="messageInput" placeholder="Describe your parameters adjustment adjustments...">
-                <button id="sendButton" onclick="checkAndProcessInput()">Send</button>
-            </div>
-        `;
-    } else {
-        checkCooldownOnLoad();
     }
 }
 
@@ -774,7 +738,6 @@ async function sendAIMessage(text) {
 
         aiDiv.innerText = cleanText;
 
-        // If AI gives final review text, trigger the locked view and the 15-minute timer
         if (cleanText.toLowerCase().includes("buy the pro plan")) {
             setTimeout(() => {
                 forceAbsoluteChatTerminationHandoff();
@@ -852,23 +815,16 @@ function forceAbsoluteChatTerminationHandoff() {
     document.getElementById("status-text").innerText = "Session Concluded";
     chat.scrollTop = chat.scrollHeight;
 
-    // Save a 15-minute cooldown timestamp to localStorage if they are a free user
-    if (userPlanTier === "free") {
-        const cooldownDuration = 15 * 60 * 1000; // 15 minutes in milliseconds
-        const endTimestamp = Date.now() + cooldownDuration;
-        localStorage.setItem("freeChatCooldownEnd", endTimestamp);
-        
-        // Wait 5 seconds to let them look at the summary, then present the cooldown shield screen
-        setTimeout(() => {
-            triggerCooldownScreen(cooldownDuration);
-        }, 5000);
-    }
+    const cooldownDuration = 15 * 60 * 1000; 
+    const endTimestamp = Date.now() + cooldownDuration;
+    localStorage.setItem("freeChatCooldownEnd", endTimestamp);
+    
+    setTimeout(() => {
+        triggerCooldownScreen(cooldownDuration);
+    }, 5000);
 }
 
-// Switches UI screen elements to show the countdown state
 function triggerCooldownScreen(durationMs) {
-    if (userPlanTier === "paid") return;
-
     document.getElementById("activeChatWrapper").style.display = "none";
     document.getElementById("appSidebar").style.display = "none";
     document.getElementById("cooldownOverlay").style.display = "flex";
@@ -882,12 +838,10 @@ function triggerCooldownScreen(durationMs) {
             clearInterval(cooldownIntervalId);
             localStorage.removeItem("freeChatCooldownEnd");
             
-            // Re-open chat interface windows completely
             document.getElementById("cooldownOverlay").style.display = "none";
             document.getElementById("activeChatWrapper").style.display = "flex";
             document.getElementById("appSidebar").style.display = "flex";
             
-            // Reload page to reset data state safely
             window.location.reload();
             return;
         }

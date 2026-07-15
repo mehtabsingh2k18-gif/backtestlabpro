@@ -5,87 +5,23 @@
     <title>Payment Successful - Backtest Lab Pro</title>
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
 
-    <!-- Firebase SDK Legacy Architecture Configuration Compatibility Layer -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     
     <style>
-        body {
-            background: #0b0e11;
-            color: white;
-            font-family: 'Inter', sans-serif, system-ui;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .success-card {
-            background: #181a20;
-            border: 1px solid #2b3139;
-            padding: 40px;
-            border-radius: 16px;
-            text-align: center;
-            max-width: 480px;
-            width: 90%;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-        }
-        .icon-container {
-            margin-bottom: 24px;
-        }
-        .success-icon {
-            width: 64px;
-            height: 64px;
-            background: rgba(14, 203, 129, 0.1);
-            border-radius: 50%;
-            display: inline-flex;
-            justify-content: center;
-            align-items: center;
-            color: #0ecb81;
-        }
-        h2 {
-            margin: 0 0 12px 0;
-            font-size: 28px;
-            font-weight: 700;
-        }
-        p {
-            color: #848e9c;
-            font-size: 16px;
-            line-height: 1.6;
-            margin: 0 0 32px 0;
-        }
-        .btn-group {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        .btn {
-            display: block;
-            padding: 14px 24px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-size: 16px;
-            font-weight: 600;
-            transition: all 0.2s ease;
-            box-sizing: border-box;
-        }
-        .btn-primary {
-            background: #0ecb81;
-            color: #0b0e11;
-        }
-        .btn-primary:hover {
-            background: #0bba74;
-        }
-        .btn-secondary {
-            background: transparent;
-            color: #eaecef;
-            border: 1px solid #474f59;
-        }
-        .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.05);
-            border-color: #848e9c;
-        }
+        body { background: #0b0e11; color: white; font-family: 'Inter', sans-serif, system-ui; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .success-card { background: #181a20; border: 1px solid #2b3139; padding: 40px; border-radius: 16px; text-align: center; max-width: 480px; width: 90%; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); }
+        .icon-container { margin-bottom: 24px; }
+        .success-icon { width: 64px; height: 64px; background: rgba(14, 203, 129, 0.1); border-radius: 50%; display: inline-flex; justify-content: center; align-items: center; color: #0ecb81; }
+        h2 { margin: 0 0 12px 0; font-size: 28px; font-weight: 700; }
+        p { color: #848e9c; font-size: 16px; line-height: 1.6; margin: 0 0 32px 0; }
+        .btn-group { display: flex; flex-direction: column; gap: 12px; }
+        .btn { display: block; padding: 14px 24px; border-radius: 8px; text-decoration: none; font-size: 16px; font-weight: 600; transition: all 0.2s ease; box-sizing: border-box; }
+        .btn-primary { background: #0ecb81; color: #0b0e11; }
+        .btn-primary:hover { background: #0bba74; }
+        .btn-secondary { background: transparent; color: #eaecef; border: 1px solid #474f59; }
+        .btn-secondary:hover { background: rgba(255, 255, 255, 0.05); border-color: #848e9c; }
     </style>
 </head>
 <body>
@@ -101,12 +37,8 @@
         <p id="details">Please hold tight while we securely update your institutional workspace access parameters.</p>
         
         <div class="btn-group" id="actionGroup" style="display: none;">
-            <a id="homeBtn" href="https://backtestlabpro.com" class="btn btn-primary">
-                Launch Platform & Start Testing
-            </a>
-            <a id="chatBtn" href="https://backtestlabpro.com/support" class="btn btn-secondary">
-                Contact Live Support Chat
-            </a>
+            <a id="homeBtn" href="https://backtestlabpro.com" class="btn btn-primary">Launch Platform & Start Testing</a>
+            <a id="chatBtn" href="https://backtestlabpro.com/support" class="btn btn-secondary">Contact Live Support Chat</a>
         </div>
     </div>
 
@@ -129,69 +61,41 @@
         const homeBtn = document.getElementById('homeBtn');
         const chatBtn = document.getElementById('chatBtn');
 
-        // Extract PayPal token from the URL context parameter block
-        const urlParams = new URLSearchParams(window.location.search);
-        const paypalButtonId = urlParams.get('hosted_button_id');
-        
-        // Dynamic valuation lookups dependent on localized incoming hostedButtonId strings
-        let paidAmount = "unknown";
-        if (paypalButtonId === "USVACKY4BVR5A") {
-            paidAmount = "399";  // Simple Bot Plan
-        } else if (paypalButtonId === "8LGE5JN33V32C") {
-            paidAmount = "599";  // Standard Bot Plan
-        }
-
         auth.onAuthStateChanged(async (user) => {
             if (user) {
                 try {
-                    // Update user document to set paid status along with amount paid
+                    // UPDATED: Now writing 1500 to your Firestore Database
                     await db.collection("users").doc(user.uid).set({
                         isPaid: true,
                         planStatus: "paid",
-                        amountPaid: paidAmount,
+                        amountPaid: "1500",
                         paymentDate: firebase.firestore.FieldValue.serverTimestamp()
                     }, { merge: true });
 
-                    // Upgrade to professional, premium message
                     statusEl.innerText = "Payment Confirmed";
-                    detailsEl.innerText = "Thank you for subscribing to Backtest Lab Pro. Your professional bot testing toolkit has been fully provisioned. You may now return to the main environment or open a support dialog.";
-                    
-                    // Reveal the premium option layout panel
+                    // Custom success description text for the 1500 plan level
+                    detailsEl.innerText = "Thank you for subscribing to Backtest Lab Pro. Your Enterprise Tier workspace parameters have been fully provisioned.";
                     actionGroup.style.display = "flex";
 
-                    // Handle window closures cleanly if they came from an explicitly captured pop-up instance
                     const handleNavigation = function(targetUrl) {
                         if (window.opener && !window.opener.closed) {
-                            try {
-                                window.opener.location.href = targetUrl;
-                                window.close();
-                                return false;
-                            } catch (err) {
-                                // fallback logic handled natively below
-                            }
+                            try { window.opener.location.href = targetUrl; window.close(); return false; } catch (err) {}
                         }
                         window.location.href = targetUrl;
                         return true;
                     };
 
-                    homeBtn.onclick = function(e) {
-                        e.preventDefault();
-                        handleNavigation("https://backtestlabpro.com");
-                    };
-
-                    chatBtn.onclick = function(e) {
-                        e.preventDefault();
-                        handleNavigation("https://backtestlabpro.com/support");
-                    };
+                    homeBtn.onclick = function(e) { e.preventDefault(); handleNavigation("https://backtestlabpro.com"); };
+                    chatBtn.onclick = function(e) { e.preventDefault(); handleNavigation("https://backtestlabpro.com/support"); };
 
                 } catch (error) {
                     statusEl.innerText = "Verification Delayed";
-                    detailsEl.innerText = "Your payment was processed, but database updates ran into an issue (Code: " + error.code + "). Please contact live support immediately.";
+                    detailsEl.innerText = "Your payment was processed, but database updates ran into an issue. Please contact support.";
                     actionGroup.style.display = "flex";
                 }
             } else {
                 statusEl.innerText = "Authentication Missing";
-                detailsEl.innerHTML = "We couldn't link this transaction to your profile. Please <a href='login.html' style='color:#3b82f6; text-decoration:none;'>log back into your account</a> to re-verify.";
+                detailsEl.innerHTML = "We couldn't link this transaction to your profile. Please <a href='login.html' style='color:#3b82f6; text-decoration:none;'>log back into your account</a>.";
             }
         });
     </script>

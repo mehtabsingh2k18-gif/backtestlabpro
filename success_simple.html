@@ -64,16 +64,17 @@
         auth.onAuthStateChanged(async (user) => {
             if (user) {
                 try {
-                    // HARDCODED SIMPLE PLAN VALUE ALWAYS WRITES 399
+                    // UPDATED: Now writing 1500 to your Firestore Database
                     await db.collection("users").doc(user.uid).set({
                         isPaid: true,
                         planStatus: "paid",
-                        amountPaid: "399",
+                        amountPaid: "1500",
                         paymentDate: firebase.firestore.FieldValue.serverTimestamp()
                     }, { merge: true });
 
                     statusEl.innerText = "Payment Confirmed";
-                    detailsEl.innerText = "Thank you for subscribing to Backtest Lab Pro. Your Simple Bot plan has been fully provisioned.";
+                    // Custom success description text for the 1500 plan level
+                    detailsEl.innerText = "Thank you for subscribing to Backtest Lab Pro. Your Enterprise Tier workspace parameters have been fully provisioned.";
                     actionGroup.style.display = "flex";
 
                     const handleNavigation = function(targetUrl) {

@@ -27,7 +27,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link class="brand-favicon-holder" rel="icon" type="image/svg+xml" href="favicon.svg">
     <script>
         tailwind.config = {
             theme: {
@@ -412,7 +412,7 @@
                     <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-success flex-shrink-0"></i> Crypto, Forex & Stocks Feeds Included</li>
                     <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-success flex-shrink-0"></i> 10 to 20-Year Candlestick Track Depth</li>
                     <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-success flex-shrink-0"></i> Unlimited Active Replay Environments</li>
-                    <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-success flex-shrink-0"></i> Ultra Advanced Strategy Statistics Modules</li>
+                    <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-success flex-shrink-0"></i> Ultra Advanced Strategy Strategy Modules</li>
                 </ul>
 
                 <button onclick="handleHeroCTA()" class="w-full py-4 rounded-xl bg-gradient-to-r from-brand-accent to-brand-purple text-white font-display font-bold text-center tracking-wide hover:opacity-90 transition-all shadow-lg shadow-brand-accent/20 min-h-[48px]">
@@ -421,6 +421,8 @@
             </div>
         </section>
 
+        <!-- Dynamic Hidden Anchor Hook for scrolling to contact block smoothly -->
+        <div id="contact" class="h-1"></div>
     </main>
 
     <footer class="mt-24 border-t border-white/5 bg-zinc-950/40 backdrop-blur-sm relative z-10 py-12 text-zinc-500 text-xs">
@@ -463,8 +465,13 @@
         window.userLiveSessionsList = [];
         window.eligibleHighPerformingSession = null;
         window.authenticatedUidGlobal = "";
+        let activeCountdownInterval = null;
 
         onAuthStateChanged(auth, async (user) => {
+            if (activeCountdownInterval) {
+                clearInterval(activeCountdownInterval);
+            }
+            
             if (user) {
                 window.authenticatedUidGlobal = user.uid;
                 const nameDisplay = document.getElementById('profile-box-name');
@@ -472,7 +479,7 @@
                 if (nameDisplay) nameDisplay.textContent = user.displayName || "Anonymous Trader";
                 if (emailDisplay) emailDisplay.textContent = user.email || "sandbox@backtestlabpro.com";
 
-                // Pull plan status from the root user document layout path: users/{uid}
+                // Pull plan status & check for the bot_file_lock subcollection tracking matrix
                 await checkUserPlanStatus(user.uid);
 
                 await fetchRealFirestoreSessions(user.uid);
@@ -483,14 +490,7 @@
                 window.authenticatedUidGlobal = "";
                 
                 // Reset to default free banner state on logout
-                const bannerWrapper = document.getElementById('hero-status-banner-wrapper');
-                if (bannerWrapper) {
-                    bannerWrapper.innerHTML = `
-                        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-brand-accent/10 border border-brand-accent/20 text-xs text-brand-accent font-medium">
-                            <span class="h-2 w-2 rounded-full bg-brand-accent animate-ping"></span> 100% Free Forever • Absolutely Zero Ads
-                        </div>
-                    `;
-                }
+                resetHeroBannerToDefault();
 
                 // Clear the visual premium plan badge
                 const planDisplay = document.getElementById('profile-box-plan');
@@ -502,6 +502,18 @@
             }
         });
 
+        function resetHeroBannerToDefault() {
+            const bannerWrapper = document.getElementById('hero-status-banner-wrapper');
+            if (bannerWrapper) {
+                bannerWrapper.className = "inline-flex items-center mb-6 md:mb-8";
+                bannerWrapper.innerHTML = `
+                    <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-brand-accent/10 border border-brand-accent/20 text-xs text-brand-accent font-medium">
+                        <span class="h-2 w-2 rounded-full bg-brand-accent animate-ping"></span> 100% Free Forever • Absolutely Zero Ads
+                    </div>
+                `;
+            }
+        }
+
         async function checkUserPlanStatus(uid) {
             try {
                 const userDocRef = doc(db, "users", uid);
@@ -510,6 +522,8 @@
                 const bannerWrapper = document.getElementById('hero-status-banner-wrapper');
                 
                 if (userSnap.exists() && userSnap.data().isPaid === true) {
+                    const userData = userSnap.data();
+                    
                     // 1. Render dropdown menu label badge
                     if (planDisplay) {
                         planDisplay.textContent = "PRO";
@@ -517,16 +531,26 @@
                         planDisplay.classList.remove('hidden');
                     }
                     
-                    // 2. Transform the Hero badge layout into an active Premium redirection button banner
-                    if (bannerWrapper) {
-                        bannerWrapper.innerHTML = `
-                            <button onclick="window.location.href='premium_chat.html'" class="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-gradient-to-r from-amber-500/20 via-brand-purple/20 to-brand-accent/20 border border-amber-500/30 hover:border-amber-400/60 text-xs text-amber-300 font-bold tracking-wide shadow-xl shadow-amber-950/20 transition-all hover:scale-[1.03] group duration-300">
-                                <span class="h-2 w-2 rounded-full bg-amber-400 animate-pulse"></span>
-                                <span class="bg-gradient-to-r from-amber-300 via-amber-200 to-amber-400 bg-clip-text text-transparent font-black">PRO ACTIVE</span> 
-                                <span class="text-zinc-400 font-medium">• Click here to open Premium Chat & Submit Bot Details</span>
-                                <i class="fa-solid fa-chevron-right text-[10px] text-amber-400 transition-transform group-hover:translate-x-1"></i>
-                            </button>
-                        `;
+                    // 2. Double check if bot_file_lock document exists inside subcollection path
+                    const lockDocRef = doc(db, "users", uid, "bot_file_lock", "compiled_strategy_matrix");
+                    const lockSnap = await getDoc(lockDocRef);
+                    
+                    if (lockSnap.exists()) {
+                        // User has active bot file lock! Build the high-tier professional timer dashboard
+                        buildHighTierTimerDashboard(userData, bannerWrapper);
+                    } else {
+                        // Regular paid layout status
+                        if (bannerWrapper) {
+                            bannerWrapper.className = "inline-flex items-center mb-6 md:mb-8";
+                            bannerWrapper.innerHTML = `
+                                <button onclick="window.location.href='premium_chat.html'" class="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-gradient-to-r from-amber-500/20 via-brand-purple/20 to-brand-accent/20 border border-amber-500/30 hover:border-amber-400/60 text-xs text-amber-300 font-bold tracking-wide shadow-xl shadow-amber-950/20 transition-all hover:scale-[1.03] group duration-300">
+                                    <span class="h-2 w-2 rounded-full bg-amber-400 animate-pulse"></span>
+                                    <span class="bg-gradient-to-r from-amber-300 via-amber-200 to-amber-400 bg-clip-text text-transparent font-black">PRO ACTIVE</span> 
+                                    <span class="text-zinc-400 font-medium">• Click here to open Premium Chat & Submit Bot Details</span>
+                                    <i class="fa-solid fa-chevron-right text-[10px] text-amber-400 transition-transform group-hover:translate-x-1"></i>
+                                </button>
+                            `;
+                        }
                     }
                 } else {
                     if (planDisplay) {
@@ -534,17 +558,120 @@
                         planDisplay.className = "text-[9px] font-black tracking-wider px-1.5 py-0.5 rounded uppercase bg-zinc-800 text-zinc-400";
                         planDisplay.classList.remove('hidden');
                     }
-                    if (bannerWrapper) {
-                        bannerWrapper.innerHTML = `
-                            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-brand-accent/10 border border-brand-accent/20 text-xs text-brand-accent font-medium">
-                                <span class="h-2 w-2 rounded-full bg-brand-accent animate-ping"></span> 100% Free Forever • Absolutely Zero Ads
-                            </div>
-                        `;
-                    }
+                    resetHeroBannerToDefault();
                 }
             } catch (error) {
                 console.error("Error checking user plan status from Firestore context:", error);
             }
+        }
+
+        function buildHighTierTimerDashboard(userData, bannerWrapper) {
+            if (!bannerWrapper) return;
+            
+            // Re-adjust classes of wrapper container to hold a wide grid dashboard cleanly
+            bannerWrapper.className = "block w-full max-w-3xl mx-auto mb-10 text-left";
+            
+            // Determine runtime parameter intervals based on plan price ranges
+            const amountPaidRaw = userData.amountPaid || "1500";
+            const amountPaid = parseInt(amountPaidRaw.replace(/[^0-9]/g, '')) || 1500;
+            
+            let allocationDays = 7; 
+            if (amountPaid === 999) allocationDays = 3;
+            if (amountPaid === 399) allocationDays = 2;
+
+            // Compute precision base timestamps using paymentDate timestamp fields
+            let startTimestampMs = Date.now();
+            if (userData.paymentDate && typeof userData.paymentDate.toMillis === 'function') {
+                startTimestampMs = userData.paymentDate.toMillis();
+            } else if (userData.paymentDate && userData.paymentDate.seconds) {
+                startTimestampMs = userData.paymentDate.seconds * 1000;
+            }
+            
+            const targetedEndTimestampMs = startTimestampMs + (allocationDays * 24 * 60 * 60 * 1000);
+
+            // Inject the ultra professional dashboard template configuration 
+            bannerWrapper.innerHTML = `
+                <div class="glass-card bg-gradient-to-br from-brand-card via-brand-dark to-zinc-950 border-2 border-brand-purple/30 rounded-3xl p-6 sm:p-8 shadow-2xl relative overflow-hidden backdrop-blur-xl">
+                    <div class="absolute -top-10 -right-10 w-40 h-40 bg-brand-purple/10 rounded-full blur-2xl pointer-events-none"></div>
+                    <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-brand-success/10 rounded-full blur-2xl pointer-events-none"></div>
+                    
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                        <!-- Left Info Stack -->
+                        <div class="space-y-3 max-w-md">
+                            <div class="flex flex-wrap items-center gap-2">
+                                <span class="px-2.5 py-0.5 rounded-md text-[10px] font-black tracking-widest bg-brand-purple/20 text-brand-purple border border-brand-purple/30 uppercase">
+                                    <i class="fa-solid fa-microchip-ai mr-1 animate-pulse"></i> Bot Development Active
+                                </span>
+                                <span class="px-2.5 py-0.5 rounded-md text-[10px] font-bold tracking-wide bg-zinc-900 text-zinc-400 border border-white/5">
+                                    Tier: Premium Allocation (₹${amountPaid})
+                                </span>
+                            </div>
+                            
+                            <h3 class="font-display font-bold text-xl sm:text-2xl text-white leading-tight">
+                                Your Custom Bot Development is <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-accent to-brand-purple">Under Process Right Away</span>
+                            </h3>
+                            
+                            <p class="text-zinc-400 text-xs sm:text-sm leading-relaxed">
+                                Once architecture testing satisfies verification protocols, you will instantly receive full compiled <strong class="text-white font-bold uppercase tracking-wide">Bot Files</strong> bundled with <strong class="text-brand-success font-semibold">1 Week Consumer Support</strong>.
+                            </p>
+                        </div>
+
+                        <!-- Right Counter Matrix -->
+                        <div class="flex flex-col items-center md:items-end justify-center min-w-[240px] bg-zinc-950/60 border border-white/5 p-4 sm:p-5 rounded-2xl relative">
+                            <span class="text-[9px] font-mono tracking-widest text-zinc-500 uppercase mb-2 block text-left w-full">ESTIMATED LAUNCH TIMELINE</span>
+                            
+                            <!-- Large Bold Timer Grid Interface -->
+                            <div class="flex items-center gap-2 text-white font-mono font-bold text-2xl sm:text-3xl tracking-tight mb-4" id="live-bot-countdown-timer">
+                                <div class="bg-zinc-900 px-2.5 py-1 rounded-xl border border-white/5 min-w-[48px] text-center"><span id="timer-days">00</span><span class="block text-[8px] font-sans text-zinc-500 uppercase tracking-normal mt-0.5">Days</span></div>
+                                <span class="text-brand-purple text-xl mb-3">:</span>
+                                <div class="bg-zinc-900 px-2.5 py-1 rounded-xl border border-white/5 min-w-[48px] text-center"><span id="timer-hours">00</span><span class="block text-[8px] font-sans text-zinc-500 uppercase tracking-normal mt-0.5">Hrs</span></div>
+                                <span class="text-brand-purple text-xl mb-3">:</span>
+                                <div class="bg-zinc-900 px-2.5 py-1 rounded-xl border border-white/5 min-w-[48px] text-center"><span id="timer-mins">00</span><span class="block text-[8px] font-sans text-zinc-500 uppercase tracking-normal mt-0.5">Mins</span></div>
+                                <span class="text-brand-purple text-xl mb-3">:</span>
+                                <div class="bg-zinc-900 px-2.5 py-1 rounded-xl border border-white/5 min-w-[48px] text-center text-brand-accent"><span id="timer-secs">00</span><span class="block text-[8px] font-sans text-zinc-500 uppercase tracking-normal mt-0.5 text-zinc-500">Secs</span></div>
+                            </div>
+                            
+                            <!-- Ultra Professional Contact Us Button Link Node -->
+                            <a href="#contact" class="w-full text-center py-2.5 rounded-xl bg-gradient-to-r from-brand-accent to-brand-purple text-white font-display font-bold text-xs hover:opacity-90 transition-all flex items-center justify-center gap-2 shadow-lg min-h-[38px]">
+                                <i class="fa-solid fa-headset text-[10px]"></i> Contact Us
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Setup continuous precision ticking interval handler
+            function updateTimer() {
+                const now = Date.now();
+                const difference = targetedEndTimestampMs - now;
+
+                if (difference <= 0) {
+                    clearInterval(activeCountdownInterval);
+                    const systemTimerContainer = document.getElementById('live-bot-countdown-timer');
+                    if (systemTimerContainer) {
+                        systemTimerContainer.innerHTML = `<span class="text-xs font-bold font-sans text-brand-success"><i class="fa-solid fa-circle-check mr-1"></i> Ready For Deployment</span>`;
+                    }
+                    return;
+                }
+
+                const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+                const dEl = document.getElementById('timer-days');
+                const hEl = document.getElementById('timer-hours');
+                const mEl = document.getElementById('timer-mins');
+                const sEl = document.getElementById('timer-secs');
+
+                if(dEl) dEl.innerText = String(days).padStart(2, '0');
+                if(hEl) hEl.innerText = String(hours).padStart(2, '0');
+                if(mEl) mEl.innerText = String(minutes).padStart(2, '0');
+                if(sEl) sEl.innerText = String(seconds).padStart(2, '0');
+            }
+
+            updateTimer(); 
+            activeCountdownInterval = setInterval(updateTimer, 1000);
         }
 
         async function fetchRealFirestoreSessions(uid) {

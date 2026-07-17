@@ -109,6 +109,23 @@
             color: #ffffff;
         }
 
+        .pricing-container {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .badge-free {
+            background-color: rgba(14, 203, 129, 0.15);
+            color: var(--accent-green);
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
         .nav-right-actions {
             display: flex;
             align-items: center;
@@ -155,6 +172,21 @@
             opacity: 0.95;
         }
 
+        .nav-power-btn {
+            color: var(--text-muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: color 0.2s ease;
+            margin-left: 4px;
+            text-decoration: none;
+        }
+
+        .nav-power-btn:hover {
+            color: var(--accent-red);
+        }
+
+        /* --- PREVENT ASYNC AUTH FLASH TIMING RULES --- */
         .auth-hidden {
             opacity: 0 !important;
             pointer-events: none !important;
@@ -172,6 +204,7 @@
             display: none !important;
         }
 
+        /* --- USER ACCOUNT TOOLBAR PROFILE MENU MATRIX --- */
         .profile-dropdown-wrapper {
             position: relative;
             margin-left: 4px;
@@ -204,6 +237,10 @@
             align-items: center;
             justify-content: center;
             color: var(--text-muted);
+        }
+
+        .profile-menu-trigger-inner:hover {
+            color: #ffffff;
         }
 
         .profile-overlay-dialog-box {
@@ -239,9 +276,26 @@
             color: var(--accent-blue);
         }
 
-        .profile-box-meta { overflow: hidden; }
-        .profile-box-name { font-size: 13px; font-weight: 700; color: #ffffff; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; }
-        .profile-box-email { font-size: 11px; color: var(--text-muted); text-overflow: ellipsis; white-space: nowrap; overflow: hidden; }
+        .profile-box-meta {
+            overflow: hidden;
+        }
+
+        .profile-box-name {
+            font-size: 13px;
+            font-weight: 700;
+            color: #ffffff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .profile-box-email {
+            font-size: 11px;
+            color: var(--text-muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
 
         .btn-logout {
             width: 100%;
@@ -266,6 +320,7 @@
             background-color: rgba(246, 70, 93, 0.05);
         }
 
+        /* --- MOBILE INTERACTIVE COMPONENT LAYER --- */
         .mobile-menu-btn {
             display: none;
             background: none;
@@ -278,10 +333,15 @@
             justify-content: center;
         }
 
+        .mobile-menu-btn:hover {
+            color: #ffffff;
+        }
+
         .mobile-menu {
             display: none;
             background-color: rgba(11, 14, 17, 0.98);
             backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--border-color);
             position: absolute;
             top: 76px;
@@ -292,92 +352,544 @@
             flex-direction: column;
             gap: 14px;
             box-shadow: 0 15px 25px rgba(0,0,0,0.5);
+            max-h: calc(100vh - 76px);
+            overflow-y: auto;
         }
 
-        .mobile-menu.open { display: flex !important; }
-        .mobile-menu a { color: var(--text-muted); text-decoration: none; font-size: 15px; font-weight: 600; padding: 10px 4px; border-bottom: 1px solid rgba(255, 255, 255, 0.03); display: flex; align-items: center; justify-content: space-between; }
-        .mobile-auth-placeholder { display: flex; flex-direction: column; gap: 12px; margin-top: 10px; padding-top: 10px; }
+        .mobile-menu a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 600;
+            padding: 10px 4px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
 
-        section { padding: 80px 24px; display: flex; justify-content: center; }
-        .container { width: 100%; max-width: var(--max-width); }
-        .section-header { text-align: center; margin-bottom: 48px; }
-        .section-header h2 { font-size: 32px; font-weight: 700; margin-bottom: 16px; }
-        .section-header p { color: var(--text-muted); font-size: 16px; max-width: 700px; margin: 0 auto; }
+        .mobile-menu a:hover, .mobile-menu a.active {
+            color: #ffffff;
+        }
 
-        .btn-group { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
-        .btn { padding: 14px 28px; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; text-decoration: none; transition: all 0.15s ease; text-align: center; }
-        .btn-primary { background-color: #3b66f5; color: #ffffff; border: none; }
-        .btn-secondary { background-color: var(--bg-input); color: var(--text-main); border: 1px solid var(--border-color); }
-        .btn:hover { opacity: 0.93; transform: translateY(-1px); }
+        .mobile-auth-placeholder {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 10px;
+            padding-top: 10px;
+        }
 
-        .hero-section { background: radial-gradient(circle at top right, rgba(59, 102, 245, 0.08), transparent 40%); padding: 100px 24px; text-align: center; }
-        .hero-content h1 { font-size: 48px; font-weight: 800; line-height: 1.2; margin-bottom: 20px; letter-spacing: -1px; }
-        .hero-content p { font-size: 18px; color: var(--text-muted); max-width: 760px; margin: 0 auto 40px auto; }
+        .mobile-menu.open {
+            display: flex !important;
+        }
+        
+        /* --- GLOBAL LAYOUT DESIGN CANVAS ELEMENTS --- */
+        section {
+            padding: 80px 24px;
+            display: flex;
+            justify-content: center;
+        }
 
-        .split-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: start; }
-        .idea-content h2, .compatibility-content h2 { font-size: 32px; font-weight: 700; margin-bottom: 20px; }
-        .idea-content p, .compatibility-content p { color: var(--text-muted); margin-bottom: 24px; }
+        .container {
+            width: 100%;
+            max-width: var(--max-width);
+        }
 
-        .factor-list, .analyze-list { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
-        .factor-list li { background-color: var(--bg-card); border: 1px solid var(--border-color); padding: 14px; border-radius: 6px; font-size: 14px; }
-        .analyze-list li { color: var(--text-main); font-size: 15px; display: flex; align-items: center; gap: 8px; }
-        .analyze-list li span { color: var(--accent-green); font-weight: bold; }
+        .section-header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
 
-        .report-widget { background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 32px; }
-        .report-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 16px; margin-bottom: 20px; }
-        .report-title { font-size: 14px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); }
-        .report-score { font-size: 20px; color: var(--accent-green); font-weight: 700; }
-        .report-metrics { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
-        .report-line { display: flex; justify-content: space-between; font-size: 14px; }
-        .report-line span:first-child { color: var(--text-muted); }
-        .report-suitability { border-top: 1px solid var(--border-color); padding-top: 16px; display: flex; justify-content: space-between; font-weight: 600; }
+        .section-header h2 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
 
-        .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
-        .card { background-color: var(--bg-card); border: 1px solid var(--border-color); padding: 32px; border-radius: 8px; transition: all 0.2s ease; text-decoration: none; display: block; }
-        .card:hover { border-color: var(--accent-blue); transform: translateY(-3px); }
-        .card h3 { font-size: 18px; margin-bottom: 12px; color: var(--text-main); }
-        .card p { color: var(--text-muted); font-size: 14px; line-height: 1.6; }
+        .section-header p {
+            color: var(--text-muted);
+            font-size: 16px;
+            max-width: 700px;
+            margin: 0 auto;
+        }
 
-        .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 24px; }
-        .pricing-card { background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 36px 32px; display: flex; flex-direction: column; transition: all 0.2s ease; text-decoration: none; }
-        .pricing-card:hover { border-color: var(--accent-blue); transform: translateY(-4px); }
-        .plan-num { font-size: 11px; font-weight: 700; color: var(--accent-blue); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
-        .pricing-card h3 { font-size: 22px; font-weight: 700; margin-bottom: 16px; color: #ffffff; }
-        .plan-price { font-size: 28px; font-weight: 800; color: var(--accent-green); margin-bottom: 24px; border-bottom: 1px solid var(--border-color); padding-bottom: 16px; }
-        .plan-price span { font-size: 14px; color: var(--text-muted); font-weight: 400; }
-        .plan-details-section { margin-bottom: 20px; }
-        .plan-details-title { font-size: 12px; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px; font-weight: 700; margin-bottom: 8px; }
-        .plan-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
-        .plan-list li { font-size: 14px; color: var(--text-main); display: flex; align-items: start; gap: 8px; }
-        .plan-list li::before { content: "•"; color: var(--accent-blue); font-weight: bold; margin-right: 6px; }
-        .plan-list.not-included li::before { content: "×"; color: var(--accent-red); font-size: 16px; }
-        .plan-delivery { margin-top: auto; background-color: rgba(255, 255, 255, 0.02); border: 1px dashed var(--border-color); padding: 12px; border-radius: 6px; text-align: center; font-size: 13px; color: var(--text-muted); }
-        .plan-delivery strong { color: var(--text-main); }
+        /* --- ACTIONABLE CONTROLS & BUTTON CLASSES --- */
+        .btn-group {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
 
-        .process-timeline { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px; }
-        .process-step { background-color: var(--bg-card); border: 1px solid var(--border-color); padding: 24px; border-radius: 8px; }
-        .step-num { font-size: 12px; font-weight: 700; color: var(--accent-blue); text-transform: uppercase; margin-bottom: 8px; display: block; }
-        .process-step h3 { font-size: 16px; color: var(--text-main); }
+        .btn {
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: opacity 0.2s ease, transform 0.15s ease;
+            text-align: center;
+        }
 
-        .faq-layout { max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; }
-        .faq-item { background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 24px; }
-        .faq-item h3 { font-size: 16px; margin-bottom: 8px; color: var(--text-main); }
-        .faq-item p { color: var(--text-muted); font-size: 14px; }
+        .btn-primary {
+            background-color: #3b66f5;
+            color: #ffffff;
+            border: none;
+        }
 
-        .footer { background-color: var(--bg-card); border-top: 1px solid var(--border-color); padding: 32px 40px; display: flex; justify-content: space-between; align-items: center; font-size: 14px; color: var(--text-muted); }
-        .footer-links { display: flex; gap: 24px; list-style: none; }
-        .footer-links a { color: var(--text-muted); text-decoration: none; }
+        .btn-secondary {
+            background-color: var(--bg-input);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn:hover {
+            opacity: 0.93;
+            transform: translateY(-1px);
+        }
+
+        /* --- HERO INTRO FEATURE SECTION --- */
+        .hero-section {
+            background: radial-gradient(circle at top right, rgba(59, 102, 245, 0.08), transparent 40%);
+            padding: 100px 24px;
+            text-align: center;
+        }
+
+        .hero-content h1 {
+            font-size: 48px;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 20px;
+            letter-spacing: -1px;
+        }
+
+        .hero-content p {
+            font-size: 18px;
+            color: var(--text-muted);
+            max-width: 760px;
+            margin: 0 auto 40px auto;
+        }
+
+        /* --- DEEP DATA TRUST BOX FRAME --- */
+        .trust-section {
+            background-color: var(--bg-card);
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .trust-box {
+            background: linear-gradient(135deg, rgba(246, 70, 93, 0.04) 0%, transparent 100%);
+            border: 1px solid rgba(246, 70, 93, 0.15);
+            border-radius: 8px;
+            padding: 40px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .trust-box h2 {
+            color: var(--accent-red);
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .trust-box p {
+            margin-bottom: 16px;
+            color: var(--text-main);
+        }
+        
+        .trust-box p:last-child {
+            margin-bottom: 0;
+            color: var(--text-muted);
+        }
+
+        /* --- MULTI-SPLIT PLATFORM GRID BLOCKS --- */
+        .split-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 64px;
+            align-items: start;
+        }
+
+        .idea-content h2, .compatibility-content h2 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .idea-content p, .compatibility-content p {
+            color: var(--text-muted);
+            margin-bottom: 24px;
+        }
+
+        .factor-list, .analyze-list {
+            list-style: none;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .factor-list li {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 14px;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .analyze-list li {
+            color: var(--text-main);
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .analyze-list li span {
+            color: var(--accent-green);
+            font-weight: bold;
+        }
+
+        /* --- REPORT COMPATIBILITY MATRIX WIDGET --- */
+        .report-widget {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 32px;
+        }
+
+        .report-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 16px;
+            margin-bottom: 20px;
+        }
+
+        .report-title {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+        }
+
+        .report-score {
+            font-size: 20px;
+            color: var(--accent-green);
+            font-weight: 700;
+        }
+
+        .report-metrics {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .report-line {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+        }
+
+        .report-line span:first-child {
+            color: var(--text-muted);
+        }
+
+        .report-suitability {
+            border-top: 1px solid var(--border-color);
+            padding-top: 16px;
+            display: flex;
+            justify-content: space-between;
+            font-weight: 600;
+        }
+
+        /* --- CUSTOM MATRIX SOLUTION CARDS GRID --- */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 32px;
+            border-radius: 8px;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+            text-decoration: none;
+            display: block;
+        }
+
+        .card:hover {
+            border-color: var(--accent-blue);
+            transform: translateY(-3px);
+        }
+
+        .card h3 {
+            font-size: 18px;
+            margin-bottom: 12px;
+            color: var(--text-main);
+        }
+
+        .card p {
+            color: var(--text-muted);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* --- COMPREHENSIVE SERVICE PLANS PRICING LAYOUT --- */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+            gap: 24px;
+        }
+
+        .pricing-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 36px 32px;
+            display: flex;
+            flex-direction: column;
+            transition: border-color 0.2s ease, transform 0.2s ease;
+            text-decoration: none;
+        }
+
+        .pricing-card:hover {
+            border-color: var(--accent-blue);
+            transform: translateY(-4px);
+        }
+
+        .plan-num {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--accent-blue);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+
+        .pricing-card h3 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: #ffffff;
+        }
+
+        .plan-price {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--accent-green);
+            margin-bottom: 24px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 16px;
+        }
+
+        .plan-price span {
+            font-size: 14px;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        .plan-details-section {
+            margin-bottom: 20px;
+        }
+
+        .plan-details-title {
+            font-size: 12px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            letter-spacing: 0.5px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .plan-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .plan-list li {
+            font-size: 14px;
+            color: var(--text-main);
+            display: flex;
+            align-items: start;
+            gap: 8px;
+            text-align: left;
+        }
+
+        .plan-list li::before {
+            content: "•";
+            color: var(--accent-blue);
+            font-weight: bold;
+        }
+
+        .plan-list.not-included li::before {
+            content: "×";
+            color: var(--accent-red);
+            font-size: 16px;
+        }
+
+        .plan-delivery {
+            margin-top: auto;
+            background-color: rgba(255, 255, 255, 0.02);
+            border: 1px dashed var(--border-color);
+            padding: 12px;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .plan-delivery strong {
+            color: var(--text-main);
+        }
+
+        /* --- FRAMEWORK EXECUTION PROCESS TIMELINE --- */
+        .process-timeline {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 24px;
+            position: relative;
+        }
+
+        .process-step {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 24px;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .step-num {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--accent-blue);
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .process-step h3 {
+            font-size: 16px;
+            color: var(--text-main);
+        }
+
+        /* --- FAQ SECTION INTEGRITY MODULE --- */
+        .faq-layout {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .faq-item {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 24px;
+        }
+
+        .faq-item h3 {
+            font-size: 16px;
+            margin-bottom: 8px;
+            color: var(--text-main);
+        }
+
+        .faq-item p {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        /* --- APPLICATION PLATFORM FOOTER CONTROLS --- */
+        .footer {
+            background-color: var(--bg-card);
+            border-top: 1px solid var(--border-color);
+            padding: 32px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 24px;
+            list-style: none;
+        }
+
+        .footer-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+        }
+
+        .footer-links a:hover {
+            color: var(--text-main);
+        }
+
+        /* --- MOBILE RESPONSIVE ADAPTATION STYLES SHEET --- */
+        @media (max-width: 1024px) {
+            .navbar {
+                padding: 0 20px;
+            }
+            .nav-menu {
+                gap: 16px;
+            }
+        }
 
         @media (max-width: 900px) {
-            .navbar { height: 70px; }
-            .nav-menu { display: none !important; }
-            .nav-right-actions { display: none; }
-            .mobile-menu-btn { display: flex !important; }
-            .split-layout { grid-template-columns: 1fr; gap: 48px; }
-            .hero-section { padding: 70px 20px; }
-            .hero-content h1 { font-size: 34px; }
-            .factor-list { grid-template-columns: 1fr; }
-            .footer { flex-direction: column; gap: 16px; text-align: center; }
+            .navbar {
+                height: 70px;
+            }
+            .nav-menu {
+                display: none !important; 
+            }
+            .nav-right-actions {
+                display: none; 
+            }
+        }
+        
+        .mobile-menu-btn {
+            display: flex !important;
+        }
+        .split-layout {
+            grid-template-columns: 1fr;
+            gap: 48px;
+        }
+        .hero-section {
+            padding: 70px 20px;
+        }
+        .hero-content h1 {
+            font-size: 34px;
+        }
+        .factor-list {
+            grid-template-columns: 1fr;
+        }
+        .footer {
+            flex-direction: column;
+            gap: 16px;
+            text-align: center;
+            padding: 32px 20px;
+        }
+        section {
+            padding: 60px 20px;
+        }
+        
+        @media (max-width: 480px) {
+            .pricing-grid, .card-grid, .analyze-list {
+                grid-template-columns: 1fr;
+            }
+            .report-widget {
+                padding: 20px;
+            }
         }
     </style>
 </head>
@@ -394,18 +906,20 @@
             <span class="brand-text">BacktestLab<span>.pro</span></span>
         </a>
 
+        <!-- Desktop Navigation Actions Matrix -->
         <ul class="nav-menu">
             <li><a href="index.html">Home</a></li>
             <li><a href="algo_store.html">Bot Store</a></li>
-            <li><a href="bot_automation.html" class="active">Bot Automation</a></li>
+            <li><a href="bot_automation.html" class="active">Bot&#10;Automation</a></li>
             <li><a href="articles.html">Articles</a></li>
-            <li><a href="index.html#about">About Us</a></li>
+            <li><a href="index.html#about">About&#10;Us</a></li>
             <li><a href="index.html#contact">Contact</a></li>
         </ul>
 
+        <!-- Desktop Authentication Actions Container -->
         <div id="desktop-auth-container" class="nav-right-actions auth-hidden">
             <div id="logged-out-actions" class="hidden" style="display: flex; align-items: center; gap: 16px;">
-                <button onclick="triggerAuthFlow()" style="background: none; border: none; color: var(--text-muted); font-size: 13px; font-weight: 600; cursor: pointer; transition: color 0.2s;">Sign In</button>
+                <button onclick="triggerAuthFlow()" style="background: none; border: none; color: var(--text-muted); font-size: 13px; font-weight: 600; cursor: pointer; transition: color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--text-muted)'">Sign In</button>
                 <button onclick="triggerAuthFlow()" class="btn-new-session" style="padding: 9px 18px;">Get Free Account</button>
             </div>
             
@@ -437,6 +951,7 @@
                                 <p id="profile-box-email" class="profile-box-email">sandbox@backtestlabpro.com</p>
                             </div>
                         </div>
+
                         <button id="firebase-logout-btn" class="btn-logout">
                             <i class="fa-solid fa-power-off"></i> Sign Out
                         </button>
@@ -445,10 +960,12 @@
             </div>
         </div>
 
+        <!-- Responsive Hamburger Action Key -->
         <button id="mobile-menu-btn" class="mobile-menu-btn">
             <i class="fa-solid fa-bars-staggered"></i>
         </button>
 
+        <!-- Responsive Mobile Slideout Container -->
         <div id="mobile-menu" class="mobile-menu">
             <a href="index.html">Features</a>
             <a href="index.html">Data Coverage</a>
@@ -482,10 +999,11 @@
             <div class="pricing-grid">
                 
                 <!-- SERVICE 1 -->
-                <a href="chat.html" class="pricing-card">
+                <a href="chat.html" class="pricing-card" data-price="Free">
                     <span class="plan-num">Service 1</span>
                     <h3>Automation Review</h3>
                     <div class="plan-price">Free</div>
+                    
                     <div class="plan-details-section">
                         <div class="plan-details-title">Includes</div>
                         <ul class="plan-list">
@@ -494,14 +1012,16 @@
                             <li>Development estimate</li>
                         </ul>
                     </div>
-                    <div class="plan-delivery">Delivery Time: <strong>24–48 hours</strong></div>
+                    
+                    <div class="plan-delivery" id="free-plan-delivery"><strong>Discuss Strategy / Chat Now</strong></div>
                 </a>
 
                 <!-- SERVICE 2 -->
-                <a href="pay_now.html" class="pricing-card">
+                <a href="pay_now_Simple Bot Development.html" class="pricing-card" data-price="399">
                     <span class="plan-num">Service 2</span>
                     <h3>Simple Bot Development</h3>
                     <div class="plan-price">$399</div>
+                    
                     <div class="plan-details-section" style="margin-bottom: 14px;">
                         <div class="plan-details-title">Examples</div>
                         <ul class="plan-list" style="color: var(--text-muted); font-size: 13px; margin-bottom: 12px;">
@@ -511,6 +1031,7 @@
                             <li>Simple TradingView Automation</li>
                         </ul>
                     </div>
+
                     <div class="plan-details-section">
                         <div class="plan-details-title">Includes</div>
                         <ul class="plan-list">
@@ -520,14 +1041,16 @@
                             <li>30-day bug support</li>
                         </ul>
                     </div>
+                    
                     <div class="plan-delivery">Delivery Time: <strong>3–7 days</strong></div>
                 </a>
 
                 <!-- SERVICE 3 -->
-                <a href="session.html" class="pricing-card">
+                <a href="pay_now_Standard Bot Development.html" class="pricing-card" data-price="999">
                     <span class="plan-num">Service 3</span>
                     <h3>Standard Bot Development</h3>
                     <div class="plan-price">$999</div>
+                    
                     <div class="plan-details-section" style="margin-bottom: 14px;">
                         <div class="plan-details-title">Examples</div>
                         <ul class="plan-list" style="color: var(--text-muted); font-size: 13px; margin-bottom: 12px;">
@@ -537,6 +1060,7 @@
                             <li>Advanced risk management</li>
                         </ul>
                     </div>
+
                     <div class="plan-details-section">
                         <div class="plan-details-title">Includes</div>
                         <ul class="plan-list">
@@ -546,11 +1070,12 @@
                             <li>30-day bug support</li>
                         </ul>
                     </div>
+                    
                     <div class="plan-delivery">Delivery Time: <strong>1–3 weeks</strong></div>
                 </a>
 
                 <!-- SERVICE 4 -->
-                <a href="session.html" class="pricing-card">
+                <a href="pay_now_Advance Bot Development.html" class="pricing-card" data-price="1500">
                     <span class="plan-num">Service 4</span>
                     <h3>Advanced Custom Automation</h3>
                     <div class="plan-price">$1500</div>                    
@@ -563,30 +1088,16 @@
                             <li>Multi-market systems</li>
                         </ul>
                     </div>
+                    
                     <div class="plan-delivery" style="margin-top: 24px;">Delivery Time: <strong>2–6 weeks</strong></div>
                 </a>
 
-                <!-- SERVICE 5 -->
-                <a href="session.html" class="pricing-card">
-                    <span class="plan-num">Service 5</span>
-                    <h3>VPS Setup</h3>
-                    <div class="plan-price">$49 <span>one-time</span></div>
-                    <div class="plan-details-section">
-                        <div class="plan-details-title">Includes</div>
-                        <ul class="plan-list">
-                            <li>VPS setup</li>
-                            <li>Bot installation</li>
-                            <li>Broker/exchange connection</li>
-                        </ul>
-                    </div>
-                    <div class="plan-delivery">Delivery Time: <strong>1 day</strong></div>
-                </a>
-
                 <!-- SERVICE 6 -->
-                <a href="session.html" class="pricing-card">
+                <a href="" class="pricing-card" data-price="29">
                     <span class="plan-num">Service 6</span>
                     <h3>Maintenance Plan</h3>
                     <div class="plan-price">$29<span>/month</span></div>
+                    
                     <div class="plan-details-section" style="margin-bottom: 14px;">
                         <div class="plan-details-title">Includes</div>
                         <ul class="plan-list">
@@ -595,6 +1106,7 @@
                             <li>Minor updates</li>
                         </ul>
                     </div>
+
                     <div class="plan-details-section">
                         <div class="plan-details-title" style="color: var(--accent-red);">Not Included</div>
                         <ul class="plan-list not-included" style="color: var(--text-muted);">
@@ -602,18 +1114,145 @@
                             <li>New strategy logic</li>
                         </ul>
                     </div>
+                    
                     <div class="plan-delivery">Delivery Time: <strong>Ongoing Framework</strong></div>
+                </a>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- STRATEGY LIMITATIONS REVIEW PANEL -->
+    <section style="border-top: 1px solid var(--border-color);">
+        <div class="container split-layout">
+            <div class="idea-content">
+                <h2>Not Every Strategy Can Be Automated</h2>
+                <p>A profitable strategy does not automatically mean it can be transformed into a reliable trading bot. Many trading systems depend on parameters that require human discretion:</p>
+                <ul class="factor-list">
+                    <li>Manual chart interpretation</li>
+                    <li>Subjective decision making</li>
+                    <li>Visual pattern recognition</li>
+                    <li>Discretionary trade management</li>
+                </ul>
+                <p>These factors can make automation difficult or impossible. Before development begins, we evaluate whether your strategy is truly suitable for automated execution.</p>
+            </div>
+
+            <!-- AUTOMATION COMPATIBILITY SECTION -->
+            <div class="compatibility-content">
+                <h2>Automation Compatibility Review</h2>
+                <p>Our review process analyzes whether a strategy can realistically be transformed into an automated trading system.</p>
+                
+                <ul class="analyze-list" style="margin-bottom: 32px;">
+                    <li><span>✓</span> Entry Conditions</li>
+                    <li><span>✓</span> Exit Conditions</li>
+                    <li><span>✓</span> Risk Management Rules</li>
+                    <li><span>✓</span> Timeframe Dependencies</li>
+                    <li><span>✓</span> Multi-Timeframe Logic</li>
+                    <li><span>✓</span> Indicator Dependencies</li>
+                    <li><span>✓</span> Execution Complexity</li>
+                    <li><span>✓</span> Signal Consistency</li>
+                </ul>
+
+                <div class="report-widget">
+                    <div class="report-header">
+                        <span class="report-title">Example Report Context</span>
+                        <span class="report-score">87% Compatibility</span>
+                    </div>
+                    <div class="report-metrics">
+                        <div class="report-line"><span>Entry Rules:</span><span style="color:var(--accent-green)">Clear</span></div>
+                        <div class="report-line"><span>Exit Rules:</span><span style="color:var(--accent-green)">Clear</span></div>
+                        <div class="report-line"><span>Risk Logic:</span><span>Suitable</span></div>
+                        <div class="report-line"><span>Execution Complexity:</span><span style="color:var(--text-muted)">Medium</span></div>
+                    </div>
+                    <div class="report-suitability">
+                        <span>Overall Suitability:</span>
+                        <span style="color:var(--accent-green)">High</span>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 24px;">
+                    <a href="session.html" class="btn btn-primary" style="display:block; width:100%; text-align:center;">Request Compatibility Review</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- WHAT WE BUILD -->
+    <section style="background-color: var(--bg-card); border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color);">
+        <div class="container">
+            <div class="section-header">
+                <h2>Custom Trading Automation Solutions</h2>
+                <p>Engineered systems mapped to exact execution protocols.</p>
+            </div>
+            <div class="card-grid">
+                <a href="session.html" class="card">
+                    <h3>TradingView Automation</h3>
+                    <p>Convert TradingView alerts into automated trade execution workflows smoothly.</p>
+                </a>
+                <a href="session.html" class="card">
+                    <h3>MT4 Automation</h3>
+                    <p>Custom Expert Advisors built directly around your mechanical structural rules.</p>
+                </a>
+                <a href="session.html" class="card">
+                    <h3>MT5 Automation</h3>
+                    <p>Advanced automated trading systems with robust multi-asset capabilities for MetaTrader 5.</p>
+                </a>
+                <a href="session.html" class="card">
+                    <h3>Crypto Trading Bots</h3>
+                    <p>24/7 automated execution strategies deployed across supported asset exchanges.</p>
+                </a>
+                <a href="session.html" class="card">
+                    <h3>API-Based Trading Systems</h3>
+                    <p>Custom direct-to-broker integrations and low-latency algorithmic execution engines.</p>
+                </a>
+                <a href="session.html" class="card">
+                    <h3>VPS Deployment</h3>
+                    <p>Reliable cloud infrastructure configuration, hosting optimization, and active logic monitoring.</p>
                 </a>
             </div>
         </div>
     </section>
 
-    <!-- CORE SCRIPTS -->
+    <!-- FAQ SECTION -->
+    <section>
+        <div class="container">
+            <div class="section-header">
+                <h2>Frequently Asked Questions</h2>
+            </div>
+            <div class="faq-layout">
+                <div class="faq-item">
+                    <h3>Do I need to use Backtest Lab Pro first?</h3>
+                    <p>No, but strategies that have already been tested and documented are generally easier to review.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>Can every profitable strategy be automated?</h3>
+                    <p>No. Some strategies depend heavily on manual analysis and may require redesign before automation becomes practical.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>Do you sell ready-made bots?</h3>
+                    <p>No. We focus on custom automation built around each trader's specific requirements.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div>&copy; 2026 backtestlabpro.com. All rights reserved.</div>
+        <ul class="footer-links">
+            <li><a href="chatnowpage">Terms of Service</a></li>
+            <li><a href="chatnowpage">Privacy Policy</a></li>
+            <li><a href="chatnowpage">Contact</a></li>
+        </ul>
+    </footer>
+
+    <!-- FIREBASE ARCHITECTURE CORE LOGIC SCRIPTS MODULE -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
+        // Verified Application Configurations Matrix
         const firebaseConfig = {
             apiKey: "AIzaSyAensfI53w49Fd4A7Lz5_K9N1JOxZsW7Kk",
             authDomain: "backtestlabpro.firebaseapp.com",
@@ -627,51 +1266,88 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
+        // Bind global handles to pass functional parameters safely outside runtime modules
         window.firebaseAuthInstance = auth;
         window.firebaseSignOutAction = signOut;
 
+        // Listen for active authentications asynchronously
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 const nameDisplay = document.getElementById('profile-box-name');
                 const emailDisplay = document.getElementById('profile-box-email');
+                
                 if (nameDisplay) nameDisplay.textContent = user.displayName || "Anonymous Trader";
                 if (emailDisplay) emailDisplay.textContent = user.email || "sandbox@backtestlabpro.com";
 
-                // EXECUTE PREMIUM LOOKUP VERIFICATION
-                await checkUserPlanActiveState(user.uid);
                 window.updateAuthViewUI(true);
+
+                // --- FIRESTORE USER PAID PLAN CHECK ENGINE ---
+                try {
+                    const userDocRef = doc(db, "users", user.uid);
+                    const userDocSnap = await getDoc(userDocRef);
+
+                    if (userDocSnap.exists()) {
+                        const userData = userDocSnap.data();
+                        const amountPaid = userData.amountPaid; // Reads field e.g., "1500"[cite: 1]
+
+                        if (amountPaid) {
+                            // Locate specific card by data-price matching amountPaid value[cite: 1]
+                            const targetCard = document.querySelector(`.pricing-card[data-price="${amountPaid}"]`);
+                            if (targetCard) {
+                                
+                                // Check if user has items inside subcollection "bot_file_lock"[cite: 1]
+                                const lockCollectionRef = collection(db, "users", user.uid, "bot_file_lock");
+                                const lockSnapshot = await getDocs(lockCollectionRef);
+                                
+                                if (!lockSnapshot.empty) {
+                                    // IF SYSTEM IS LOCKED: block routing and trigger intercepting alert notice
+                                    targetCard.href = "#";
+                                    targetCard.addEventListener('click', (e) => {
+                                        e.preventDefault();
+                                        alert("Your bot development is under process. For more updates go to dashboard.");
+                                    });
+
+                                    const deliveryElement = targetCard.querySelector('.plan-delivery');
+                                    if (deliveryElement) {
+                                        deliveryElement.innerHTML = `<strong style="color: var(--accent-purple);">Under Process / Locked</strong>`;
+                                    }
+                                } else {
+                                    // IF SYSTEM IS OPEN: Update the card's href so it redirects premium users to premium_chat.html[cite: 1]
+                                    targetCard.href = "premium_chat.html";
+
+                                    const deliveryElement = targetCard.querySelector('.plan-delivery');
+                                    if (deliveryElement) {
+                                        deliveryElement.innerHTML = `<strong style="color: var(--accent-green);">Chat Now / Make Bot</strong>`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } catch (error) {
+                    console.error("Error reading data from Firestore: ", error);
+                }
+
             } else {
                 window.updateAuthViewUI(false);
+                // Reset to baseline state if logged out
+                const freeDelivery = document.getElementById('free-plan-delivery');
+                if (freeDelivery) freeDelivery.innerHTML = `<strong>Discuss Strategy / Chat Now</strong>`;
             }
         });
 
-        async function checkUserPlanActiveState(uid) {
-            try {
-                const planSnap = await getDoc(doc(db, "users", uid, "plan", "current"));
-                if (planSnap.exists() && planSnap.data().isPaid === true) {
-                    // ESSENTIAL UPGRADE RE-ROUTING CHANGE: Renders the active workspace portal links
-                    const pricingCards = document.querySelectorAll('.pricing-grid a');
-                    pricingCards.forEach((card, index) => {
-                        if (index === 1 || index === 2 || index === 3) {
-                            card.setAttribute('href', 'premium_chat.html');
-                            const priceLabel = card.querySelector('.plan-price');
-                            if (priceLabel) priceLabel.innerHTML = `<span style="color:#0ecb81; font-size:16px; font-weight:bold;"><i class="fa-solid fa-circle-check"></i> Workspace Active</span>`;
-                        }
-                    });
-                }
-            } catch (err) {
-                console.error("Firestore database verification loop error:", err);
-            }
-        }
-
+        // Sign Out Listener
         document.getElementById('firebase-logout-btn').addEventListener('click', () => {
             signOut(auth).then(() => {
                 document.getElementById('profile-overlay-dialog-box').classList.add('hidden');
-                window.location.reload();
+                alert('You have successfully signed out of your account session.');
+                window.location.reload(); // Reload to clean the dynamically checked plans UI state safely
+            }).catch((error) => {
+                console.error('Sign out execution exception: ', error);
             });
         });
     </script>
 
+    <!-- LOCAL INTERACTIVE ACTIONS SCRIPT CORE -->
     <script>
         window.addEventListener('DOMContentLoaded', () => {
             setupMobileNavigationLogic();
@@ -681,9 +1357,11 @@
         function setupMobileNavigationLogic() {
             const menuBtn = document.getElementById('mobile-menu-btn');
             const mobileMenu = document.getElementById('mobile-menu');
+
             menuBtn.addEventListener('click', () => {
                 mobileMenu.classList.toggle('open');
-                menuBtn.innerHTML = mobileMenu.classList.contains('open') ? `<i class="fa-solid fa-xmark"></i>` : `<i class="fa-solid fa-bars-staggered"></i>`;
+                const isOpen = mobileMenu.classList.contains('open');
+                menuBtn.innerHTML = isOpen ? `<i class="fa-solid fa-xmark"></i>` : `<i class="fa-solid fa-bars-staggered"></i>`;
             });
         }
 
@@ -691,11 +1369,22 @@
             const trigger = document.getElementById('profile-menu-trigger-btn');
             const dialogBox = document.getElementById('profile-overlay-dialog-box');
             const wrapper = document.getElementById('profile-dropdown-wrapper');
-            if (!trigger) return;
-            trigger.addEventListener('click', (e) => { e.stopPropagation(); dialogBox.classList.toggle('hidden'); });
-            document.addEventListener('click', (e) => { if (!wrapper.contains(e.target)) dialogBox.classList.add('hidden'); });
+
+            if (!trigger || !dialogBox || !wrapper) return;
+
+            trigger.addEventListener('click', (e) => {
+                e.stopPropagation();
+                dialogBox.classList.toggle('hidden');
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!wrapper.contains(e.target)) {
+                    dialogBox.classList.add('hidden');
+                }
+            });
         }
 
+        // Asynchronous structural UI state pipeline updates
         window.updateAuthViewUI = function(isLoggedIn) {
             const desktopContainer = document.getElementById('desktop-auth-container');
             const loggedOutBar = document.getElementById('logged-out-actions');
@@ -705,14 +1394,40 @@
             if (isLoggedIn) {
                 if (loggedOutBar) loggedOutBar.classList.add('hidden');
                 if (loggedInBar) loggedInBar.classList.remove('hidden');
+                
+                if (mobileAuthBox) {
+                    mobileAuthBox.innerHTML = `
+                        <a href="my-sessions.html">My Sessions <i class="fa-solid fa-folder-open" style="color:var(--accent-blue)"></i></a>
+                        <a href="session.html" style="background:linear-gradient(90deg, #4d5ef7, #8942f7); color:#fff; border-radius:8px; justify-content:center; gap:6px;">+ New Session</a>
+                        <button onclick="window.firebaseSignOutAction(window.firebaseAuthInstance)" class="btn-logout" style="margin-top:4px;">Sign Out</button>
+                    `;
+                }
             } else {
                 if (loggedOutBar) loggedOutBar.classList.remove('hidden');
                 if (loggedInBar) loggedInBar.classList.add('hidden');
+
+                if (mobileAuthBox) {
+                    mobileAuthBox.innerHTML = `
+                        <button onclick="triggerAuthFlow()" style="background:none; border:1px solid var(--border-color); color:var(--text-main); padding:12px; border-radius:8px; font-weight:600; cursor:pointer;">Sign In</button>
+                        <button onclick="triggerAuthFlow()" style="background:linear-gradient(90deg, #4d5ef7, #8942f7); border:none; color:#fff; padding:12px; border-radius:8px; font-weight:600; cursor:pointer;">Get Free Account</button>
+                    `;
+                }
             }
-            if (desktopContainer) { desktopContainer.classList.remove('auth-hidden'); desktopContainer.classList.add('auth-visible'); }
+
+            // Expose updated structural frames instantly to clean layout flashes
+            if (desktopContainer) {
+                desktopContainer.classList.remove('auth-hidden');
+                desktopContainer.classList.add('auth-visible');
+            }
+            if (mobileAuthBox) {
+                mobileAuthBox.classList.remove('auth-hidden');
+                mobileAuthBox.classList.add('auth-visible');
+            }
         }
 
-        function triggerAuthFlow() { window.location.href = "login.html"; }
+        function triggerAuthFlow() {
+            window.location.href = "login.html";
+        }
     </script>
 </body>
 </html>

@@ -4,9 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BacktestLab Pro | Insights & Articles</title>
-        <link rel="icon" type="image/svg+xml" href="favicon.svg">
-
-    <!-- Google Analytics Tracking from index.html -->
+    
+    <!-- Google Analytics Tracking -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-V7SXCF9923"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
@@ -51,7 +50,7 @@
             overflow-x: hidden;
         }
         
-        /* Deep 3D glow background background gradients matching index.html */
+        /* Deep 3D glow background matching index.html */
         .glow-orb {
             position: absolute;
             border-radius: 50%;
@@ -99,7 +98,6 @@
             transition: opacity 0.2s ease-in-out;
         }
         
-        /* Custom layout rule for managing clamp ellipses */
         .line-clamp-2 {
             display: -webkit-box;
             -webkit-line-clamp: 2;
@@ -114,7 +112,7 @@
     <div class="glow-orb w-[300px] h-[300px] md:w-[600px] md:h-[600px] bg-brand-accent top-[-100px] left-[-100px]"></div>
     <div class="glow-orb w-[350px] h-[350px] md:w-[700px] md:h-[700px] bg-brand-purple top-[20%] right-[-150px]"></div>
 
-    <!-- EXACT NAVBAR ENTRY - TRANSFERRED VERBATIM -->
+    <!-- NAVBAR -->
     <header class="sticky top-0 z-50 w-full border-b border-white/5 bg-brand-dark/70 backdrop-blur-md">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full h-20 flex items-center justify-between">
             <a href="index.html" class="flex items-center gap-3 group">
@@ -225,13 +223,13 @@
                             <span>Market Analysis</span><span class="text-xs bg-white/5 px-2.5 py-0.5 rounded-full text-zinc-500">12</span>
                         </li>
                         <li class="flex justify-between items-center cursor-pointer hover:text-brand-accent transition-colors">
-                            <span>Backtesting Guides</span><span class="text-xs bg-white/5 px-2.5 py-0.5 rounded-full text-zinc-500">8</span>
+                            <span>Backtesting Guides</span><span class="text-xs bg-white/5 px-2.5 py-0.5 rounded-full text-zinc-500">11</span>
                         </li>
                         <li class="flex justify-between items-center cursor-pointer hover:text-brand-accent transition-colors">
-                            <span>Risk Management</span><span class="text-xs bg-white/5 px-2.5 py-0.5 rounded-full text-zinc-500">5</span>
+                            <span>Risk Management</span><span class="text-xs bg-white/5 px-2.5 py-0.5 rounded-full text-zinc-500">7</span>
                         </li>
                         <li class="flex justify-between items-center cursor-pointer hover:text-brand-accent transition-colors">
-                            <span>Crypto Outlook</span><span class="text-xs bg-white/5 px-2.5 py-0.5 rounded-full text-zinc-500">14</span>
+                            <span>Crypto Outlook</span><span class="text-xs bg-white/5 px-2.5 py-0.5 rounded-full text-zinc-500">16</span>
                         </li>
                     </ul>
                 </div>
@@ -249,7 +247,7 @@
         </div>
     </main>
 
-    <!-- Global Application Footer Component matching original theme footprints -->
+    <!-- Global Application Footer Component -->
     <footer class="mt-24 border-t border-white/5 bg-zinc-950/40 backdrop-blur-sm relative z-10 py-12 text-zinc-500 text-xs">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-6 text-center sm:text-left">
             <div class="flex flex-col sm:flex-row items-center gap-3">
@@ -266,7 +264,7 @@
         </div>
     </footer>
 
-    <!-- Firebase System Pipeline Implementations from index.html -->
+    <!-- Firebase System Pipeline Implementations -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
@@ -310,11 +308,11 @@
    <script>
     let currentAuthStatusGlobal = false;
 
-    // 1. Updated Database Array with explicit 'url' parameters
+    // Database Array explicitly linking all your new and historical files
     const articlesDatabase = [
         {
-            id: "art_4",
-            isFeatured: true, // This places it in the premium top slot
+            id: "art_featured_2026",
+            isFeatured: true, // Key top banner card spotlight position
             title: "Best Backtesting Software for Traders in 2026: A Complete Comparison",
             excerpt: "An in-depth review comparing TradingView, MetaTrader, and Forex Tester workflows against modern cloud architectures to optimize your testing pipeline.",
             category: "Product Review",
@@ -323,46 +321,59 @@
             date: "June 2026",
             readTime: "8 min read",
             icon: "fa-solid fa-chart-line text-brand-accent",
-            url: "articles/Best Backtesting Software for Traders in 2026.html" // Links directly to your new page
+            url: "articles/Best Backtesting Software for Traders in 2026.html"
         },
         {
-            id: "art_1",
+            id: "art_new_tv_grid",
+            isFeatured: false,
+            title: "Is TradingView Backtesting Accurate for Leverage Grid Bots?",
+            excerpt: "An exhaustive long-form breakdown unpacking high-frequency chart tick streams, memory limitations inside Pine Script, dynamic correlation metrics, and mitigation strategies for automated grids.",
+            category: "Backtesting Guides",
+            tagColor: "text-purple-400 bg-purple-500/10 border-purple-500/20",
+            author: "BacktestLab Research Team",
+            date: "Today",
+            readTime: "12 min read",
+            icon: "fa-solid fa-robot text-purple-400",
+            url: "articles/backtestlabpro_article_1784454213917.html"
+        },
+        {
+            id: "art_new_crypto_risk",
+            isFeatured: false,
+            title: "What is the Best Risk Management Formula for Backtesting Crypto?",
+            excerpt: "A systematic masterclass modeling mean-reversion anomalies, dynamic Z-Score bands, Engle's GARCH memory processes, and structural downside calculations across volatile token liquidity streams.",
+            category: "Risk Management",
+            tagColor: "text-amber-400 bg-amber-500/10 border-amber-500/20",
+            author: "BacktestLab Research Team",
+            date: "Today",
+            readTime: "10 min read",
+            icon: "fa-solid fa-shield-halved text-amber-500",
+            url: "articles/backtestlabpro_article_1784454272073.html"
+        },
+        {
+            id: "art_new_crypto_risk_v2",
+            isFeatured: false,
+            title: "Systematic Risk Modeling Frameworks & Mathematical Intuitions",
+            excerpt: "Alternative design parameters analyzing transaction friction metrics, broker slippage limits, and out-of-sample walk-forward checks to protect trading bots against curve-fitting.",
+            category: "Risk Management",
+            tagColor: "text-red-400 bg-red-500/10 border-red-500/20",
+            author: "BacktestLab Research Team",
+            date: "Today",
+            readTime: "9 min read",
+            icon: "fa-solid fa-calculator text-red-400",
+            url: "articles/backtestlabpro_article_1784454301341.html"
+        },
+        {
+            id: "art_legacy_xau",
             isFeatured: false,
             title: "Deconstructive Blueprint: Backtesting 20+ Years of XAUUSD Macro Cycles",
-            excerpt: "An engineering look into multi-decade Gold algorithmic structures. Learn how to optimize data slice servers for parsing 20-year MT5 histories cleanly without triggering memory buffer exceptions.",
+            excerpt: "An engineering look into multi-decade Gold algorithmic structures. Learn how to optimize data slice servers for parsing 20-year MT5 histories cleanly without memory buffer bugs.",
             category: "Market Analysis",
             tagColor: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20",
             author: "Dev Team Core",
-            date: "Today",
+            date: "Yesterday",
             readTime: "6 min read",
             icon: "fa-solid fa-gem text-emerald-400",
             url: "articles/xauusd-macro-cycles.html"
-        },
-        {
-            id: "art_2",
-            isFeatured: false,
-            title: "Handling Cryptocurrency Lifecycle Volatility Across 10-Year Streams",
-            excerpt: "Deep asset metrics tracking the evolution of liquidity depth across early BTC historical archives vs present spot setups.",
-            category: "Crypto Outlook",
-            tagColor: "text-amber-400 bg-amber-500/10 border-amber-500/20",
-            author: "Alex Rivers",
-            date: "Yesterday",
-            readTime: "4 min read",
-            icon: "fa-brands fa-bitcoin text-amber-500",
-            url: "articles/crypto-lifecycle-volatility.html"
-        },
-        {
-            id: "art_3",
-            isFeatured: false,
-            title: "Architecting Web-based Trading Replays: UI State Systems",
-            excerpt: "A direct structural blueprint handling high-frequency chart tick streams while maintaining fluid stop-loss dragging capabilities.",
-            category: "Backtesting Guides",
-            tagColor: "text-purple-400 bg-purple-500/10 border-purple-500/20",
-            author: "M. Kovac",
-            date: "2 days ago",
-            readTime: "9 min read",
-            icon: "fa-solid fa-code text-purple-400",
-            url: "articles/web-trading-replay-ui.html"
         }
     ];
 
@@ -432,7 +443,6 @@
         }
     }
 
-    // 2. Upgraded Render Engine utilizing HTML5 anchor standard tracking links
     function renderArticleHub() {
         const heroBlock = document.getElementById('hero-block');
         const wrapper = document.getElementById('articles-wrapper');
@@ -442,7 +452,6 @@
 
         articlesDatabase.forEach(art => {
             if(art.isFeatured) {
-                // Wrap the text section in an anchor tag and add a "Read Full Review" interactive action element
                 heroBlock.innerHTML = `
                     <div class="flex-1 space-y-4">
                         <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-accent/10 border border-brand-accent/20 text-xs text-brand-accent font-medium">
@@ -474,10 +483,9 @@
                     </a>
                 `;
             } else {
-                // Changed standard 'div' block instantiation to semantic 'a' element tags for clean SEO navigation pipelines
                 const card = document.createElement('a');
                 card.href = art.url;
-                card.className = 'group p-5 rounded-2xl glass-card transition-all hover:border-white/20 flex flex-col md:flex-row gap-6 items-start md:items-center cursor-pointer';
+                card.className = 'group p-5 rounded-2xl glass-card transition-all hover:border-white/20 flex flex-col md:flex-row gap-6 items-start md:items-center cursor-pointer block';
                 card.innerHTML = `
                     <div class="h-24 w-full md:w-32 rounded-xl bg-zinc-950 flex items-center justify-center text-3xl border border-white/5 flex-shrink-0 group-hover:bg-zinc-900 transition-colors">
                         <i class="${art.icon} transition-transform group-hover:scale-105 duration-200"></i>
@@ -500,3 +508,5 @@
         });
     }
 </script>
+</body>
+</html>

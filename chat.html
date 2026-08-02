@@ -472,7 +472,7 @@ body {
 
         <div class="chat-messages" id="chat">
             <div class="message ai" id="step-msg-0">
-                Hello 👋 Welcome to Backtest Lab Pro Automation. 
+                Hello 🤖 Welcome to Backtest Lab Pro Automation. 
                 
                 Let's setup your project framework first. Which **Target Platform** do you want to build this trading bot for?
                 <div class="options-container" id="options-step-0">
@@ -738,7 +738,7 @@ async function sendAIMessage(text) {
 
         aiDiv.innerText = cleanText;
 
-        if (cleanText.toLowerCase().includes("buy the pro plan")) {
+        if (cleanText.toLowerCase().includes("buy the pro plan") || fullContent.includes("[STRATEGY_COMPLETE]")) {
             setTimeout(() => {
                 forceAbsoluteChatTerminationHandoff();
             }, 1000);
@@ -776,27 +776,32 @@ function forceAbsoluteChatTerminationHandoff() {
     const chat = document.getElementById("chat");
     const closingSummaryDiv = document.createElement("div");
     closingSummaryDiv.className = "message ai";
-    closingSummaryDiv.style.cssText = "border: 2px solid #2563eb; background: #0b0f19; box-shadow: 0 0 15px rgba(37,99,235,0.15);";
+    closingSummaryDiv.style.cssText = "border: 2px solid #3b82f6; background: linear-gradient(145deg, #0b0f19 0%, #111827 100%); box-shadow: 0 0 25px rgba(59,130,246,0.25); border-radius: 16px; padding: 24px;";
     
     closingSummaryDiv.innerHTML = `
-        <p style="font-weight:700; color:#10b981; margin-bottom:6px; font-size:15px;">🏁 Strategy Matrix Profiling Completed!</p>
-        <p style="margin-bottom:12px; color:#d1d5db;">Awesome! We have captured your target structural parameters layout into the ledger framework configuration:</p>
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">
+            <span style="font-size:22px;">⚡</span>
+            <p style="font-weight:700; color:#10b981; font-size:16px;">Strategy Blueprint Complete!</p>
+        </div>
+        <p style="margin-bottom:14px; color:#e5e7eb; font-size:14px;">We've successfully gathered all your bot configuration requirements:</p>
         
-        <ul style="margin-left: 18px; margin-bottom: 16px; color: #a5b4fc; font-size: 13px; line-height: 1.6;">
-            <li><strong>Target Eco-System:</strong> ${sessionData.platform}</li>
-            <li><strong>Instrument Profile Layer:</strong> ${sessionData.market} (${sessionData.timeframe})</li>
-            <li><strong>Technical Strategy Entry Trigger:</strong> ${sessionData.entry_rules}</li>
-            <li><strong>Execution Exit Conditions:</strong> ${sessionData.exit_rules}</li>
-            <li><strong>Risk Portfolio Metrics:</strong> ${sessionData.risk_management}</li>
-        </ul>
+        <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); border-radius:10px; padding:14px; margin-bottom:16px;">
+            <ul style="margin-left: 18px; color: #a5b4fc; font-size: 13px; line-height: 1.8;">
+                <li><strong>Target Platform:</strong> ${sessionData.platform}</li>
+                <li><strong>Asset / Timeframe:</strong> ${sessionData.market} (${sessionData.timeframe})</li>
+                <li><strong>Entry Strategy:</strong> ${sessionData.entry_rules}</li>
+                <li><strong>Exit Strategy:</strong> ${sessionData.exit_rules}</li>
+                <li><strong>Risk Management:</strong> ${sessionData.risk_management}</li>
+            </ul>
+        </div>
         
-        <p style="margin-bottom:12px; font-weight:600; color:#ffffff;">🔒 Ready to Compile Production Files?</p>
-        <p style="margin-bottom:16px; color:#9ca3af; font-size:13px;">Free session limits provide workspace logic mapping dashboards but do not include script configuration exports. Unlock a workspace license package to immediately generate your plug-and-play functional bot scripts.</p>
-        
-        <div class="options-container" style="gap:12px; margin-top:8px;">
-            <button class="option-btn" style="background:#2563eb; border-color:#2563eb; color:#ffffff; font-weight:700; padding:10px 20px;" onclick="alert('Redirecting to secure premium checkout portal matrix...')">
-                🚀 Purchase Pro License & Download Scripts
-            </button>
+        <div style="text-align:center; padding:12px; background:linear-gradient(135deg, rgba(59,130,246,0.15) 0%, rgba(37,99,235,0.05) 100%); border-radius:12px; border:1px solid rgba(59,130,246,0.3);">
+            <p style="margin-bottom:6px; font-weight:700; color:#ffffff; font-size:15px;">🚀 Ready to Launch Your Bot?</p>
+            <p style="margin-bottom:14px; color:#9ca3af; font-size:13px; line-height:1.5;">To generate your full bot source code, backtest scripts, and automated trade execution features, buy our <strong>Pro Plan</strong> today!</p>
+            
+            <a href="/services" style="display:inline-block; background:linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); color:#ffffff; font-weight:700; padding:12px 24px; border-radius:8px; text-decoration:none; font-size:14px; box-shadow:0 4px 14px rgba(37,99,235,0.4); transition:transform 0.2s;">
+                🛒 Buy Pro Plan & Unlock Bot Code
+            </a>
         </div>
     `;
     
@@ -804,15 +809,15 @@ function forceAbsoluteChatTerminationHandoff() {
     
     const containerWrapper = document.getElementById("inputContainerWrapper");
     containerWrapper.innerHTML = `
-        <div style="text-align:center; background:#111827; padding:18px; border-radius:12px; border:1px dashed rgba(255,255,255,0.08); color:#9ca3af; font-size:13px; font-weight:500;">
-            🔒 Architecture extraction conformed. Upgrade workspace tier to unlock compilation outputs.
+        <div style="text-align:center; background:#111827; padding:18px; border-radius:12px; border:1px dashed rgba(59,130,246,0.3); color:#a5b4fc; font-size:13px; font-weight:600;">
+            🔒 Requirements collection complete! Buy our Pro Plan to proceed with bot development.
         </div>
     `;
 
-    document.getElementById("assistant-mode-desc").innerText = "Requirements processing matrix locked. Choose a terminal action to proceed.";
+    document.getElementById("assistant-mode-desc").innerText = "Strategy blueprint finalized. Upgrade to Pro to build and download your bot.";
     const badge = document.getElementById("status-badge");
     badge.className = "status locked";
-    document.getElementById("status-text").innerText = "Session Concluded";
+    document.getElementById("status-text").innerText = "Session Complete";
     chat.scrollTop = chat.scrollHeight;
 
     const cooldownDuration = 15 * 60 * 1000; 

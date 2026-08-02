@@ -14,7 +14,7 @@
         .app-preloader.fade-out { opacity: 0; visibility: hidden; pointer-events: none; }
         
         .loader-logo-container { display: flex; flex-direction: column; align-items: center; gap: 20px; animation: brandPulse 1.2s ease-in-out infinite; }
-        .logo-svg-wrapper { width: 120px; height: 120px; }
+        .loader-logo-container svg { width: 120px; height: 120px; }
         .loader-text { color: #ffffff; font-size: 18px; font-weight: 600; letter-spacing: 0.5px; font-family: sans-serif; }
         .loader-text span { color: var(--accent); }
         .loader-subtext { color: #787b86; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; margin-top: -10px; }
@@ -32,20 +32,21 @@
         
         .main-container { display: flex; flex: 1; width: 100vw; overflow: hidden; position: relative; }
         
-        .left-sidebar { width: 58px; background: var(--panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; padding-top: 10px; gap: 14px; overflow-y: visible; overflow-x: visible; z-index: 500; position: relative; }
+        .left-sidebar { width: 50px; background: var(--panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; padding-top: 10px; gap: 8px; overflow-y: visible; overflow-x: visible; z-index: 500; position: relative; }
         
         .tool-group { position: relative; width: 100%; display: flex; justify-content: center; }
         
-        .tool-icon { color: #787b86; cursor: pointer; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; border-radius: 6px; font-size: 18px; transition: 0.15s; user-select: none; background: transparent; }
+        .tool-icon { color: #787b86; cursor: pointer; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 6px; transition: 0.15s; user-select: none; background: transparent; }
+        .tool-icon svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
         .tool-icon:hover { background: #2a2e39; color: #fff; }
         .tool-icon.active { background: var(--accent); color: #fff; }
 
-        .tool-menu { position: absolute; left: 48px; top: 0; background: #1c2030; border: 1px solid #363a45; border-radius: 8px; min-width: 220px; display: none; flex-direction: column; overflow: hidden; box-shadow: 5px 10px 30px rgba(0,0,0,0.55); z-index: 99999; }
+        .tool-menu { position: absolute; left: 44px; top: 0; background: #1c2030; border: 1px solid #363a45; border-radius: 8px; min-width: 200px; display: none; flex-direction: column; overflow: hidden; box-shadow: 5px 10px 30px rgba(0,0,0,0.55); z-index: 99999; }
         .tool-group:hover .tool-menu { display: flex; }
         
-        .tool-item { padding: 10px 14px; font-size: 13px; color: #d1d4dc; cursor: pointer; transition: 0.12s; white-space: nowrap; display: flex; align-items: center; gap: 10px; }
+        .tool-item { padding: 9px 12px; font-size: 12px; color: #d1d4dc; cursor: pointer; transition: 0.12s; white-space: nowrap; display: flex; align-items: center; gap: 10px; }
         .tool-item:hover { background: var(--accent); color: white; }
-        .tool-item .item-icon { width: 18px; display: inline-block; text-align: center; }
+        .tool-item svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; }
 
         #chart { flex: 1; height: calc(100vh - 50px); position: relative; background: var(--bg); cursor: crosshair; }
         .right-sidebar { width: 340px; background: var(--panel); border-left: 1px solid var(--border); display: flex; flex-direction: column; z-index: 25; overflow-y: auto; }
@@ -108,7 +109,7 @@
         .premium-modal-body { padding: 18px; display: flex; flex-direction: column; gap: 14px; max-height: 450px; overflow-y: auto; }
         .modal-input-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
         .modal-label { font-size: 13px; color: #b2b5be; }
-        .modal-input-field { width: 100px; background: #2a2e39; border: 1px solid #434651; color: white; padding: 6px 8px; border-radius: 4px; font-size: 13px; text-align: left; outline: none; }
+        .modal-input-field { width: 120px; background: #2a2e39; border: 1px solid #434651; color: white; padding: 6px 8px; border-radius: 4px; font-size: 13px; text-align: left; outline: none; }
         .modal-input-field:focus { border-color: var(--accent); }
         .modal-color-picker { width: 32px; height: 32px; padding: 0; border: 1px solid #434651; background: transparent; border-radius: 4px; cursor: pointer; outline: none; vertical-align: middle; }
         .premium-modal-footer { background: #131722; padding: 12px 18px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 8px; }
@@ -134,7 +135,7 @@
 
 <div id="appPreloader" class="app-preloader">
     <div class="loader-logo-container">
-        <svg class="logo-svg-wrapper" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M38 25H62M43 25V42L22 73C20 76 22 80 26 80H74C78 80 80 76 78 73L57 42V25" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
             <rect x="34" y="56" width="3" height="12" fill="#2962ff"/>
             <path d="M35.5 52V72" stroke="#2962ff" stroke-width="1.5" stroke-linecap="round"/>
@@ -153,9 +154,7 @@
 </div>
 
 <div class="topbar">
-    <div class="group">
-      
-    </div>
+    <div class="group"></div>
 
     <div class="group">
         <button onclick="play()">PLAY</button>
@@ -202,72 +201,80 @@
 <div class="main-container">
     <div class="left-sidebar">
         <div class="tool-group">
-            <div class="tool-icon active" id="tool-cursor" onclick="setTool('cursor')">↖</div>
+            <div class="tool-icon active" id="tool-cursor" onclick="setTool('cursor')" title="Cursor">
+                <svg viewBox="0 0 24 24"><path d="M4 4l7 17 3-6 6-3L4 4z"/></svg>
+            </div>
         </div>
         
         <div class="tool-group">
-            <div class="tool-icon" id="primary-lines-icon">／</div>
+            <div class="tool-icon" id="primary-lines-icon" title="Lines">
+                <svg viewBox="0 0 24 24"><path d="M4 20L20 4"/></svg>
+            </div>
             <div class="tool-menu">
-                <div class="tool-item" onclick="setTool('trend')"><span class="item-icon">／</span> Trend Line</div>
-                <div class="tool-item" onclick="setTool('ray')"><span class="item-icon">⟍</span> Ray Line</div>
-                <div class="tool-item" onclick="setTool('extend')"><span class="item-icon">⟋</span> Extended Line</div>
-                <div class="tool-item" onclick="setTool('hline')"><span class="item-icon">H</span> Horizontal Line</div>
-                <div class="tool-item" onclick="setTool('vline')"><span class="item-icon">V</span> Vertical Line</div>
-                <div class="tool-item" onclick="setTool('arrow')"><span class="item-icon">➜</span> Arrow Line</div>
-                <div class="tool-item" onclick="setTool('channel')"><span class="item-icon">≋</span> Parallel Channel</div>
+                <div class="tool-item" onclick="setTool('trend')"><svg viewBox="0 0 24 24"><path d="M4 20L20 4"/></svg> Trend Line</div>
+                <div class="tool-item" onclick="setTool('ray')"><svg viewBox="0 0 24 24"><path d="M4 20L20 4"/><circle cx="4" cy="20" r="2" fill="currentColor"/></svg> Ray Line</div>
+                <div class="tool-item" onclick="setTool('hline')"><svg viewBox="0 0 24 24"><path d="M3 12h18"/></svg> Horizontal Line</div>
+                <div class="tool-item" onclick="setTool('vline')"><svg viewBox="0 0 24 24"><path d="M12 3v18"/></svg> Vertical Line</div>
+                <div class="tool-item" onclick="setTool('arrow')"><svg viewBox="0 0 24 24"><path d="M4 20L20 4M13 4h7v7"/></svg> Arrow Line</div>
             </div>
         </div>
 
         <div class="tool-group">
-            <div class="tool-icon" id="primary-fib-icon">F</div>
+            <div class="tool-icon" id="primary-fib-icon" title="Fibonacci">
+                <svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18M8 3v18"/></svg>
+            </div>
             <div class="tool-menu">
-                <div class="tool-item" onclick="setTool('fib')"><span class="item-icon">F</span> Fibonacci Retracement</div>
-                <div class="tool-item" onclick="setTool('fibExt')"><span class="item-icon">FE</span> Trend-Based Fib Extension</div>
-                <div class="tool-item" onclick="setTool('fibTimeZone')"><span class="item-icon">⏰</span> Fibonacci Time Zones</div>
-                <div class="tool-item" onclick="setTool('fibFan')"><span class="item-icon">🪭</span> Fibonacci Fan Matrix</div>
+                <div class="tool-item" onclick="setTool('fib')"><svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></svg> Fibonacci Retracement</div>
             </div>
         </div>
 
         <div class="tool-group">
-            <div class="tool-icon" id="primary-shapes-icon">▭</div>
+            <div class="tool-icon" id="primary-shapes-icon" title="Shapes">
+                <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/></svg>
+            </div>
             <div class="tool-menu">
-                <div class="tool-item" onclick="setTool('rect')"><span class="item-icon">▭</span> Rectangle</div>
-                <div class="tool-item" onclick="setTool('circle')"><span class="item-icon">◯</span> Circle</div>
-                <div class="tool-item" onclick="setTool('triangle')"><span class="item-icon">△</span> Triangle</div>
+                <div class="tool-item" onclick="setTool('rect')"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/></svg> Rectangle</div>
+                <div class="tool-item" onclick="setTool('circle')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/></svg> Circle</div>
+                <div class="tool-item" onclick="setTool('triangle')"><svg viewBox="0 0 24 24"><path d="M12 4l9 16H3l9-16z"/></svg> Triangle</div>
             </div>
         </div>
 
         <div class="tool-group">
-            <div class="tool-icon" id="primary-text-icon">T</div>
+            <div class="tool-icon" id="primary-text-icon" title="Text">
+                <svg viewBox="0 0 24 24"><path d="M5 4h14M12 4v16"/></svg>
+            </div>
             <div class="tool-menu">
-                <div class="tool-item" onclick="setTool('text')"><span class="item-icon">T</span> Text Annotation</div>
-                <div class="tool-item" onclick="setTool('label')"><span class="item-icon">🏷</span> Pricing Label</div>
+                <div class="tool-item" onclick="setTool('text')"><svg viewBox="0 0 24 24"><path d="M5 4h14M12 4v16"/></svg> Text Annotation</div>
+                <div class="tool-item" onclick="setTool('label')"><svg viewBox="0 0 24 24"><path d="M20 12l-6-6H4v12h10l6-6z"/></svg> Pricing Label</div>
             </div>
         </div>
 
         <div class="tool-group">
-            <div class="tool-icon" id="primary-brush-icon">✎</div>
+            <div class="tool-icon" id="primary-brush-icon" title="Brush">
+                <svg viewBox="0 0 24 24"><path d="M12 19l7-7 3 3-7 7-3-3zM18 13l-1.5-1.5M2 22s5-1 7-3l11-11-4-4L5 15c-2 2-3 7-3 7z"/></svg>
+            </div>
             <div class="tool-menu">
-                <div class="tool-item" onclick="setTool('brush')"><span class="item-icon">✎</span> Standard Brush</div>
-                <div class="tool-item" onclick="setTool('highlight')"><span class="item-icon">🖍</span> Marker Highlighter</div>
-                <div class="tool-item" onclick="setTool('path')"><span class="item-icon">⌇</span> Multi-point Path</div>
+                <div class="tool-item" onclick="setTool('brush')"><svg viewBox="0 0 24 24"><path d="M3 21c3 0 7-1 9-4L21 8l-5-5L7 12c-3 2-4 6-4 9z"/></svg> Standard Brush</div>
             </div>
         </div>
 
         <div class="tool-group">
-            <div class="tool-icon" id="primary-positions-icon">🟢</div>
+            <div class="tool-icon" id="primary-positions-icon" title="Position Tools">
+                <svg viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8M17 7h4v4"/></svg>
+            </div>
             <div class="tool-menu">
-                <div class="tool-item" onclick="setTool('long')"><span class="item-icon">🟢</span> Long Position</div>
-                <div class="tool-item" onclick="setTool('short')"><span class="item-icon">🔴</span> Short Position</div>
+                <div class="tool-item" onclick="setTool('long')"><svg viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8"/><path d="M12 3v18" stroke-dasharray="2 2"/></svg> Long Position</div>
+                <div class="tool-item" onclick="setTool('short')"><svg viewBox="0 0 24 24"><path d="M3 7l6 6 4-4 8 8"/><path d="M12 3v18" stroke-dasharray="2 2"/></svg> Short Position</div>
             </div>
         </div>
 
         <div class="tool-group">
-            <div class="tool-icon" id="primary-utils-icon">📏</div>
+            <div class="tool-icon" id="primary-utils-icon" title="Utilities">
+                <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-4h2v4zm4 0h-2V7h2v10zm4 0h-2v-7h2v7z"/></svg>
+            </div>
             <div class="tool-menu">
-                <div class="tool-item" onclick="setTool('measure')"><span class="item-icon">📏</span> Measure Ruler</div>
-                <div class="tool-item" onclick="setTool('eraser')"><span class="item-icon">⌫</span> Precision Eraser</div>
-                <div class="tool-item" onclick="clearDrawings()"><span class="item-icon">🗑</span> Wipe All Clear</div>
+                <div class="tool-item" onclick="setTool('measure')"><svg viewBox="0 0 24 24"><path d="M2 12h20M6 8v8M10 9v6M14 9v6M18 8v8"/></svg> Measure Ruler</div>
+                <div class="tool-item" onclick="clearDrawings()"><svg viewBox="0 0 24 24"><path d="M3 6h18M8 6V4h8v2M10 11v6M14 11v6M5 6l1 14h12l1-14"/></svg> Wipe All Clear</div>
             </div>
         </div>
     </div>
@@ -359,7 +366,6 @@
     </div>
 </div>
 
-<!-- Step 1: Request configuration name prompt modal -->
 <div id="sessionModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:99999; align-items:center; justify-content:center;">
     <div style="width:400px; background:#131722; border:1px solid #2a2e39; border-radius:8px; padding:20px; box-sizing:border-box;">
         <div style="font-size:18px; font-weight:bold; margin-bottom:15px; color:white;">Save Backtest Session</div>
@@ -372,7 +378,6 @@
     </div>
 </div>
 
-<!-- Step 2: Custom Professional Success Modal Box Overlay UI (Completely Eradicates Native Popups) -->
 <div id="successModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:999999; align-items:center; justify-content:center;">
     <div style="width:380px; background:#131722; border:1px solid #2a2e39; border-radius:8px; padding:24px; box-sizing:border-box; text-align:center; animation: modalFadeIn 0.2s ease-out; box-shadow: 0 20px 50px rgba(0,0,0,0.6);">
         <div style="width: 52px; height: 52px; background: rgba(8, 153, 129, 0.1); border: 2px solid var(--up); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px auto;">
@@ -395,8 +400,7 @@
             <span id="modalIndicatorTitle" class="premium-modal-title">Indicator Settings</span>
             <span class="premium-modal-close" onclick="closeIndicatorModal()">✕</span>
         </div>
-        <div class="premium-modal-body" id="modalBodyContent">
-        </div>
+        <div class="premium-modal-body" id="modalBodyContent"></div>
         <div class="premium-modal-footer">
             <input type="hidden" id="modalTargetMode" value="ADD">
             <input type="hidden" id="modalTargetId" value="">
@@ -413,8 +417,7 @@
             <span class="premium-modal-title" id="toolSettingsTitle">Drawing Tool Properties</span>
             <span class="premium-modal-close" onclick="closeToolSettingsModal()">✕</span>
         </div>
-        <div class="premium-modal-body" id="toolSettingsBody">
-        </div>
+        <div class="premium-modal-body" id="toolSettingsBody"></div>
         <div class="premium-modal-footer">
             <button class="premium-btn premium-btn-secondary" onclick="closeToolSettingsModal()">Cancel</button>
             <button class="premium-btn premium-btn-primary" onclick="applyToolSettings()">Save Parameters</button>
@@ -423,7 +426,7 @@
 </div>
 
 <div id="canvasContextMenu" class="canvas-context-menu">
-    <div class="context-menu-item" onclick="openSelectedToolSettings()">⚙ Settings</div>
+    <div class="context-menu-item" onclick="openSelectedToolSettings()">⚙ Settings / Colors</div>
     <div class="context-menu-item" onclick="deleteSelectedDrawing()" style="color:var(--down)">🗑 Delete Item</div>
 </div>
 
@@ -445,6 +448,9 @@ let activeTrade = null;
 let entryLine, slLine, tpLine;
 let pendingType = null;
 let sessionEnded = false;
+
+let isDraggingSL = false;
+let isDraggingTP = false;
 
 const chartEl = document.getElementById("chart");
 const chart = LightweightCharts.createChart(chartEl, {
@@ -516,9 +522,29 @@ function updateTradeLines(type, entry, sl, tp, lots) {
     if (slLine) series.removePriceLine(slLine);
     if (tpLine) series.removePriceLine(tpLine);
 
-    entryLine = series.createPriceLine({ price: entry, color: '#2962ff', lineWidth: 2, axisLabelVisible: true, title: `${lots} Lots | ${pnlString} USD ✕` });
-    slLine = series.createPriceLine({ price: sl, color: '#f23645', lineWidth: 2, lineStyle: LightweightCharts.LineStyle.Dashed, axisLabelVisible: true, title: 'SL' });
-    tpLine = series.createPriceLine({ price: tp, color: '#089981', lineWidth: 2, lineStyle: LightweightCharts.LineStyle.Dashed, axisLabelVisible: true, title: 'TP' });
+    entryLine = series.createPriceLine({ 
+        price: entry, 
+        color: '#2962ff', 
+        lineWidth: 2, 
+        axisLabelVisible: true, 
+        title: `${lots} Lots | ${pnlString} USD ✕` 
+    });
+    slLine = series.createPriceLine({ 
+        price: sl, 
+        color: '#f23645', 
+        lineWidth: 2, 
+        lineStyle: LightweightCharts.LineStyle.Dashed, 
+        axisLabelVisible: true, 
+        title: 'SL (Drag Me)' 
+    });
+    tpLine = series.createPriceLine({ 
+        price: tp, 
+        color: '#089981', 
+        lineWidth: 2, 
+        lineStyle: LightweightCharts.LineStyle.Dashed, 
+        axisLabelVisible: true, 
+        title: 'TP (Drag Me)' 
+    });
 }
 
 function prepareTrade(type) {
@@ -589,6 +615,74 @@ function closeTrade() {
     updateStats();
 }
 
+chartEl.addEventListener('click', (e) => {
+    if (!activeTrade || !entryLine) return;
+
+    const rect = chartEl.getBoundingClientRect();
+    const clickX = e.clientX - rect.left;
+    const clickY = e.clientY - rect.top;
+
+    const entryY = series.priceToCoordinate(activeTrade.entry);
+    if (entryY === null) return;
+
+    const isYMatch = Math.abs(clickY - entryY) < 12;
+    const chartWidth = rect.width;
+    const isXMatch = clickX > (chartWidth - 220);
+
+    if (isYMatch && isXMatch) {
+        closeTrade();
+    }
+});
+
+chartEl.addEventListener('mousedown', (e) => {
+    if (!activeTrade) return;
+    const rect = chartEl.getBoundingClientRect();
+    const mouseY = e.clientY - rect.top;
+
+    const slY = series.priceToCoordinate(activeTrade.sl);
+    const tpY = series.priceToCoordinate(activeTrade.tp);
+
+    if (slY !== null && Math.abs(mouseY - slY) < 10) {
+        isDraggingSL = true;
+        chart.applyOptions({ handleScroll: false, handleScale: false });
+    } else if (tpY !== null && Math.abs(mouseY - tpY) < 10) {
+        isDraggingTP = true;
+        chart.applyOptions({ handleScroll: false, handleScale: false });
+    }
+});
+
+chartEl.addEventListener('mousemove', (e) => {
+    if (!activeTrade) return;
+    const rect = chartEl.getBoundingClientRect();
+    const mouseY = e.clientY - rect.top;
+
+    if (isDraggingSL || isDraggingTP) {
+        const newPrice = series.coordinateToPrice(mouseY);
+        if (newPrice) {
+            if (isDraggingSL) activeTrade.sl = parseFloat(newPrice.toFixed(2));
+            if (isDraggingTP) activeTrade.tp = parseFloat(newPrice.toFixed(2));
+            updateTradeLines(activeTrade.type, activeTrade.entry, activeTrade.sl, activeTrade.tp, activeTrade.lots);
+        }
+    } else {
+        const slY = series.priceToCoordinate(activeTrade.sl);
+        const tpY = series.priceToCoordinate(activeTrade.tp);
+        if ((slY !== null && Math.abs(mouseY - slY) < 10) || (tpY !== null && Math.abs(mouseY - tpY) < 10)) {
+            chartEl.style.cursor = 'ns-resize';
+        } else {
+            chartEl.style.cursor = 'crosshair';
+        }
+    }
+});
+
+window.addEventListener('mouseup', () => {
+    if (isDraggingSL || isDraggingTP) {
+        isDraggingSL = false;
+        isDraggingTP = false;
+        chart.applyOptions({ handleScroll: true, handleScale: true });
+        chartEl.style.cursor = 'crosshair';
+    }
+});
+
 function openSessionModal() {
     if (sessionEnded) return;
     sessionEnded = true;
@@ -596,13 +690,8 @@ function openSessionModal() {
     document.getElementById("sessionModal").style.display = "flex";
 }
 
-function closeSessionModal() {
-    document.getElementById("sessionModal").style.display = "none";
-}
-
-function closeSuccessModal() {
-    document.getElementById("successModal").style.display = "none";
-}
+function closeSessionModal() { document.getElementById("sessionModal").style.display = "none"; }
+function closeSuccessModal() { document.getElementById("successModal").style.display = "none"; }
 
 window.closeSessionModal = closeSessionModal;
 window.closeSuccessModal = closeSuccessModal;
@@ -757,12 +846,7 @@ window.submitIndicatorModal = function() {
     }
 
     if (mode === "ADD") {
-        addIndicator({
-            type,
-            chart: window.chart,
-            candles: window.historyData,
-            options
-        });
+        addIndicator({ type, chart: window.chart, candles: window.historyData, options });
     } else if (mode === "EDIT") {
         const id = document.getElementById("modalTargetId").value;
         editIndicator(id, window.chart, window.historyData, options);
@@ -914,21 +998,11 @@ window.auth = auth;
 window.collection = collection;
 window.addDoc = addDoc;
 
-/* 
-  Pure Custom Save Pipeline - No Success alerts exist here.
-  Closes configuration form, creates doc record, and triggers #successModal immediately.
-*/
 window.saveSession = async function() {
     try {
-        if (!window.auth || !window.db) {
-            console.error("Firebase resources offline.");
-            return;
-        }
+        if (!window.auth || !window.db) return;
         const user = window.auth.currentUser;
-        if (!user) {
-            console.error("No authenticated user active.");
-            return;
-        }
+        if (!user) return;
 
         const sessionName = document.getElementById("sessionNameInput").value.trim();
         if (!sessionName) {
@@ -944,15 +1018,9 @@ window.saveSession = async function() {
             created_at: new Date().toISOString()
         };
 
-        // Push data securely upstream to Firestore
         await window.addDoc(window.collection(window.db, "users", user.uid, "sessions"), sessionData);
-        
-        // Step 1: Wipe the configuration choice pane instantly
         window.closeSessionModal();
-        
-        // Step 2: Render your beautiful professional choice router layout directly
         document.getElementById("successModal").style.display = "flex";
-        
     } catch (err) {
         console.error("Cloud Write Exception Failure Layer:", err);
     }
@@ -966,6 +1034,7 @@ window.load();
 window.calcLots();
 </script>
 
+<!-- Pro Canvas Overlay Engine with Dynamic Event Pass-Through -->
 <script>
 (() => {
 const canvas = document.getElementById('drawingCanvasOverlay');
@@ -973,342 +1042,413 @@ const ctx = canvas.getContext('2d');
 
 let tool = 'cursor';
 let drawings = [];
-
 let drawing = false;
-let startX = 0;
-let startY = 0;
+let startX = 0, startY = 0;
 let currentShape = null;
-
 let selected = null;
 let rightClickedShape = null;
-
-let multiPointStage = 0;
-let multiPointTemp = null;
+let draggingHandle = null; // 'p1', 'p2', 'target', 'stop' or 'body'
+let dragStartVal = null;
 
 function resizeCanvas() {
     const rect = chartEl.getBoundingClientRect();
-    canvas.width = rect.width * devicePixelRatio;
-    canvas.height = rect.height * devicePixelRatio;
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
     canvas.style.width = rect.width + 'px';
     canvas.style.height = rect.height + 'px';
-    ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     redraw();
 }
 
-resizeCanvas();
 window.addEventListener('resize', resizeCanvas);
 
-function redraw() {
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    drawings.forEach(drawShape);
-    if(currentShape){
-        drawShape(currentShape,true);
-    }
+function pxToVal(x, y) {
+    const idx = chart.timeScale().coordinateToLogical(x);
+    const price = series.coordinateToPrice(y);
+    return { index: idx, price: price };
 }
 
-function drawHandle(x,y){
-    ctx.fillStyle='#fff';
-    ctx.strokeStyle='#2962ff';
-    ctx.lineWidth = 1;
+function valToPx(index, price) {
+    if (index === null || price === null || index === undefined || price === undefined) return { x: null, y: null };
+    const x = chart.timeScale().logicalToCoordinate(index);
+    const y = series.priceToCoordinate(price);
+    return { x, y };
+}
+
+function redraw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawings.forEach(d => drawShape(d, false));
+    if (currentShape) drawShape(currentShape, true);
+}
+
+function drawHandle(x, y) {
+    if (x === null || y === null) return;
+    ctx.save();
+    ctx.fillStyle = '#ffffff';
+    ctx.strokeStyle = '#2962ff';
+    ctx.lineWidth = 2;
     ctx.beginPath();
-    ctx.arc(x,y,4,0,Math.PI*2);
+    ctx.arc(x, y, 5, 0, Math.PI * 2);
     ctx.fill();
     ctx.stroke();
+    ctx.restore();
 }
 
-function drawShape(shape,preview=false){
+function drawShape(shape, preview = false) {
+    ctx.save();
     ctx.lineWidth = shape.lineWidth || 2;
     ctx.strokeStyle = shape.color || '#2962ff';
     ctx.fillStyle = shape.fill || 'rgba(41,98,255,0.15)';
 
-    switch(shape.type){
+    let p1 = preview ? { x: shape.x1, y: shape.y1 } : valToPx(shape.i1, shape.p1);
+    let p2 = preview ? { x: shape.x2, y: shape.y2 } : (shape.i2 !== undefined ? valToPx(shape.i2, shape.p2) : { x: null, y: null });
+
+    if (!preview && (p1.x === null || p1.y === null)) {
+        ctx.restore();
+        return;
+    }
+
+    switch(shape.type) {
         case 'trend':
-            line(shape.x1,shape.y1,shape.x2,shape.y2);
-        break;
+            if (p2.x !== null) line(p1.x, p1.y, p2.x, p2.y);
+            break;
         case 'ray':
-            drawRay(shape);
-        break;
-        case 'extend':
-            drawExtended(shape);
-        break;
+            if (p2.x !== null) drawRay(p1, p2);
+            break;
         case 'hline':
-            line(0,shape.y1,canvas.width,shape.y1);
-        break;
+            line(0, p1.y, canvas.width / (window.devicePixelRatio || 1), p1.y);
+            break;
         case 'vline':
-            line(shape.x1,0,shape.x1,canvas.height);
-        break;
+            line(p1.x, 0, p1.x, canvas.height / (window.devicePixelRatio || 1));
+            break;
         case 'rect':
-            rect(shape);
-        break;
+            if (p2.x !== null) rect(p1.x, p1.y, p2.x, p2.y);
+            break;
         case 'circle':
-            circle(shape);
-        break;
+            if (p2.x !== null) circle(p1.x, p1.y, p2.x, p2.y);
+            break;
         case 'arrow':
-            arrow(shape);
-        break;
-        case 'channel':
-            channel(shape);
-        break;
+            if (p2.x !== null) arrow(p1.x, p1.y, p2.x, p2.y);
+            break;
         case 'fib':
-            fib(shape);
-        break;
-        case 'fibExt':
-            fibExt(shape);
-        break;
-        case 'fibTimeZone':
-            fibTimeZone(shape);
-        break;
-        case 'fibFan':
-            fibFan(shape);
-        break;
+            if (p2.x !== null) fib(p1.x, p1.y, p2.x, p2.y, shape);
+            break;
         case 'long':
-            riskBox(shape,'#089981');
-        break;
         case 'short':
-            riskBox(shape,'#f23645');
-        break;
+            drawPositionTool(shape, preview);
+            break;
         case 'brush':
-        case 'path':
-            brush(shape);
-        break;
-        case 'highlight':
-            highlight(shape);
-        break;
+            drawPoints(shape, preview);
+            break;
         case 'triangle':
-            triangle(shape);
-        break;
+            if (p2.x !== null) triangle(p1.x, p1.y, p2.x, p2.y);
+            break;
         case 'measure':
-            measure(shape);
-        break;
+            if (p2.x !== null) measure(p1.x, p1.y, p2.x, p2.y);
+            break;
         case 'text':
-            drawText(shape);
-        break;
+            drawText(shape.text, p1.x, p1.y, shape);
+            break;
         case 'label':
-            label(shape);
-        break;
+            label(shape.text, p1.x, p1.y, shape);
+            break;
     }
 
-    if(selected===shape){
-        drawHandle(shape.x1,shape.y1);
-        if(shape.x2 !== undefined) drawHandle(shape.x2,shape.y2);
-        if(shape.x3 !== undefined) drawHandle(shape.x3,shape.y3);
+    if (selected === shape && !preview && shape.type !== 'long' && shape.type !== 'short') {
+        drawHandle(p1.x, p1.y);
+        if (p2.x !== null) drawHandle(p2.x, p2.y);
     }
-}
-
-function line(x1,y1,x2,y2){
-    ctx.beginPath();
-    ctx.moveTo(x1,y1);
-    ctx.lineTo(x2,y2);
-    ctx.stroke();
-}
-
-function rect(s){
-    ctx.fillRect(s.x1,s.y1,s.x2-s.x1,s.y2-s.y1);
-    ctx.strokeRect(s.x1,s.y1,s.x2-s.x1,s.y2-s.y1);
-}
-
-function circle(s){
-    const r=Math.hypot(s.x2-s.x1,s.y2-s.y1);
-    ctx.beginPath();
-    ctx.arc(s.x1,s.y1,r,0,Math.PI*2);
-    ctx.fill();
-    ctx.stroke();
-}
-
-function arrow(s){
-    line(s.x1,s.y1,s.x2,s.y2);
-    const angle=Math.atan2(s.y2-s.y1,s.x2-s.x1);
-    ctx.beginPath();
-    ctx.moveTo(s.x2,s.y2);
-    ctx.lineTo(s.x2-12*Math.cos(angle-0.3),s.y2-12*Math.sin(angle-0.3));
-    ctx.lineTo(s.x2-12*Math.cos(angle+0.3),s.y2-12*Math.sin(angle+0.3));
-    ctx.closePath();
-    ctx.fill();
-}
-
-function drawRay(s){
-    const angle=Math.atan2(s.y2-s.y1,s.x2-s.x1);
-    const len=5000;
-    line(s.x1,s.y1,s.x1+Math.cos(angle)*len,s.y1+Math.sin(angle)*len);
-}
-
-function drawExtended(s){
-    const angle=Math.atan2(s.y2-s.y1,s.x2-s.x1);
-    const len=5000;
-    line(s.x1-Math.cos(angle)*len,s.y1-Math.sin(angle)*len,s.x1+Math.cos(angle)*len,s.y1+Math.sin(angle)*len);
-}
-
-function brush(s){
-    ctx.beginPath();
-    s.points.forEach((p,i)=>{
-        if(i===0) ctx.moveTo(p.x,p.y);
-        else ctx.lineTo(p.x,p.y);
-    });
-    ctx.stroke();
-}
-
-function highlight(s){
-    ctx.save();
-    ctx.globalAlpha=0.2;
-    ctx.lineWidth=s.lineWidth || 12;
-    brush(s);
     ctx.restore();
 }
 
-function triangle(s){
+function drawPositionTool(shape, preview) {
+    let entryPx = preview ? { x: shape.x1, y: shape.y1 } : valToPx(shape.i1, shape.p1);
+    let targetPx = preview ? { x: shape.x2, y: shape.y2 } : valToPx(shape.i2, shape.targetPrice);
+    let stopPx = preview ? { x: shape.x2, y: shape.y2 } : valToPx(shape.i2, shape.stopPrice);
+
+    if (!preview && (entryPx.x === null || entryPx.y === null)) return;
+
+    let width = preview ? Math.abs(shape.x2 - shape.x1) : Math.abs((targetPx.x || entryPx.x + 60) - entryPx.x);
+    width = Math.max(width, 50);
+
+    let leftX = entryPx.x;
+    let rightX = entryPx.x + width;
+
+    let isLong = shape.type === 'long';
+    
+    let targetY = preview ? (isLong ? entryPx.y - 40 : entryPx.y + 40) : targetPx.y;
+    let stopY = preview ? (isLong ? entryPx.y + 20 : entryPx.y - 20) : stopPx.y;
+
+    // Profit Box (Green)
+    ctx.fillStyle = shape.targetColor || 'rgba(8, 153, 129, 0.25)';
+    ctx.fillRect(leftX, Math.min(entryPx.y, targetY), width, Math.abs(entryPx.y - targetY));
+    ctx.strokeStyle = '#089981';
+    ctx.strokeRect(leftX, Math.min(entryPx.y, targetY), width, Math.abs(entryPx.y - targetY));
+
+    // Stop Loss Box (Red)
+    ctx.fillStyle = shape.stopColor || 'rgba(242, 54, 69, 0.25)';
+    ctx.fillRect(leftX, Math.min(entryPx.y, stopY), width, Math.abs(entryPx.y - stopY));
+    ctx.strokeStyle = '#f23645';
+    ctx.strokeRect(leftX, Math.min(entryPx.y, stopY), width, Math.abs(entryPx.y - stopY));
+
+    // Center Entry Line
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 1.5;
     ctx.beginPath();
-    ctx.moveTo(s.x1,s.y2);
-    ctx.lineTo((s.x1+s.x2)/2,s.y1);
-    ctx.lineTo(s.x2,s.y2);
+    ctx.moveTo(leftX, entryPx.y);
+    ctx.lineTo(rightX, entryPx.y);
+    ctx.stroke();
+
+    // R/R Metric Box
+    if (!preview) {
+        let entryP = shape.p1;
+        let targetP = shape.targetPrice;
+        let stopP = shape.stopPrice;
+
+        let rewardPips = Math.abs(targetP - entryP);
+        let riskPips = Math.abs(entryP - stopP);
+        let rrr = riskPips > 0 ? (rewardPips / riskPips).toFixed(2) : "0.00";
+
+        ctx.fillStyle = '#131722';
+        ctx.fillRect(leftX + 4, entryPx.y - 11, 100, 22);
+        ctx.strokeStyle = '#363a45';
+        ctx.strokeRect(leftX + 4, entryPx.y - 11, 100, 22);
+
+        ctx.fillStyle = '#ffffff';
+        ctx.font = '10px sans-serif';
+        ctx.fillText(`R/R Ratio: ${rrr}`, leftX + 8, entryPx.y + 4);
+    }
+
+    if (selected === shape && !preview) {
+        drawHandle(entryPx.x + width / 2, entryPx.y);
+        drawHandle(entryPx.x + width / 2, targetY);
+        drawHandle(entryPx.x + width / 2, stopY);
+    }
+}
+
+function line(x1, y1, x2, y2) {
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.stroke();
+}
+
+function rect(x1, y1, x2, y2) {
+    ctx.fillRect(x1, y1, x2 - x1, y2 - y1);
+    ctx.strokeRect(x1, y1, x2 - x1, y2 - y1);
+}
+
+function circle(x1, y1, x2, y2) {
+    const r = Math.hypot(x2 - x1, y2 - y1);
+    ctx.beginPath();
+    ctx.arc(x1, y1, r, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+}
+
+function arrow(x1, y1, x2, y2) {
+    line(x1, y1, x2, y2);
+    const angle = Math.atan2(y2 - y1, x2 - x1);
+    ctx.beginPath();
+    ctx.moveTo(x2, y2);
+    ctx.lineTo(x2 - 10 * Math.cos(angle - 0.4), y2 - 10 * Math.sin(angle - 0.4));
+    ctx.lineTo(x2 - 10 * Math.cos(angle + 0.4), y2 - 10 * Math.sin(angle + 0.4));
+    ctx.closePath();
+    ctx.fill();
+}
+
+function drawRay(p1, p2) {
+    const angle = Math.atan2(p2.y - p1.y, p2.x - p1.x);
+    line(p1.x, p1.y, p1.x + Math.cos(angle) * 4000, p1.y + Math.sin(angle) * 4000);
+}
+
+function drawPoints(shape, preview) {
+    if (!shape.points || shape.points.length === 0) return;
+    ctx.beginPath();
+    shape.points.forEach((pt, i) => {
+        const p = preview ? pt : valToPx(pt.i, pt.p);
+        if (p.x !== null) {
+            if (i === 0) ctx.moveTo(p.x, p.y);
+            else ctx.lineTo(p.x, p.y);
+        }
+    });
+    ctx.stroke();
+}
+
+function triangle(x1, y1, x2, y2) {
+    ctx.beginPath();
+    ctx.moveTo(x1, y2);
+    ctx.lineTo((x1 + x2) / 2, y1);
+    ctx.lineTo(x2, y2);
     ctx.closePath();
     ctx.fill();
     ctx.stroke();
 }
 
-function measure(s){
-    line(s.x1,s.y1,s.x2,s.y2);
-    const dist=Math.round(Math.hypot(s.x2-s.x1,s.y2-s.y1));
-    ctx.fillStyle='#fff';
-    ctx.fillText(dist+' px',(s.x1+s.x2)/2,(s.y1+s.y2)/2);
+function measure(x1, y1, x2, y2) {
+    line(x1, y1, x2, y2);
+    const dist = Math.round(Math.hypot(x2 - x1, y2 - y1));
+    ctx.fillStyle = '#ffffff';
+    ctx.font = '12px sans-serif';
+    ctx.fillText(dist + ' px', (x1 + x2) / 2 + 5, (y1 + y2) / 2 - 5);
 }
 
-function channel(s){
-    line(s.x1,s.y1,s.x2,s.y2);
-    const offset= s.channelOffset || 50;
-    line(s.x1,s.y1+offset,s.x2,s.y2+offset);
-}
-
-function fib(s){
+function fib(x1, y1, x2, y2, s) {
     const levels = s.fibLevels || [0, 0.236, 0.382, 0.5, 0.618, 0.786, 1];
-    levels.forEach(l=>{
-        const y=s.y1+(s.y2-s.y1)*l;
-        line(s.x1,y,s.x2,y);
-        ctx.fillStyle= s.textColor || '#787b86';
+    levels.forEach(l => {
+        const y = y1 + (y2 - y1) * l;
+        line(x1, y, x2, y);
+        ctx.fillStyle = s.textColor || '#787b86';
         ctx.font = "11px sans-serif";
-        ctx.fillText((l*100).toFixed(1)+'%',s.x2+5,y);
+        ctx.fillText((l * 100).toFixed(1) + '%', Math.max(x1, x2) + 5, y + 4);
     });
 }
 
-function fibExt(s){
-    line(s.x1, s.y1, s.x2, s.y2);
-    const referencePointX = s.x3 !== undefined ? s.x3 : s.x2;
-    const referencePointY = s.y3 !== undefined ? s.y3 : s.y2;
-    
-    if(s.x3 !== undefined) {
-        line(s.x2, s.y2, s.x3, s.y3);
-    }
-
-    const deltaY = s.y2 - s.y1;
-    const levels = s.fibLevels || [0, 0.236, 0.382, 0.5, 0.618, 0.786, 1, 1.618];
-    
-    levels.forEach(l => {
-        const targetY = referencePointY + (deltaY * l);
-        line(s.x1, targetY, referencePointX, targetY);
-        ctx.fillStyle = s.textColor || '#787b86';
-        ctx.fillText(`Ext ${l.toFixed(3)}`, referencePointX + 6, targetY + 3);
-    });
+function drawText(txt, x, y, s) {
+    ctx.fillStyle = s.color || '#fff';
+    ctx.font = (s.fontSize || 14) + 'px Arial';
+    ctx.fillText(txt, x, y);
 }
 
-function fibTimeZone(s){
-    const baseDistance = Math.abs(s.x2 - s.x1);
-    if(baseDistance < 2) return;
-    const intervals = [0, 1, 2, 3, 5, 8, 13, 21, 34, 55];
-    const direction = s.x2 >= s.x1 ? 1 : -1;
-
-    intervals.forEach(node => {
-        const computedX = s.x1 + (direction * node * baseDistance);
-        line(computedX, 0, computedX, canvas.height);
-        ctx.fillStyle = s.textColor || '#787b86';
-        ctx.fillText(`(${node})`, computedX + 4, s.y1 - 10);
-    });
-}
-
-function fibFan(s){
-    line(s.x1, s.y1, s.x2, s.y2);
-    const levels = s.fibLevels || [0.382, 0.5, 0.618];
-    const deltaX = s.x2 - s.x1;
-    const deltaY = s.y2 - s.y1;
-
-    levels.forEach(l => {
-        const innerX = s.x1 + deltaX;
-        const innerY = s.y1 + (deltaY * l);
-        line(s.x1, s.y1, innerX, innerY);
-        ctx.fillStyle = s.textColor || '#787b86';
-        ctx.fillText(`Fan ${l}`, innerX - 35, innerY - 4);
-    });
-}
-
-function riskBox(s,color){
-    ctx.fillStyle= s.fill || color+'33';
-    ctx.strokeStyle= s.color || color;
-    rect(s);
-}
-
-function drawText(s){
-    ctx.fillStyle= s.color || '#fff';
-    ctx.font= (s.fontSize || 14) + 'px Arial';
-    ctx.fillText(s.text,s.x1,s.y1);
-}
-
-function label(s){
-    ctx.fillStyle= s.color || '#2962ff';
-    ctx.fillRect(s.x1,s.y1,90,24);
-    ctx.fillStyle='#fff';
+function label(txt, x, y, s) {
+    ctx.fillStyle = s.color || '#2962ff';
+    ctx.fillRect(x, y, 90, 24);
+    ctx.fillStyle = '#fff';
     ctx.font = "12px sans-serif";
-    ctx.fillText(s.text,s.x1+8,s.y1+16);
+    ctx.fillText(txt, x + 8, y + 16);
 }
 
-window.setTool=function(t){
-    tool=t;
-    multiPointStage = 0; 
-    multiPointTemp = null;
+window.setTool = function(t) {
+    tool = t;
+    selected = null;
+    document.querySelectorAll('.tool-icon').forEach(e => e.classList.remove('active'));
 
-    document.querySelectorAll('.tool-icon').forEach(e=>{
-        e.classList.remove('active');
-    });
-
-    let targetIcon = document.getElementById('tool-'+t);
+    let targetIcon = document.getElementById('tool-' + t);
     if (!targetIcon) {
-        if(['trend','ray','extend','hline','vline','arrow','channel'].includes(t)) targetIcon = document.getElementById('primary-lines-icon');
-        if(['fib','fibExt','fibTimeZone','fibFan'].includes(t)) targetIcon = document.getElementById('primary-fib-icon');
-        if(['rect','circle','triangle'].includes(t)) targetIcon = document.getElementById('primary-shapes-icon');
-        if(['text','label'].includes(t)) targetIcon = document.getElementById('primary-text-icon');
-        if(['brush','highlight','path'].includes(t)) targetIcon = document.getElementById('primary-brush-icon');
-        if(['long','short'].includes(t)) targetIcon = document.getElementById('primary-positions-icon');
-        if(['measure','eraser'].includes(t)) targetIcon = document.getElementById('primary-utils-icon');
+        if (['trend','ray','hline','vline','arrow'].includes(t)) targetIcon = document.getElementById('primary-lines-icon');
+        if (['fib'].includes(t)) targetIcon = document.getElementById('primary-fib-icon');
+        if (['rect','circle','triangle'].includes(t)) targetIcon = document.getElementById('primary-shapes-icon');
+        if (['text','label'].includes(t)) targetIcon = document.getElementById('primary-text-icon');
+        if (['brush'].includes(t)) targetIcon = document.getElementById('primary-brush-icon');
+        if (['long','short'].includes(t)) targetIcon = document.getElementById('primary-positions-icon');
+        if (['measure'].includes(t)) targetIcon = document.getElementById('primary-utils-icon');
     }
 
-    if(targetIcon) targetIcon.classList.add('active');
+    if (targetIcon) targetIcon.classList.add('active');
 
-    if(t==='cursor'){
-        canvas.style.pointerEvents='none';
-        chart.applyOptions({ handleScroll:true, handleScale:true });
-    }else{
-        canvas.style.pointerEvents='auto';
-        chart.applyOptions({ handleScroll:false, handleScale:false });
+    if (t === 'cursor') {
+        canvas.style.pointerEvents = 'none';
+        chart.applyOptions({ handleScroll: true, handleScale: true });
+    } else {
+        canvas.style.pointerEvents = 'auto';
+        chart.applyOptions({ handleScroll: false, handleScale: false });
     }
-};
-
-window.clearDrawings=function(){
-    drawings=[];
     redraw();
 };
 
+window.clearDrawings = function() {
+    drawings = [];
+    selected = null;
+    redraw();
+};
+
+function convertToLogical(shape) {
+    const v1 = pxToVal(shape.x1, shape.y1);
+    shape.i1 = v1.index; 
+    shape.p1 = v1.price;
+
+    if (shape.type === 'long' || shape.type === 'short') {
+        const isLong = shape.type === 'long';
+        shape.i2 = (v1.index || 0) + 12; // Fits 12 bars cleanly on view
+        const priceOffset = v1.price * 0.005; // Adaptive 0.5% Target / 0.25% Stop
+        shape.targetPrice = isLong ? v1.price + priceOffset : v1.price - priceOffset;
+        shape.stopPrice = isLong ? v1.price - (priceOffset * 0.5) : v1.price + (priceOffset * 0.5);
+        return;
+    }
+
+    if (shape.x2 !== undefined) {
+        const v2 = pxToVal(shape.x2, shape.y2);
+        shape.i2 = v2.index; shape.p2 = v2.price;
+    }
+    if (shape.points) {
+        shape.points = shape.points.map(pt => {
+            const v = pxToVal(pt.x, pt.y);
+            return { i: v.index, p: v.price };
+        });
+    }
+}
+
 function findShapeNear(x, y) {
-    for(let i=drawings.length-1; i>=0; i--) {
+    for (let i = drawings.length - 1; i >= 0; i--) {
         const s = drawings[i];
-        if(Math.abs(s.x1 - x) < 15 && Math.abs(s.y1 - y) < 15) return s;
-        if(s.x2 !== undefined && Math.abs(s.x2 - x) < 15 && Math.abs(s.y2 - y) < 15) return s;
-        if(s.x3 !== undefined && Math.abs(s.x3 - x) < 15 && Math.abs(s.y3 - y) < 15) return s;
         
-        if(s.type === 'rect' || s.type === 'long' || s.type === 'short') {
-            if(x >= Math.min(s.x1, s.x2) && x <= Math.max(s.x1, s.x2) && y >= Math.min(s.y1, s.y2) && y <= Math.max(s.y1, s.y2)) {
-                return s;
+        if (s.type === 'long' || s.type === 'short') {
+            let entryPx = valToPx(s.i1, s.p1);
+            let targetPx = valToPx(s.i2, s.targetPrice);
+            let stopPx = valToPx(s.i2, s.stopPrice);
+
+            if (entryPx.x !== null && entryPx.y !== null) {
+                let width = Math.max(Math.abs((targetPx.x || entryPx.x + 60) - entryPx.x), 50);
+                let midX = entryPx.x + width / 2;
+
+                if (Math.hypot(midX - x, entryPx.y - y) < 12) return { shape: s, handle: 'p1' };
+                if (targetPx.y !== null && Math.hypot(midX - x, targetPx.y - y) < 12) return { shape: s, handle: 'target' };
+                if (stopPx.y !== null && Math.hypot(midX - x, stopPx.y - y) < 12) return { shape: s, handle: 'stop' };
+
+                let minY = Math.min(entryPx.y, targetPx.y || entryPx.y, stopPx.y || entryPx.y);
+                let maxY = Math.max(entryPx.y, targetPx.y || entryPx.y, stopPx.y || entryPx.y);
+
+                if (x >= entryPx.x && x <= entryPx.x + width && y >= minY && y <= maxY) {
+                    return { shape: s, handle: 'body' };
+                }
             }
+            continue;
+        }
+
+        const p1 = valToPx(s.i1, s.p1);
+        const p2 = s.i2 !== undefined ? valToPx(s.i2, s.p2) : { x: null, y: null };
+
+        if (p1.x !== null && Math.hypot(p1.x - x, p1.y - y) < 16) return { shape: s, handle: 'p1' };
+        if (p2.x !== null && Math.hypot(p2.x - x, p2.y - y) < 16) return { shape: s, handle: 'p2' };
+
+        if (p1.x !== null && p2.x !== null) {
+            const l2 = (p2.x - p1.x) ** 2 + (p2.y - p1.y) ** 2;
+            let dist = 999;
+            if (l2 === 0) {
+                dist = Math.hypot(x - p1.x, y - p1.y);
+            } else {
+                let t = ((x - p1.x) * (p2.x - p1.x) + (y - p1.y) * (p2.y - p1.y)) / l2;
+                t = Math.max(0, Math.min(1, t));
+                dist = Math.hypot(x - (p1.x + t * (p2.x - p1.x)), y - (p1.y + t * (p2.y - p1.y)));
+            }
+            if (dist < 16) return { shape: s, handle: 'body' };
+        } else if (p1.x !== null) {
+            if (Math.hypot(p1.x - x, p1.y - y) < 20) return { shape: s, handle: 'body' };
         }
     }
     return null;
 }
+
+// Window-level mouse move to update hover states over chart vs items
+window.addEventListener('mousemove', e => {
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    if (x < 0 || y < 0 || x > rect.width || y > rect.height) return;
+
+    if (tool === 'cursor') {
+        const hover = findShapeNear(x, y);
+        if (hover || draggingHandle) {
+            canvas.style.pointerEvents = 'auto';
+            canvas.style.cursor = 'grab';
+        } else {
+            canvas.style.pointerEvents = 'none';
+            canvas.style.cursor = 'crosshair';
+        }
+    }
+});
 
 canvas.addEventListener('contextmenu', e => {
     e.preventDefault();
@@ -1317,9 +1457,9 @@ canvas.addEventListener('contextmenu', e => {
     const clickY = e.clientY - rect.top;
 
     const targeted = findShapeNear(clickX, clickY);
-    if(targeted) {
-        rightClickedShape = targeted;
-        selected = targeted;
+    if (targeted) {
+        rightClickedShape = targeted.shape;
+        selected = targeted.shape;
         redraw();
         
         const menu = document.getElementById('canvasContextMenu');
@@ -1331,16 +1471,13 @@ canvas.addEventListener('contextmenu', e => {
     }
 });
 
-function hideContextMenu() {
-    document.getElementById('canvasContextMenu').style.display = 'none';
-}
-
-document.addEventListener('click', () => { hideContextMenu(); });
+function hideContextMenu() { document.getElementById('canvasContextMenu').style.display = 'none'; }
+document.addEventListener('click', () => hideContextMenu());
 
 window.deleteSelectedDrawing = function() {
-    if(rightClickedShape) {
+    if (rightClickedShape) {
         drawings = drawings.filter(item => item !== rightClickedShape);
-        if(selected === rightClickedShape) selected = null;
+        if (selected === rightClickedShape) selected = null;
         rightClickedShape = null;
         redraw();
     }
@@ -1348,190 +1485,176 @@ window.deleteSelectedDrawing = function() {
 };
 
 window.openSelectedToolSettings = function() {
-    if(!rightClickedShape) return;
+    if (!rightClickedShape) return;
     hideContextMenu();
-
     const s = rightClickedShape;
     const body = document.getElementById('toolSettingsBody');
-    document.getElementById('toolSettingsTitle').innerText = `${s.type.toUpperCase()} Settings Configurator`;
+    document.getElementById('toolSettingsTitle').innerText = `${s.type.toUpperCase()} Properties`;
     
     let html = `
-        <div class="modal-input-row">
-            <span class="modal-label">Border Color</span>
-            <input type="color" id="propColor" class="modal-color-picker" value="${s.color || '#2962ff'}">
-        </div>
-        <div class="modal-input-row">
-            <span class="modal-label">Thickness (px)</span>
-            <input type="number" id="propLineWidth" class="modal-input-field" value="${s.lineWidth || 2}" min="1" max="10">
-        </div>
+        <div class="modal-input-row"><span class="modal-label">Border/Line Color</span><input type="color" id="propColor" class="modal-color-picker" value="${s.color || '#2962ff'}"></div>
+        <div class="modal-input-row"><span class="modal-label">Thickness (px)</span><input type="number" id="propLineWidth" class="modal-input-field" value="${s.lineWidth || 2}" min="1" max="10"></div>
     `;
 
-    if(['rect','circle','triangle','long','short'].includes(s.type)) {
-        html += `
-            <div class="modal-input-row">
-                <span class="modal-label">Fill Color</span>
-                <input type="color" id="propFill" class="modal-color-picker" value="${s.fill ? s.fill.substring(0,7) : '#2962ff'}">
-            </div>
-        `;
+    if (['rect','circle','triangle'].includes(s.type)) {
+        html += `<div class="modal-input-row"><span class="modal-label">Fill Color</span><input type="color" id="propFill" class="modal-color-picker" value="${s.fill ? s.fill.substring(0,7) : '#2962ff'}"></div>`;
     }
 
-    if(['fib','fibExt','fibFan'].includes(s.type)) {
-        const levelsStr = s.fibLevels ? s.fibLevels.join(', ') : (s.type === 'fibExt' ? '0, 0.236, 0.382, 0.5, 0.618, 0.786, 1, 1.618' : '0, 0.236, 0.382, 0.5, 0.618, 0.786, 1');
-        html += `
-            <div class="modal-input-row">
-                <span class="modal-label">Fib Levels (CSV)</span>
-                <input type="text" id="propFibLevels" class="modal-input-field" style="width:160px;" value="${levelsStr}">
-            </div>
-            <div class="modal-input-row">
-                <span class="modal-label">Labels Color</span>
-                <input type="color" id="propTextColor" class="modal-color-picker" value="${s.textColor || '#787b86'}">
-            </div>
-        `;
-    }
-
-    if(s.type === 'text' || s.type === 'label') {
-        html += `
-            <div class="modal-input-row">
-                <span class="modal-label">Text Content</span>
-                <input type="text" id="propText" class="modal-input-field" style="width:160px;" value="${s.text || ''}">
-            </div>
-        `;
+    if (s.type === 'fib') {
+        const levelsStr = (s.fibLevels || [0, 0.236, 0.382, 0.5, 0.618, 0.786, 1]).join(', ');
+        html += `<div class="modal-input-row"><span class="modal-label">Fib Levels</span><input type="text" id="propFibLevels" class="modal-input-field" value="${levelsStr}"></div>`;
     }
 
     body.innerHTML = html;
     document.getElementById('toolSettingsModal').style.display = 'flex';
 };
 
-window.closeToolSettingsModal = function() {
-    document.getElementById('toolSettingsModal').style.display = 'none';
-};
+window.closeToolSettingsModal = function() { document.getElementById('toolSettingsModal').style.display = 'none'; };
 
 window.applyToolSettings = function() {
-    if(!rightClickedShape) return;
+    if (!rightClickedShape) return;
     const s = rightClickedShape;
-
     s.color = document.getElementById('propColor').value;
     s.lineWidth = parseInt(document.getElementById('propLineWidth').value) || 2;
-
     const fillEl = document.getElementById('propFill');
-    if(fillEl) s.fill = fillEl.value + '33'; 
+    if (fillEl) s.fill = fillEl.value + '33';
 
-    const fibLvlEl = document.getElementById('propFibLevels');
-    if(fibLvlEl) {
-        s.fibLevels = fibLvlEl.value.split(',').map(v => parseFloat(v.trim())).filter(v => !isNaN(v));
+    const fibEl = document.getElementById('propFibLevels');
+    if (fibEl) {
+        s.fibLevels = fibEl.value.split(',').map(v => parseFloat(v.trim())).filter(v => !isNaN(v));
     }
-
-    const txtColorEl = document.getElementById('propTextColor');
-    if(txtColorEl) s.textColor = txtColorEl.value;
-
-    const txtEl = document.getElementById('propText');
-    if(txtEl) s.text = txtEl.value;
 
     window.closeToolSettingsModal();
     redraw();
 };
 
 canvas.addEventListener('mousedown', e => {
-    if(e.button === 2) return; 
+    if (e.button === 2) return;
     
     const rect = canvas.getBoundingClientRect();
     startX = e.clientX - rect.left;
     startY = e.clientY - rect.top;
 
-    if(tool === 'cursor') {
+    if (tool === 'cursor') {
         const hit = findShapeNear(startX, startY);
-        if(hit) { selected = hit; redraw(); }
-        else { selected = null; redraw(); }
-        return;
-    }
-
-    if(tool === 'fibExt') {
-        if(multiPointStage === 0) {
-            drawing = true;
-            currentShape = { type: 'fibExt', x1: startX, y1: startY, x2: startX, y2: startY };
-        } else if(multiPointStage === 1) {
-            multiPointStage = 2;
+        if (hit) {
+            selected = hit.shape;
+            draggingHandle = hit.handle;
+            const currentVal = pxToVal(startX, startY);
+            dragStartVal = {
+                index: currentVal.index,
+                price: currentVal.price,
+                i1: hit.shape.i1,
+                p1: hit.shape.p1,
+                i2: hit.shape.i2,
+                p2: hit.shape.p2,
+                targetPrice: hit.shape.targetPrice,
+                stopPrice: hit.shape.stopPrice
+            };
+            canvas.style.pointerEvents = 'auto';
+            chart.applyOptions({ handleScroll: false, handleScale: false });
+        } else {
+            selected = null;
+            draggingHandle = null;
+            canvas.style.pointerEvents = 'none';
+            chart.applyOptions({ handleScroll: true, handleScale: true });
         }
+        redraw();
         return;
     }
 
     drawing = true;
 
-    if(tool==='brush' || tool==='highlight' || tool==='path'){
-        currentShape={ type:tool, points:[{x:startX,y:startY}], lineWidth: tool==='highlight'?12:2 };
+    if (['brush'].includes(tool)) {
+        currentShape = { type: tool, points: [{ x: startX, y: startY }], lineWidth: 2 };
         return;
     }
 
-    if(tool==='text'){
-        const txt=prompt('Enter Canvas Text:');
-        if(txt){ drawings.push({ type:'text', x1:startX, y1:startY, text:txt }); redraw(); }
-        drawing=false; return;
+    if (tool === 'text' || tool === 'label') {
+        const txt = prompt(`Enter ${tool.toUpperCase()} Content:`);
+        if (txt) {
+            let s = { type: tool, x1: startX, y1: startY, text: txt };
+            convertToLogical(s);
+            drawings.push(s);
+            redraw();
+        }
+        drawing = false;
+        setTool('cursor');
+        return;
     }
 
-    if(tool==='label'){
-        const txt=prompt('Enter Label Price/Text:');
-        if(txt){ drawings.push({ type:'label', x1:startX, y1:startY, text:txt }); redraw(); }
-        drawing=false; return;
-    }
-
-    currentShape={ type:tool, x1:startX, y1:startY, x2:startX, y2:startX };
+    currentShape = { type: tool, x1: startX, y1: startY, x2: startX, y2: startY };
 });
 
 canvas.addEventListener('mousemove', e => {
-    if(!drawing || !currentShape) return;
     const rect = canvas.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
 
-    if(currentShape.type === 'fibExt') {
-        if(multiPointStage === 0) {
-            currentShape.x2 = x; currentShape.y2 = y;
-        } else if(multiPointStage === 1 || multiPointStage === 2) {
-            currentShape.x3 = x; currentShape.y3 = y;
+    if (tool === 'cursor' && selected && draggingHandle) {
+        const val = pxToVal(x, y);
+        if (draggingHandle === 'p1') {
+            selected.i1 = val.index;
+            selected.p1 = val.price;
+        } else if (draggingHandle === 'p2') {
+            selected.i2 = val.index;
+            selected.p2 = val.price;
+        } else if (draggingHandle === 'target') {
+            selected.targetPrice = val.price;
+        } else if (draggingHandle === 'stop') {
+            selected.stopPrice = val.price;
+        } else if (draggingHandle === 'body' && dragStartVal) {
+            const dIdx = val.index - dragStartVal.index;
+            const dPrice = val.price - dragStartVal.price;
+
+            if (dragStartVal.i1 !== undefined) selected.i1 = dragStartVal.i1 + dIdx;
+            if (dragStartVal.p1 !== undefined) selected.p1 = dragStartVal.p1 + dPrice;
+            if (dragStartVal.i2 !== undefined) selected.i2 = dragStartVal.i2 + dIdx;
+            if (dragStartVal.p2 !== undefined) selected.p2 = dragStartVal.p2 + dPrice;
+            if (dragStartVal.targetPrice !== undefined) selected.targetPrice = dragStartVal.targetPrice + dPrice;
+            if (dragStartVal.stopPrice !== undefined) selected.stopPrice = dragStartVal.stopPrice + dPrice;
         }
-        redraw(); return;
+        redraw();
+        return;
     }
 
-    if(currentShape.points){
-        currentShape.points.push({x,y});
-    }else{
-        currentShape.x2=x;
-        currentShape.y2=y;
+    if (!drawing || !currentShape) return;
+
+    if (currentShape.points) {
+        currentShape.points.push({ x, y });
+    } else {
+        currentShape.x2 = x; currentShape.y2 = y;
     }
     redraw();
 });
 
 canvas.addEventListener('mouseup', () => {
-    if(!drawing) return;
-
-    if(tool === 'fibExt') {
-        if(multiPointStage === 0) {
-            multiPointStage = 1; 
-        } else if(multiPointStage === 2) {
-            drawing = false;
-            multiPointStage = 0;
-            if(currentShape) { drawings.push(currentShape); currentShape = null; }
-            redraw();
+    if (draggingHandle) {
+        draggingHandle = null;
+        dragStartVal = null;
+        if (tool === 'cursor') {
+            canvas.style.pointerEvents = 'none';
+            chart.applyOptions({ handleScroll: true, handleScale: true });
         }
-        return;
     }
 
+    if (!drawing) return;
     drawing = false;
-    if(currentShape){
-        if(tool==='eraser'){
-            drawings=drawings.filter(d=>{
-                return !(Math.abs(d.x1-currentShape.x1)<20 && Math.abs(d.y1-currentShape.y1)<20);
-            });
-        }else{
-            drawings.push(currentShape);
-        }
-        currentShape=null;
+
+    if (currentShape) {
+        convertToLogical(currentShape);
+        drawings.push(currentShape);
+        currentShape = null;
         redraw();
     }
+
+    setTool('cursor');
 });
 
+chart.timeScale().subscribeVisibleLogicalRangeChange(redraw);
 chart.timeScale().subscribeVisibleTimeRangeChange(redraw);
 chart.subscribeCrosshairMove(redraw);
+
 resizeCanvas();
 })();
 </script>

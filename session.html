@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>PureBacktest - Create Session</title>
-    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<title>BacktestLabPro - Create Session</title>
 
 <style>
 
@@ -14,230 +15,407 @@
 }
 
 body{
-    font-family:'Segoe UI',sans-serif;
-    background:#0b0e14;
+    font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background:#080a0f;
     color:#d1d4dc;
     min-height:100vh;
     display:flex;
     justify-content:center;
     align-items:center;
-    padding:30px;
+    padding:20px 10px;
 }
 
 .container{
-    width:1200px;
-    background:#131722;
-    border:1px solid #2a2e39;
-    border-radius:18px;
+    width:100%;
+    max-width:1240px;
+    background:#11151f;
+    border:1px solid #232836;
+    border-radius:20px;
     overflow:hidden;
-    box-shadow:0 20px 60px rgba(0,0,0,.5);
+    box-shadow:0 30px 80px rgba(0,0,0,.7);
 }
 
 .topBar{
     display:flex;
     justify-content:space-between;
     align-items:center;
-    padding:20px 30px;
-    border-bottom:1px solid #2a2e39;
-}
-
-.brand{
-    font-size:24px;
-    font-weight:700;
-    color:white;
-}
-
-.userArea{
-    display:flex;
-    align-items:center;
+    padding:18px 25px;
+    background:#0d1017;
+    border-bottom:1px solid #232836;
+    flex-wrap:wrap;
     gap:12px;
 }
 
-.profile{
-    width:42px;
-    height:42px;
-    border-radius:50%;
-    background:#2962ff;
+.brand{
+    font-size:20px;
+    font-weight:800;
+    color:#ffffff;
+    letter-spacing:0.5px;
     display:flex;
-    justify-content:center;
     align-items:center;
-    color:white;
-    font-weight:bold;
+    gap:8px;
 }
 
-.logoutBtn{
-    background:#ef4444;
-    color:white;
-    border:none;
-    padding:10px 15px;
-    border-radius:8px;
-    cursor:pointer;
+.brand span {
+    color:#2962ff;
+}
+
+.badge-pro {
+    font-size:10px;
+    background:rgba(41,98,255,0.15);
+    color:#2962ff;
+    border:1px solid rgba(41,98,255,0.3);
+    padding:2px 8px;
+    border-radius:20px;
+    text-transform:uppercase;
+    font-weight:700;
+}
+
+.engineStatus {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(16, 185, 129, 0.08);
+    border: 1px solid rgba(16, 185, 129, 0.25);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 11px;
+    color: #10b981;
+    font-weight: 600;
+}
+
+.pulseDot {
+    width: 8px;
+    height: 8px;
+    background-color: #10b981;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #10b981;
+    animation: pulse 1.8s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+    70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
 }
 
 .main{
     display:grid;
-    grid-template-columns:1.4fr 0.9fr;
+    grid-template-columns:1.35fr 0.95fr;
 }
 
 .leftPanel{
     padding:25px;
-    border-right:1px solid #2a2e39;
+    border-right:1px solid #232836;
 }
 
 .rightPanel{
     padding:25px;
+    background:#131824;
 }
 
 .sectionTitle{
-    color:white;
-    font-size:20px;
-    margin-bottom:15px;
+    color:#ffffff;
+    font-size:18px;
+    font-weight:700;
+    margin-bottom:18px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
 }
 
 .searchBox{
     width:100%;
-    background:#1e222d;
-    border:1px solid #363a45;
+    background:#1a202c;
+    border:1px solid #2d3548;
     color:white;
-    padding:14px;
-    border-radius:10px;
-    margin-bottom:15px;
+    padding:14px 16px;
+    border-radius:12px;
+    margin-bottom:18px;
+    font-size:14px;
+    transition:all 0.2s ease;
 }
 
 .searchBox:focus{
     outline:none;
     border-color:#2962ff;
+    box-shadow:0 0 0 3px rgba(41,98,255,0.2);
 }
 
 .categories{
     display:flex;
     gap:8px;
     margin-bottom:20px;
+    overflow-x:auto;
+    padding-bottom:4px;
 }
 
 .cat{
     flex:1;
-    border:none;
-    background:#1e222d;
-    color:#999;
-    padding:10px;
-    border-radius:8px;
+    min-width:70px;
+    border:1px solid #2a3142;
+    background:#1a202c;
+    color:#8c95a8;
+    padding:10px 8px;
+    border-radius:10px;
+    font-size:12px;
+    font-weight:600;
     cursor:pointer;
+    transition:all 0.2s ease;
+    text-align:center;
+}
+
+.cat:hover {
+    background:#232a3a;
+    color:white;
 }
 
 .cat.active{
     background:#2962ff;
+    border-color:#2962ff;
     color:white;
+    box-shadow:0 4px 15px rgba(41,98,255,0.3);
 }
 
 .pairGrid{
     display:grid;
-    grid-template-columns:repeat(4,1fr);
+    grid-template-columns:repeat(3, 1fr);
     gap:10px;
-    max-height:520px;
+    max-height:480px;
     overflow-y:auto;
+    padding-right:5px;
+}
+
+.pairGrid::-webkit-scrollbar {
+    width: 5px;
+}
+
+.pairGrid::-webkit-scrollbar-thumb {
+    background: #2a3142;
+    border-radius: 4px;
 }
 
 .pairCard{
-    background:#1a1f2b;
-    border:1px solid #303648;
+    background:#181e2b;
+    border:1px solid #262d3d;
     border-radius:12px;
-    padding:14px;
+    padding:12px 14px;
     cursor:pointer;
-    transition:.2s;
+    transition:all 0.2s ease;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
 }
 
 .pairCard:hover{
-    border-color:#2962ff;
+    border-color:#3b4761;
     transform:translateY(-2px);
+    background:#1e2638;
 }
 
 .pairCard.selected{
     border-color:#2962ff;
-    box-shadow:0 0 20px rgba(41,98,255,.3);
+    background:rgba(41,98,255,0.08);
+    box-shadow:0 0 20px rgba(41,98,255,0.25);
 }
 
 .pairName{
     color:white;
-    font-weight:600;
+    font-weight:700;
+    font-size:14px;
 }
 
-.pairType{
-    margin-top:5px;
-    font-size:11px;
-    color:#888;
+.pairBadge{
+    font-size:9px;
+    padding:3px 6px;
+    border-radius:5px;
+    text-transform:uppercase;
+    font-weight:700;
 }
+
+.type-forex { background: rgba(16, 185, 129, 0.12); color: #10b981; }
+.type-crypto { background: rgba(245, 158, 11, 0.12); color: #f59e0b; }
+.type-indices { background: rgba(139, 92, 246, 0.12); color: #8b5cf6; }
+.type-metals { background: rgba(236, 72, 153, 0.12); color: #ec4899; }
 
 label{
     display:block;
-    margin-top:15px;
+    margin-top:16px;
     margin-bottom:6px;
-    font-size:12px;
-    color:#888;
+    font-size:11px;
+    color:#7e8b9b;
     text-transform:uppercase;
+    letter-spacing:0.8px;
+    font-weight:700;
 }
 
-input,
-select{
+input, select{
     width:100%;
-    padding:13px;
-    background:#1e222d;
-    border:1px solid #363a45;
+    padding:12px 14px;
+    background:#1a202c;
+    border:1px solid #2d3548;
     color:white;
-    border-radius:8px;
+    border-radius:10px;
+    font-size:13px;
+    transition:all 0.2s ease;
 }
 
-input:focus,
-select:focus{
+input:focus, select:focus{
     outline:none;
     border-color:#2962ff;
+    box-shadow:0 0 0 3px rgba(41,98,255,0.2);
 }
 
 .hint{
-    margin-top:6px;
-    color:#666;
+    margin-top:5px;
+    color:#5a6678;
     font-size:11px;
 }
 
+.presets {
+    display:flex;
+    gap:6px;
+    margin-top:8px;
+}
+
+.presetBtn {
+    flex:1;
+    background:#1a202c;
+    border:1px solid #2d3548;
+    color:#8c95a8;
+    padding:7px 10px;
+    border-radius:6px;
+    font-size:11px;
+    cursor:pointer;
+    transition:all 0.2s ease;
+    text-align:center;
+}
+
+.presetBtn:hover {
+    background:#2962ff;
+    border-color:#2962ff;
+    color:white;
+}
+
+.dataNotice {
+    background: rgba(41, 98, 255, 0.08);
+    border: 1px solid rgba(41, 98, 255, 0.25);
+    color: #82aaff;
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-size: 12px;
+    margin-bottom: 15px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:6px;
+}
+
+.errorBanner {
+    display: none;
+    background: rgba(239, 68, 68, 0.15);
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    color: #f87171;
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 12px;
+    margin-top: 12px;
+}
+
 .summary{
-    margin-top:20px;
-    background:#1a1f2b;
-    border:1px solid #303648;
-    border-radius:12px;
-    padding:15px;
+    margin-top:22px;
+    background:#181e2b;
+    border:1px solid #262d3d;
+    border-radius:14px;
+    padding:18px;
 }
 
 .summaryRow{
     display:flex;
     justify-content:space-between;
-    margin-bottom:10px;
+    align-items:center;
+    margin-bottom:12px;
+    font-size:13px;
 }
 
 .summaryRow:last-child{
     margin-bottom:0;
 }
 
+.summaryVal {
+    color:white;
+    font-weight:600;
+}
+
+.miniCandles {
+    display: flex;
+    align-items: flex-end;
+    gap: 3px;
+    height: 18px;
+}
+
+.miniCandle {
+    width: 3px;
+    border-radius: 2px;
+    animation: candlePulse 1.8s ease-in-out infinite alternate;
+}
+
+.green { background: #10b981; }
+.red { background: #ef4444; }
+
+.miniCandle:nth-child(2) { animation-delay: 0.3s; }
+.miniCandle:nth-child(3) { animation-delay: 0.6s; }
+.miniCandle:nth-child(4) { animation-delay: 0.9s; }
+
+@keyframes candlePulse {
+    0% { transform: scaleY(0.6); }
+    100% { transform: scaleY(1.15); }
+}
+
 .launchBtn{
     width:100%;
     margin-top:25px;
     border:none;
-    background:#2962ff;
+    background:linear-gradient(135deg, #2962ff 0%, #1a4cd2 100%);
     color:white;
     padding:16px;
-    border-radius:10px;
+    border-radius:12px;
     font-size:16px;
     font-weight:700;
     cursor:pointer;
+    box-shadow:0 8px 25px rgba(41,98,255,0.35);
+    transition:all 0.2s ease;
 }
 
 .launchBtn:hover{
-    background:#1f51df;
+    transform:translateY(-1px);
+    box-shadow:0 12px 30px rgba(41,98,255,0.5);
 }
 
-.userEmail{
-    font-size:12px;
-    color:#777;
-    margin-top:6px;
+/* Mobile Breakpoint Optimization */
+@media (max-width: 900px) {
+    body {
+        padding: 10px 5px;
+    }
+    .main {
+        grid-template-columns: 1fr;
+    }
+    .leftPanel {
+        border-right: none;
+        border-bottom: 1px solid #232836;
+        padding: 20px 15px;
+    }
+    .rightPanel {
+        padding: 20px 15px;
+    }
+    .pairGrid {
+        grid-template-columns: repeat(2, 1fr);
+        max-height: 350px;
+    }
+    .topBar {
+        padding: 15px;
+    }
 }
 
 </style>
@@ -247,13 +425,14 @@ select:focus{
 <div class="container">
 
     <div class="topBar">
-
-        <div>
-            <div class="brand">BacktestLabPro</div>
+        <div class="brand">
+            BacktestLab<span>Pro</span>
+            <span class="badge-pro">Terminal</span>
         </div>
-
-       
-
+        <div class="engineStatus">
+            <span class="pulseDot"></span>
+            <span>Historical Engine Ready</span>
+        </div>
     </div>
 
     <div class="main">
@@ -267,17 +446,15 @@ select:focus{
             <input
                 id="pairSearch"
                 class="searchBox"
-                placeholder="Search symbol..."
+                placeholder="Search symbol (e.g., XAUUSD, EURUSD, BTCUSD)..."
             >
 
             <div class="categories">
-
                 <button class="cat active" data-cat="all">All</button>
                 <button class="cat" data-cat="forex">Forex</button>
                 <button class="cat" data-cat="crypto">Crypto</button>
                 <button class="cat" data-cat="indices">Indices</button>
                 <button class="cat" data-cat="metals">Metals</button>
-
             </div>
 
             <div id="pairGrid" class="pairGrid"></div>
@@ -287,54 +464,74 @@ select:focus{
         <div class="rightPanel">
 
             <div class="sectionTitle">
-                Replay Settings
+                Replay Environment
+            </div>
+
+            <div id="dataNotice" class="dataNotice">
+                <span>Available Coverage:</span>
+                <strong id="noticeRange">Checking market data availability...</strong>
             </div>
 
             <label>History Beginning</label>
-            <input type="date" id="from" value="2025-01-14">
-            <div class="hint">
-                How far back chart data begins.
-            </div>
+            <input type="date" id="from">
+            <div class="hint">How far back chart data starts loading.</div>
 
             <label>Replay Start Point</label>
-            <input type="date" id="start" value="2025-02-16">
-            <div class="hint">
-                Candle playback starts here.
-            </div>
+            <input type="date" id="start">
+            <div class="hint">Candle playback starts here (+10 days context).</div>
 
             <label>Backtest End Date</label>
-            <input type="date" id="to" value="2025-08-13">
+            <input type="date" id="to">
+            <div class="presets">
+                <button class="presetBtn" onclick="applyPreset('1y')">1 Year</button>
+                <button class="presetBtn" onclick="applyPreset('2y')">2 Years</button>
+                <button class="presetBtn" onclick="applyPreset('max')">Max Available</button>
+            </div>
 
-            <label>Initial Speed</label>
+            <div id="errorBanner" class="errorBanner"></div>
 
+            <label>Initial Replay Speed</label>
             <select id="speed">
-                <option value="1000">1x</option>
-                <option value="500" selected>2x</option>
-                <option value="250">4x</option>
-                <option value="100">10x</option>
+                <option value="1000">1 Candle / Sec (1x)</option>
+                <option value="500" selected>2 Candles / Sec (2x)</option>
+                <option value="250">4 Candles / Sec (4x)</option>
+                <option value="100">10 Candles / Sec (10x)</option>
             </select>
 
             <div class="summary">
 
                 <div class="summaryRow">
-                    <span>Symbol</span>
-                    <span id="pvPair">XAUUSD</span>
+                    <span>Instrument</span>
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <div class="miniCandles">
+                            <div class="miniCandle green" style="height: 12px;"></div>
+                            <div class="miniCandle red" style="height: 16px;"></div>
+                            <div class="miniCandle green" style="height: 18px;"></div>
+                            <div class="miniCandle green" style="height: 14px;"></div>
+                        </div>
+                        <span id="pvPair" class="summaryVal">XAUUSD</span>
+                    </div>
+                </div>
+
+                <div class="summaryRow">
+                    <span>History Context</span>
+                    <span id="pvFrom" class="summaryVal">Loading...</span>
                 </div>
 
                 <div class="summaryRow">
                     <span>Replay Start</span>
-                    <span id="pvStart">2025-02-16</span>
+                    <span id="pvStart" class="summaryVal">Loading...</span>
                 </div>
 
                 <div class="summaryRow">
-                    <span>End Date</span>
-                    <span id="pvEnd">2025-08-13</span>
+                    <span>Session End</span>
+                    <span id="pvEnd" class="summaryVal">Loading...</span>
                 </div>
 
             </div>
 
             <button class="launchBtn" onclick="go()">
-                Launch Replay Session
+                Launch Replay Engine
             </button>
 
         </div>
@@ -346,202 +543,298 @@ select:focus{
 <script>
 
 const symbols = [
-
-{symbol:"XAUUSD",type:"metals"},
-{symbol:"XAGUSD",type:"metals"},
-
-{symbol:"EURUSD",type:"forex"},
-{symbol:"GBPUSD",type:"forex"},
-{symbol:"USDJPY",type:"forex"},
-{symbol:"GBPJPY",type:"forex"},
-{symbol:"EURJPY",type:"forex"},
-{symbol:"EURGBP",type:"forex"},
-{symbol:"EURCAD",type:"forex"},
-{symbol:"EURCHF",type:"forex"},
-{symbol:"USDCAD",type:"forex"},
-//{symbol:"AUDUSD",type:"forex"},
-//{symbol:"NZDUSD",type:"forex"},
-
-//{symbol:"BTCUSD",type:"crypto"},
-//{symbol:"ETHUSDT",type:"crypto"},
-//{symbol:"BNBUSDT",type:"crypto"},
-////{symbol:"DOGEUSDT",type:"crypto"},
-//{symbol:"XRPUSDT",type:"crypto"},
-//{symbol:"TRXUSDT",type:"crypto"},
-
-//{symbol:"NASDAQ",type:"indices"},
-//{symbol:"US30_MT5",type:"indices"},
-//{symbol:"US500",type:"indices"}
-
+    {symbol:"AUDJPY", type:"forex"},
+    {symbol:"BNBUSDT", type:"crypto"},
+    {symbol:"BTCUSD", type:"crypto"},
+    {symbol:"CHFJPY", type:"forex"},
+    {symbol:"DOGEUSDT", type:"crypto"},
+    {symbol:"EURCAD", type:"forex"},
+    {symbol:"EURCHF", type:"forex"},
+    {symbol:"EURGBP", type:"forex"},
+    {symbol:"EURJPY", type:"forex"},
+    {symbol:"EURUSD", type:"forex"},
+    {symbol:"GBPJPY", type:"forex"},
+    {symbol:"GBPUSD", type:"forex"},
+    {symbol:"NASDAQ", type:"indices"},
+    {symbol:"SOLUSDT", type:"crypto"},
+    {symbol:"TRXUSDT", type:"crypto"},
+    {symbol:"US30", type:"indices"},
+    {symbol:"US500", type:"indices"},
+    {symbol:"USDCAD", type:"forex"},
+    {symbol:"USDJPY", type:"forex"},
+    {symbol:"XAGUSD", type:"metals"},
+    {symbol:"XAUUSD", type:"metals"},
+    {symbol:"XRPUSDT", type:"crypto"}
 ];
 
 let selectedPair = "XAUUSD";
+let activeDataLimits = { min: "2003-05-01", max: "2026-08-28" };
+const symbolCache = {};
 
 const grid = document.getElementById("pairGrid");
 const search = document.getElementById("pairSearch");
+const fromInput = document.getElementById("from");
+const startInput = document.getElementById("start");
+const toInput = document.getElementById("to");
+const errorBanner = document.getElementById("errorBanner");
+const noticeRange = document.getElementById("noticeRange");
 
-function renderPairs(category="all",term=""){
+function formatDate(dateObj) {
+    return dateObj.toISOString().split('T')[0];
+}
 
+function addDays(dateStr, days) {
+    const d = new Date(dateStr);
+    d.setDate(d.getDate() + days);
+    return formatDate(d);
+}
+
+async function fetchSymbolLimitsFromStorage(symbol) {
+    const cleanSymbol = symbol.toLowerCase().replace('_mt5', '');
+    
+    if (symbolCache[cleanSymbol]) {
+        return symbolCache[cleanSymbol];
+    }
+
+    noticeRange.innerText = "Checking market data availability...";
+
+    try {
+        const yearsApiUrl = `https://huggingface.co/api/spaces/mehtab13/backtestlab-data/tree/main/${cleanSymbol}/m1`;
+        const response = await fetch(yearsApiUrl);
+        
+        if (!response.ok) {
+            throw new Error(`Directory path not found for ${cleanSymbol}`);
+        }
+
+        const yearItems = await response.json();
+        
+        const years = yearItems
+            .map(item => parseInt(item.path.split('/').pop()))
+            .filter(y => !isNaN(y))
+            .sort((a, b) => a - b);
+
+        if (years.length > 0) {
+            const earliestYear = years[0];
+            const latestYear = years[years.length - 1];
+
+            const firstYearUrl = `https://huggingface.co/api/spaces/mehtab13/backtestlab-data/tree/main/${cleanSymbol}/m1/${earliestYear}`;
+            const firstYearRes = await fetch(firstYearUrl);
+            let minMonth = "01";
+
+            if (firstYearRes.ok) {
+                const firstYearFiles = await firstYearRes.json();
+                const months = firstYearFiles
+                    .map(f => f.path.split('/').pop().replace('.json', ''))
+                    .filter(m => /^\d{2}$/.test(m))
+                    .sort();
+                if (months.length > 0) minMonth = months[0];
+            }
+
+            const lastYearUrl = `https://huggingface.co/api/spaces/mehtab13/backtestlab-data/tree/main/${cleanSymbol}/m1/${latestYear}`;
+            const lastYearRes = await fetch(lastYearUrl);
+            let maxMonth = "12";
+
+            if (lastYearRes.ok) {
+                const lastYearFiles = await lastYearRes.json();
+                const months = lastYearFiles
+                    .map(f => f.path.split('/').pop().replace('.json', ''))
+                    .filter(m => /^\d{2}$/.test(m))
+                    .sort();
+                if (months.length > 0) maxMonth = months[months.length - 1];
+            }
+
+            const limits = {
+                min: `${earliestYear}-${minMonth}-01`,
+                max: `${latestYear}-${maxMonth}-28`
+            };
+            
+            symbolCache[cleanSymbol] = limits;
+            return limits;
+        }
+    } catch (err) {
+        console.warn(`Market data fetch fallback for ${cleanSymbol}:`, err);
+    }
+
+    const fallbackLimits = { min: "2010-01-01", max: "2026-08-28" };
+    symbolCache[cleanSymbol] = fallbackLimits;
+    return fallbackLimits;
+}
+
+async function loadDynamicSymbolSettings(symbol) {
+    activeDataLimits = await fetchSymbolLimitsFromStorage(symbol);
+    noticeRange.innerText = `${activeDataLimits.min} to ${activeDataLimits.max}`;
+
+    fromInput.min = activeDataLimits.min;
+    fromInput.max = activeDataLimits.max;
+    startInput.min = activeDataLimits.min;
+    startInput.max = activeDataLimits.max;
+    toInput.min = activeDataLimits.min;
+    toInput.max = activeDataLimits.max;
+
+    const baseDate = activeDataLimits.min;
+    fromInput.value = baseDate;
+    startInput.value = addDays(baseDate, 10);
+    toInput.value = activeDataLimits.max;
+
+    validateDates();
+    updatePreview();
+}
+
+function applyPreset(type) {
+    if (!startInput.value) return;
+    const startDate = new Date(startInput.value);
+    
+    if (type === '1y') {
+        startDate.setFullYear(startDate.getFullYear() + 1);
+        toInput.value = formatDate(startDate);
+    } else if (type === '2y') {
+        startDate.setFullYear(startDate.getFullYear() + 2);
+        toInput.value = formatDate(startDate);
+    } else if (type === 'max') {
+        toInput.value = activeDataLimits.max;
+    }
+    
+    validateDates();
+    updatePreview();
+}
+
+fromInput.addEventListener("change", () => {
+    if (fromInput.value) {
+        startInput.value = addDays(fromInput.value, 10);
+    }
+    validateDates();
+    updatePreview();
+});
+
+startInput.addEventListener("change", () => {
+    if (startInput.value) {
+        fromInput.value = addDays(startInput.value, -10);
+    }
+    validateDates();
+    updatePreview();
+});
+
+toInput.addEventListener("change", () => {
+    validateDates();
+    updatePreview();
+});
+
+function validateDates() {
+    const userFrom = new Date(fromInput.value);
+    const userStart = new Date(startInput.value);
+    const userTo = new Date(toInput.value);
+    
+    const minLimit = new Date(activeDataLimits.min);
+    const maxLimit = new Date(activeDataLimits.max);
+
+    errorBanner.style.display = "none";
+    errorBanner.innerText = "";
+
+    if (userFrom < minLimit) {
+        errorBanner.innerText = `Data Limit Warning: Historical data for ${selectedPair} starts from ${activeDataLimits.min}.`;
+        errorBanner.style.display = "block";
+        return false;
+    }
+
+    if (userTo > maxLimit) {
+        errorBanner.innerText = `Data Limit Warning: Selected end date exceeds available historical records (${activeDataLimits.max}).`;
+        errorBanner.style.display = "block";
+        return false;
+    }
+
+    if (userStart <= userFrom) {
+        errorBanner.innerText = `Invalid Sequence: Replay Start Point must be after History Beginning.`;
+        errorBanner.style.display = "block";
+        return false;
+    }
+
+    if (userTo <= userStart) {
+        errorBanner.innerText = `Invalid Sequence: Backtest End Date must be after Replay Start Point.`;
+        errorBanner.style.display = "block";
+        return false;
+    }
+
+    return true;
+}
+
+function renderPairs(category="all", term=""){
     grid.innerHTML="";
 
     symbols
     .filter(x=>{
-
-        const cat =
-            category==="all" ||
-            x.type===category;
-
-        const txt =
-            x.symbol
-            .toLowerCase()
-            .includes(term.toLowerCase());
-
+        const cat = category==="all" || x.type===category;
+        const txt = x.symbol.toLowerCase().includes(term.toLowerCase());
         return cat && txt;
-
     })
     .forEach(pair=>{
-
-        const card =
-            document.createElement("div");
-
+        const card = document.createElement("div");
         card.className="pairCard";
 
-        if(pair.symbol===selectedPair)
-            card.classList.add("selected");
+        if(pair.symbol===selectedPair) card.classList.add("selected");
 
         card.innerHTML=`
             <div class="pairName">${pair.symbol}</div>
-            <div class="pairType">${pair.type}</div>
+            <div class="pairBadge type-${pair.type}">${pair.type}</div>
         `;
 
         card.onclick=()=>{
-
             selectedPair=pair.symbol;
-
             renderPairs(
-                document.querySelector(".cat.active")
-                .dataset.cat,
+                document.querySelector(".cat.active").dataset.cat,
                 search.value
             );
-
-            updatePreview();
+            loadDynamicSymbolSettings(selectedPair);
         };
 
         grid.appendChild(card);
-
     });
 }
 
 renderPairs();
 
-document
-.querySelectorAll(".cat")
-.forEach(btn=>{
-
+document.querySelectorAll(".cat").forEach(btn=>{
     btn.onclick=()=>{
-
-        document
-        .querySelectorAll(".cat")
-        .forEach(x=>x.classList.remove("active"));
-
+        document.querySelectorAll(".cat").forEach(x=>x.classList.remove("active"));
         btn.classList.add("active");
-
-        renderPairs(
-            btn.dataset.cat,
-            search.value
-        );
-
+        renderPairs(btn.dataset.cat, search.value);
     };
-
 });
 
 search.addEventListener("input",()=>{
-
     renderPairs(
         document.querySelector(".cat.active").dataset.cat,
         search.value
     );
-
 });
 
 function updatePreview(){
-
-    document.getElementById("pvPair").innerText =
-        selectedPair;
-
-    document.getElementById("pvStart").innerText =
-        document.getElementById("start").value;
-
-    document.getElementById("pvEnd").innerText =
-        document.getElementById("to").value;
+    document.getElementById("pvPair").innerText = selectedPair;
+    document.getElementById("pvFrom").innerText = fromInput.value;
+    document.getElementById("pvStart").innerText = startInput.value;
+    document.getElementById("pvEnd").innerText = toInput.value;
 }
 
-document
-.getElementById("start")
-.addEventListener("change",updatePreview);
-
-document
-.getElementById("to")
-.addEventListener("change",updatePreview);
-
-updatePreview();
-
-</script>
-
-<script>
+loadDynamicSymbolSettings(selectedPair);
 
 function go(){
-
-    const symbol = selectedPair;
-
-    const from =
-        document.getElementById("from").value;
-
-    const start =
-        document.getElementById("start").value;
-
-    const to =
-        document.getElementById("to").value;
-
-    const speed =
-        document.getElementById("speed").value;
-
-    if(new Date(start) < new Date(from)){
-
-        alert(
-            "Replay Start cannot be earlier than History Beginning!"
-        );
-
+    if(!validateDates()) {
+        alert("Please select dates within the available historical data range before launching.");
         return;
     }
 
-    localStorage.setItem(
-        "symbol",
-        symbol
-    );
+    const symbol = selectedPair;
+    const from = document.getElementById("from").value;
+    const start = document.getElementById("start").value;
+    const to = document.getElementById("to").value;
+    const speed = document.getElementById("speed").value;
 
-    localStorage.setItem(
-        "from",
-        from
-    );
+    localStorage.setItem("symbol", symbol);
+    localStorage.setItem("from", from);
+    localStorage.setItem("initial", start);
+    localStorage.setItem("to", to);
+    localStorage.setItem("speed", speed);
 
-    localStorage.setItem(
-        "initial",
-        start
-    );
-
-    localStorage.setItem(
-        "to",
-        to
-    );
-
-    localStorage.setItem(
-        "speed",
-        speed
-    );
-
-    window.location.href =
-        "chart.html";
+    window.location.href = "chart.html";
 }
 
 </script>

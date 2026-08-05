@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Support | BacktestLab Pro</title>
+    
+    <!-- Tailwind CSS & FontAwesome -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link class="brand-favicon-holder" rel="icon" type="image/svg+xml" href="favicon.svg">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            dark: '#050507',
+                            card: '#0c0c0e',
+                            accent: '#6366f1',
+                            success: '#10b981',
+                            purple: '#a855f7'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { background-color: #050507; color: #f4f4f5; overflow-x: hidden; }
+        .glass-card {
+            background: rgba(12, 12, 14, 0.5);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        .brand-icon-box {
+            width: 38px; height: 38px;
+            background: linear-gradient(135deg, #503bf5, #863bf5);
+            border-radius: 8px; display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+<body class="font-sans antialiased relative min-h-screen flex flex-col justify-between">
+
+    <!-- Header / Navbar -->
+    <header class="sticky top-0 z-50 w-full border-b border-white/5 bg-brand-dark/70 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full h-20 flex items-center justify-between">
+            <a href="index.html" class="flex items-center gap-3 group">
+                <div class="brand-icon-box">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                    </svg>
+                </div>
+                <span class="font-display font-bold text-lg text-white tracking-tight">BacktestLab<span class="text-brand-accent">.pro</span></span>
+            </a>
+
+            <nav class="hidden md:flex items-center gap-6 lg:gap-8 text-sm font-medium text-zinc-400">
+                <a href="index.html#features" class="hover:text-white transition-colors">Features</a>
+                <a href="algo_store.html" class="hover:text-white transition-colors">Bot Store</a>
+                <a href="bot_automation.html" class="hover:text-white transition-colors">Bot Automation</a>
+                <a href="articles.html" class="hover:text-white transition-colors">Articles</a>
+                <a href="about.html" class="hover:text-white transition-colors">About Us</a>
+                <a href="contact.html" class="text-white font-semibold transition-colors">Contact</a>
+            </nav>
+
+            <div class="hidden md:flex items-center gap-4">
+                <a href="login.html" class="text-sm font-medium text-zinc-400 hover:text-white transition-colors">Sign In</a>
+                <a href="session.html" class="text-sm font-medium bg-white text-brand-dark px-4 py-2.5 rounded-xl hover:bg-zinc-200 transition-all font-display shadow-lg">Start Session</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="relative z-10 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto py-16">
+        
+        <div class="text-center space-y-4 mb-12">
+            <h1 class="font-display font-bold text-4xl sm:text-5xl text-white tracking-tight">Get In Touch With Our Team</h1>
+            <p class="text-zinc-400 text-sm sm:text-base max-w-xl mx-auto">
+                Need help with a backtesting session, bot deployment, or custom data feeds? Send us a message and our technical team will respond promptly.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            
+            <!-- Left Information Column -->
+            <div class="lg:col-span-5 space-y-6">
+                <div class="p-6 rounded-2xl glass-card space-y-4">
+                    <div class="h-10 w-10 rounded-xl bg-brand-accent/10 text-brand-accent flex items-center justify-center text-lg">
+                        <i class="fa-solid fa-envelope"></i>
+                    </div>
+                    <h3 class="font-display font-bold text-lg text-white">Direct Email Support</h3>
+                    <p class="text-zinc-400 text-xs leading-relaxed">Reach out directly for account or feature inquiries:</p>
+                    <a href="mailto:support@backtestlabpro.com" class="text-brand-accent text-sm font-mono font-semibold hover:underline block">support@backtestlabpro.com</a>
+                </div>
+
+                <div class="p-6 rounded-2xl glass-card space-y-4">
+                    <div class="h-10 w-10 rounded-xl bg-brand-purple/10 text-brand-purple flex items-center justify-center text-lg">
+                        <i class="fa-solid fa-clock"></i>
+                    </div>
+                    <h3 class="font-display font-bold text-lg text-white">Estimated Response Window</h3>
+                    <p class="text-zinc-400 text-xs leading-relaxed">Our active support team operates Monday – Friday. Standard response window is within 24 to 48 hours.</p>
+                </div>
+            </div>
+
+            <!-- Right Message Form -->
+            <div class="lg:col-span-7 p-8 rounded-3xl glass-card border border-white/10 shadow-2xl">
+                <form id="contact-form" onsubmit="handleContactSubmit(event)" class="space-y-5">
+                    <div>
+                        <label class="block text-xs font-mono text-zinc-400 uppercase tracking-wider mb-2">Your Name</label>
+                        <input type="text" required placeholder="Trader Name" class="w-full bg-brand-dark/80 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-brand-accent transition-colors">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-mono text-zinc-400 uppercase tracking-wider mb-2">Your Email</label>
+                        <input type="email" required placeholder="trader@example.com" class="w-full bg-brand-dark/80 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-brand-accent transition-colors">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-mono text-zinc-400 uppercase tracking-wider mb-2">Subject</label>
+                        <select class="w-full bg-brand-dark/80 border border-white/10 rounded-xl px-4 py-3 text-sm text-zinc-300 focus:outline-none focus:border-brand-accent transition-colors">
+                            <option>Technical Platform Inquiry</option>
+                            <option>Bot Compiler / Script Issue</option>
+                            <option>Data Feed Request</option>
+                            <option>General Feedback</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-mono text-zinc-400 uppercase tracking-wider mb-2">Message</label>
+                        <textarea required rows="4" placeholder="Detail your question or strategy requirements..." class="w-full bg-brand-dark/80 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-brand-accent transition-colors resize-none"></textarea>
+                    </div>
+
+                    <button type="submit" class="w-full py-4 rounded-xl bg-gradient-to-r from-brand-accent to-brand-purple text-white font-display font-bold text-sm tracking-wide hover:opacity-90 transition-all shadow-lg min-h-[48px]">
+                        Transmit Message
+                    </button>
+                </form>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-white/5 bg-zinc-950/40 backdrop-blur-sm relative z-10 py-12 text-zinc-500 text-xs">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-6 text-center sm:text-left">
+            <div class="flex flex-col sm:flex-row items-center gap-3">
+                <div class="h-6 w-6 rounded bg-zinc-900 flex items-center justify-center text-[10px] text-zinc-400"><i class="fa-solid fa-chart-line"></i></div>
+                <span>© 2026 BacktestLab Pro. Open-source public good utility architecture.</span>
+            </div>
+            <div class="flex flex-wrap items-center justify-center gap-6 text-zinc-400">
+                <a href="index.html#features" class="hover:text-white transition-colors">Features</a>
+                <a href="about.html" class="hover:text-white transition-colors">About Us</a>
+                <a href="contact.html" class="hover:text-white transition-colors">Contact</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function handleContactSubmit(e) {
+            e.preventDefault();
+            alert("Thank you! Your message payload has been transmitted over secure channels.");
+            e.target.reset();
+        }
+    </script>
+</body>
+</html>

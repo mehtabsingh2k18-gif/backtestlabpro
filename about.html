@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us | BacktestLab Pro</title>
+    
+    <!-- Tailwind CSS & FontAwesome -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link class="brand-favicon-holder" rel="icon" type="image/svg+xml" href="favicon.svg">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            dark: '#050507',
+                            card: '#0c0c0e',
+                            accent: '#6366f1',
+                            success: '#10b981',
+                            purple: '#a855f7'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { background-color: #050507; color: #f4f4f5; overflow-x: hidden; }
+        .glass-card {
+            background: rgba(12, 12, 14, 0.5);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        .brand-icon-box {
+            width: 38px; height: 38px;
+            background: linear-gradient(135deg, #503bf5, #863bf5);
+            border-radius: 8px; display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+<body class="font-sans antialiased relative min-h-screen flex flex-col justify-between">
+
+    <!-- Header / Navbar -->
+    <header class="sticky top-0 z-50 w-full border-b border-white/5 bg-brand-dark/70 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full h-20 flex items-center justify-between">
+            <a href="index.html" class="flex items-center gap-3 group">
+                <div class="brand-icon-box">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                    </svg>
+                </div>
+                <span class="font-display font-bold text-lg text-white tracking-tight">BacktestLab<span class="text-brand-accent">.pro</span></span>
+            </a>
+
+            <nav class="hidden md:flex items-center gap-6 lg:gap-8 text-sm font-medium text-zinc-400">
+                <a href="index.html#features" class="hover:text-white transition-colors">Features</a>
+                <a href="algo_store.html" class="hover:text-white transition-colors">Bot Store</a>
+                <a href="bot_automation.html" class="hover:text-white transition-colors">Bot Automation</a>
+                <a href="articles.html" class="hover:text-white transition-colors">Articles</a>
+                <a href="about.html" class="text-white font-semibold transition-colors">About Us</a>
+                <a href="contact.html" class="hover:text-white transition-colors">Contact</a>
+            </nav>
+
+            <div class="hidden md:flex items-center gap-4">
+                <a href="login.html" class="text-sm font-medium text-zinc-400 hover:text-white transition-colors">Sign In</a>
+                <a href="session.html" class="text-sm font-medium bg-white text-brand-dark px-4 py-2.5 rounded-xl hover:bg-zinc-200 transition-all font-display shadow-lg">Start Session</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="relative z-10 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto py-16 space-y-16">
+        
+        <!-- Hero Section -->
+        <section class="text-center space-y-4">
+            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-brand-accent/10 border border-brand-accent/20 text-xs text-brand-accent font-medium">
+                <i class="fa-solid fa-code"></i> Built for Traders • 100% Free Public Web Engine
+            </div>
+            <h1 class="font-display font-bold text-4xl sm:text-6xl text-white tracking-tight">
+                Why We Built <br>
+                <span class="bg-gradient-to-r from-brand-accent via-brand-purple to-brand-success bg-clip-text text-transparent">BacktestLab Pro</span>
+            </h1>
+            <p class="text-zinc-400 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed">
+                Raw historical CSV data is everywhere for free, but turning flat spreadsheets into actionable visual strategy testing is difficult for most traders. We bridged that gap with an intuitive, 100% free web workspace.
+            </p>
+        </section>
+
+        <!-- Story & Problem Section -->
+        <section class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="p-8 rounded-2xl glass-card space-y-4">
+                <div class="h-12 w-12 rounded-xl bg-brand-accent/10 text-brand-accent flex items-center justify-center text-xl">
+                    <i class="fa-solid fa-database"></i>
+                </div>
+                <h2 class="font-display font-bold text-2xl text-white">The CSV & Paywall Problem</h2>
+                <p class="text-zinc-400 text-sm leading-relaxed">
+                    Most historical market data (Crypto, Forex, Equities) is actually freely available in CSV files online. However, many traders find downloading, cleaning, and coding custom backtesting scripts for standard spreadsheets frustrating or overly technical.
+                </p>
+                <p class="text-zinc-400 text-sm leading-relaxed">
+                    Meanwhile, commercial retail software platforms charge heavy recurring monthly fees just to give you basic replay buttons and simple statistical dashboards. We wanted to end predatory subscriptions for basic utility tools.
+                </p>
+            </div>
+
+            <div class="p-8 rounded-2xl glass-card space-y-4">
+                <div class="h-12 w-12 rounded-xl bg-brand-success/10 text-brand-success flex items-center justify-center text-xl">
+                    <i class="fa-solid fa-desktop"></i>
+                </div>
+                <h2 class="font-display font-bold text-2xl text-white">Our Free Web Platform</h2>
+                <p class="text-zinc-400 text-sm leading-relaxed">
+                    BacktestLab Pro ingests vast historical datasets and serves them inside a smooth, interactive web browser interface. You don't need to know Python, manage messy spreadsheets, or pay monthly software bills.
+                </p>
+                <p class="text-zinc-400 text-sm leading-relaxed">
+                    Our web replay tool, multi-timeframe analytics, and metric calculation engines are completely free for community use without ad pollution or hidden limits.
+                </p>
+            </div>
+        </section>
+
+        <!-- Bot Development & Automation Transparency -->
+        <section class="p-8 sm:p-10 rounded-3xl bg-gradient-to-b from-brand-card to-brand-dark border border-white/10 space-y-6">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-brand-purple/20 text-brand-purple text-xs font-mono font-bold uppercase tracking-wider">
+                <i class="fa-solid fa-robot"></i> Custom Bot Development Service
+            </div>
+            
+            <h2 class="font-display font-bold text-3xl text-white">How Our Trading Bot & Automation Services Work</h2>
+            
+            <p class="text-zinc-300 text-sm leading-relaxed">
+                In addition to our free backtesting simulator, BacktestLab Pro offers strategy programming and bot development services. We convert your proven backtested rules into automated scripts and algorithmic execution bots.
+            </p>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-2">
+                <div class="p-5 rounded-2xl bg-zinc-900/60 border border-white/5 space-y-2">
+                    <h3 class="font-bold text-white text-base text-brand-accent"><i class="fa-solid fa-terminal mr-2"></i> Pure Technical Translation</h3>
+                    <p class="text-xs text-zinc-400 leading-relaxed">
+                        We simply translate your exact rules, criteria, and strategy logic into clean, functional code. We automate your words—nothing more, nothing less.
+                    </p>
+                </div>
+
+                <div class="p-5 rounded-2xl bg-zinc-900/60 border border-white/5 space-y-2">
+                    <h3 class="font-bold text-white text-base text-brand-purple"><i class="fa-solid fa-ban mr-2"></i> Zero Profit Claims</h3>
+                    <p class="text-xs text-zinc-400 leading-relaxed">
+                        We make **NO claims or guarantees of profit**. We do not sell "magic money makers." Trading results depend entirely on your strategy logic and market conditions.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Risk Warning Box -->
+            <div class="p-5 rounded-2xl bg-red-500/10 border border-red-500/20 text-xs text-zinc-300 space-y-2">
+                <div class="font-bold text-red-400 flex items-center gap-2">
+                    <i class="fa-solid fa-triangle-exclamation"></i> Mandatory Risk Disclaimer
+                </div>
+                <p class="leading-relaxed text-zinc-400">
+                    If you use any script, bot, or strategy code developed by or downloaded from BacktestLab Pro on live trading accounts, you do so entirely **at your own risk**. Financial markets carry substantial risk of capital loss. BacktestLab Pro is strictly a software development and analytical tool provider—we are not responsible for any financial losses incurred from live execution.
+                </p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-white/5 bg-zinc-950/40 backdrop-blur-sm relative z-10 py-12 text-zinc-500 text-xs">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-6 text-center sm:text-left">
+            <div class="flex flex-col sm:flex-row items-center gap-3">
+                <div class="h-6 w-6 rounded bg-zinc-900 flex items-center justify-center text-[10px] text-zinc-400"><i class="fa-solid fa-chart-line"></i></div>
+                <span>© 2026 BacktestLab Pro. Open-source public good utility architecture.</span>
+            </div>
+            <div class="flex flex-wrap items-center justify-center gap-6 text-zinc-400">
+                <a href="index.html#features" class="hover:text-white transition-colors">Features</a>
+                <a href="about.html" class="hover:text-white transition-colors">About Us</a>
+                <a href="contact.html" class="hover:text-white transition-colors">Contact</a>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

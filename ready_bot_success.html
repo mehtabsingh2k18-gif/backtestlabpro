@@ -121,15 +121,15 @@
                 <span id="sync-status-text">Synchronizing purchase to Firestore...</span>
             </div>
 
-            <!-- Primary Download Action Area -->
+            <!-- Primary Action Area -->
             <div class="space-y-3 pt-2">
                 <a id="btn-download" href="#" download class="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 text-brand-dark font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-2 hover:opacity-90 active:scale-95 transition-all shadow-lg shadow-emerald-500/10">
                     <i class="fa-solid fa-download"></i>
                     <span id="download-btn-text">Download Compiled Bot (.EX5)</span>
                 </a>
 
-                <a href="bot_automation.html" class="w-full py-3 px-4 rounded-xl bg-[#15151b] border border-white/5 text-zinc-300 hover:text-white font-mono text-xs uppercase tracking-wider text-center block hover:bg-zinc-900 transition-all">
-                    Go to Bot Dashboard &rarr;
+                <a href="my-products.html" class="w-full py-3 px-4 rounded-xl bg-[#15151b] border border-white/5 text-zinc-300 hover:text-white font-mono text-xs uppercase tracking-wider text-center block hover:bg-zinc-900 transition-all">
+                    View in My Products &rarr;
                 </a>
             </div>
 
@@ -154,23 +154,22 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-        // 🔥 Replace with your standard Firebase configuration
+        // Verified Firebase configuration from your project
         const firebaseConfig = {
-            apiKey: "YOUR_FIREBASE_API_KEY",
-            authDomain: "backtestlab-pro.firebaseapp.com",
-            projectId: "backtestlab-pro",
-            storageBucket: "backtestlab-pro.appspot.com",
-            messagingSenderId: "1234567890",
-            appId: "YOUR_APP_ID"
+            apiKey: "AIzaSyAensfI53w49Fd4A7Lz5_K9N1JOxZsW7Kk",
+            authDomain: "backtestlabpro.firebaseapp.com",
+            projectId: "backtestlabpro",
+            storageBucket: "backtestlabpro.firebasestorage.app",
+            messagingSenderId: "560146824734",
+            appId: "1:560146824734:web:5287d0ded3a1024e75780f"
         };
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const auth = getAuth(app);
 
-        // Catalog mapping of prices to file deliverables
         const BOT_DATABASE = {
             "499": {
                 name: "Devil Gold v4.2 Software",
@@ -192,7 +191,7 @@
             }
         };
 
-        // 1. Parse URL Query Parameters
+        // Parse query params
         const params = new URLSearchParams(window.location.search);
         const amount = params.get('amount') || "499";
         const botIdParam = params.get('botId') || "devil_gold_v4_2";
@@ -205,7 +204,6 @@
             url: "downloads/DEVIL_GOLD_V42.EX5"
         };
 
-        // 2. Populate UI
         document.getElementById('display-bot-name').innerText = currentBot.name;
         document.getElementById('display-amount').innerText = `$${amount}.00 USD`;
         document.getElementById('display-order-id').innerText = orderId;
@@ -215,10 +213,10 @@
         downloadBtn.href = currentBot.url;
         downloadBtn.setAttribute('download', currentBot.file);
 
-        // 3. Write / Save to Firestore
+        // Core write operation
         async function recordPurchaseToFirestore(userId) {
             try {
-                // Write directly to user's root document to update paid state
+                // 1. Root user document update
                 const userRef = doc(db, "users", userId);
                 await setDoc(userRef, {
                     isPaid: true,
@@ -230,7 +228,7 @@
                     orderId: orderId
                 }, { merge: true });
 
-                // Also record in the subcollection for audit tracking
+                // 2. Purchases subcollection record
                 const purchaseRef = doc(db, "users", userId, "purchases", currentBot.botId);
                 await setDoc(purchaseRef, {
                     botId: currentBot.botId,
@@ -244,25 +242,32 @@
 
                 document.getElementById('sync-banner').innerHTML = `
                     <i class="fa-solid fa-circle-check text-emerald-400"></i>
-                    <span class="text-emerald-400">Saved to your Firestore profile successfully!</span>
+                    <span class="text-emerald-400">Saved to Firestore ledger successfully!</span>
                 `;
             } catch (err) {
                 console.error("Firestore write error:", err);
                 document.getElementById('sync-banner').innerHTML = `
-                    <i class="fa-solid fa-check text-emerald-400"></i>
-                    <span class="text-zinc-300">File download ready below.</span>
+                    <i class="fa-solid fa-triangle-exclamation text-amber-400"></i>
+                    <span class="text-zinc-300">File download ready below (Local Mode).</span>
                 `;
             }
         }
 
-        // Check authentication state or fallback to local user identifier
-        onAuthStateChanged(auth, (user) => {
+        // Handle authentication or fallback
+        const existingStoredId = localStorage.getItem("backtestlab_user_id") || "o3EIzM0arjSwafklEP5jlRpqdO22";
+
+        onAuthStateChanged(auth, async (user) => {
             if (user) {
-                recordPurchaseToFirestore(user.uid);
+                await recordPurchaseToFirestore(user.uid);
             } else {
-                // If using localStorage session ID fallback
-                const fallbackUid = localStorage.getItem("backtestlab_user_id") || "o3EIzM0arjSwafklEP5jlRpqdO22";
-                recordPurchaseToFirestore(fallbackUid);
+                try {
+                    // Sign in anonymously to establish a valid request.auth session
+                    const cred = await signInAnonymously(auth);
+                    await recordPurchaseToFirestore(existingStoredId || cred.user.uid);
+                } catch (e) {
+                    // Direct fallback write with updated rules
+                    await recordPurchaseToFirestore(existingStoredId);
+                }
             }
         });
     </script>

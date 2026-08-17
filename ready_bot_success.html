@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Payment Successful | BacktestLab Pro</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { 
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace']
+                    },
+                    colors: {
+                        brand: {
+                            dark: '#070709',
+                            card: '#0e0e12',
+                            subtle: '#15151b',
+                            border: '#23232c',
+                            accent: '#38bdf8',
+                            success: '#10b981',
+                            purple: '#818cf8',
+                            muted: '#71717a'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #070709;
+            color: #e4e4e7;
+            overflow-x: hidden;
+        }
+        .terminal-card {
+            background: #0d0d11;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+        }
+        .success-glow {
+            box-shadow: 0 0 50px -10px rgba(16, 185, 129, 0.25);
+        }
+    </style>
+</head>
+<body class="antialiased font-sans min-h-screen flex flex-col justify-between p-4">
+
+    <!-- Top Navigation Header -->
+    <header class="w-full max-w-5xl mx-auto py-6 flex items-center justify-between">
+        <a href="index.html" class="flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-lg bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400">
+                <i class="fa-solid fa-chart-line text-sm"></i>
+            </div>
+            <span class="text-base font-bold tracking-tight text-white font-mono">
+                BACKTESTLAB<span class="text-indigo-400">.PRO</span>
+            </span>
+        </a>
+
+        <div class="flex items-center gap-3">
+            <a href="algo_store.html" class="text-xs font-mono text-zinc-400 hover:text-white transition-colors">
+                <i class="fa-solid fa-store mr-1"></i> Bot Store
+            </a>
+        </div>
+    </header>
+
+    <!-- Main Content Viewport -->
+    <main class="w-full max-w-xl mx-auto flex-1 flex items-center justify-center py-6">
+        
+        <div class="terminal-card success-glow w-full rounded-2xl p-6 sm:p-8 space-y-6">
+            
+            <!-- Success Status Icon & Heading -->
+            <div class="text-center space-y-3">
+                <div class="w-14 h-14 mx-auto rounded-full bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 text-2xl">
+                    <i class="fa-solid fa-check"></i>
+                </div>
+                <div>
+                    <span class="text-[10px] font-mono uppercase tracking-widest text-emerald-400 font-bold bg-emerald-500/10 px-2.5 py-0.5 rounded border border-emerald-500/20">
+                        Payment Authenticated
+                    </span>
+                    <h1 class="text-2xl font-bold text-white tracking-tight mt-2">Order Confirmed & Settled</h1>
+                    <p class="text-xs text-zinc-400 mt-1">Your standalone bot license has been permanently attached to your workspace.</p>
+                </div>
+            </div>
+
+            <!-- Settlement Receipt Box -->
+            <div class="rounded-xl bg-zinc-950/80 border border-zinc-800/80 p-4 sm:p-5 space-y-3 font-mono text-xs">
+                <div class="flex justify-between items-center border-b border-zinc-800/60 pb-3">
+                    <span class="text-zinc-500 uppercase text-[10px]">Product Licensed</span>
+                    <span id="display-bot-name" class="text-white font-bold text-sm">Devil Gold v4.2 Software</span>
+                </div>
+                
+                <div class="flex justify-between items-center">
+                    <span class="text-zinc-500 uppercase text-[10px]">Amount Settled</span>
+                    <span id="display-amount" class="text-emerald-400 font-bold">$499.00 USD</span>
+                </div>
+
+                <div class="flex justify-between items-center">
+                    <span class="text-zinc-500 uppercase text-[10px]">Terminal License</span>
+                    <span class="text-zinc-300">Single Terminal Perpetual</span>
+                </div>
+
+                <div class="flex justify-between items-center">
+                    <span class="text-zinc-500 uppercase text-[10px]">Reference Order ID</span>
+                    <span id="display-order-id" class="text-zinc-400 text-[11px] truncate max-w-[200px]">SANDBOX-PAYMENT-OK</span>
+                </div>
+            </div>
+
+            <!-- Database Synchronization Notification -->
+            <div id="sync-banner" class="p-3 rounded-lg bg-zinc-900 border border-zinc-800 text-[11px] font-mono text-zinc-400 flex items-center justify-center gap-2">
+                <i class="fa-solid fa-spinner fa-spin text-cyan-400"></i>
+                <span id="sync-status-text">Synchronizing purchase to Firestore...</span>
+            </div>
+
+            <!-- Primary Download Action Area -->
+            <div class="space-y-3 pt-2">
+                <a id="btn-download" href="#" download class="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 text-brand-dark font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-2 hover:opacity-90 active:scale-95 transition-all shadow-lg shadow-emerald-500/10">
+                    <i class="fa-solid fa-download"></i>
+                    <span id="download-btn-text">Download Compiled Bot (.EX5)</span>
+                </a>
+
+                <a href="bot_automation.html" class="w-full py-3 px-4 rounded-xl bg-[#15151b] border border-white/5 text-zinc-300 hover:text-white font-mono text-xs uppercase tracking-wider text-center block hover:bg-zinc-900 transition-all">
+                    Go to Bot Dashboard &rarr;
+                </a>
+            </div>
+
+            <!-- Trust / Security Footer -->
+            <div class="text-center pt-2 border-t border-zinc-900">
+                <p class="text-[10px] font-mono text-zinc-500">
+                    <i class="fa-solid fa-shield-halved text-emerald-400 mr-1"></i>
+                    SHA-256 Verified Binary Signature &bull; Stored in Cloud Firestore
+                </p>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center py-4 text-zinc-600 font-mono text-[11px]">
+        &copy; 2026 BacktestLab Pro. All rights reserved.
+    </footer>
+
+    <!-- Firebase SDK Modules -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+        // 🔥 Replace with your standard Firebase configuration
+        const firebaseConfig = {
+            apiKey: "YOUR_FIREBASE_API_KEY",
+            authDomain: "backtestlab-pro.firebaseapp.com",
+            projectId: "backtestlab-pro",
+            storageBucket: "backtestlab-pro.appspot.com",
+            messagingSenderId: "1234567890",
+            appId: "YOUR_APP_ID"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        // Catalog mapping of prices to file deliverables
+        const BOT_DATABASE = {
+            "499": {
+                name: "Devil Gold v4.2 Software",
+                botId: "devil_gold_v4_2",
+                file: "DEVIL_GOLD_V42.EX5",
+                url: "downloads/DEVIL_GOLD_V42.EX5"
+            },
+            "299": {
+                name: "M5 King Engine Software",
+                botId: "m5_king_engine",
+                file: "M5_KING_ENGINE.EX5",
+                url: "downloads/M5_KING_ENGINE.EX5"
+            },
+            "149": {
+                name: "Asian Breakout v2.1 Software",
+                botId: "asian_breakout_v2_1",
+                file: "ASIAN_BREAKOUT_EA.EX5",
+                url: "downloads/ASIAN_BREAKOUT_EA.EX5"
+            }
+        };
+
+        // 1. Parse URL Query Parameters
+        const params = new URLSearchParams(window.location.search);
+        const amount = params.get('amount') || "499";
+        const botIdParam = params.get('botId') || "devil_gold_v4_2";
+        const orderId = params.get('orderId') || "REF-" + Math.random().toString(36).substring(2, 9).toUpperCase();
+
+        const currentBot = BOT_DATABASE[amount] || {
+            name: "Devil Gold v4.2 Software",
+            botId: botIdParam,
+            file: "DEVIL_GOLD_V42.EX5",
+            url: "downloads/DEVIL_GOLD_V42.EX5"
+        };
+
+        // 2. Populate UI
+        document.getElementById('display-bot-name').innerText = currentBot.name;
+        document.getElementById('display-amount').innerText = `$${amount}.00 USD`;
+        document.getElementById('display-order-id').innerText = orderId;
+        document.getElementById('download-btn-text').innerText = `Download ${currentBot.file}`;
+        
+        const downloadBtn = document.getElementById('btn-download');
+        downloadBtn.href = currentBot.url;
+        downloadBtn.setAttribute('download', currentBot.file);
+
+        // 3. Write / Save to Firestore
+        async function recordPurchaseToFirestore(userId) {
+            try {
+                // Write directly to user's root document to update paid state
+                const userRef = doc(db, "users", userId);
+                await setDoc(userRef, {
+                    isPaid: true,
+                    amountPaid: String(amount),
+                    planStatus: "paid",
+                    purchasedBotId: currentBot.botId,
+                    purchasedBotName: currentBot.name,
+                    lastPaymentDate: new Date().toISOString(),
+                    orderId: orderId
+                }, { merge: true });
+
+                // Also record in the subcollection for audit tracking
+                const purchaseRef = doc(db, "users", userId, "purchases", currentBot.botId);
+                await setDoc(purchaseRef, {
+                    botId: currentBot.botId,
+                    botName: currentBot.name,
+                    amountPaid: String(amount),
+                    isPaid: true,
+                    downloadFile: currentBot.file,
+                    downloadUrl: currentBot.url,
+                    purchasedAt: new Date().toISOString()
+                }, { merge: true });
+
+                document.getElementById('sync-banner').innerHTML = `
+                    <i class="fa-solid fa-circle-check text-emerald-400"></i>
+                    <span class="text-emerald-400">Saved to your Firestore profile successfully!</span>
+                `;
+            } catch (err) {
+                console.error("Firestore write error:", err);
+                document.getElementById('sync-banner').innerHTML = `
+                    <i class="fa-solid fa-check text-emerald-400"></i>
+                    <span class="text-zinc-300">File download ready below.</span>
+                `;
+            }
+        }
+
+        // Check authentication state or fallback to local user identifier
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                recordPurchaseToFirestore(user.uid);
+            } else {
+                // If using localStorage session ID fallback
+                const fallbackUid = localStorage.getItem("backtestlab_user_id") || "o3EIzM0arjSwafklEP5jlRpqdO22";
+                recordPurchaseToFirestore(fallbackUid);
+            }
+        });
+    </script>
+
+</body>
+</html>

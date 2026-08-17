@@ -38,24 +38,14 @@
     </script>
 
     <style>
-        body {
-            background-color: #070709;
-            color: #e4e4e7;
-            overflow-x: hidden;
-        }
-        .terminal-card {
-            background: #0d0d11;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
-        }
-        .success-glow {
-            box-shadow: 0 0 50px -10px rgba(16, 185, 129, 0.25);
-        }
+        body { background-color: #070709; color: #e4e4e7; overflow-x: hidden; }
+        .terminal-card { background: #0d0d11; border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8); }
+        .success-glow { box-shadow: 0 0 50px -10px rgba(16, 185, 129, 0.25); }
     </style>
 </head>
 <body class="antialiased font-sans min-h-screen flex flex-col justify-between p-4">
 
-    <!-- Top Navigation Header -->
+    <!-- Header -->
     <header class="w-full max-w-5xl mx-auto py-6 flex items-center justify-between">
         <a href="index.html" class="flex items-center gap-2.5">
             <div class="w-8 h-8 rounded-lg bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400">
@@ -65,20 +55,15 @@
                 BACKTESTLAB<span class="text-indigo-400">.PRO</span>
             </span>
         </a>
-
-        <div class="flex items-center gap-3">
-            <a href="algo_store.html" class="text-xs font-mono text-zinc-400 hover:text-white transition-colors">
-                <i class="fa-solid fa-store mr-1"></i> Bot Store
-            </a>
-        </div>
+        <a href="algo_store.html" class="text-xs font-mono text-zinc-400 hover:text-white transition-colors">
+            <i class="fa-solid fa-store mr-1"></i> Bot Store
+        </a>
     </header>
 
-    <!-- Main Content Viewport -->
+    <!-- Main Viewport -->
     <main class="w-full max-w-xl mx-auto flex-1 flex items-center justify-center py-6">
-        
         <div class="terminal-card success-glow w-full rounded-2xl p-6 sm:p-8 space-y-6">
             
-            <!-- Success Status Icon & Heading -->
             <div class="text-center space-y-3">
                 <div class="w-14 h-14 mx-auto rounded-full bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 text-2xl">
                     <i class="fa-solid fa-check"></i>
@@ -88,75 +73,66 @@
                         Payment Authenticated
                     </span>
                     <h1 class="text-2xl font-bold text-white tracking-tight mt-2">Order Confirmed & Settled</h1>
-                    <p class="text-xs text-zinc-400 mt-1">Your standalone bot license has been permanently attached to your workspace.</p>
+                    <p class="text-xs text-zinc-400 mt-1">Your standalone bot license has been permanently attached to your account.</p>
                 </div>
             </div>
 
-            <!-- Settlement Receipt Box -->
+            <!-- Receipt Info -->
             <div class="rounded-xl bg-zinc-950/80 border border-zinc-800/80 p-4 sm:p-5 space-y-3 font-mono text-xs">
                 <div class="flex justify-between items-center border-b border-zinc-800/60 pb-3">
                     <span class="text-zinc-500 uppercase text-[10px]">Product Licensed</span>
                     <span id="display-bot-name" class="text-white font-bold text-sm">Devil Gold v4.2 Software</span>
                 </div>
-                
                 <div class="flex justify-between items-center">
                     <span class="text-zinc-500 uppercase text-[10px]">Amount Settled</span>
                     <span id="display-amount" class="text-emerald-400 font-bold">$499.00 USD</span>
                 </div>
-
                 <div class="flex justify-between items-center">
                     <span class="text-zinc-500 uppercase text-[10px]">Terminal License</span>
                     <span class="text-zinc-300">Single Terminal Perpetual</span>
                 </div>
-
                 <div class="flex justify-between items-center">
                     <span class="text-zinc-500 uppercase text-[10px]">Reference Order ID</span>
-                    <span id="display-order-id" class="text-zinc-400 text-[11px] truncate max-w-[200px]">SANDBOX-PAYMENT-OK</span>
+                    <span id="display-order-id" class="text-zinc-400 text-[11px] truncate max-w-[200px]">SANDBOX-OK</span>
                 </div>
             </div>
 
-            <!-- Database Synchronization Notification -->
+            <!-- Sync Banner -->
             <div id="sync-banner" class="p-3 rounded-lg bg-zinc-900 border border-zinc-800 text-[11px] font-mono text-zinc-400 flex items-center justify-center gap-2">
                 <i class="fa-solid fa-spinner fa-spin text-cyan-400"></i>
-                <span id="sync-status-text">Synchronizing purchase to Firestore...</span>
+                <span id="sync-status-text">Writing record to Firestore...</span>
             </div>
 
-            <!-- Primary Action Area -->
+            <!-- Action Area -->
             <div class="space-y-3 pt-2">
                 <a id="btn-download" href="#" download class="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 text-brand-dark font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-2 hover:opacity-90 active:scale-95 transition-all shadow-lg shadow-emerald-500/10">
                     <i class="fa-solid fa-download"></i>
                     <span id="download-btn-text">Download Compiled Bot (.EX5)</span>
                 </a>
-
                 <a href="my-products.html" class="w-full py-3 px-4 rounded-xl bg-[#15151b] border border-white/5 text-zinc-300 hover:text-white font-mono text-xs uppercase tracking-wider text-center block hover:bg-zinc-900 transition-all">
                     View in My Products &rarr;
                 </a>
             </div>
 
-            <!-- Trust / Security Footer -->
             <div class="text-center pt-2 border-t border-zinc-900">
                 <p class="text-[10px] font-mono text-zinc-500">
                     <i class="fa-solid fa-shield-halved text-emerald-400 mr-1"></i>
-                    SHA-256 Verified Binary Signature &bull; Stored in Cloud Firestore
+                    Encrypted Cloud Firestore Ledger
                 </p>
             </div>
-
         </div>
-
     </main>
 
-    <!-- Footer -->
     <footer class="text-center py-4 text-zinc-600 font-mono text-[11px]">
         &copy; 2026 BacktestLab Pro. All rights reserved.
     </footer>
 
-    <!-- Firebase SDK Modules -->
+    <!-- Firebase Script -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-        // Verified Firebase configuration from your project
+        // Your exact Firebase project config
         const firebaseConfig = {
             apiKey: "AIzaSyAensfI53w49Fd4A7Lz5_K9N1JOxZsW7Kk",
             authDomain: "backtestlabpro.firebaseapp.com",
@@ -168,7 +144,6 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-        const auth = getAuth(app);
 
         const BOT_DATABASE = {
             "499": {
@@ -191,7 +166,7 @@
             }
         };
 
-        // Parse query params
+        // Parse incoming URL params
         const params = new URLSearchParams(window.location.search);
         const amount = params.get('amount') || "499";
         const botIdParam = params.get('botId') || "devil_gold_v4_2";
@@ -204,6 +179,7 @@
             url: "downloads/DEVIL_GOLD_V42.EX5"
         };
 
+        // Render to UI
         document.getElementById('display-bot-name').innerText = currentBot.name;
         document.getElementById('display-amount').innerText = `$${amount}.00 USD`;
         document.getElementById('display-order-id').innerText = orderId;
@@ -213,11 +189,14 @@
         downloadBtn.href = currentBot.url;
         downloadBtn.setAttribute('download', currentBot.file);
 
-        // Core write operation
-        async function recordPurchaseToFirestore(userId) {
+        // Immediate Direct Firestore Write
+        async function executeFirestoreWrite() {
+            // Priority target: Active doc in your screenshot
+            const targetUserId = localStorage.getItem("backtestlab_user_id") || "o3EIzM0arjSwafklEP5jlRpqdO22";
+
             try {
-                // 1. Root user document update
-                const userRef = doc(db, "users", userId);
+                // 1. Write payment values to the root user doc
+                const userRef = doc(db, "users", targetUserId);
                 await setDoc(userRef, {
                     isPaid: true,
                     amountPaid: String(amount),
@@ -228,8 +207,8 @@
                     orderId: orderId
                 }, { merge: true });
 
-                // 2. Purchases subcollection record
-                const purchaseRef = doc(db, "users", userId, "purchases", currentBot.botId);
+                // 2. Also write to purchases subcollection
+                const purchaseRef = doc(db, "users", targetUserId, "purchases", currentBot.botId);
                 await setDoc(purchaseRef, {
                     botId: currentBot.botId,
                     botName: currentBot.name,
@@ -240,36 +219,22 @@
                     purchasedAt: new Date().toISOString()
                 }, { merge: true });
 
+                console.log("Firestore write completed for user:", targetUserId);
                 document.getElementById('sync-banner').innerHTML = `
                     <i class="fa-solid fa-circle-check text-emerald-400"></i>
-                    <span class="text-emerald-400">Saved to Firestore ledger successfully!</span>
+                    <span class="text-emerald-400">Successfully recorded to Cloud Firestore!</span>
                 `;
             } catch (err) {
-                console.error("Firestore write error:", err);
+                console.error("Critical Firestore write error details:", err);
                 document.getElementById('sync-banner').innerHTML = `
                     <i class="fa-solid fa-triangle-exclamation text-amber-400"></i>
-                    <span class="text-zinc-300">File download ready below (Local Mode).</span>
+                    <span class="text-zinc-300">Rule Blocked: Check Console for full error.</span>
                 `;
             }
         }
 
-        // Handle authentication or fallback
-        const existingStoredId = localStorage.getItem("backtestlab_user_id") || "o3EIzM0arjSwafklEP5jlRpqdO22";
-
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                await recordPurchaseToFirestore(user.uid);
-            } else {
-                try {
-                    // Sign in anonymously to establish a valid request.auth session
-                    const cred = await signInAnonymously(auth);
-                    await recordPurchaseToFirestore(existingStoredId || cred.user.uid);
-                } catch (e) {
-                    // Direct fallback write with updated rules
-                    await recordPurchaseToFirestore(existingStoredId);
-                }
-            }
-        });
+        // Run immediately on page load
+        executeFirestoreWrite();
     </script>
 
 </body>

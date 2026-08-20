@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Payment Successful | BacktestLab Pro</title>
+    <title>Payment Successful | M5 King Engine Software</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -81,11 +81,11 @@
             <div class="rounded-xl bg-zinc-950/80 border border-zinc-800/80 p-4 sm:p-5 space-y-3 font-mono text-xs">
                 <div class="flex justify-between items-center border-b border-zinc-800/60 pb-3">
                     <span class="text-zinc-500 uppercase text-[10px]">Product Licensed</span>
-                    <span id="display-bot-name" class="text-white font-bold text-sm">Devil Gold v4.2 Software</span>
+                    <span class="text-white font-bold text-sm">M5 King Engine Software</span>
                 </div>
                 <div class="flex justify-between items-center">
                     <span class="text-zinc-500 uppercase text-[10px]">Amount Settled</span>
-                    <span id="display-amount" class="text-emerald-400 font-bold">$499.00 USD</span>
+                    <span class="text-emerald-400 font-bold">$299.00 USD</span>
                 </div>
                 <div class="flex justify-between items-center">
                     <span class="text-zinc-500 uppercase text-[10px]">Terminal License</span>
@@ -105,9 +105,9 @@
 
             <!-- Actions -->
             <div class="space-y-3 pt-2">
-                <a id="btn-download" href="#" download class="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 text-brand-dark font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-2 hover:opacity-90 active:scale-95 transition-all shadow-lg shadow-emerald-500/10">
+                <a id="btn-download" href="downloads/M5_KING_ENGINE.EX5" download="M5_KING_ENGINE.EX5" class="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 text-brand-dark font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-2 hover:opacity-90 active:scale-95 transition-all shadow-lg shadow-emerald-500/10">
                     <i class="fa-solid fa-download"></i>
-                    <span id="download-btn-text">Download Compiled Bot (.EX5)</span>
+                    <span id="download-btn-text">Download M5_KING_ENGINE.EX5</span>
                 </a>
                 <a href="my-products.html" class="w-full py-3 px-4 rounded-xl bg-[#15151b] border border-white/5 text-zinc-300 hover:text-white font-mono text-xs uppercase tracking-wider text-center block hover:bg-zinc-900 transition-all">
                     View in My Products &rarr;
@@ -130,7 +130,8 @@
     <!-- Firebase SDK Logic -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, doc, setDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAensfI53w49Fd4A7Lz5_K9N1JOxZsW7Kk",
@@ -143,69 +144,36 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
+        const auth = getAuth(app);
 
-        const BOT_DATABASE = {
-            "499": {
-                name: "Devil Gold v4.2 Software",
-                botId: "devil_gold_v4_2",
-                file: "DEVIL_GOLD_V42.EX5",
-                url: "downloads/DEVIL_GOLD_V42.EX5"
-            },
-            "299": {
-                name: "M5 King Engine Software",
-                botId: "m5_king_engine",
-                file: "M5_KING_ENGINE.EX5",
-                url: "downloads/M5_KING_ENGINE.EX5"
-            },
-            "149": {
-                name: "Asian Breakout v2.1 Software",
-                botId: "asian_breakout_v2_1",
-                file: "ASIAN_BREAKOUT_EA.EX5",
-                url: "downloads/ASIAN_BREAKOUT_EA.EX5"
-            }
-        };
+        // Fixed data definition for M5 King Engine
+        const BOT_ID = "m5_king_engine";
+        const BOT_NAME = "M5 King Engine Software";
+        const AMOUNT = "299";
+        const DOWNLOAD_FILE = "M5_KING_ENGINE.EX5";
+        const DOWNLOAD_URL = "downloads/M5_KING_ENGINE.EX5";
 
         const params = new URLSearchParams(window.location.search);
-        const amount = params.get('amount') || "499";
-        const botIdParam = params.get('botId') || "devil_gold_v4_2";
-        const orderId = params.get('orderId') || "REF-" + Math.random().toString(36).substring(2, 9).toUpperCase();
-
-        const currentBot = BOT_DATABASE[amount] || {
-            name: "Devil Gold v4.2 Software",
-            botId: botIdParam,
-            file: "DEVIL_GOLD_V42.EX5",
-            url: "downloads/DEVIL_GOLD_V42.EX5"
-        };
-
-        document.getElementById('display-bot-name').innerText = currentBot.name;
-        document.getElementById('display-amount').innerText = `$${amount}.00 USD`;
+        const orderId = params.get('orderId') || ("REF-" + Math.random().toString(36).substring(2, 9).toUpperCase());
         document.getElementById('display-order-id').innerText = orderId;
-        document.getElementById('download-btn-text').innerText = `Download ${currentBot.file}`;
-        
-        const downloadBtn = document.getElementById('btn-download');
-        downloadBtn.href = currentBot.url;
-        downloadBtn.setAttribute('download', currentBot.file);
 
-        async function executeFirestoreWrite() {
-            const targetUserId = localStorage.getItem("backtestlab_user_id") || "o3EIzM0arjSwafklEP5jlRpqdO22";
-
+        async function executeFirestoreWrite(targetUserId) {
             try {
-                const userRef = doc(db, "users", targetUserId);
+                // Stores directly into the "purchases" subcollection as "m5_king_engine"
+                const purchaseDocRef = doc(db, "users", targetUserId, "purchases", BOT_ID);
 
-                // Use arrayUnion so existing fields (e.g., service payment details) remain untouched
-                await setDoc(userRef, {
-                    storePurchases: arrayUnion({
-                        botId: currentBot.botId,
-                        botName: currentBot.name,
-                        amountPaid: String(amount),
-                        downloadFile: currentBot.file,
-                        downloadUrl: currentBot.url,
-                        orderId: orderId,
-                        purchasedAt: new Date().toISOString()
-                    })
+                await setDoc(purchaseDocRef, {
+                    botId: BOT_ID,
+                    botName: BOT_NAME,
+                    amountPaid: AMOUNT,
+                    isPaid: true,
+                    downloadFile: DOWNLOAD_FILE,
+                    downloadUrl: DOWNLOAD_URL,
+                    orderId: orderId,
+                    purchasedAt: new Date().toISOString()
                 }, { merge: true });
 
-                console.log("Purchase appended to storePurchases array successfully.");
+                console.log("Recorded M5 King purchase under purchases subcollection for:", targetUserId);
                 document.getElementById('sync-banner').innerHTML = `
                     <i class="fa-solid fa-circle-check text-emerald-400"></i>
                     <span class="text-emerald-400">Successfully recorded to Cloud Firestore!</span>
@@ -219,7 +187,15 @@
             }
         }
 
-        executeFirestoreWrite();
+        // Detect active user or fallback ID from local storage
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                executeFirestoreWrite(user.uid);
+            } else {
+                const fallbackId = localStorage.getItem("backtestlab_user_id") || "p8BueXIMVjOgx1SlF2KRYhGd5LH3";
+                executeFirestoreWrite(fallbackId);
+            }
+        });
     </script>
 </body>
 </html>

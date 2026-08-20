@@ -133,36 +133,38 @@
         const db = getFirestore(app);
         const auth = getAuth(app);
 
-        // Exact subfolder paths and case-sensitive filenames matching GitHub repository
+        // Direct GitHub Raw repository base URL
+        const GITHUB_RAW_BASE = "https://raw.githubusercontent.com/mehtabsingh2k18-gif/backtestlabpro/main/downloads";
+
         const FILE_CATALOG = {
             "devil_gold_v4_2": {
                 name: "Devil Gold v4.2 Software",
                 file: "DEVIL_GOLD_V42.mq5",
-                url: "downloads/Devil%20Gold%20v4.2/DEVIL_GOLD_V42.mq5",
+                url: `${GITHUB_RAW_BASE}/Devil%20Gold%20v4.2/DEVIL_GOLD_V42.mq5`,
                 category: "Flagship Bot"
             },
             "m5_king_engine": {
                 name: "M5 King Engine Software",
                 file: "M5_KING_ENGINE.mq5",
-                url: "downloads/M5%20King%20Engine/M5_KING_ENGINE.mq5",
+                url: `${GITHUB_RAW_BASE}/M5%20King%20Engine/M5_KING_ENGINE.mq5`,
                 category: "High Frequency Bot"
             },
             "asian_breakout_v2_1": {
                 name: "Asian Breakout v2.1 Software",
                 file: "Asian_Session_Breakout_EA.mq5",
-                url: "downloads/Asian_Session_Breakout_EA/Asian_Session_Breakout_EA.mq5",
+                url: `${GITHUB_RAW_BASE}/Asian_Session_Breakout_EA/Asian_Session_Breakout_EA.mq5`,
                 category: "Session Model"
             },
             "pulse_telegram_bridge": {
                 name: "Pulse Telegram Bridge Software",
                 file: "TELEGRAM_BRIDGE_SETUP.ZIP",
-                url: "downloads/TELEGRAM_BRIDGE_SETUP.ZIP",
+                url: `${GITHUB_RAW_BASE}/TELEGRAM_BRIDGE_SETUP.ZIP`,
                 category: "Signal Bridge"
             },
             "nexus_discord_bridge": {
                 name: "Nexus Discord Bridge Software",
                 file: "DISCORD_BRIDGE_SETUP.ZIP",
-                url: "downloads/DISCORD_BRIDGE_SETUP.ZIP",
+                url: `${GITHUB_RAW_BASE}/DISCORD_BRIDGE_SETUP.ZIP`,
                 category: "Signal Bridge"
             }
         };
@@ -193,9 +195,9 @@
                         </div>
                     </div>
 
-                    <!-- Direct Static Download Link -->
+                    <!-- Direct GitHub Raw Download Link -->
                     <div class="w-full md:w-auto flex flex-col sm:flex-row items-center gap-3">
-                        <a href="${downloadUrl}" download="${filename}" class="w-full sm:w-auto px-6 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 hover:opacity-90 active:scale-95 text-white font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-2 transition-all shadow-lg shadow-cyan-500/10">
+                        <a href="${downloadUrl}" target="_blank" download="${filename}" class="w-full sm:w-auto px-6 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 hover:opacity-90 active:scale-95 text-white font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-2 transition-all shadow-lg shadow-cyan-500/10">
                             <i class="fa-solid fa-download"></i> Download File
                         </a>
                     </div>
@@ -240,9 +242,7 @@
 
                     const title = data.botName || catalogInfo.name || "Algorithmic Bot Software";
                     const filename = catalogInfo.file || data.downloadFile || `${botKey}.mq5`;
-                    
-                    // Match catalog path before falling back to generic path
-                    const downloadUrl = catalogInfo.url || data.downloadUrl || `downloads/${filename}`;
+                    const downloadUrl = catalogInfo.url || data.downloadUrl || `${GITHUB_RAW_BASE}/${filename}`;
                     const category = data.category || catalogInfo.category || "Store Purchase";
                     const amountPaid = data.amountPaid || "Paid";
 

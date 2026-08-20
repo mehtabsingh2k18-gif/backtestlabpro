@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Payment Successful | M5 King Engine Software</title>
+    <title>Payment Successful | M5 King Engine</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
 
@@ -20,7 +20,7 @@
 </head>
 <body class="antialiased min-h-screen flex flex-col justify-between p-4">
 
-    <!-- Header -->
+    <!-- Top Header -->
     <header class="w-full max-w-5xl mx-auto py-6 flex items-center justify-between">
         <a href="index.html" class="flex items-center gap-2.5">
             <div class="w-8 h-8 rounded-lg bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400">
@@ -75,7 +75,7 @@
             <!-- Sync Banner -->
             <div id="sync-banner" class="p-3 rounded-lg bg-zinc-900 border border-zinc-800 text-[11px] font-mono text-zinc-400 flex items-center justify-center gap-2">
                 <i class="fa-solid fa-spinner fa-spin text-cyan-400"></i>
-                <span id="sync-status-text">Recording purchase to Firestore...</span>
+                <span id="sync-status-text">Recording purchase to Firestore purchases collection...</span>
             </div>
 
             <!-- Action Area -->
@@ -105,7 +105,7 @@
     <!-- Firebase SDK Logic -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, doc, setDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAensfI53w49Fd4A7Lz5_K9N1JOxZsW7Kk",
@@ -119,16 +119,6 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Product Definition for M5 King Engine
-        const PRODUCT_INFO = {
-            botId: "m5_king_engine",
-            botName: "M5 King Engine Software",
-            category: "Standalone Bot",
-            amountPaid: "299",
-            downloadFile: "M5_KING_ENGINE.EX5",
-            downloadUrl: "downloads/M5_KING_ENGINE.EX5"
-        };
-
         const params = new URLSearchParams(window.location.search);
         const orderId = params.get('orderId') || ("REF-" + Math.random().toString(36).substring(2, 9).toUpperCase());
         document.getElementById('display-order-id').innerText = orderId;
@@ -137,26 +127,30 @@
             const targetUserId = localStorage.getItem("backtestlab_user_id") || "o3EIzM0arjSwafklEP5jlRpqdO22";
 
             try {
-                const userRef = doc(db, "users", targetUserId);
+                // Creates a standalone document inside the "purchases" subcollection
+                const purchaseDocRef = doc(db, "users", targetUserId, "purchases", "m5_king_engine");
 
-                // Use arrayUnion to append without overwriting other records
-                await setDoc(userRef, {
-                    storePurchases: arrayUnion({
-                        ...PRODUCT_INFO,
-                        orderId: orderId,
-                        purchasedAt: new Date().toISOString()
-                    })
+                await setDoc(purchaseDocRef, {
+                    botId: "m5_king_engine",
+                    botName: "M5 King Engine Software",
+                    category: "Standalone Bot",
+                    amountPaid: "299",
+                    isPaid: true,
+                    downloadFile: "M5_KING_ENGINE.EX5",
+                    downloadUrl: "downloads/M5_KING_ENGINE.EX5",
+                    orderId: orderId,
+                    purchasedAt: new Date().toISOString()
                 }, { merge: true });
 
                 document.getElementById('sync-banner').innerHTML = `
                     <i class="fa-solid fa-circle-check text-emerald-400"></i>
-                    <span class="text-emerald-400">Successfully recorded to Cloud Firestore!</span>
+                    <span class="text-emerald-400">Successfully recorded to purchases subcollection!</span>
                 `;
             } catch (err) {
                 console.error("Firestore write error:", err);
                 document.getElementById('sync-banner').innerHTML = `
                     <i class="fa-solid fa-circle-check text-emerald-400"></i>
-                    <span class="text-zinc-300">File download ready above.</span>
+                    <span class="text-zinc-300">File download ready below.</span>
                 `;
             }
         }

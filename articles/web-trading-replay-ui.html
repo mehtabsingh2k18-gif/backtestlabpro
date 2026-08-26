@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Architecting Web-based Trading Replays: UI State Systems | BacktestLab Pro</title>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-V7SXCF9923"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-V7SXCF9923');
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'], display: ['Space Grotesk', 'sans-serif'] },
+                    colors: { brand: { dark: '#050507', card: '#0c0c0e', accent: '#6366f1', purple: '#a855f7' } }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #050507; color: #d4d4d8; overflow-x: hidden; }
+        .glass-card { background: rgba(12, 12, 14, 0.5); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.06); }
+        .brand-icon-box { width: 38px; height: 38px; background: linear-gradient(135deg, #503bf5, #863bf5); border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .auth-hidden { opacity: 0 !important; pointer-events: none !important; visibility: hidden !important; }
+        .auth-visible { opacity: 1 !important; pointer-events: auto !important; visibility: visible !important; transition: opacity 0.2s ease-in-out; }
+        .article-content p { margin-bottom: 1.5rem; line-height: 1.75; color: #a1a1aa; }
+        .article-content h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; color: #ffffff; margin-top: 2.5rem; margin-bottom: 1rem; font-size: 1.5rem; }
+    </style>
+</head>
+<body class="font-sans antialiased relative">
+
+    <header class="sticky top-0 z-50 w-full border-b border-white/5 bg-brand-dark/70 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full h-20 flex items-center justify-between">
+            <a href="index.html" class="flex items-center gap-3">
+                <div class="brand-icon-box">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                </div>
+                <span class="font-display font-bold text-lg text-white">BacktestLab<span class="text-brand-accent">.pro</span></span>
+            </a>
+            <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-zinc-400">
+                <a href="index.html#features" class="hover:text-white">Features</a>
+                <a href="bot_automation.html" class="hover:text-white">Bot Automation</a>
+                <a href="articles.html" class="text-white">Articles</a>
+            </nav>
+            <div id="desktop-auth-container" class="hidden md:flex items-center gap-4 auth-hidden">
+                <div id="logged-out-actions" class="hidden flex items-center gap-4">
+                    <button onclick="triggerAuthFlow()" class="text-sm font-medium text-zinc-400">Sign In</button>
+                    <button onclick="triggerAuthFlow()" class="text-sm font-medium bg-white text-brand-dark px-4 py-2.5 rounded-xl">Get Free Account</button>
+                </div>
+                <div id="logged-in-actions" class="hidden flex items-center gap-3 relative">
+                    <a href="my-sessions.html" class="text-sm font-medium text-zinc-300 border border-white/10 px-4 py-2.5 rounded-xl glass-card">My Sessions</a>
+                    <button id="profile-menu-trigger-btn" class="h-10 w-10 rounded-xl bg-gradient-to-br from-brand-accent to-brand-purple p-[1px]">
+                        <div class="h-full w-full bg-brand-dark rounded-[11px] flex items-center justify-center text-zinc-300"><i class="fa-solid fa-user text-sm"></i></div>
+                    </button>
+                    <div id="profile-overlay-dialog-box" class="hidden absolute right-0 mt-3 w-64 rounded-2xl border border-white/10 bg-brand-dark/95 p-4 shadow-2xl z-50">
+                        <h5 id="profile-box-name" class="text-sm font-bold text-white truncate">Trader Pro</h5>
+                        <p id="profile-box-email" class="text-xs text-zinc-500 truncate mb-3">sandbox@backtestlabpro.com</p>
+                        <button id="firebase-logout-btn" class="w-full py-2 rounded-xl bg-zinc-900 text-zinc-400 text-xs font-semibold">Sign Out</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto my-12">
+        <div class="space-y-4 mb-8">
+            <div class="flex items-center gap-2 text-xs font-medium text-zinc-500">
+                <a href="articles.html" class="hover:text-white">Articles</a>
+                <i class="fa-solid fa-angle-right text-[10px]"></i>
+                <span class="text-zinc-300">Backtesting Guides</span>
+            </div>
+            <h1 class="font-display font-bold text-3xl sm:text-4xl lg:text-5xl text-white tracking-tight max-w-4xl">
+                Architecting Web-based Trading Replays: UI State Systems
+            </h1>
+            <p class="text-xs text-zinc-400">By M. Kovac &bull; June 2026 &bull; 9 min read</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+            <article class="lg:col-span-8 article-content">
+                <p>
+                    Building interactive, high-frequency historical market charting interfaces running inside web viewports introduces strict rendering and event-handling performance constraints. Syncing real-time market ticket data alongside complex user actions requires robust front-end layout strategies.
+                </p>
+                
+                <h2>1. Engineering Smooth Playback Speed State Machinery</h2>
+                <p>
+                    A main component of manual strategy simulation loops is the execution speed controller system. Managing granular tick feed updates asynchronously without blocking main browser rendering lanes means optimizing animation loops using standard `requestAnimationFrame` loops governed by clean scale logic parameters:
+                </p>
+                <div class="p-4 rounded-xl bg-zinc-950 border border-white/5 font-mono text-xs text-zinc-400 my-4 overflow-x-auto">
+                    // Abstract speed controller simulation tick scaling matrix
+                    function renderReplayStep(timestamp) {
+                        if (isPlaying && timestamp - lastFrameTime >= (1000 / currentSpeedMultiplier)) {
+                            drawNextCandleTick();
+                            lastFrameTime = timestamp;
+                        }
+                        requestAnimationFrame(renderReplayStep);
+                    }
+                </div>
+
+                <h2>2. Implementing High-Performance Interactive Drag Fields</h2>
+                <p>
+                    When rendering custom risk layers like mouse-draggable Stop-Loss ($SL$) or Take-Profit ($TP$) marker bars directly across active canvas layers, standard layout DOM node updates can instantly cause browser frame thrashing. 
+                </p>
+                <p>
+                    Instead of updating raw absolute node heights continuously during dragging tracking interactions, map the raw mouse coordinates onto coordinate calculations inside an isolated interactive container wrapper, pushing localized visual translations exclusively via optimized transform layers.
+                </p>
+
+                <div class="p-6 rounded-2xl bg-gradient-to-br from-brand-accent/20 to-brand-purple/20 border border-brand-accent/30 my-8 text-center">
+                    <h3 class="text-lg font-bold text-white font-display !mt-0">Experience Fluid, Desktop-Grade Simulation Architecture</h3>
+                    <button onclick="triggerAuthFlow()" class="mt-3 bg-white text-brand-dark text-xs font-semibold px-4 py-2 rounded-xl">Open Interactive Workspace</button>
+                </div>
+            </article>
+        </div>
+    </main>
+
+    <footer class="border-t border-white/5 bg-zinc-950/40 py-8 text-center text-xs text-zinc-500">
+        <p>© 2026 BacktestLab Pro. Open-source public good utility architecture.</p>
+    </footer>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAensfI53w49Fd4A7Lz5_K9N1JOxZsW7Kk",
+            authDomain: "backtestlabpro.firebaseapp.com",
+            projectId: "backtestlabpro",
+            storageBucket: "backtestlabpro.firebasestorage.app",
+            messagingSenderId: "560146824734",
+            appId: "1:560146824734:web:5287d0ded3a1024e75780f"
+        };
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        window.firebaseAuthInstance = auth; window.firebaseSignOutAction = signOut;
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                document.getElementById('profile-box-name').textContent = user.displayName || "Anonymous Trader";
+                document.getElementById('profile-box-email').textContent = user.email || "";
+                window.updateAuthViewUI(true);
+            } else {
+                window.updateAuthViewUI(false);
+            }
+        });
+        document.getElementById('firebase-logout-btn').addEventListener('click', () => { signOut(auth); });
+    </script>
+    <script>
+        window.triggerAuthFlow = function() { window.location.href = "login.html"; };
+        window.updateAuthViewUI = function(isLoggedIn) {
+            const container = document.getElementById('desktop-auth-container');
+            document.getElementById('logged-out-actions').classList.toggle('hidden', isLoggedIn);
+            document.getElementById('logged-in-actions').classList.toggle('hidden', !isLoggedIn);
+            if (container) { container.classList.remove('auth-hidden'); container.classList.add('auth-visible'); }
+        };
+        document.getElementById('profile-menu-trigger-btn').addEventListener('click', (e) => {
+            e.stopPropagation(); document.getElementById('profile-overlay-dialog-box').classList.toggle('hidden');
+        });
+    </script>
+</body>
+</html>

@@ -3,10 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bot Development - BacktestLabPro</title>
+    <title>Bot Development - BacktestLab Pro</title>
     
-    <!-- External Icon Modules Integration -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <style>
         /* --- BRAND THEME & RESET --- */
@@ -14,20 +16,20 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
         }
 
         :root {
-            --bg-main: #0b0e11;
-            --bg-card: #181a20;
-            --bg-input: #2b3139;
+            --bg-main: #050507;
+            --bg-card: #0c0c0e;
+            --bg-input: #181a20;
             --text-main: #eaecef;
             --text-muted: #848e9c;
             --accent-blue: #3b66f5;
             --accent-purple: #863bf5;
             --accent-green: #0ecb81;
             --accent-red: #f6465d;
-            --border-color: #2b3139;
+            --border-color: rgba(255, 255, 255, 0.07);
             --max-width: 1200px;
         }
 
@@ -36,12 +38,18 @@
             color: var(--text-main);
             line-height: 1.6;
             overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
         /* --- NAVBAR STRUCTURAL BACKBONE --- */
         .navbar {
-            background-color: #0b0e11;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            background-color: rgba(5, 5, 7, 0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -55,7 +63,7 @@
         .nav-left-brand {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
             text-decoration: none;
             flex-shrink: 0;
         }
@@ -63,22 +71,23 @@
         .brand-icon-box {
             width: 38px;
             height: 38px;
-            background: linear-gradient(135deg, #503bf5, #863bf5);
-            border-radius: 8px;
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
+            box-shadow: 0 4px 14px rgba(99, 102, 241, 0.25);
         }
 
         .brand-text {
-            font-size: 22px;
+            font-size: 20px;
             font-weight: 700;
             color: #ffffff;
             letter-spacing: -0.3px;
         }
 
         .brand-text span {
-            color: #3b66f5;
+            color: #818cf8;
         }
 
         .nav-menu {
@@ -98,64 +107,47 @@
         .nav-menu a {
             color: var(--text-muted);
             text-decoration: none;
-            font-size: 13px;
-            font-weight: 600;
-            line-height: 1.3;
+            font-size: 13.5px;
+            font-weight: 500;
             transition: color 0.15s ease;
-            white-space: pre-line;
         }
 
         .nav-menu a:hover, .nav-menu a.active {
             color: #ffffff;
-        }
-
-        .pricing-container {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .badge-free {
-            background-color: rgba(14, 203, 129, 0.15);
-            color: var(--accent-green);
-            font-size: 10px;
-            font-weight: 700;
-            padding: 2px 6px;
-            border-radius: 4px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            font-weight: 600;
         }
 
         .nav-right-actions {
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: 12px;
         }
 
         .btn-my-sessions {
-            background-color: #0f1217;
-            border: 1px solid #232830;
-            color: #ffffff;
-            padding: 10px 18px;
-            border-radius: 12px;
+            background-color: #0d0d11;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #eaecef;
+            padding: 9px 18px;
+            border-radius: 9999px;
             font-size: 13px;
             font-weight: 600;
             display: flex;
             align-items: center;
             gap: 8px;
             text-decoration: none;
-            transition: background-color 0.2s ease;
+            transition: all 0.2s ease;
         }
 
         .btn-my-sessions:hover {
             background-color: #161a22;
+            color: #ffffff;
         }
 
         .btn-new-session {
-            background: linear-gradient(90deg, #4d5ef7, #8942f7);
+            background: linear-gradient(90deg, #6366f1, #a855f7);
             color: #ffffff;
-            padding: 10px 20px;
-            border-radius: 12px;
+            padding: 9px 20px;
+            border-radius: 9999px;
             font-size: 13px;
             font-weight: 600;
             display: flex;
@@ -163,27 +155,14 @@
             gap: 6px;
             border: none;
             text-decoration: none;
-            transition: opacity 0.2s ease;
-            box-shadow: 0 4px 12px rgba(77, 94, 247, 0.2);
+            transition: opacity 0.2s ease, transform 0.15s ease;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
             cursor: pointer;
         }
 
         .btn-new-session:hover {
             opacity: 0.95;
-        }
-
-        .nav-power-btn {
-            color: var(--text-muted);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            transition: color 0.2s ease;
-            margin-left: 4px;
-            text-decoration: none;
-        }
-
-        .nav-power-btn:hover {
-            color: var(--accent-red);
+            transform: translateY(-1px);
         }
 
         /* --- PREVENT ASYNC AUTH FLASH TIMING RULES --- */
@@ -211,13 +190,13 @@
         }
 
         .profile-menu-trigger-btn {
-            background: linear-gradient(135deg, #503bf5, #863bf5);
+            background: linear-gradient(135deg, #6366f1, #a855f7);
             border: none;
             padding: 1px;
             border-radius: 12px;
             cursor: pointer;
-            width: 38px;
-            height: 38px;
+            width: 36px;
+            height: 36px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -273,7 +252,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--accent-blue);
+            color: #6366f1;
         }
 
         .profile-box-meta {
@@ -323,12 +302,13 @@
         /* --- MOBILE INTERACTIVE COMPONENT LAYER --- */
         .mobile-menu-btn {
             display: none;
-            background: none;
-            border: none;
+            background: #121217;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
             color: var(--text-muted);
-            font-size: 22px;
+            font-size: 18px;
             cursor: pointer;
-            padding: 8px;
+            padding: 7px 11px;
             align-items: center;
             justify-content: center;
         }
@@ -340,8 +320,8 @@
         .mobile-menu {
             display: none;
             background-color: rgba(11, 14, 17, 0.98);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
             border-bottom: 1px solid var(--border-color);
             position: absolute;
             top: 76px;
@@ -350,19 +330,19 @@
             padding: 20px 24px;
             z-index: 999;
             flex-direction: column;
-            gap: 14px;
+            gap: 12px;
             box-shadow: 0 15px 25px rgba(0,0,0,0.5);
-            max-h: calc(100vh - 76px);
+            max-height: calc(100vh - 76px);
             overflow-y: auto;
         }
 
         .mobile-menu a {
             color: var(--text-muted);
             text-decoration: none;
-            font-size: 15px;
-            font-weight: 600;
+            font-size: 14.5px;
+            font-weight: 500;
             padding: 10px 4px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -370,14 +350,15 @@
 
         .mobile-menu a:hover, .mobile-menu a.active {
             color: #ffffff;
+            font-weight: 600;
         }
 
         .mobile-auth-placeholder {
             display: flex;
             flex-direction: column;
-            gap: 12px;
-            margin-top: 10px;
-            padding-top: 10px;
+            gap: 10px;
+            margin-top: 12px;
+            padding-top: 12px;
         }
 
         .mobile-menu.open {
@@ -409,7 +390,7 @@
 
         .section-header p {
             color: var(--text-muted);
-            font-size: 16px;
+            font-size: 15px;
             max-width: 700px;
             margin: 0 auto;
         }
@@ -424,8 +405,8 @@
 
         .btn {
             padding: 14px 28px;
-            border-radius: 8px;
-            font-size: 15px;
+            border-radius: 12px;
+            font-size: 14px;
             font-weight: 600;
             cursor: pointer;
             text-decoration: none;
@@ -434,13 +415,14 @@
         }
 
         .btn-primary {
-            background-color: #3b66f5;
+            background: linear-gradient(90deg, #6366f1, #a855f7);
             color: #ffffff;
             border: none;
+            box-shadow: 0 4px 14px rgba(99, 102, 241, 0.25);
         }
 
         .btn-secondary {
-            background-color: var(--bg-input);
+            background-color: var(--bg-card);
             color: var(--text-main);
             border: 1px solid var(--border-color);
         }
@@ -452,56 +434,41 @@
 
         /* --- HERO INTRO FEATURE SECTION --- */
         .hero-section {
-            background: radial-gradient(circle at top right, rgba(59, 102, 245, 0.08), transparent 40%);
-            padding: 100px 24px;
+            background: radial-gradient(circle at top right, rgba(99, 102, 241, 0.12), transparent 50%);
+            padding: 90px 24px;
             text-align: center;
         }
 
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 9999px;
+            background: rgba(6, 182, 212, 0.1);
+            border: 1px solid rgba(6, 182, 212, 0.2);
+            font-size: 11px;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            color: #06b6d4;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 20px;
+        }
+
         .hero-content h1 {
-            font-size: 48px;
+            font-size: 44px;
             font-weight: 800;
-            line-height: 1.2;
+            line-height: 1.25;
             margin-bottom: 20px;
             letter-spacing: -1px;
         }
 
         .hero-content p {
-            font-size: 18px;
+            font-size: 16px;
             color: var(--text-muted);
             max-width: 760px;
-            margin: 0 auto 40px auto;
-        }
-
-        /* --- DEEP DATA TRUST BOX FRAME --- */
-        .trust-section {
-            background-color: var(--bg-card);
-            border-top: 1px solid var(--border-color);
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .trust-box {
-            background: linear-gradient(135deg, rgba(246, 70, 93, 0.04) 0%, transparent 100%);
-            border: 1px solid rgba(246, 70, 93, 0.15);
-            border-radius: 8px;
-            padding: 40px;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .trust-box h2 {
-            color: var(--accent-red);
-            font-size: 24px;
-            margin-bottom: 20px;
-        }
-
-        .trust-box p {
-            margin-bottom: 16px;
-            color: var(--text-main);
-        }
-        
-        .trust-box p:last-child {
-            margin-bottom: 0;
-            color: var(--text-muted);
+            margin: 0 auto 36px auto;
         }
 
         /* --- MULTI-SPLIT PLATFORM GRID BLOCKS --- */
@@ -513,21 +480,23 @@
         }
 
         .idea-content h2, .compatibility-content h2 {
-            font-size: 32px;
+            font-size: 30px;
             font-weight: 700;
             margin-bottom: 20px;
+            letter-spacing: -0.5px;
         }
 
         .idea-content p, .compatibility-content p {
             color: var(--text-muted);
             margin-bottom: 24px;
+            font-size: 14.5px;
         }
 
         .factor-list, .analyze-list {
             list-style: none;
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 16px;
+            gap: 14px;
             margin-bottom: 24px;
         }
 
@@ -535,13 +504,13 @@
             background-color: var(--bg-card);
             border: 1px solid var(--border-color);
             padding: 14px;
-            border-radius: 6px;
-            font-size: 14px;
+            border-radius: 10px;
+            font-size: 13.5px;
         }
 
         .analyze-list li {
             color: var(--text-main);
-            font-size: 15px;
+            font-size: 14px;
             display: flex;
             align-items: center;
             gap: 8px;
@@ -556,8 +525,8 @@
         .report-widget {
             background-color: var(--bg-card);
             border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 32px;
+            border-radius: 12px;
+            padding: 28px;
         }
 
         .report-header {
@@ -565,34 +534,36 @@
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid var(--border-color);
-            padding-bottom: 16px;
-            margin-bottom: 20px;
+            padding-bottom: 14px;
+            margin-bottom: 18px;
         }
 
         .report-title {
-            font-size: 14px;
+            font-size: 12px;
             text-transform: uppercase;
             letter-spacing: 1px;
             color: var(--text-muted);
+            font-family: 'JetBrains Mono', monospace;
         }
 
         .report-score {
-            font-size: 20px;
+            font-size: 18px;
             color: var(--accent-green);
             font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
         }
 
         .report-metrics {
             display: flex;
             flex-direction: column;
             gap: 12px;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
         }
 
         .report-line {
             display: flex;
             justify-content: space-between;
-            font-size: 14px;
+            font-size: 13.5px;
         }
 
         .report-line span:first-child {
@@ -601,58 +572,60 @@
 
         .report-suitability {
             border-top: 1px solid var(--border-color);
-            padding-top: 16px;
+            padding-top: 14px;
             display: flex;
             justify-content: space-between;
             font-weight: 600;
+            font-size: 14px;
         }
 
         /* --- CUSTOM MATRIX SOLUTION CARDS GRID --- */
         .card-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 24px;
+            gap: 20px;
         }
 
         .card {
             background-color: var(--bg-card);
             border: 1px solid var(--border-color);
-            padding: 32px;
-            border-radius: 8px;
-            transition: transform 0.2s ease, border-color 0.2s ease;
+            padding: 28px;
+            border-radius: 14px;
+            transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
             text-decoration: none;
             display: block;
         }
 
         .card:hover {
-            border-color: var(--accent-blue);
+            border-color: rgba(99, 102, 241, 0.4);
             transform: translateY(-3px);
+            box-shadow: 0 10px 30px -10px rgba(99, 102, 241, 0.2);
         }
 
         .card h3 {
-            font-size: 18px;
-            margin-bottom: 12px;
+            font-size: 17px;
+            margin-bottom: 10px;
             color: var(--text-main);
         }
 
         .card p {
             color: var(--text-muted);
-            font-size: 14px;
+            font-size: 13px;
             line-height: 1.6;
         }
 
         /* --- COMPREHENSIVE SERVICE PLANS PRICING LAYOUT --- */
         .pricing-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
-            gap: 24px;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
         }
 
         .pricing-card {
             background-color: var(--bg-card);
             border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 36px 32px;
+            border-radius: 14px;
+            padding: 30px 26px;
             display: flex;
             flex-direction: column;
             transition: border-color 0.2s ease, transform 0.2s ease;
@@ -660,52 +633,55 @@
         }
 
         .pricing-card:hover {
-            border-color: var(--accent-blue);
-            transform: translateY(-4px);
+            border-color: rgba(99, 102, 241, 0.4);
+            transform: translateY(-3px);
         }
 
         .plan-num {
-            font-size: 11px;
+            font-size: 10px;
+            font-family: 'JetBrains Mono', monospace;
             font-weight: 700;
-            color: var(--accent-blue);
+            color: #818cf8;
             text-transform: uppercase;
             letter-spacing: 1px;
-            margin-bottom: 4px;
+            margin-bottom: 6px;
         }
 
         .pricing-card h3 {
-            font-size: 22px;
+            font-size: 20px;
             font-weight: 700;
-            margin-bottom: 16px;
+            margin-bottom: 14px;
             color: #ffffff;
         }
 
         .plan-price {
-            font-size: 28px;
+            font-size: 26px;
             font-weight: 800;
+            font-family: 'JetBrains Mono', monospace;
             color: var(--accent-green);
-            margin-bottom: 24px;
+            margin-bottom: 20px;
             border-bottom: 1px solid var(--border-color);
-            padding-bottom: 16px;
+            padding-bottom: 14px;
         }
 
         .plan-price span {
-            font-size: 14px;
+            font-size: 13px;
             color: var(--text-muted);
             font-weight: 400;
         }
 
         .plan-details-section {
-            margin-bottom: 20px;
+            margin-bottom: 18px;
         }
 
         .plan-details-title {
-            font-size: 12px;
+            font-size: 11px;
             text-transform: uppercase;
             color: var(--text-muted);
             letter-spacing: 0.5px;
             font-weight: 700;
             margin-bottom: 8px;
+            font-family: 'JetBrains Mono', monospace;
         }
 
         .plan-list {
@@ -716,7 +692,7 @@
         }
 
         .plan-list li {
-            font-size: 14px;
+            font-size: 13px;
             color: var(--text-main);
             display: flex;
             align-items: start;
@@ -726,14 +702,14 @@
 
         .plan-list li::before {
             content: "•";
-            color: var(--accent-blue);
+            color: #818cf8;
             font-weight: bold;
         }
 
         .plan-list.not-included li::before {
             content: "×";
             color: var(--accent-red);
-            font-size: 16px;
+            font-size: 15px;
         }
 
         .plan-delivery {
@@ -741,43 +717,13 @@
             background-color: rgba(255, 255, 255, 0.02);
             border: 1px dashed var(--border-color);
             padding: 12px;
-            border-radius: 6px;
+            border-radius: 8px;
             text-align: center;
-            font-size: 13px;
+            font-size: 12px;
             color: var(--text-muted);
         }
 
         .plan-delivery strong {
-            color: var(--text-main);
-        }
-
-        /* --- FRAMEWORK EXECUTION PROCESS TIMELINE --- */
-        .process-timeline {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 24px;
-            position: relative;
-        }
-
-        .process-step {
-            background-color: var(--bg-card);
-            border: 1px solid var(--border-color);
-            padding: 24px;
-            border-radius: 8px;
-            position: relative;
-        }
-
-        .step-num {
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--accent-blue);
-            text-transform: uppercase;
-            margin-bottom: 8px;
-            display: block;
-        }
-
-        .process-step h3 {
-            font-size: 16px;
             color: var(--text-main);
         }
 
@@ -787,52 +733,188 @@
             margin: 0 auto;
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 14px;
         }
 
         .faq-item {
             background-color: var(--bg-card);
             border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 24px;
+            border-radius: 12px;
+            padding: 22px;
         }
 
         .faq-item h3 {
-            font-size: 16px;
+            font-size: 15px;
             margin-bottom: 8px;
             color: var(--text-main);
         }
 
         .faq-item p {
             color: var(--text-muted);
-            font-size: 14px;
+            font-size: 13.5px;
+            line-height: 1.55;
         }
 
-        /* --- APPLICATION PLATFORM FOOTER CONTROLS --- */
-        .footer {
-            background-color: var(--bg-card);
+        /* --- UNIFIED FOOTER STYLES --- */
+        .site-footer {
+            background-color: #08080a;
             border-top: 1px solid var(--border-color);
-            padding: 32px 40px;
+            padding: 64px 24px 36px 24px;
+            margin-top: 60px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .footer-container {
+            max-width: 1400px;
+            margin: 0 auto;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 14px;
+            flex-direction: column;
+            gap: 40px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 40px;
+        }
+
+        .footer-brand-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            max-width: 380px;
+        }
+
+        .footer-brand-meta p {
             color: var(--text-muted);
+            font-size: 13px;
+            line-height: 1.6;
         }
 
-        .footer-links {
+        .footer-socials {
             display: flex;
-            gap: 24px;
-            list-style: none;
+            align-items: center;
+            gap: 10px;
+            padding-top: 6px;
         }
 
-        .footer-links a {
+        .social-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background: #111116;
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
             color: var(--text-muted);
             text-decoration: none;
+            transition: all 0.2s ease;
         }
 
-        .footer-links a:hover {
-            color: var(--text-main);
+        .social-btn:hover {
+            color: #ffffff;
+            border-color: rgba(255, 255, 255, 0.2);
+            background: #161820;
+        }
+
+        .footer-col {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .footer-col h4 {
+            font-size: 11px;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            color: #ffffff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .footer-col ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .footer-col ul li a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 13px;
+            transition: color 0.15s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .footer-col ul li a:hover {
+            color: #ffffff;
+        }
+
+        .footer-risk-box {
+            background-color: #0c0c0f;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            font-size: 12px;
+            color: #71717a;
+            line-height: 1.6;
+        }
+
+        .risk-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #fbbf24;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .risk-header i {
+            font-size: 13px;
+        }
+
+        .footer-bottom-bar {
+            border-top: 1px solid var(--border-color);
+            padding-top: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #71717a;
+            font-family: 'JetBrains Mono', monospace;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .footer-bottom-bar a {
+            color: inherit;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: color 0.15s ease;
+        }
+
+        .footer-bottom-bar a:hover {
+            color: #ffffff;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #10b981;
+            display: inline-block;
+            margin-right: 6px;
+            box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
         }
 
         /* --- MOBILE RESPONSIVE ADAPTATION STYLES SHEET --- */
@@ -843,11 +925,19 @@
             .nav-menu {
                 gap: 16px;
             }
+            .footer-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 32px;
+            }
+            .footer-brand-meta {
+                grid-column: span 2;
+                max-width: 100%;
+            }
         }
 
         @media (max-width: 900px) {
             .navbar {
-                height: 70px;
+                height: 68px;
             }
             .nav-menu {
                 display: none !important; 
@@ -855,47 +945,69 @@
             .nav-right-actions {
                 display: none; 
             }
+            .mobile-menu-btn {
+                display: flex !important;
+            }
         }
         
-        .mobile-menu-btn {
-            display: flex !important;
-        }
-        .split-layout {
-            grid-template-columns: 1fr;
-            gap: 48px;
-        }
-        .hero-section {
-            padding: 70px 20px;
-        }
-        .hero-content h1 {
-            font-size: 34px;
-        }
-        .factor-list {
-            grid-template-columns: 1fr;
-        }
-        .footer {
-            flex-direction: column;
-            gap: 16px;
-            text-align: center;
-            padding: 32px 20px;
-        }
-        section {
-            padding: 60px 20px;
+        @media (max-width: 768px) {
+            .split-layout {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            .hero-section {
+                padding: 60px 16px;
+            }
+            .hero-content h1 {
+                font-size: 28px;
+                letter-spacing: -0.5px;
+            }
+            .hero-content p {
+                font-size: 14.5px;
+                margin-bottom: 28px;
+            }
+            .factor-list, .analyze-list {
+                grid-template-columns: 1fr;
+            }
+            section {
+                padding: 50px 16px;
+            }
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 28px;
+            }
+            .footer-brand-meta {
+                grid-column: span 1;
+            }
+            .footer-bottom-bar {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
         }
         
         @media (max-width: 480px) {
-            .pricing-grid, .card-grid, .analyze-list {
+            .btn-group {
+                flex-direction: column;
+                width: 100%;
+            }
+            .btn {
+                width: 100%;
+            }
+            .pricing-grid, .card-grid {
                 grid-template-columns: 1fr;
             }
             .report-widget {
                 padding: 20px;
+            }
+            .brand-text {
+                font-size: 18px;
             }
         }
     </style>
 </head>
 <body>
 
-    <!-- NAVBAR INTERACTIVE CONTROL MATRIX -->
     <nav class="navbar">
         <a href="index.html" class="nav-left-brand">
             <div class="brand-icon-box">
@@ -903,35 +1015,32 @@
                     <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
                 </svg>
             </div>
-            <span class="brand-text">BacktestLab<span>.pro</span></span>
+            <span class="brand-text">BacktestLab <span>Pro</span></span>
         </a>
 
-        <!-- Desktop Navigation Actions Matrix -->
         <ul class="nav-menu">
             <li><a href="index.html">Home</a></li>
             <li><a href="algo_store.html">Bot Store</a></li>
-            <li><a href="bot_automation.html" class="active">Bot&#10;Automation</a></li>
+            <li><a href="bot_automation.html" class="active">Bot Automation</a></li>
+            <li><a href="my-products.html">My Products</a></li>
             <li><a href="articles.html">Articles</a></li>
-            <li><a href="index.html#about">About&#10;Us</a></li>
-            <li><a href="index.html#contact">Contact</a></li>
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="contact.html">Contact</a></li>
         </ul>
 
-        <!-- Desktop Authentication Actions Container -->
         <div id="desktop-auth-container" class="nav-right-actions auth-hidden">
-            <div id="logged-out-actions" class="hidden" style="display: flex; align-items: center; gap: 16px;">
+            <div id="logged-out-actions" class="hidden" style="display: flex; align-items: center; gap: 14px;">
                 <button onclick="triggerAuthFlow()" style="background: none; border: none; color: var(--text-muted); font-size: 13px; font-weight: 600; cursor: pointer; transition: color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--text-muted)'">Sign In</button>
-                <button onclick="triggerAuthFlow()" class="btn-new-session" style="padding: 9px 18px;">Get Free Account</button>
+                <button onclick="triggerAuthFlow()" class="btn-new-session" style="padding: 8px 18px;">Get Free Account</button>
             </div>
             
-            <div id="logged-in-actions" class="hidden" style="display: flex; align-items: center; gap: 14px;">
+            <div id="logged-in-actions" class="hidden" style="display: flex; align-items: center; gap: 12px;">
                 <a href="my-sessions.html" class="btn-my-sessions">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
-                    </svg>
+                    <i class="fa-solid fa-folder text-indigo-500" style="color: #818cf8; font-size: 12px;"></i>
                     My Sessions
                 </a>
                 <a href="session.html" class="btn-new-session">
-                    <span style="font-size: 16px; font-weight: bold; margin-right: 2px;">+</span> New Session
+                    <span style="font-size: 15px; font-weight: bold; margin-right: 2px;">+</span> New Session
                 </a>
                 
                 <div class="profile-dropdown-wrapper" id="profile-dropdown-wrapper">
@@ -960,293 +1069,366 @@
             </div>
         </div>
 
-        <!-- Responsive Hamburger Action Key -->
-        <button id="mobile-menu-btn" class="mobile-menu-btn">
+        <button id="mobile-menu-btn" class="mobile-menu-btn" aria-label="Toggle Navigation Menu">
             <i class="fa-solid fa-bars-staggered"></i>
         </button>
 
-        <!-- Responsive Mobile Slideout Container -->
         <div id="mobile-menu" class="mobile-menu">
-            <a href="index.html">Features</a>
-            <a href="index.html">Data Coverage</a>
+            <a href="index.html">Home</a>
+            <a href="algo_store.html">Bot Store</a>
             <a href="bot_automation.html" class="active">Bot Automation</a>
+            <a href="my-products.html">My Products</a>
             <a href="articles.html">Articles</a>
-            <a href="index.html#about">About Us</a>
-            <a href="index.html#contact">Contact</a>
+            <a href="about.html">About Us</a>
+            <a href="contact.html">Contact</a>
             <div id="mobile-auth-placeholder" class="mobile-auth-placeholder auth-hidden"></div>
         </div>
     </nav>
 
-    <!-- HERO SECTION -->
-    <section class="hero-section">
-        <div class="container hero-content">
-            <h1>Turn Proven Trading Strategies<br>Into Automated Systems</h1>
-            <p>Backtesting identifies opportunities. Automation helps execute them consistently. We review your strategy, evaluate automation compatibility, and build custom trading systems designed around your rules.</p>
-            <div class="btn-group">
-                <a href="session.html" class="btn btn-primary">Request Automation Review</a>
-                <a href="index.html" class="btn btn-secondary">Start Backtesting First</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- SERVICES & PRICING PLANS MODULE -->
-    <section id="pricing">
-        <div class="container">
-            <div class="section-header">
-                <h2>Simple & Transparent Pricing</h2>
-                <p>Professional deployment models scaling precisely from strategy analysis up to complete algorithmic operations.</p>
-            </div>
-            <div class="pricing-grid">
-                
-                <!-- SERVICE 1 -->
-                <a href="chat.html" class="pricing-card" data-price="Free">
-                    <span class="plan-num">Service 1</span>
-                    <h3>Automation Review</h3>
-                    <div class="plan-price">Free</div>
-                    
-                    <div class="plan-details-section">
-                        <div class="plan-details-title">Includes</div>
-                        <ul class="plan-list">
-                            <li>Strategy discussion</li>
-                            <li>Feasibility check</li>
-                            <li>Development estimate</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="plan-delivery" id="free-plan-delivery"><strong>Discuss Strategy / Chat Now</strong></div>
-                </a>
-
-                <!-- SERVICE 2 -->
-                <a href="pay_now_Simple Bot Development.html" class="pricing-card" data-price="399">
-                    <span class="plan-num">Service 2</span>
-                    <h3>Simple Bot Development</h3>
-                    <div class="plan-price">$399</div>
-                    
-                    <div class="plan-details-section" style="margin-bottom: 14px;">
-                        <div class="plan-details-title">Examples</div>
-                        <ul class="plan-list" style="color: var(--text-muted); font-size: 13px; margin-bottom: 12px;">
-                            <li>EMA Cross</li>
-                            <li>RSI Strategy</li>
-                            <li>MACD Strategy</li>
-                            <li>Simple TradingView Automation</li>
-                        </ul>
-                    </div>
-
-                    <div class="plan-details-section">
-                        <div class="plan-details-title">Includes</div>
-                        <ul class="plan-list">
-                            <li>Development</li>
-                            <li>Testing</li>
-                            <li>Delivery</li>
-                            <li>30-day bug support</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="plan-delivery">Delivery Time: <strong>3–7 days</strong></div>
-                </a>
-
-                <!-- SERVICE 3 -->
-                <a href="pay_now_Standard Bot Development.html" class="pricing-card" data-price="999">
-                    <span class="plan-num">Service 3</span>
-                    <h3>Standard Bot Development</h3>
-                    <div class="plan-price">$999</div>
-                    
-                    <div class="plan-details-section" style="margin-bottom: 14px;">
-                        <div class="plan-details-title">Examples</div>
-                        <ul class="plan-list" style="color: var(--text-muted); font-size: 13px; margin-bottom: 12px;">
-                            <li>Multiple indicators</li>
-                            <li>Multi-condition entries</li>
-                            <li>Multi-timeframe filters</li>
-                            <li>Advanced risk management</li>
-                        </ul>
-                    </div>
-
-                    <div class="plan-details-section">
-                        <div class="plan-details-title">Includes</div>
-                        <ul class="plan-list">
-                            <li>Development</li>
-                            <li>Testing</li>
-                            <li>Delivery</li>
-                            <li>30-day bug support</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="plan-delivery">Delivery Time: <strong>1–3 weeks</strong></div>
-                </a>
-
-                <!-- SERVICE 4 -->
-                <a href="pay_now_Advance Bot Development.html" class="pricing-card" data-price="1500">
-                    <span class="plan-num">Service 4</span>
-                    <h3>Advanced Custom Automation</h3>
-                    <div class="plan-price">$1500</div>                    
-                    <div class="plan-details-section">
-                        <div class="plan-details-title">Examples</div>
-                        <ul class="plan-list" style="color: var(--text-muted); font-size: 13px;">
-                            <li>ICT / SMC Architecture</li>
-                            <li>Custom indicators</li>
-                            <li>Complex trade management</li>
-                            <li>Multi-market systems</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="plan-delivery" style="margin-top: 24px;">Delivery Time: <strong>2–6 weeks</strong></div>
-                </a>
-
-                <!-- SERVICE 6 -->
-                <a href="" class="pricing-card" data-price="29">
-                    <span class="plan-num">Service 6</span>
-                    <h3>Maintenance Plan</h3>
-                    <div class="plan-price">$29<span>/month</span></div>
-                    
-                    <div class="plan-details-section" style="margin-bottom: 14px;">
-                        <div class="plan-details-title">Includes</div>
-                        <ul class="plan-list">
-                            <li>Bug fixes</li>
-                            <li>Monitoring</li>
-                            <li>Minor updates</li>
-                        </ul>
-                    </div>
-
-                    <div class="plan-details-section">
-                        <div class="plan-details-title" style="color: var(--accent-red);">Not Included</div>
-                        <ul class="plan-list not-included" style="color: var(--text-muted);">
-                            <li>New features</li>
-                            <li>New strategy logic</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="plan-delivery">Delivery Time: <strong>Ongoing Framework</strong></div>
-                </a>
-
-            </div>
-        </div>
-    </section>
-
-    <!-- STRATEGY LIMITATIONS REVIEW PANEL -->
-    <section style="border-top: 1px solid var(--border-color);">
-        <div class="container split-layout">
-            <div class="idea-content">
-                <h2>Not Every Strategy Can Be Automated</h2>
-                <p>A profitable strategy does not automatically mean it can be transformed into a reliable trading bot. Many trading systems depend on parameters that require human discretion:</p>
-                <ul class="factor-list">
-                    <li>Manual chart interpretation</li>
-                    <li>Subjective decision making</li>
-                    <li>Visual pattern recognition</li>
-                    <li>Discretionary trade management</li>
-                </ul>
-                <p>These factors can make automation difficult or impossible. Before development begins, we evaluate whether your strategy is truly suitable for automated execution.</p>
-            </div>
-
-            <!-- AUTOMATION COMPATIBILITY SECTION -->
-            <div class="compatibility-content">
-                <h2>Automation Compatibility Review</h2>
-                <p>Our review process analyzes whether a strategy can realistically be transformed into an automated trading system.</p>
-                
-                <ul class="analyze-list" style="margin-bottom: 32px;">
-                    <li><span>✓</span> Entry Conditions</li>
-                    <li><span>✓</span> Exit Conditions</li>
-                    <li><span>✓</span> Risk Management Rules</li>
-                    <li><span>✓</span> Timeframe Dependencies</li>
-                    <li><span>✓</span> Multi-Timeframe Logic</li>
-                    <li><span>✓</span> Indicator Dependencies</li>
-                    <li><span>✓</span> Execution Complexity</li>
-                    <li><span>✓</span> Signal Consistency</li>
-                </ul>
-
-                <div class="report-widget">
-                    <div class="report-header">
-                        <span class="report-title">Example Report Context</span>
-                        <span class="report-score">87% Compatibility</span>
-                    </div>
-                    <div class="report-metrics">
-                        <div class="report-line"><span>Entry Rules:</span><span style="color:var(--accent-green)">Clear</span></div>
-                        <div class="report-line"><span>Exit Rules:</span><span style="color:var(--accent-green)">Clear</span></div>
-                        <div class="report-line"><span>Risk Logic:</span><span>Suitable</span></div>
-                        <div class="report-line"><span>Execution Complexity:</span><span style="color:var(--text-muted)">Medium</span></div>
-                    </div>
-                    <div class="report-suitability">
-                        <span>Overall Suitability:</span>
-                        <span style="color:var(--accent-green)">High</span>
-                    </div>
+    <main>
+        <section class="hero-section">
+            <div class="container hero-content">
+                <div class="hero-badge">
+                    <i class="fa-solid fa-robot"></i> Algorithmic Bot Engineering
                 </div>
-                
-                <div style="margin-top: 24px;">
-                    <a href="session.html" class="btn btn-primary" style="display:block; width:100%; text-align:center;">Request Compatibility Review</a>
+                <h1>Turn Proven Trading Strategies<br>Into Automated Systems</h1>
+                <p>Backtesting identifies opportunities. Automation helps execute them consistently. We review your strategy, evaluate automation compatibility, and build custom trading systems designed around your rules.</p>
+                <div class="btn-group">
+                    <a href="session.html" class="btn btn-primary">Request Automation Review</a>
+                    <a href="index.html" class="btn btn-secondary">Start Backtesting First</a>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- WHAT WE BUILD -->
-    <section style="background-color: var(--bg-card); border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color);">
-        <div class="container">
-            <div class="section-header">
-                <h2>Custom Trading Automation Solutions</h2>
-                <p>Engineered systems mapped to exact execution protocols.</p>
+        <section id="pricing">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Simple & Transparent Pricing</h2>
+                    <p>Professional deployment models scaling precisely from strategy analysis up to complete algorithmic operations.</p>
+                </div>
+                <div class="pricing-grid">
+                    
+                    <a href="chat.html" class="pricing-card" data-price="Free">
+                        <span class="plan-num">Service 1</span>
+                        <h3>Automation Review</h3>
+                        <div class="plan-price">Free</div>
+                        
+                        <div class="plan-details-section">
+                            <div class="plan-details-title">Includes</div>
+                            <ul class="plan-list">
+                                <li>Strategy discussion</li>
+                                <li>Feasibility check</li>
+                                <li>Development estimate</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="plan-delivery" id="free-plan-delivery"><strong>Discuss Strategy / Chat Now</strong></div>
+                    </a>
+
+                    <a href="pay_now_Simple Bot Development.html" class="pricing-card" data-price="399">
+                        <span class="plan-num">Service 2</span>
+                        <h3>Simple Bot Development</h3>
+                        <div class="plan-price">$399</div>
+                        
+                        <div class="plan-details-section" style="margin-bottom: 14px;">
+                            <div class="plan-details-title">Examples</div>
+                            <ul class="plan-list" style="color: var(--text-muted); font-size: 13px; margin-bottom: 12px;">
+                                <li>EMA Cross</li>
+                                <li>RSI Strategy</li>
+                                <li>MACD Strategy</li>
+                                <li>Simple TradingView Automation</li>
+                            </ul>
+                        </div>
+
+                        <div class="plan-details-section">
+                            <div class="plan-details-title">Includes</div>
+                            <ul class="plan-list">
+                                <li>Development</li>
+                                <li>Testing</li>
+                                <li>Delivery</li>
+                                <li>30-day bug support</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="plan-delivery">Delivery Time: <strong>3–7 days</strong></div>
+                    </a>
+
+                    <a href="pay_now_Standard Bot Development.html" class="pricing-card" data-price="999">
+                        <span class="plan-num">Service 3</span>
+                        <h3>Standard Bot Development</h3>
+                        <div class="plan-price">$999</div>
+                        
+                        <div class="plan-details-section" style="margin-bottom: 14px;">
+                            <div class="plan-details-title">Examples</div>
+                            <ul class="plan-list" style="color: var(--text-muted); font-size: 13px; margin-bottom: 12px;">
+                                <li>Multiple indicators</li>
+                                <li>Multi-condition entries</li>
+                                <li>Multi-timeframe filters</li>
+                                <li>Advanced risk management</li>
+                            </ul>
+                        </div>
+
+                        <div class="plan-details-section">
+                            <div class="plan-details-title">Includes</div>
+                            <ul class="plan-list">
+                                <li>Development</li>
+                                <li>Testing</li>
+                                <li>Delivery</li>
+                                <li>30-day bug support</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="plan-delivery">Delivery Time: <strong>1–3 weeks</strong></div>
+                    </a>
+
+                    <a href="pay_now_Advance Bot Development.html" class="pricing-card" data-price="1500">
+                        <span class="plan-num">Service 4</span>
+                        <h3>Advanced Custom Automation</h3>
+                        <div class="plan-price">$1500</div>                    
+                        <div class="plan-details-section">
+                            <div class="plan-details-title">Examples</div>
+                            <ul class="plan-list" style="color: var(--text-muted); font-size: 13px;">
+                                <li>ICT / SMC Architecture</li>
+                                <li>Custom indicators</li>
+                                <li>Complex trade management</li>
+                                <li>Multi-market systems</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="plan-delivery" style="margin-top: 24px;">Delivery Time: <strong>2–6 weeks</strong></div>
+                    </a>
+
+                    <a href="" class="pricing-card" data-price="29">
+                        <span class="plan-num">Service 6</span>
+                        <h3>Maintenance Plan</h3>
+                        <div class="plan-price">$29<span>/month</span></div>
+                        
+                        <div class="plan-details-section" style="margin-bottom: 14px;">
+                            <div class="plan-details-title">Includes</div>
+                            <ul class="plan-list">
+                                <li>Bug fixes</li>
+                                <li>Monitoring</li>
+                                <li>Minor updates</li>
+                            </ul>
+                        </div>
+
+                        <div class="plan-details-section">
+                            <div class="plan-details-title" style="color: var(--accent-red);">Not Included</div>
+                            <ul class="plan-list not-included" style="color: var(--text-muted);">
+                                <li>New features</li>
+                                <li>New strategy logic</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="plan-delivery">Delivery Time: <strong>Ongoing Framework</strong></div>
+                    </a>
+
+                </div>
             </div>
-            <div class="card-grid">
-                <a href="session.html" class="card">
-                    <h3>TradingView Automation</h3>
-                    <p>Convert TradingView alerts into automated trade execution workflows smoothly.</p>
-                </a>
-                <a href="session.html" class="card">
-                    <h3>MT4 Automation</h3>
-                    <p>Custom Expert Advisors built directly around your mechanical structural rules.</p>
-                </a>
-                <a href="session.html" class="card">
-                    <h3>MT5 Automation</h3>
-                    <p>Advanced automated trading systems with robust multi-asset capabilities for MetaTrader 5.</p>
-                </a>
-                <a href="session.html" class="card">
-                    <h3>Crypto Trading Bots</h3>
-                    <p>24/7 automated execution strategies deployed across supported asset exchanges.</p>
-                </a>
-                <a href="session.html" class="card">
-                    <h3>API-Based Trading Systems</h3>
-                    <p>Custom direct-to-broker integrations and low-latency algorithmic execution engines.</p>
-                </a>
-                <a href="session.html" class="card">
-                    <h3>VPS Deployment</h3>
-                    <p>Reliable cloud infrastructure configuration, hosting optimization, and active logic monitoring.</p>
-                </a>
+        </section>
+
+        <section style="border-top: 1px solid var(--border-color);">
+            <div class="container split-layout">
+                <div class="idea-content">
+                    <h2>Not Every Strategy Can Be Automated</h2>
+                    <p>A profitable strategy does not automatically mean it can be transformed into a reliable trading bot. Many trading systems depend on parameters that require human discretion:</p>
+                    <ul class="factor-list">
+                        <li>Manual chart interpretation</li>
+                        <li>Subjective decision making</li>
+                        <li>Visual pattern recognition</li>
+                        <li>Discretionary trade management</li>
+                    </ul>
+                    <p>These factors can make automation difficult or impossible. Before development begins, we evaluate whether your strategy is truly suitable for automated execution.</p>
+                </div>
+
+                <div class="compatibility-content">
+                    <h2>Automation Compatibility Review</h2>
+                    <p>Our review process analyzes whether a strategy can realistically be transformed into an automated trading system.</p>
+                    
+                    <ul class="analyze-list" style="margin-bottom: 32px;">
+                        <li><span>✓</span> Entry Conditions</li>
+                        <li><span>✓</span> Exit Conditions</li>
+                        <li><span>✓</span> Risk Management Rules</li>
+                        <li><span>✓</span> Timeframe Dependencies</li>
+                        <li><span>✓</span> Multi-Timeframe Logic</li>
+                        <li><span>✓</span> Indicator Dependencies</li>
+                        <li><span>✓</span> Execution Complexity</li>
+                        <li><span>✓</span> Signal Consistency</li>
+                    </ul>
+
+                    <div class="report-widget">
+                        <div class="report-header">
+                            <span class="report-title">Example Report Context</span>
+                            <span class="report-score">87% Compatibility</span>
+                        </div>
+                        <div class="report-metrics">
+                            <div class="report-line"><span>Entry Rules:</span><span style="color:var(--accent-green)">Clear</span></div>
+                            <div class="report-line"><span>Exit Rules:</span><span style="color:var(--accent-green)">Clear</span></div>
+                            <div class="report-line"><span>Risk Logic:</span><span>Suitable</span></div>
+                            <div class="report-line"><span>Execution Complexity:</span><span style="color:var(--text-muted)">Medium</span></div>
+                        </div>
+                        <div class="report-suitability">
+                            <span>Overall Suitability:</span>
+                            <span style="color:var(--accent-green)">High</span>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 24px;">
+                        <a href="session.html" class="btn btn-primary" style="display:block; width:100%; text-align:center;">Request Compatibility Review</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section style="background-color: var(--bg-card); border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color);">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Custom Trading Automation Solutions</h2>
+                    <p>Engineered systems mapped to exact execution protocols.</p>
+                </div>
+                <div class="card-grid">
+                    <a href="session.html" class="card">
+                        <h3>TradingView Automation</h3>
+                        <p>Convert TradingView alerts into automated trade execution workflows smoothly.</p>
+                    </a>
+                    <a href="session.html" class="card">
+                        <h3>MT4 Automation</h3>
+                        <p>Custom Expert Advisors built directly around your mechanical structural rules.</p>
+                    </a>
+                    <a href="session.html" class="card">
+                        <h3>MT5 Automation</h3>
+                        <p>Advanced automated trading systems with robust multi-asset capabilities for MetaTrader 5.</p>
+                    </a>
+                    <a href="session.html" class="card">
+                        <h3>Crypto Trading Bots</h3>
+                        <p>24/7 automated execution strategies deployed across supported asset exchanges.</p>
+                    </a>
+                    <a href="session.html" class="card">
+                        <h3>API-Based Trading Systems</h3>
+                        <p>Custom direct-to-broker integrations and low-latency algorithmic execution engines.</p>
+                    </a>
+                    <a href="session.html" class="card">
+                        <h3>VPS Deployment</h3>
+                        <p>Reliable cloud infrastructure configuration, hosting optimization, and active logic monitoring.</p>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="container">
+                <div class="section-header">
+                    <h2>Frequently Asked Questions</h2>
+                </div>
+                <div class="faq-layout">
+                    <div class="faq-item">
+                        <h3>Do I need to use Backtest Lab Pro first?</h3>
+                        <p>No, but strategies that have already been tested and documented are generally easier to review.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h3>Can every profitable strategy be automated?</h3>
+                        <p>No. Some strategies depend heavily on manual analysis and may require redesign before automation becomes practical.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h3>Do you sell ready-made bots?</h3>
+                        <p>No. We focus on custom automation built around each trader's specific requirements.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-container">
+            <div class="footer-grid">
+                <div class="footer-brand-meta">
+                    <a href="index.html" class="nav-left-brand">
+                        <div class="brand-icon-box">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                            </svg>
+                        </div>
+                        <span class="brand-text">BacktestLab <span>Pro</span></span>
+                    </a>
+                    <p>
+                        Institutional-grade strategy backtesting platform and trading bot development framework. Built to eliminate paywalls, automate strategy validation, and bridge manual setups to algorithmic code.
+                    </p>
+                    <div class="footer-socials">
+                        <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="social-btn" aria-label="GitHub">
+                            <i class="fa-brands fa-github"></i>
+                        </a>
+                        <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" class="social-btn" aria-label="Twitter">
+                            <i class="fa-brands fa-x-twitter"></i>
+                        </a>
+                        <a href="https://discord.com" target="_blank" rel="noopener noreferrer" class="social-btn" aria-label="Discord">
+                            <i class="fa-brands fa-discord"></i>
+                        </a>
+                        <a href="contact.html" class="social-btn" aria-label="Contact Email">
+                            <i class="fa-solid fa-envelope"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Platform</h4>
+                    <ul>
+                        <li><a href="index.html#features">Platform Features</a></li>
+                        <li><a href="session.html">Start Backtest Session</a></li>
+                        <li><a href="algo_store.html">Algo Bot Store</a></li>
+                        <li><a href="bot_automation.html">Bot Automation Compiler</a></li>
+                        <li><a href="historical_data.html">Historical Feeds Pool</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="articles.html">Quant Articles &amp; Guides</a></li>
+                        <li><a href="about.html">About Us &amp; Mission</a></li>
+                        <li><a href="contact.html">Contact Support</a></li>
+                        <li><a href="reviews.html"><i class="fa-solid fa-star" style="color: #fbbf24; font-size: 11px;"></i> User Reviews</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Legal &amp; Risk</h4>
+                    <ul>
+                        <li><a href="privacy.html">Privacy Policy</a></li>
+                        <li><a href="terms.html">Terms of Service</a></li>
+                        <li><a href="risk.html">Financial Risk Disclaimer</a></li>
+                        <li><a href="disclosure.html">Bot Development Disclosure</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-risk-box">
+                <div class="risk-header">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    <span>Financial &amp; Automation Risk Disclaimer</span>
+                </div>
+                <p>
+                    <strong style="color: #e4e4e7;">BacktestLab Pro</strong> provides analytical simulation software, historical market datasets, and automated script translation services for educational and quantitative research purposes only. Simulated past backtest performance is not indicative of future market results.
+                </p>
+                <p>
+                    We do not sell "guaranteed profit" algorithms or financial advice. Trading foreign exchange (Forex), cryptocurrencies, and equities carries substantial financial risk and is not suitable for every investor. Any trading script or bot executed on live accounts is used entirely at your own risk.
+                </p>
+            </div>
+
+            <div class="footer-bottom-bar">
+                <div>
+                    <span class="status-dot"></span>
+                    <span>&copy; 2026 BacktestLab Pro. All rights reserved.</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 20px;">
+                    <span>Engine Build: v1.04-Public</span>
+                    <a href="#">
+                        <i class="fa-solid fa-arrow-up" style="font-size: 10px;"></i> Back to Top
+                    </a>
+                </div>
             </div>
         </div>
-    </section>
-
-    <!-- FAQ SECTION -->
-    <section>
-        <div class="container">
-            <div class="section-header">
-                <h2>Frequently Asked Questions</h2>
-            </div>
-            <div class="faq-layout">
-                <div class="faq-item">
-                    <h3>Do I need to use Backtest Lab Pro first?</h3>
-                    <p>No, but strategies that have already been tested and documented are generally easier to review.</p>
-                </div>
-                <div class="faq-item">
-                    <h3>Can every profitable strategy be automated?</h3>
-                    <p>No. Some strategies depend heavily on manual analysis and may require redesign before automation becomes practical.</p>
-                </div>
-                <div class="faq-item">
-                    <h3>Do you sell ready-made bots?</h3>
-                    <p>No. We focus on custom automation built around each trader's specific requirements.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- FOOTER -->
-    <footer class="footer">
-        <div>&copy; 2026 backtestlabpro.com. All rights reserved.</div>
-        <ul class="footer-links">
-            <li><a href="chatnowpage">Terms of Service</a></li>
-            <li><a href="chatnowpage">Privacy Policy</a></li>
-            <li><a href="chatnowpage">Contact</a></li>
-        </ul>
     </footer>
 
-    <!-- FIREBASE ARCHITECTURE CORE LOGIC SCRIPTS MODULE -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
@@ -1288,19 +1470,15 @@
 
                     if (userDocSnap.exists()) {
                         const userData = userDocSnap.data();
-                        const amountPaid = userData.amountPaid; // Reads field e.g., "1500"[cite: 1]
+                        const amountPaid = userData.amountPaid;
 
                         if (amountPaid) {
-                            // Locate specific card by data-price matching amountPaid value[cite: 1]
                             const targetCard = document.querySelector(`.pricing-card[data-price="${amountPaid}"]`);
                             if (targetCard) {
-                                
-                                // Check if user has items inside subcollection "bot_file_lock"[cite: 1]
                                 const lockCollectionRef = collection(db, "users", user.uid, "bot_file_lock");
                                 const lockSnapshot = await getDocs(lockCollectionRef);
                                 
                                 if (!lockSnapshot.empty) {
-                                    // IF SYSTEM IS LOCKED: block routing and trigger intercepting alert notice
                                     targetCard.href = "#";
                                     targetCard.addEventListener('click', (e) => {
                                         e.preventDefault();
@@ -1312,7 +1490,6 @@
                                         deliveryElement.innerHTML = `<strong style="color: var(--accent-purple);">Under Process / Locked</strong>`;
                                     }
                                 } else {
-                                    // IF SYSTEM IS OPEN: Update the card's href so it redirects premium users to premium_chat.html[cite: 1]
                                     targetCard.href = "premium_chat.html";
 
                                     const deliveryElement = targetCard.querySelector('.plan-delivery');
@@ -1329,7 +1506,6 @@
 
             } else {
                 window.updateAuthViewUI(false);
-                // Reset to baseline state if logged out
                 const freeDelivery = document.getElementById('free-plan-delivery');
                 if (freeDelivery) freeDelivery.innerHTML = `<strong>Discuss Strategy / Chat Now</strong>`;
             }
@@ -1340,14 +1516,13 @@
             signOut(auth).then(() => {
                 document.getElementById('profile-overlay-dialog-box').classList.add('hidden');
                 alert('You have successfully signed out of your account session.');
-                window.location.reload(); // Reload to clean the dynamically checked plans UI state safely
+                window.location.reload();
             }).catch((error) => {
                 console.error('Sign out execution exception: ', error);
             });
         });
     </script>
 
-    <!-- LOCAL INTERACTIVE ACTIONS SCRIPT CORE -->
     <script>
         window.addEventListener('DOMContentLoaded', () => {
             setupMobileNavigationLogic();
@@ -1357,6 +1532,8 @@
         function setupMobileNavigationLogic() {
             const menuBtn = document.getElementById('mobile-menu-btn');
             const mobileMenu = document.getElementById('mobile-menu');
+
+            if (!menuBtn || !mobileMenu) return;
 
             menuBtn.addEventListener('click', () => {
                 mobileMenu.classList.toggle('open');
@@ -1397,8 +1574,8 @@
                 
                 if (mobileAuthBox) {
                     mobileAuthBox.innerHTML = `
-                        <a href="my-sessions.html">My Sessions <i class="fa-solid fa-folder-open" style="color:var(--accent-blue)"></i></a>
-                        <a href="session.html" style="background:linear-gradient(90deg, #4d5ef7, #8942f7); color:#fff; border-radius:8px; justify-content:center; gap:6px;">+ New Session</a>
+                        <a href="my-sessions.html">My Sessions <i class="fa-solid fa-folder-open" style="color:#818cf8"></i></a>
+                        <a href="session.html" style="background:linear-gradient(90deg, #6366f1, #a855f7); color:#fff; border-radius:8px; justify-content:center; gap:6px;">+ New Session</a>
                         <button onclick="window.firebaseSignOutAction(window.firebaseAuthInstance)" class="btn-logout" style="margin-top:4px;">Sign Out</button>
                     `;
                 }
@@ -1409,12 +1586,11 @@
                 if (mobileAuthBox) {
                     mobileAuthBox.innerHTML = `
                         <button onclick="triggerAuthFlow()" style="background:none; border:1px solid var(--border-color); color:var(--text-main); padding:12px; border-radius:8px; font-weight:600; cursor:pointer;">Sign In</button>
-                        <button onclick="triggerAuthFlow()" style="background:linear-gradient(90deg, #4d5ef7, #8942f7); border:none; color:#fff; padding:12px; border-radius:8px; font-weight:600; cursor:pointer;">Get Free Account</button>
+                        <button onclick="triggerAuthFlow()" style="background:linear-gradient(90deg, #6366f1, #a855f7); border:none; color:#fff; padding:12px; border-radius:8px; font-weight:600; cursor:pointer;">Get Free Account</button>
                     `;
                 }
             }
 
-            // Expose updated structural frames instantly to clean layout flashes
             if (desktopContainer) {
                 desktopContainer.classList.remove('auth-hidden');
                 desktopContainer.classList.add('auth-visible');

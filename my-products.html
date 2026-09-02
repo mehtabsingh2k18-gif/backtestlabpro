@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Products & Software | BacktestLab Pro</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
@@ -22,10 +22,10 @@
                     },
                     colors: {
                         brand: {
-                            dark: '#070709',
-                            card: '#0d0d11',
+                            dark: '#050507',
+                            card: '#0c0c0e',
                             subtle: '#14141a',
-                            border: '#1f2029',
+                            border: 'rgba(255, 255, 255, 0.07)',
                             accent: '#06b6d4',
                             success: '#10b981',
                             bear: '#ef4444',
@@ -39,12 +39,12 @@
 
     <style>
         body {
-            background-color: #070709;
+            background-color: #050507;
             color: #e4e4e7;
             overflow-x: hidden;
         }
         .product-card {
-            background: #0d0d11;
+            background: #0c0c0e;
             border: 1px solid rgba(255, 255, 255, 0.07);
             transition: all 0.25s ease;
         }
@@ -57,119 +57,197 @@
 <body class="antialiased font-sans min-h-screen flex flex-col justify-between">
 
     <!-- Top Navigation Header -->
-    <header class="w-full border-b border-white/5 bg-[#070709]/90 backdrop-blur-md sticky top-0 z-50 h-20">
-        <div class="max-w-7xl mx-auto px-6 h-full flex items-center justify-between">
-            <a href="index.html" class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
+    <header class="w-full border-b border-white/5 bg-[#050507]/90 backdrop-blur-md sticky top-0 z-50">
+        <div class="max-w-[1600px] mx-auto px-4 sm:px-6 h-16 sm:h-20 flex items-center justify-between">
+            <a href="index.html" class="flex items-center gap-2.5 sm:gap-3 group">
+                <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20 flex-shrink-0">
                     <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M3 12h3l3-9 4 18 3-13 3 4h3"/>
                     </svg>
                 </div>
-                <span class="text-xl font-bold tracking-tight text-white">
-                    BacktestLab<span class="text-indigo-400">.pro</span>
+                <span class="text-lg sm:text-xl font-bold tracking-tight text-white">
+                    BacktestLab <span class="text-indigo-400">Pro</span>
                 </span>
             </a>
 
-            <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-zinc-400">
+            <!-- Desktop Navigation Links -->
+            <nav class="hidden lg:flex items-center gap-7 xl:gap-8 text-sm font-medium text-zinc-400">
+                <a href="index.html" class="hover:text-white transition-colors">Home</a>
                 <a href="algo_store.html" class="hover:text-white transition-colors">Bot Store</a>
                 <a href="bot_automation.html" class="hover:text-white transition-colors">Bot Automation</a>
-                <a href="my-products.html" class="text-white font-semibold">My Products</a>
+                <a href="my-products.html" class="text-white font-semibold transition-colors">My Products</a>
+                <a href="articles.html" class="hover:text-white transition-colors">Articles</a>
+                <a href="about.html" class="hover:text-white transition-colors">About Us</a>
+                <a href="contact.html" class="hover:text-white transition-colors">Contact</a>
             </nav>
 
-            <div class="flex items-center gap-3">
-                <a href="algo_store.html" class="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-mono text-zinc-300 hover:text-white transition-all">
-                    + Browse Store
+            <!-- Actions & Mobile Toggle -->
+            <div class="flex items-center gap-2 sm:gap-3">
+                <a href="algo_store.html" class="flex items-center gap-2 px-3 sm:px-4 py-2 rounded-full bg-[#0d0d11] border border-white/10 text-xs sm:text-sm font-medium text-zinc-200 hover:bg-zinc-900 hover:text-white transition-all">
+                    <i class="fa-solid fa-store text-cyan-400 text-xs"></i>
+                    <span>Bot Store</span>
                 </a>
+                <a href="session.html" class="flex items-center gap-1.5 px-3 sm:px-5 py-1.5 sm:py-2.5 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 text-xs sm:text-sm font-semibold text-white hover:opacity-90 active:scale-95 transition-all shadow-md shadow-indigo-500/10">
+                    <i class="fa-solid fa-plus text-[10px] sm:text-xs"></i>
+                    <span>New Session</span>
+                </a>
+
+                <!-- Mobile Hamburger Button -->
+                <button id="mobileMenuBtn" type="button" aria-label="Toggle navigation menu" class="lg:hidden w-9 h-9 flex items-center justify-center rounded-lg bg-zinc-900 border border-white/10 text-zinc-300 hover:text-white focus:outline-none">
+                    <i id="menuIcon" class="fa-solid fa-bars text-sm"></i>
+                </button>
             </div>
+        </div>
+
+        <!-- Mobile Dropdown Navigation -->
+        <div id="mobileMenu" class="hidden lg:hidden border-t border-white/5 bg-[#09090d] px-4 py-4 space-y-3">
+            <a href="index.html" class="block text-sm font-medium text-zinc-300 hover:text-white py-1">Home</a>
+            <a href="algo_store.html" class="block text-sm font-medium text-zinc-300 hover:text-white py-1">Bot Store</a>
+            <a href="bot_automation.html" class="block text-sm font-medium text-zinc-300 hover:text-white py-1">Bot Automation</a>
+            <a href="my-products.html" class="block text-sm font-semibold text-indigo-400 py-1">My Products</a>
+            <a href="articles.html" class="block text-sm font-medium text-zinc-300 hover:text-white py-1">Articles</a>
+            <a href="about.html" class="block text-sm font-medium text-zinc-300 hover:text-white py-1">About Us</a>
+            <a href="contact.html" class="block text-sm font-medium text-zinc-300 hover:text-white py-1">Contact</a>
         </div>
     </header>
 
     <!-- Main Content Area -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex-1 w-full space-y-8">
-        
-        <!-- Header Section -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 flex-1 w-full space-y-8">
         <div class="border-b border-white/5 pb-6">
             <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-[10px] font-mono font-bold text-brand-accent uppercase tracking-wider mb-2">
                 <i class="fa-solid fa-layer-group"></i> Verified Vault
             </div>
-            <h1 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">My Active Software & Bot Licenses</h1>
-            <p class="text-zinc-400 text-xs sm:text-sm mt-1">Download algorithmic trading bots and setup archives mapped to your verified account.</p>
+            <h1 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">My Active Software &amp; Bot Licenses</h1>
+            <p class="text-zinc-400 text-xs sm:text-sm mt-1">Download complete software packages including source binaries, set files, and installation guides.</p>
         </div>
 
-        <!-- Products Grid / Dynamic Container -->
         <div id="products-grid" class="space-y-4">
-            <!-- Loading State -->
             <div id="loading-spinner" class="py-16 text-center space-y-3">
                 <i class="fa-solid fa-circle-notch fa-spin text-2xl text-brand-accent"></i>
-                <p class="text-xs font-mono text-zinc-500">Checking active software permissions in Firestore...</p>
+                <p class="text-xs font-mono text-zinc-500">Scanning repository vault and database records...</p>
             </div>
         </div>
-
     </main>
 
-    <!-- Footer -->
-    <footer class="border-t border-white/5 bg-zinc-950/60 py-6 text-zinc-500 text-xs font-mono">
-        <div class="max-w-7xl mx-auto px-6 text-center">
-            <span>&copy; 2026 BacktestLab Pro. Perpetual License Architecture.</span>
+    <!-- Site Footer -->
+    <footer class="w-full border-t border-white/5 bg-[#08080a] mt-20 pt-16 pb-12 relative z-10">
+        <div class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+            
+            <!-- Top Column Section -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 lg:gap-8">
+                <!-- Branding Info -->
+                <div class="lg:col-span-2 space-y-5">
+                    <a href="index.html" class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20 flex-shrink-0">
+                            <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M3 12h3l3-9 4 18 3-13 3 4h3"/>
+                            </svg>
+                        </div>
+                        <span class="text-xl font-bold tracking-tight text-white">
+                            BacktestLab <span class="text-indigo-400">Pro</span>
+                        </span>
+                    </a>
+                    <p class="text-zinc-400 text-sm leading-relaxed max-w-sm">
+                        Institutional-grade strategy backtesting platform and trading bot development framework. Built to eliminate paywalls, automate strategy validation, and bridge manual setups to algorithmic code.
+                    </p>
+                    <div class="flex items-center gap-3 pt-2">
+                        <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="w-9 h-9 rounded-lg bg-zinc-900 border border-white/5 flex items-center justify-center text-zinc-400 hover:text-white hover:border-white/20 transition-all">
+                            <i class="fa-brands fa-github text-sm"></i>
+                        </a>
+                        <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" class="w-9 h-9 rounded-lg bg-zinc-900 border border-white/5 flex items-center justify-center text-zinc-400 hover:text-white hover:border-white/20 transition-all">
+                            <i class="fa-brands fa-x-twitter text-sm"></i>
+                        </a>
+                        <a href="https://discord.com" target="_blank" rel="noopener noreferrer" class="w-9 h-9 rounded-lg bg-zinc-900 border border-white/5 flex items-center justify-center text-zinc-400 hover:text-white hover:border-white/20 transition-all">
+                            <i class="fa-brands fa-discord text-sm"></i>
+                        </a>
+                        <a href="contact.html" class="w-9 h-9 rounded-lg bg-zinc-900 border border-white/5 flex items-center justify-center text-zinc-400 hover:text-white hover:border-white/20 transition-all">
+                            <i class="fa-solid fa-envelope text-sm"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Column: Platform -->
+                <div class="space-y-4">
+                    <h3 class="text-xs font-mono font-bold text-white uppercase tracking-wider">Platform</h3>
+                    <ul class="space-y-2.5 text-sm text-zinc-400">
+                        <li><a href="index.html#features" class="hover:text-white transition-colors">Platform Features</a></li>
+                        <li><a href="session.html" class="hover:text-white transition-colors">Start Backtest Session</a></li>
+                        <li><a href="algo_store.html" class="hover:text-white transition-colors">Algo Bot Store</a></li>
+                        <li><a href="bot_automation.html" class="hover:text-white transition-colors">Bot Automation Compiler</a></li>
+                        <li><a href="historical_data.html" class="hover:text-white transition-colors">Historical Feeds Pool</a></li>
+                    </ul>
+                </div>
+
+                <!-- Column: Resources -->
+                <div class="space-y-4">
+                    <h3 class="text-xs font-mono font-bold text-white uppercase tracking-wider">Resources</h3>
+                    <ul class="space-y-2.5 text-sm text-zinc-400">
+                        <li><a href="articles.html" class="hover:text-white transition-colors">Quant Articles &amp; Guides</a></li>
+                        <li><a href="about.html" class="hover:text-white transition-colors">About Us &amp; Mission</a></li>
+                        <li><a href="contact.html" class="hover:text-white transition-colors">Contact Support</a></li>
+                        <li><a href="reviews.html" class="hover:text-white transition-colors flex items-center gap-1.5"><i class="fa-solid fa-star text-amber-400 text-xs"></i> User Reviews</a></li>
+                    </ul>
+                </div>
+
+                <!-- Column: Legal & Risk -->
+                <div class="space-y-4">
+                    <h3 class="text-xs font-mono font-bold text-white uppercase tracking-wider">Legal &amp; Risk</h3>
+                    <ul class="space-y-2.5 text-sm text-zinc-400">
+                        <li><a href="privacy.html" class="hover:text-white transition-colors">Privacy Policy</a></li>
+                        <li><a href="terms.html" class="hover:text-white transition-colors">Terms of Service</a></li>
+                        <li><a href="risk.html" class="hover:text-white transition-colors">Financial Risk Disclaimer</a></li>
+                        <li><a href="disclosure.html" class="hover:text-white transition-colors">Bot Development Disclosure</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Risk Banner Box -->
+            <div class="p-4 sm:p-6 rounded-2xl bg-[#0c0c0f] border border-white/5 space-y-2.5 text-xs text-zinc-500 leading-relaxed">
+                <div class="flex items-center gap-2 text-amber-400 font-semibold text-xs">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    <span>Financial &amp; Automation Risk Disclaimer</span>
+                </div>
+                <p>
+                    <strong class="text-zinc-300">BacktestLab Pro</strong> provides analytical simulation software, historical market datasets, and automated script translation services for educational and quantitative research purposes only. Simulated past backtest performance is not indicative of future market results.
+                </p>
+                <p>
+                    We do not sell "guaranteed profit" algorithms or financial advice. Trading foreign exchange (Forex), cryptocurrencies, and equities carries substantial financial risk and is not suitable for every investor. Any trading script or bot executed on live accounts is used entirely at your own risk.
+                </p>
+            </div>
+
+            <!-- Bottom Sub-Footer -->
+            <div class="pt-6 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-zinc-500 font-mono">
+                <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 inline-block animate-pulse"></span>
+                    <span>&copy; 2026 BacktestLab Pro. All rights reserved.</span>
+                </div>
+                <div class="flex items-center gap-6">
+                    <span>Engine Build: v1.04-Public</span>
+                    <a href="#" class="hover:text-white flex items-center gap-1 transition-colors">
+                        <i class="fa-solid fa-arrow-up text-[10px]"></i> Back to Top
+                    </a>
+                </div>
+            </div>
+
         </div>
     </footer>
 
-    <!-- Firebase SDK Logic -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    <!-- Mobile Drawer Script -->
+    <script>
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const menuIcon = document.getElementById('menuIcon');
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyAensfI53w49Fd4A7Lz5_K9N1JOxZsW7Kk",
-            authDomain: "backtestlabpro.firebaseapp.com",
-            projectId: "backtestlabpro",
-            storageBucket: "backtestlabpro.firebasestorage.app",
-            messagingSenderId: "560146824734",
-            appId: "1:560146824734:web:5287d0ded3a1024e75780f"
-        };
+        if (mobileMenuBtn && mobileMenu && menuIcon) {
+            mobileMenuBtn.addEventListener('click', () => {
+                const isHidden = mobileMenu.classList.toggle('hidden');
+                menuIcon.className = isHidden ? 'fa-solid fa-bars text-sm' : 'fa-solid fa-xmark text-sm';
+            });
+        }
+    </script>
 
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const auth = getAuth(app);
-
-        // Exact raw GitHub file mappings with accurate names and encoded spaces
-        const RAW_BASE = "https://raw.githubusercontent.com/mehtabsingh2k18-gif/backtestlabpro/main/downloads";
-
-        const FILE_CATALOG = {
-            "devil_gold_v4_2": {
-                name: "Devil Gold v4.2 Software",
-                file: "Devil Gold v4.2.mq5",
-                url: `${RAW_BASE}/Devil%20Gold%20v4.2/Devil%20Gold%20v4.2.mq5`,
-                category: "Flagship Bot"
-            },
-            "m5_king_engine": {
-                name: "M5 King Engine Software",
-                file: "M5 King Engine.mq5",
-                url: `${RAW_BASE}/M5%20King%20Engine/M5%20King%20Engine.mq5`,
-                category: "High Frequency Bot"
-            },
-            "asian_breakout_v2_1": {
-                name: "Asian Breakout v2.1 Software",
-                file: "Asian_Session_Breakout_EA.mq5",
-                url: `${RAW_BASE}/Asian_Session_Breakout_EA/Asian_Session_Breakout_EA.mq5`,
-                category: "Session Model"
-            },
-            "pulse_telegram_bridge": {
-                name: "Pulse Telegram Bridge Software",
-                file: "TELEGRAM_BRIDGE_SETUP.ZIP",
-                url: `${RAW_BASE}/TELEGRAM_BRIDGE_SETUP.ZIP`,
-                category: "Signal Bridge"
-            },
-            "nexus_discord_bridge": {
-                name: "Nexus Discord Bridge Software",
-                file: "DISCORD_BRIDGE_SETUP.ZIP",
-                url: `${RAW_BASE}/DISCORD_BRIDGE_SETUP.ZIP`,
-                category: "Signal Bridge"
-            }
-        };
-
-        // Triggers browser download by fetching blob data
+    <!-- Direct Download Blob Function -->
+    <script>
         async function triggerDirectDownload(fileUrl, fileName) {
             try {
                 const response = await fetch(fileUrl);
@@ -187,16 +265,107 @@
                 window.URL.revokeObjectURL(objectUrl);
                 document.body.removeChild(a);
             } catch (err) {
-                console.error("Direct fetch download failed, falling back to direct open:", err);
+                console.warn("Direct blob download failed, opening direct link:", err);
                 window.open(fileUrl, '_blank');
             }
         }
+    </script>
 
-        window.triggerDirectDownload = triggerDirectDownload;
+    <!-- Firebase & GitHub Dynamic Vault Sync Logic -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, doc, getDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAensfI53w49Fd4A7Lz5_K9N1JOxZsW7Kk",
+            authDomain: "backtestlabpro.firebaseapp.com",
+            projectId: "backtestlabpro",
+            storageBucket: "backtestlabpro.firebasestorage.app",
+            messagingSenderId: "560146824734",
+            appId: "1:560146824734:web:5287d0ded3a1024e75780f"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        const GITHUB_USERNAME = "mehtabsingh2k18-gif";
+        const GITHUB_REPO = "backtestlabpro";
+        const RAW_BASE = `https://raw.githubusercontent.com/${GITHUB_USERNAME}/${GITHUB_REPO}/main/downloads`;
+
+        const READY_MADE_BOTS = {
+            "asian_session_breakout_ea.zip": {
+                name: "Asian Breakout v2.1 Package",
+                fileName: "Asian_Session_Breakout_EA.zip",
+                url: `${RAW_BASE}/Asian_Session_Breakout_EA/Asian_Session_Breakout_EA.zip`,
+                category: "Session Model"
+            },
+            "asian_session_breakout_ea.mq5": {
+                name: "Asian Breakout v2.1 Package",
+                fileName: "Asian_Session_Breakout_EA.zip",
+                url: `${RAW_BASE}/Asian_Session_Breakout_EA/Asian_Session_Breakout_EA.zip`,
+                category: "Session Model"
+            },
+            "asian_breakout_v2_1": {
+                name: "Asian Breakout v2.1 Package",
+                fileName: "Asian_Session_Breakout_EA.zip",
+                url: `${RAW_BASE}/Asian_Session_Breakout_EA/Asian_Session_Breakout_EA.zip`,
+                category: "Session Model"
+            },
+            "devil gold v4.2.zip": {
+                name: "Devil Gold v4.2 Package",
+                fileName: "Devil Gold v4.2.zip",
+                url: `${RAW_BASE}/Devil%20Gold%20v4.2/Devil%20Gold%20v4.2.zip`,
+                category: "Flagship Bot"
+            },
+            "devil gold v4.2.mq5": {
+                name: "Devil Gold v4.2 Package",
+                fileName: "Devil Gold v4.2.zip",
+                url: `${RAW_BASE}/Devil%20Gold%20v4.2/Devil%20Gold%20v4.2.zip`,
+                category: "Flagship Bot"
+            },
+            "devil_gold_v4_2": {
+                name: "Devil Gold v4.2 Package",
+                fileName: "Devil Gold v4.2.zip",
+                url: `${RAW_BASE}/Devil%20Gold%20v4.2/Devil%20Gold%20v4.2.zip`,
+                category: "Flagship Bot"
+            },
+            "m5 king engine.zip": {
+                name: "M5 King Engine Package",
+                fileName: "M5 King Engine.zip",
+                url: `${RAW_BASE}/M5%20King%20Engine/M5%20King%20Engine.zip`,
+                category: "High Frequency Bot"
+            },
+            "m5 king engine.mq5": {
+                name: "M5 King Engine Package",
+                fileName: "M5 King Engine.zip",
+                url: `${RAW_BASE}/M5%20King%20Engine/M5%20King%20Engine.zip`,
+                category: "High Frequency Bot"
+            },
+            "m5_king_engine": {
+                name: "M5 King Engine Package",
+                fileName: "M5 King Engine.zip",
+                url: `${RAW_BASE}/M5%20King%20Engine/M5%20King%20Engine.zip`,
+                category: "High Frequency Bot"
+            },
+            "pulse_telegram_bridge": {
+                name: "Pulse Telegram Bridge Setup",
+                fileName: "TELEGRAM_BRIDGE_SETUP.ZIP",
+                url: `${RAW_BASE}/TELEGRAM_BRIDGE_SETUP.ZIP`,
+                category: "Signal Bridge"
+            },
+            "nexus_discord_bridge": {
+                name: "Nexus Discord Bridge Setup",
+                fileName: "DISCORD_BRIDGE_SETUP.ZIP",
+                url: `${RAW_BASE}/DISCORD_BRIDGE_SETUP.ZIP`,
+                category: "Signal Bridge"
+            }
+        };
 
         function createProductCardHTML(title, badgeText, filename, downloadUrl, price) {
             return `
-                <div class="product-card rounded-2xl p-6 sm:p-7 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+                <div class="product-card rounded-2xl p-5 sm:p-7 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
                     <div class="space-y-3">
                         <div class="flex items-center gap-2">
                             <span class="px-2.5 py-0.5 rounded font-mono font-bold text-[9px] bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 uppercase tracking-wider">
@@ -210,20 +379,19 @@
                         <div>
                             <h2 class="text-white text-lg sm:text-xl font-bold tracking-tight">${title}</h2>
                             <p class="text-zinc-400 font-mono text-xs mt-1">
-                                Settled: $${price} USD &bull; Verified Delivery
+                                Settled: $${price} USD &bull; Includes .mq5 file, Presets & Readme Guide
                             </p>
                         </div>
 
                         <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-zinc-950/80 border border-zinc-800 text-xs font-mono text-zinc-300">
-                            <i class="fa-solid fa-file-code text-cyan-400"></i>
-                            <span>Download Target: <strong class="text-white">${filename}</strong></span>
+                            <i class="fa-solid fa-file-zipper text-cyan-400"></i>
+                            <span>Package: <strong class="text-white">${filename}</strong></span>
                         </div>
                     </div>
 
-                    <!-- Direct Download Action -->
                     <div class="w-full md:w-auto flex flex-col sm:flex-row items-center gap-3">
                         <button onclick="triggerDirectDownload('${downloadUrl}', '${filename}')" class="w-full sm:w-auto px-6 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 hover:opacity-90 active:scale-95 text-white font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-2 transition-all shadow-lg shadow-cyan-500/10 cursor-pointer">
-                            <i class="fa-solid fa-download"></i> Download File
+                            <i class="fa-solid fa-download"></i> Download Package (.zip)
                         </button>
                     </div>
                 </div>
@@ -239,7 +407,7 @@
                     <div class="space-y-1">
                         <h3 class="text-white font-bold text-base">No Software Purchased Yet</h3>
                         <p class="text-zinc-400 text-xs max-w-md mx-auto">
-                            You do not have any active standalone bot licenses or signal bridges registered to this account.
+                            You do not have any active bot packages or standalone licenses mapped to this account.
                         </p>
                     </div>
                     <div class="pt-2">
@@ -251,29 +419,123 @@
             `;
         }
 
+        function resolveDownloadDetails(item, targetUserId) {
+            const keyById = (item.botId || "").toLowerCase().trim();
+            const keyByFile = (item.downloadFile || item.file || "").toLowerCase().trim();
+
+            const matchedBot = READY_MADE_BOTS[keyById] || READY_MADE_BOTS[keyByFile];
+
+            if (matchedBot) {
+                return {
+                    title: item.botName || matchedBot.name,
+                    category: item.category || matchedBot.category,
+                    fileName: matchedBot.fileName,
+                    downloadUrl: matchedBot.url
+                };
+            }
+
+            let fileName = item.downloadFile || `${item.botId || 'custom_package'}.zip`;
+            if (fileName.endsWith('.mq5')) {
+                fileName = fileName.replace(/\.mq5$/i, '.zip');
+            }
+
+            return {
+                title: item.botName || "Custom Strategy Package",
+                category: item.category || "Custom Service",
+                fileName: fileName,
+                downloadUrl: item.downloadUrl || `${RAW_BASE}/${encodeURIComponent(targetUserId)}/${encodeURIComponent(fileName)}`
+            };
+        }
+
+        async function fetchGitHubUserFiles(userId) {
+            const apiEndpoint = `https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPO}/contents/downloads/${userId}?timestamp=${Date.now()}`;
+            const fileList = [];
+
+            try {
+                const response = await fetch(apiEndpoint);
+                if (response.ok) {
+                    const contents = await response.json();
+                    if (Array.isArray(contents)) {
+                        contents.forEach(item => {
+                            if (item.type === 'file') {
+                                fileList.push({
+                                    name: item.name,
+                                    downloadUrl: item.download_url
+                                });
+                            }
+                        });
+                    }
+                }
+            } catch (err) {
+                console.log("No custom directory found for ID:", userId);
+            }
+
+            return fileList;
+        }
+
         async function loadPurchasedProducts(targetUserId) {
             const container = document.getElementById('products-grid');
             let renderedCards = 0;
             let outputHTML = "";
+            const loadedFileNames = new Set();
 
             try {
+                const userGitHubFiles = await fetchGitHubUserFiles(targetUserId);
+
+                userGitHubFiles.forEach(fileObj => {
+                    const formattedTitle = fileObj.name.replace(/\.[^/.]+$/, "").replace(/_/g, " ");
+                    outputHTML += createProductCardHTML(
+                        formattedTitle,
+                        "Custom Strategy Package",
+                        fileObj.name,
+                        fileObj.downloadUrl,
+                        "Settled & Verified"
+                    );
+                    loadedFileNames.add(fileObj.name.toLowerCase());
+                    renderedCards++;
+                });
+
+                const userDocRef = doc(db, "users", targetUserId);
+                const userDocSnap = await getDoc(userDocRef);
+
+                if (userDocSnap.exists()) {
+                    const userData = userDocSnap.data();
+                    if (Array.isArray(userData.storePurchases)) {
+                        userData.storePurchases.forEach(item => {
+                            const resolved = resolveDownloadDetails(item, targetUserId);
+                            if (!loadedFileNames.has(resolved.fileName.toLowerCase())) {
+                                outputHTML += createProductCardHTML(
+                                    resolved.title,
+                                    resolved.category,
+                                    resolved.fileName,
+                                    resolved.downloadUrl,
+                                    item.amountPaid || "Paid"
+                                );
+                                loadedFileNames.add(resolved.fileName.toLowerCase());
+                                renderedCards++;
+                            }
+                        });
+                    }
+                }
+
                 const purchasesSubColRef = collection(db, "users", targetUserId, "purchases");
                 const snapshot = await getDocs(purchasesSubColRef);
 
                 snapshot.forEach((docItem) => {
-                    const data = docItem.data();
-                    const botKey = docItem.id;
-                    const catalogInfo = FILE_CATALOG[botKey] || {};
-
-                    const title = data.botName || catalogInfo.name || "Algorithmic Bot Software";
-                    const filename = catalogInfo.file || `${botKey}.mq5`;
-                    const downloadUrl = catalogInfo.url || `${RAW_BASE}/${filename}`;
-                    const category = data.category || catalogInfo.category || "Store Purchase";
-                    const amountPaid = data.amountPaid || "Paid";
-
+                    const data = { id: docItem.id, ...docItem.data() };
                     if (data.isPaid !== false) {
-                        outputHTML += createProductCardHTML(title, category, filename, downloadUrl, amountPaid);
-                        renderedCards++;
+                        const resolved = resolveDownloadDetails(data, targetUserId);
+                        if (!loadedFileNames.has(resolved.fileName.toLowerCase())) {
+                            outputHTML += createProductCardHTML(
+                                resolved.title,
+                                resolved.category,
+                                resolved.fileName,
+                                resolved.downloadUrl,
+                                data.amountPaid || "Paid"
+                            );
+                            loadedFileNames.add(resolved.fileName.toLowerCase());
+                            renderedCards++;
+                        }
                     }
                 });
 
@@ -284,17 +546,16 @@
                 }
 
             } catch (err) {
-                console.error("Firestore vault retrieval error:", err);
+                console.error("Error loading products vault:", err);
                 renderEmptyState(container);
             }
         }
 
-        // Detect user session
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 loadPurchasedProducts(user.uid);
             } else {
-                const fallbackId = localStorage.getItem("backtestlab_user_id") || "p8BueXIMVjOgx1SlF2KRYhGd5LH3";
+                const fallbackId = localStorage.getItem("backtestlab_user_id") || "o3EIzM0arjSwafklEP5jlRpqdO22";
                 loadPurchasedProducts(fallbackId);
             }
         });

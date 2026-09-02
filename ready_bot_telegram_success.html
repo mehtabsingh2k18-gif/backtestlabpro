@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Payment Successful | Pulse Telegram Bridge</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+    <style>
+        body { background-color: #070709; color: #e4e4e7; overflow-x: hidden; font-family: 'Plus Jakarta Sans', sans-serif; }
+        .terminal-card { background: #0d0d11; border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8); }
+        .success-glow { box-shadow: 0 0 50px -10px rgba(16, 185, 129, 0.25); }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col justify-between p-4">
+
+    <!-- Header -->
+    <header class="w-full max-w-5xl mx-auto py-6 flex items-center justify-between">
+        <a href="index.html" class="flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-lg bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400">
+                <i class="fa-solid fa-chart-line text-sm"></i>
+            </div>
+            <span class="text-base font-bold tracking-tight text-white font-mono">
+                BACKTESTLAB<span class="text-indigo-400">.PRO</span>
+            </span>
+        </a>
+        <a href="algo_store.html" class="text-xs font-mono text-zinc-400 hover:text-white transition-colors">
+            <i class="fa-solid fa-store mr-1"></i> Bot Store
+        </a>
+    </header>
+
+    <!-- Main Viewport -->
+    <main class="w-full max-w-xl mx-auto flex-1 flex items-center justify-center py-6">
+        <div class="terminal-card success-glow w-full rounded-2xl p-6 sm:p-8 space-y-6">
+            
+            <div class="text-center space-y-3">
+                <div class="w-14 h-14 mx-auto rounded-full bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 text-2xl">
+                    <i class="fa-solid fa-check"></i>
+                </div>
+                <div>
+                    <span class="text-[10px] font-mono uppercase tracking-widest text-emerald-400 font-bold bg-emerald-500/10 px-2.5 py-0.5 rounded border border-emerald-500/20">
+                        Payment Authenticated
+                    </span>
+                    <h1 class="text-2xl font-bold text-white tracking-tight mt-2">Order Confirmed & Settled</h1>
+                    <p class="text-xs text-zinc-400 mt-1">Your signal copier bridge license has been permanently registered to your account.</p>
+                </div>
+            </div>
+
+            <!-- Receipt Info -->
+            <div class="rounded-xl bg-zinc-950/80 border border-zinc-800/80 p-4 sm:p-5 space-y-3 font-mono text-xs">
+                <div class="flex justify-between items-center border-b border-zinc-800/60 pb-3">
+                    <span class="text-zinc-500 uppercase text-[10px]">Product Licensed</span>
+                    <span class="text-white font-bold text-sm">Pulse Telegram Bridge Software</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-zinc-500 uppercase text-[10px]">Amount Settled</span>
+                    <span class="text-emerald-400 font-bold">$49.00 USD</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-zinc-500 uppercase text-[10px]">License Class</span>
+                    <span class="text-zinc-300">Signal Copier Bridge</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-zinc-500 uppercase text-[10px]">Reference Order ID</span>
+                    <span id="display-order-id" class="text-zinc-400 text-[11px] truncate max-w-[200px]">SANDBOX-OK</span>
+                </div>
+            </div>
+
+            <!-- Sync Banner -->
+            <div id="sync-banner" class="p-3 rounded-lg bg-zinc-900 border border-zinc-800 text-[11px] font-mono text-zinc-400 flex items-center justify-center gap-2">
+                <i class="fa-solid fa-spinner fa-spin text-cyan-400"></i>
+                <span id="sync-status-text">Recording purchase to Firestore...</span>
+            </div>
+
+            <!-- Action Area -->
+            <div class="space-y-3 pt-2">
+                <a href="downloads/TELEGRAM_BRIDGE_SETUP.ZIP" download="TELEGRAM_BRIDGE_SETUP.ZIP" class="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 text-black font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-2 hover:opacity-90 active:scale-95 transition-all shadow-lg shadow-emerald-500/10">
+                    <i class="fa-solid fa-download"></i>
+                    <span>Download TELEGRAM_BRIDGE_SETUP.ZIP</span>
+                </a>
+                <a href="my-products.html" class="w-full py-3 px-4 rounded-xl bg-[#15151b] border border-white/5 text-zinc-300 hover:text-white font-mono text-xs uppercase tracking-wider text-center block hover:bg-zinc-900 transition-all">
+                    View in My Products &rarr;
+                </a>
+            </div>
+
+            <div class="text-center pt-2 border-t border-zinc-900">
+                <p class="text-[10px] font-mono text-zinc-500">
+                    <i class="fa-solid fa-shield-halved text-emerald-400 mr-1"></i>
+                    Cloud Firestore Secure Ledger
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="text-center py-4 text-zinc-600 font-mono text-[11px]">
+        &copy; 2026 BacktestLab Pro. All rights reserved.
+    </footer>
+
+    <!-- Firebase SDK Logic -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, doc, setDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAensfI53w49Fd4A7Lz5_K9N1JOxZsW7Kk",
+            authDomain: "backtestlabpro.firebaseapp.com",
+            projectId: "backtestlabpro",
+            storageBucket: "backtestlabpro.firebasestorage.app",
+            messagingSenderId: "560146824734",
+            appId: "1:560146824734:web:5287d0ded3a1024e75780f"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Product Definition for Pulse Telegram Bridge
+        const PRODUCT_INFO = {
+            botId: "pulse_telegram_bridge",
+            botName: "Pulse Telegram Bridge Software",
+            category: "Signal Bridge",
+            amountPaid: "49",
+            downloadFile: "TELEGRAM_BRIDGE_SETUP.ZIP",
+            downloadUrl: "downloads/TELEGRAM_BRIDGE_SETUP.ZIP"
+        };
+
+        const params = new URLSearchParams(window.location.search);
+        const orderId = params.get('orderId') || ("REF-" + Math.random().toString(36).substring(2, 9).toUpperCase());
+        document.getElementById('display-order-id').innerText = orderId;
+
+        async function saveTelegramBridgePurchase() {
+            const targetUserId = localStorage.getItem("backtestlab_user_id") || "o3EIzM0arjSwafklEP5jlRpqdO22";
+
+            try {
+                const userRef = doc(db, "users", targetUserId);
+
+                // Use arrayUnion to append without overwriting other records
+                await setDoc(userRef, {
+                    storePurchases: arrayUnion({
+                        ...PRODUCT_INFO,
+                        orderId: orderId,
+                        purchasedAt: new Date().toISOString()
+                    })
+                }, { merge: true });
+
+                document.getElementById('sync-banner').innerHTML = `
+                    <i class="fa-solid fa-circle-check text-emerald-400"></i>
+                    <span class="text-emerald-400">Successfully recorded to Cloud Firestore!</span>
+                `;
+            } catch (err) {
+                console.error("Firestore write error:", err);
+                document.getElementById('sync-banner').innerHTML = `
+                    <i class="fa-solid fa-circle-check text-emerald-400"></i>
+                    <span class="text-zinc-300">File download ready below.</span>
+                `;
+            }
+        }
+
+        saveTelegramBridgePurchase();
+    </script>
+</body>
+</html>

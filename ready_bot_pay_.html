@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Secure Payment | BacktestLab Pro</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+    <style>
+        body {
+            background-color: #0b0c10;
+            color: #f4f4f5;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .checkout-modal {
+            background: #12131a;
+            border: 1px solid #1f222e;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+        }
+        .inner-summary-box {
+            background: #171923;
+            border: 1px solid #232738;
+        }
+        #paypal-container-HR2LEDJFWB5WQ {
+            width: 100% !important;
+            display: block !important;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+    <div class="checkout-modal w-full max-w-[460px] rounded-2xl p-8 space-y-6">
+        
+        <div class="text-center space-y-1">
+            <h1 class="text-2xl font-extrabold text-white tracking-tight">Secure Payment</h1>
+            <p class="text-xs text-zinc-400">Review your order details below</p>
+        </div>
+
+        <div class="inner-summary-box rounded-xl p-5 space-y-4">
+            <div>
+                <span id="summary-category" class="px-2 py-0.5 rounded font-mono font-bold text-[9px] bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 uppercase">Standalone Bot</span>
+                <h2 id="summary-title" class="text-base font-bold text-white tracking-tight mt-1.5">Devil Gold v4.2 Software</h2>
+                <p id="summary-desc" class="text-xs text-zinc-400 mt-1 leading-relaxed">
+                    Access to your compiled standalone algorithm file will be granted immediately after successful payment verification.
+                </p>
+            </div>
+
+            <div class="border-t border-dashed border-zinc-700/60 pt-3.5 flex items-center justify-between font-mono">
+                <span class="text-xs text-zinc-400 font-medium">Total to Pay</span>
+                <span id="summary-price" class="text-emerald-400 text-lg font-bold font-sans">$499 USD</span>
+            </div>
+        </div>
+
+        <div class="pt-2">
+            <div id="paypal-container-HR2LEDJFWB5WQ"></div>
+        </div>
+
+        <div class="text-center pt-2">
+            <p class="text-[11px] text-zinc-500 font-mono flex items-center justify-center gap-1.5">
+                <i class="fa-solid fa-lock text-[10px] text-zinc-400"></i>
+                Secured via PayPal Live Encryption
+            </p>
+        </div>
+
+    </div>
+
+    <!-- Live PayPal SDK Script -->
+    <script 
+      src="https://www.paypal.com/sdk/js?client-id=BAAEqqBng4jRkrWgNQ1maidDZcJ20ijG31YidgtYcbdBubwS1vGWHVr08Xa-4Ip9k6mV8YCw3Z7BTt0KAc&components=hosted-buttons&disable-funding=venmo&currency=USD">
+    </script>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const botId = urlParams.get('botId') || 'devil_gold_v4_2';
+        const botName = decodeURIComponent(urlParams.get('botName') || 'Devil Gold v4.2 Software');
+        const price = urlParams.get('price') || '499';
+        const filename = urlParams.get('filename') || 'DEVIL_GOLD_V42.EX5';
+        const category = decodeURIComponent(urlParams.get('category') || 'Standalone Bot');
+
+        document.getElementById('summary-title').innerText = botName;
+        document.getElementById('summary-price').innerText = `$${price} USD`;
+        document.getElementById('summary-category').innerText = category;
+
+        if (window.paypal && window.paypal.HostedButtons) {
+            paypal.HostedButtons({
+                hostedButtonId: "HR2LEDJFWB5WQ",
+                onApprove: function(data, actions) {
+                    const passParams = new URLSearchParams({
+                        botId: botId,
+                        botName: encodeURIComponent(botName),
+                        amount: price,
+                        filename: filename,
+                        category: encodeURIComponent(category),
+                        orderId: data.orderID || ("ORDER-" + Math.random().toString(36).substring(2, 9).toUpperCase())
+                    });
+                    window.location.href = `ready_bot_success.html?${passParams.toString()}`;
+                }
+            }).render("#paypal-container-HR2LEDJFWB5WQ");
+        }
+    </script>
+
+</body>
+</html>

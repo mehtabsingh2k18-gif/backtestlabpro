@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>BACKTESTLABPRO | Algorithmic Trading Bot Store & Bridges</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BacktestLab Pro | Algorithmic Trading Bot Store & Bridges</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -56,26 +56,27 @@
         }
     </style>
 </head>
-<body class="antialiased font-sans relative min-h-screen pb-24">
+<body class="antialiased font-sans relative min-h-screen flex flex-col justify-between">
 
-    <div class="glow-orb w-[400px] h-[400px] bg-brand-purple top-[-100px] left-[-100px]"></div>
-    <div class="glow-orb w-[500px] h-[500px] bg-brand-accent top-[35%] right-[-150px]"></div>
+    <div class="glow-orb w-[300px] sm:w-[400px] h-[300px] sm:h-[400px] bg-brand-purple top-[-100px] left-[-100px]"></div>
+    <div class="glow-orb w-[350px] sm:w-[500px] h-[350px] sm:h-[500px] bg-brand-accent top-[35%] right-[-150px]"></div>
 
     <!-- Header Navigation -->
-    <header class="w-full border-b border-white/5 bg-[#050507]/80 backdrop-blur-md sticky top-0 z-50 h-20">
-        <div class="max-w-[1600px] mx-auto px-6 h-full flex items-center justify-between">
-            <a href="index.html" class="flex items-center gap-3 group">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
+    <header class="w-full border-b border-white/5 bg-[#050507]/90 backdrop-blur-md sticky top-0 z-50">
+        <div class="max-w-[1600px] mx-auto px-4 sm:px-6 h-16 sm:h-20 flex items-center justify-between">
+            <a href="index.html" class="flex items-center gap-2.5 sm:gap-3 group">
+                <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20 flex-shrink-0">
                     <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M3 12h3l3-9 4 18 3-13 3 4h3"/>
                     </svg>
                 </div>
-                <span class="text-xl font-bold tracking-tight text-white">
-                    BacktestLab<span class="text-indigo-400">.pro</span>
+                <span class="text-lg sm:text-xl font-bold tracking-tight text-white">
+                    BacktestLab <span class="text-indigo-400">Pro</span>
                 </span>
             </a>
 
-            <nav class="hidden lg:flex items-center gap-8 text-sm font-medium text-zinc-400">
+            <!-- Desktop Navigation Links -->
+            <nav class="hidden lg:flex items-center gap-7 xl:gap-8 text-sm font-medium text-zinc-400">
                 <a href="index.html#features" class="hover:text-white transition-colors">Features</a>
                 <a href="algo_store.html" class="text-white font-semibold transition-colors">Bot Store</a>
                 <a href="bot_automation.html" class="hover:text-white transition-colors">Bot Automation</a>
@@ -85,29 +86,46 @@
                 <a href="contact.html" class="hover:text-white transition-colors">Contact</a>
             </nav>
 
-            <div class="flex items-center gap-3">
-                <a href="my-products.html" class="flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#0d0d11] border border-white/10 text-sm font-medium text-zinc-200 hover:bg-zinc-900 hover:text-white transition-all">
+            <!-- Actions & Mobile Toggle -->
+            <div class="flex items-center gap-2 sm:gap-3">
+                <a href="my-products.html" class="hidden sm:flex items-center gap-2 px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full bg-[#0d0d11] border border-white/10 text-xs sm:text-sm font-medium text-zinc-200 hover:bg-zinc-900 hover:text-white transition-all">
                     <i class="fa-solid fa-folder text-indigo-500 text-xs"></i>
-                    My Products
+                    <span>My Products</span>
                 </a>
-                <a href="session.html" class="flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 text-sm font-semibold text-white hover:opacity-90 active:scale-95 transition-all shadow-md shadow-indigo-500/10">
-                    <i class="fa-solid fa-plus text-xs"></i>
-                    New Session
+                <a href="session.html" class="flex items-center gap-1.5 px-3 sm:px-5 py-1.5 sm:py-2.5 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 text-xs sm:text-sm font-semibold text-white hover:opacity-90 active:scale-95 transition-all shadow-md shadow-indigo-500/10">
+                    <i class="fa-solid fa-plus text-[10px] sm:text-xs"></i>
+                    <span>New Session</span>
                 </a>
+                
+                <!-- Mobile Hamburger Button -->
+                <button id="mobileMenuBtn" type="button" aria-label="Toggle navigation menu" class="lg:hidden w-9 h-9 flex items-center justify-center rounded-lg bg-zinc-900 border border-white/10 text-zinc-300 hover:text-white focus:outline-none">
+                    <i id="menuIcon" class="fa-solid fa-bars text-sm"></i>
+                </button>
             </div>
+        </div>
+
+        <!-- Mobile Dropdown Navigation -->
+        <div id="mobileMenu" class="hidden lg:hidden border-t border-white/5 bg-[#09090d] px-4 py-4 space-y-3">
+            <a href="index.html#features" class="block text-sm font-medium text-zinc-300 hover:text-white py-1">Features</a>
+            <a href="algo_store.html" class="block text-sm font-semibold text-indigo-400 py-1">Bot Store</a>
+            <a href="bot_automation.html" class="block text-sm font-medium text-zinc-300 hover:text-white py-1">Bot Automation</a>
+            <a href="my-products.html" class="block text-sm font-medium text-zinc-300 hover:text-white py-1">My Products</a>
+            <a href="articles.html" class="block text-sm font-medium text-zinc-300 hover:text-white py-1">Articles</a>
+            <a href="about.html" class="block text-sm font-medium text-zinc-300 hover:text-white py-1">About Us</a>
+            <a href="contact.html" class="block text-sm font-medium text-zinc-300 hover:text-white py-1">Contact</a>
         </div>
     </header>
 
-    <main class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 space-y-16">
+    <main class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 my-8 sm:my-12 space-y-12 sm:space-y-16 w-full">
         
         <section class="text-center max-w-3xl mx-auto space-y-3">
             <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-[11px] font-mono font-bold text-brand-accent uppercase tracking-wider">
                 <i class="fa-solid fa-store"></i> Automated Algo Store
             </div>
-            <h1 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+            <h1 class="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
                 Instantly Download Verified Trading Bots
             </h1>
-            <p class="text-zinc-400 text-sm sm:text-base leading-relaxed">
+            <p class="text-zinc-400 text-xs sm:text-base leading-relaxed px-2">
                 Own standalone, compiled algorithmic software files (.ex5) with audited telemetry, or deploy dedicated signal copier bridges.
             </p>
         </section>
@@ -115,83 +133,83 @@
         <!-- SECTION 1: Standalone Bots -->
         <section class="space-y-6">
             <div class="border-b border-white/5 pb-4">
-                <h2 class="font-bold text-xl text-white flex items-center gap-2">
+                <h2 class="font-bold text-lg sm:text-xl text-white flex items-center gap-2">
                     <i class="fa-solid fa-download text-brand-accent"></i> Standalone Software Bot Downloads
                 </h2>
                 <p class="text-zinc-400 text-xs sm:text-sm mt-1">Perpetual license binaries. Plug straight into your MetaTrader 5 terminal.</p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
                 
-                <!-- Devil Gold ($499) -> links to ready_bot_pay_.html -->
-                <div class="p-6 rounded-2xl bg-brand-card border border-white/5 flex flex-col justify-between product-card-glow">
+                <!-- Devil Gold ($499) -->
+                <div class="p-5 sm:p-6 rounded-2xl bg-brand-card border border-white/5 flex flex-col justify-between product-card-glow">
                     <div>
                         <div class="flex items-center justify-between mb-4">
                             <span class="px-2.5 py-0.5 rounded font-mono font-bold text-[9px] bg-brand-purple/10 text-brand-purple border border-brand-purple/20 uppercase">Flagship Product</span>
                             <span class="text-[9px] font-mono font-bold text-brand-success bg-brand-success/10 border border-brand-success/20 px-2 py-0.5 rounded uppercase">Verified File</span>
                         </div>
-                        <div class="w-full h-32 rounded-xl bg-zinc-950 border border-white/5 mb-4 flex flex-col items-center justify-center">
-                            <i class="fa-solid fa-bolt-lightning text-3xl text-brand-purple"></i>
+                        <div class="w-full h-28 sm:h-32 rounded-xl bg-zinc-950 border border-white/5 mb-4 flex flex-col items-center justify-center">
+                            <i class="fa-solid fa-bolt-lightning text-2xl sm:text-3xl text-brand-purple"></i>
                             <span class="text-[9px] font-mono text-zinc-500 mt-2 uppercase">DEVIL_GOLD_V42.EX5</span>
                         </div>
-                        <h3 class="text-white text-lg font-bold">Devil Gold v4.2 Software</h3>
+                        <h3 class="text-white text-base sm:text-lg font-bold">Devil Gold v4.2 Software</h3>
                         <p class="text-zinc-500 text-xs font-mono mt-0.5">Asset: GOLD (XAUUSD) &bull; MT5</p>
                         <p class="text-zinc-400 text-xs mt-3 leading-relaxed">Aggressive breakout model designed specifically for structural Gold market trends.</p>
                     </div>
                     <div class="space-y-3 mt-6">
                         <div class="flex items-center justify-between">
                             <span class="text-white text-xl font-mono font-bold">$499</span>
-                            <a href="ready_bot_pay_.html" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-brand-accent to-brand-purple hover:opacity-90 text-white text-xs font-bold uppercase tracking-wider text-center block">
+                            <a href="ready_bot_pay_.html" class="px-4 sm:px-5 py-2.5 rounded-xl bg-gradient-to-r from-brand-accent to-brand-purple hover:opacity-90 text-white text-xs font-bold uppercase tracking-wider text-center block">
                                 Buy Bot File
                             </a>
                         </div>
                     </div>
                 </div>
 
-                <!-- M5 King ($299) -> links to ready_bot_pay_king.html -->
-                <div class="p-6 rounded-2xl bg-brand-card border border-white/5 flex flex-col justify-between product-card-glow">
+                <!-- M5 King ($299) -->
+                <div class="p-5 sm:p-6 rounded-2xl bg-brand-card border border-white/5 flex flex-col justify-between product-card-glow">
                     <div>
                         <div class="flex items-center justify-between mb-4">
                             <span class="px-2.5 py-0.5 rounded font-mono font-bold text-[9px] bg-brand-accent/10 text-brand-accent border border-brand-accent/20 uppercase">High Frequency</span>
                             <span class="text-[9px] font-mono font-bold text-brand-success bg-brand-success/10 border border-brand-success/20 px-2 py-0.5 rounded uppercase">Verified File</span>
                         </div>
-                        <div class="w-full h-32 rounded-xl bg-zinc-950 border border-white/5 mb-4 flex flex-col items-center justify-center">
-                            <i class="fa-solid fa-gauge-high text-3xl text-brand-accent"></i>
+                        <div class="w-full h-28 sm:h-32 rounded-xl bg-zinc-950 border border-white/5 mb-4 flex flex-col items-center justify-center">
+                            <i class="fa-solid fa-gauge-high text-2xl sm:text-3xl text-brand-accent"></i>
                             <span class="text-[9px] font-mono text-zinc-500 mt-2 uppercase">M5_KING_ENGINE.EX5</span>
                         </div>
-                        <h3 class="text-white text-lg font-bold">M5 King Engine Software</h3>
+                        <h3 class="text-white text-base sm:text-lg font-bold">M5 King Engine Software</h3>
                         <p class="text-zinc-500 text-xs font-mono mt-0.5">Asset: GOLD (XAUUSD) &bull; MT5</p>
                         <p class="text-zinc-400 text-xs mt-3 leading-relaxed">High-velocity scalp execution routine tracking cyclical fast liquidity shifts.</p>
                     </div>
                     <div class="space-y-3 mt-6">
                         <div class="flex items-center justify-between">
                             <span class="text-white text-xl font-mono font-bold">$299</span>
-                            <a href="ready_bot_pay_king.html" class="px-5 py-2.5 rounded-xl bg-white text-brand-dark hover:bg-zinc-200 text-xs font-bold uppercase tracking-wider text-center block">
+                            <a href="ready_bot_pay_king.html" class="px-4 sm:px-5 py-2.5 rounded-xl bg-white text-brand-dark hover:bg-zinc-200 text-xs font-bold uppercase tracking-wider text-center block">
                                 Buy Bot File
                             </a>
                         </div>
                     </div>
                 </div>
 
-                <!-- Asian Breakout ($149) -> links to ready_bot_asian_pay.html -->
-                <div class="p-6 rounded-2xl bg-brand-card border border-white/5 flex flex-col justify-between product-card-glow">
+                <!-- Asian Breakout ($149) -->
+                <div class="p-5 sm:p-6 rounded-2xl bg-brand-card border border-white/5 flex flex-col justify-between product-card-glow">
                     <div>
                         <div class="flex items-center justify-between mb-4">
                             <span class="px-2.5 py-0.5 rounded font-mono font-bold text-[9px] bg-zinc-800 text-zinc-400 border border-white/5 uppercase">Session Model</span>
                             <span class="text-[9px] font-mono font-bold text-brand-success bg-brand-success/10 border border-brand-success/20 px-2 py-0.5 rounded uppercase">Verified File</span>
                         </div>
-                        <div class="w-full h-32 rounded-xl bg-zinc-950 border border-white/5 mb-4 flex flex-col items-center justify-center">
-                            <i class="fa-solid fa-clock-rotate-left text-3xl text-emerald-400"></i>
+                        <div class="w-full h-28 sm:h-32 rounded-xl bg-zinc-950 border border-white/5 mb-4 flex flex-col items-center justify-center">
+                            <i class="fa-solid fa-clock-rotate-left text-2xl sm:text-3xl text-emerald-400"></i>
                             <span class="text-[9px] font-mono text-zinc-500 mt-2 uppercase">ASIAN_BREAKOUT_EA.EX5</span>
                         </div>
-                        <h3 class="text-white text-lg font-bold">Asian Breakout v2.1 Software</h3>
+                        <h3 class="text-white text-base sm:text-lg font-bold">Asian Breakout v2.1 Software</h3>
                         <p class="text-zinc-500 text-xs font-mono mt-0.5">Asset: GOLD (XAUUSD) &bull; MT5</p>
                         <p class="text-zinc-400 text-xs mt-3 leading-relaxed">Capitalizes systematically on early liquidity expansions following Tokyo compression.</p>
                     </div>
                     <div class="space-y-3 mt-6">
                         <div class="flex items-center justify-between">
                             <span class="text-white text-xl font-mono font-bold">$149</span>
-                            <a href="ready_bot_asian_pay.html" class="px-5 py-2.5 rounded-xl bg-zinc-800 text-zinc-200 hover:text-white hover:bg-zinc-700 text-xs font-bold uppercase tracking-wider text-center block">
+                            <a href="ready_bot_asian_pay.html" class="px-4 sm:px-5 py-2.5 rounded-xl bg-zinc-800 text-zinc-200 hover:text-white hover:bg-zinc-700 text-xs font-bold uppercase tracking-wider text-center block">
                                 Buy Bot File
                             </a>
                         </div>
@@ -204,20 +222,20 @@
         <!-- SECTION 2: Fixed Price Signal Copier Bridges -->
         <section class="space-y-6">
             <div class="border-b border-white/5 pb-4">
-                <h2 class="font-bold text-xl text-white flex items-center gap-2">
+                <h2 class="font-bold text-lg sm:text-xl text-white flex items-center gap-2">
                     <i class="fa-solid fa-bolt text-brand-success"></i> Automated Signal Copier Bridges
                 </h2>
                 <p class="text-zinc-400 text-xs sm:text-sm mt-1">Connect your Telegram or Discord channels directly to execution terminals.</p>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
                 
                 <!-- Pulse Telegram Bridge ($49) -->
-                <div class="p-6 rounded-2xl glass-card flex flex-col justify-between gap-6 product-card-glow">
+                <div class="p-5 sm:p-6 rounded-2xl glass-card flex flex-col justify-between gap-6 product-card-glow">
                     <div class="space-y-4">
                         <div class="flex items-center justify-between">
                             <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 rounded-xl bg-sky-500/10 border border-sky-500/20 text-sky-400 flex items-center justify-center text-xl">
+                                <div class="w-10 h-10 rounded-xl bg-sky-500/10 border border-sky-500/20 text-sky-400 flex items-center justify-center text-xl flex-shrink-0">
                                     <i class="fa-brands fa-telegram"></i>
                                 </div>
                                 <div>
@@ -236,11 +254,11 @@
                 </div>
 
                 <!-- Nexus Discord Bridge ($39) -->
-                <div class="p-6 rounded-2xl glass-card flex flex-col justify-between gap-6 product-card-glow">
+                <div class="p-5 sm:p-6 rounded-2xl glass-card flex flex-col justify-between gap-6 product-card-glow">
                     <div class="space-y-4">
                         <div class="flex items-center justify-between">
                             <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center text-xl">
+                                <div class="w-10 h-10 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center text-xl flex-shrink-0">
                                     <i class="fa-brands fa-discord"></i>
                                 </div>
                                 <div>
@@ -259,10 +277,10 @@
                 </div>
 
                 <!-- Custom Bespoke Bridge -->
-                <div class="p-6 rounded-2xl bg-[#0c0c0e] border border-brand-purple/30 flex flex-col justify-between gap-6">
+                <div class="p-5 sm:p-6 rounded-2xl bg-[#0c0c0e] border border-brand-purple/30 flex flex-col justify-between gap-6 md:col-span-2 lg:col-span-1">
                     <div class="space-y-4">
                         <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-xl bg-brand-purple/10 border border-brand-purple/20 text-brand-purple flex items-center justify-center text-xl">
+                            <div class="w-10 h-10 rounded-xl bg-brand-purple/10 border border-brand-purple/20 text-brand-purple flex items-center justify-center text-xl flex-shrink-0">
                                 <i class="fa-solid fa-network-wired"></i>
                             </div>
                             <div>
@@ -282,5 +300,121 @@
 
     </main>
 
+    <!-- Site Footer -->
+    <footer class="w-full border-t border-white/5 bg-[#08080a] mt-20 pt-16 pb-12 relative z-10">
+        <div class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+            
+            <!-- Top Column Section -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 lg:gap-8">
+                <!-- Branding Info -->
+                <div class="lg:col-span-2 space-y-5">
+                    <a href="index.html" class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20 flex-shrink-0">
+                            <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M3 12h3l3-9 4 18 3-13 3 4h3"/>
+                            </svg>
+                        </div>
+                        <span class="text-xl font-bold tracking-tight text-white">
+                            BacktestLab <span class="text-indigo-400">Pro</span>
+                        </span>
+                    </a>
+                    <p class="text-zinc-400 text-sm leading-relaxed max-w-sm">
+                        Institutional-grade strategy backtesting platform and trading bot development framework. Built to eliminate paywalls, automate strategy validation, and bridge manual setups to algorithmic code.
+                    </p>
+                    <div class="flex items-center gap-3 pt-2">
+                        <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="w-9 h-9 rounded-lg bg-zinc-900 border border-white/5 flex items-center justify-center text-zinc-400 hover:text-white hover:border-white/20 transition-all">
+                            <i class="fa-brands fa-github text-sm"></i>
+                        </a>
+                        <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" class="w-9 h-9 rounded-lg bg-zinc-900 border border-white/5 flex items-center justify-center text-zinc-400 hover:text-white hover:border-white/20 transition-all">
+                            <i class="fa-brands fa-x-twitter text-sm"></i>
+                        </a>
+                        <a href="https://discord.com" target="_blank" rel="noopener noreferrer" class="w-9 h-9 rounded-lg bg-zinc-900 border border-white/5 flex items-center justify-center text-zinc-400 hover:text-white hover:border-white/20 transition-all">
+                            <i class="fa-brands fa-discord text-sm"></i>
+                        </a>
+                        <a href="contact.html" class="w-9 h-9 rounded-lg bg-zinc-900 border border-white/5 flex items-center justify-center text-zinc-400 hover:text-white hover:border-white/20 transition-all">
+                            <i class="fa-solid fa-envelope text-sm"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Column: Platform -->
+                <div class="space-y-4">
+                    <h3 class="text-xs font-mono font-bold text-white uppercase tracking-wider">Platform</h3>
+                    <ul class="space-y-2.5 text-sm text-zinc-400">
+                        <li><a href="index.html#features" class="hover:text-white transition-colors">Platform Features</a></li>
+                        <li><a href="session.html" class="hover:text-white transition-colors">Start Backtest Session</a></li>
+                        <li><a href="algo_store.html" class="hover:text-white transition-colors">Algo Bot Store</a></li>
+                        <li><a href="bot_automation.html" class="hover:text-white transition-colors">Bot Automation Compiler</a></li>
+                        <li><a href="historical_data.html" class="hover:text-white transition-colors">Historical Feeds Pool</a></li>
+                    </ul>
+                </div>
+
+                <!-- Column: Resources -->
+                <div class="space-y-4">
+                    <h3 class="text-xs font-mono font-bold text-white uppercase tracking-wider">Resources</h3>
+                    <ul class="space-y-2.5 text-sm text-zinc-400">
+                        <li><a href="articles.html" class="hover:text-white transition-colors">Quant Articles &amp; Guides</a></li>
+                        <li><a href="about.html" class="hover:text-white transition-colors">About Us &amp; Mission</a></li>
+                        <li><a href="contact.html" class="hover:text-white transition-colors">Contact Support</a></li>
+                        <li><a href="reviews.html" class="hover:text-white transition-colors flex items-center gap-1.5"><i class="fa-solid fa-star text-amber-400 text-xs"></i> User Reviews</a></li>
+                    </ul>
+                </div>
+
+                <!-- Column: Legal & Risk -->
+                <div class="space-y-4">
+                    <h3 class="text-xs font-mono font-bold text-white uppercase tracking-wider">Legal &amp; Risk</h3>
+                    <ul class="space-y-2.5 text-sm text-zinc-400">
+                        <li><a href="privacy.html" class="hover:text-white transition-colors">Privacy Policy</a></li>
+                        <li><a href="terms.html" class="hover:text-white transition-colors">Terms of Service</a></li>
+                        <li><a href="risk.html" class="hover:text-white transition-colors">Financial Risk Disclaimer</a></li>
+                        <li><a href="disclosure.html" class="hover:text-white transition-colors">Bot Development Disclosure</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Risk Banner Box -->
+            <div class="p-4 sm:p-6 rounded-2xl bg-[#0c0c0f] border border-white/5 space-y-2.5 text-xs text-zinc-500 leading-relaxed">
+                <div class="flex items-center gap-2 text-amber-400 font-semibold text-xs">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    <span>Financial &amp; Automation Risk Disclaimer</span>
+                </div>
+                <p>
+                    <strong class="text-zinc-300">BacktestLab Pro</strong> provides analytical simulation software, historical market datasets, and automated script translation services for educational and quantitative research purposes only. Simulated past backtest performance is not indicative of future market results.
+                </p>
+                <p>
+                    We do not sell "guaranteed profit" algorithms or financial advice. Trading foreign exchange (Forex), cryptocurrencies, and equities carries substantial financial risk and is not suitable for every investor. Any trading script or bot executed on live accounts is used entirely at your own risk.
+                </p>
+            </div>
+
+            <!-- Bottom Sub-Footer -->
+            <div class="pt-6 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-zinc-500 font-mono">
+                <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 inline-block animate-pulse"></span>
+                    <span>&copy; 2026 BacktestLab Pro. All rights reserved.</span>
+                </div>
+                <div class="flex items-center gap-6">
+                    <span>Engine Build: v1.04-Public</span>
+                    <a href="#" class="hover:text-white flex items-center gap-1 transition-colors">
+                        <i class="fa-solid fa-arrow-up text-[10px]"></i> Back to Top
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </footer>
+
+    <!-- Mobile Drawer Script -->
+    <script>
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const menuIcon = document.getElementById('menuIcon');
+
+        if (mobileMenuBtn && mobileMenu && menuIcon) {
+            mobileMenuBtn.addEventListener('click', () => {
+                const isHidden = mobileMenu.classList.toggle('hidden');
+                menuIcon.className = isHidden ? 'fa-solid fa-bars text-sm' : 'fa-solid fa-xmark text-sm';
+            });
+        }
+    </script>
 </body>
 </html>

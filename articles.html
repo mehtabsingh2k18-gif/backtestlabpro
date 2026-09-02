@@ -19,26 +19,27 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="icon" type="image/png" sizes="192x192" href="https://backtestlabpro.com/favicon.png">
-<link rel="icon" type="image/svg+xml" href="https://backtestlabpro.com/favicon.svg">
-<link rel="apple-touch-icon" href="https://backtestlabpro.com/favicon.png">    
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" sizes="192x192" href="https://backtestlabpro.com/favicon.png">
+    <link rel="icon" type="image/svg+xml" href="https://backtestlabpro.com/favicon.svg">
+    <link rel="apple-touch-icon" href="https://backtestlabpro.com/favicon.png">    
+    
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
                         display: ['Space Grotesk', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
                     },
                     colors: {
                         brand: {
                             dark: '#050507',
                             card: '#0c0c0e',
-                            accent: '#6366f1', // Indigo
-                            success: '#10b981', // Emerald Green
-                            purple: '#a855f7' // Purple
+                            accent: '#6366f1',
+                            success: '#10b981',
+                            purple: '#a855f7'
                         }
                     }
                 }
@@ -53,7 +54,6 @@
             overflow-x: hidden;
         }
         
-        /* Deep 3D glow background matching index.html */
         .glow-orb {
             position: absolute;
             border-radius: 50%;
@@ -68,7 +68,7 @@
         }
         
         .glass-card {
-            background: rgba(12, 12, 14, 0.5);
+            background: rgba(12, 12, 14, 0.6);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.06);
@@ -76,17 +76,6 @@
         .glass-card:hover {
             border-color: rgba(99, 102, 241, 0.3);
             box-shadow: 0 0 40px rgba(99, 102, 241, 0.08);
-        }
-
-        .brand-icon-box {
-            width: 38px;
-            height: 38px;
-            background: linear-gradient(135deg, #503bf5, #863bf5);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
         }
 
         .auth-hidden {
@@ -109,92 +98,106 @@
         }
     </style>
 </head>
-<body class="font-sans antialiased relative">
+<body class="font-sans antialiased relative min-h-screen flex flex-col justify-between" id="top">
 
     <!-- Ambient Layer Glow Orbs -->
     <div class="glow-orb w-[300px] h-[300px] md:w-[600px] md:h-[600px] bg-brand-accent top-[-100px] left-[-100px]"></div>
     <div class="glow-orb w-[350px] h-[350px] md:w-[700px] md:h-[700px] bg-brand-purple top-[20%] right-[-150px]"></div>
 
     <!-- NAVBAR -->
-    <header class="sticky top-0 z-50 w-full border-b border-white/5 bg-brand-dark/70 backdrop-blur-md">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full h-20 flex items-center justify-between">
-            <a href="index.html" class="flex items-center gap-3 group">
-                <div class="brand-icon-box">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <header class="sticky top-0 z-50 w-full border-b border-white/5 bg-[#050507]/90 backdrop-blur-md">
+        <div class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 w-full h-16 sm:h-20 flex items-center justify-between">
+            <a href="index.html" class="flex items-center gap-2.5 sm:gap-3 group flex-shrink-0" aria-label="BacktestLab Pro">
+                <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20 flex-shrink-0">
+                    <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
                     </svg>
                 </div>
-                <span class="font-display font-bold text-lg text-white tracking-tight">BacktestLab<span class="text-brand-accent">.pro</span></span>
+                <span class="text-lg sm:text-xl font-bold tracking-tight text-white font-sans">
+                    BacktestLab <span class="text-indigo-400">Pro</span>
+                </span>
             </a>
 
-            <nav class="hidden md:flex items-center gap-6 lg:gap-8 text-sm font-medium text-zinc-400">
+            <!-- Desktop Links -->
+            <nav class="hidden lg:flex items-center gap-6 xl:gap-8 text-sm font-medium text-zinc-400" aria-label="Desktop Navigation">
                 <a href="index.html#features" class="hover:text-white transition-colors">Features</a>
-                <a href="index.html#markets" class="hover:text-white transition-colors">Data Coverage</a>
+                <a href="algo_store.html" class="hover:text-white transition-colors">Bot Store</a>
                 <a href="bot_automation.html" class="hover:text-white transition-colors">Bot Automation</a>
-                <a href="articles.html" class="hover:text-white text-white transition-colors">Articles</a>
-                <a href="index.html#about" class="hover:text-white transition-colors">About Us</a>
-                <a href="index.html#contact" class="hover:text-white transition-colors">Contact</a>
+                <a href="my-products.html" class="hover:text-white transition-colors">My Products</a>
+                <a href="articles.html" class="text-white font-semibold transition-colors">Articles</a>
+                <a href="about.html" class="hover:text-white transition-colors">About Us</a>
+                <a href="contact.html" class="hover:text-white transition-colors">Contact</a>
             </nav>
 
-            <div id="desktop-auth-container" class="hidden md:flex items-center gap-4 auth-hidden">
-                <div id="logged-out-actions" class="hidden flex items-center gap-4">
-                    <button onclick="triggerAuthFlow()" class="text-sm font-medium text-zinc-400 hover:text-white transition-colors min-w-[44px]">Sign In</button>
-                    <button onclick="triggerAuthFlow()" class="text-sm font-medium bg-white text-brand-dark px-4 py-2.5 rounded-xl hover:bg-zinc-200 transition-all font-display shadow-lg">Get Free Account</button>
-                </div>
-                
-                <div id="logged-in-actions" class="hidden flex items-center gap-3 relative">
-                    <a href="my-sessions.html" class="text-sm font-medium text-zinc-300 hover:text-white border border-white/10 px-4 py-2.5 rounded-xl glass-card transition-all flex items-center gap-2">
-                        <i class="fa-solid fa-folder-open text-brand-accent"></i> My Sessions
-                    </a>
-                    <a href="session.html" class="text-sm font-medium bg-gradient-to-r from-brand-accent to-brand-purple text-white px-5 py-2.5 rounded-xl hover:opacity-90 transition-all font-display shadow-md flex items-center gap-2">
-                        <i class="fa-solid fa-plus text-xs"></i> New Session
-                    </a>
+            <!-- Desktop Actions Matrix -->
+            <div class="hidden lg:flex items-center gap-3">
+                <div id="desktop-auth-container" class="flex items-center gap-3 auth-hidden">
+                    <div id="logged-out-actions" class="hidden flex items-center gap-4">
+                        <button onclick="triggerAuthFlow()" class="text-sm font-semibold text-zinc-400 hover:text-white transition-colors min-w-[44px]">Sign In</button>
+                        <button onclick="triggerAuthFlow()" class="text-sm font-semibold bg-white text-zinc-950 px-4 py-2.5 rounded-xl hover:bg-zinc-200 transition-all font-display shadow-lg">Get Free Account</button>
+                    </div>
                     
-                    <div class="relative ml-2" id="profile-dropdown-wrapper">
-                        <button id="profile-menu-trigger-btn" class="flex items-center justify-center h-10 w-10 rounded-xl bg-gradient-to-br from-brand-accent to-brand-purple p-[1px] focus:outline-none transition-transform hover:scale-105" title="View Account Profile">
-                            <div class="h-full w-full bg-brand-dark rounded-[11px] flex items-center justify-center text-zinc-300 hover:text-white">
-                                <i class="fa-solid fa-user text-sm"></i>
-                            </div>
-                        </button>
-
-                        <div id="profile-overlay-dialog-box" class="hidden absolute right-0 mt-3 w-64 rounded-2xl border border-white/10 bg-brand-dark/95 backdrop-blur-xl p-4 shadow-2xl z-50 text-left">
-                            <div class="flex items-center gap-3 mb-3">
-                                <div class="h-9 w-9 rounded-xl bg-white/5 flex items-center justify-center text-brand-accent border border-white/10 flex-shrink-0">
+                    <div id="logged-in-actions" class="hidden flex items-center gap-3 relative">
+                        <a href="my-sessions.html" class="text-xs sm:text-sm font-semibold text-zinc-300 hover:text-white border border-white/10 px-4 py-2.5 rounded-full bg-[#0d0d11] hover:bg-zinc-900 transition-all flex items-center gap-2">
+                            <i class="fa-solid fa-folder text-indigo-400 text-xs"></i> My Sessions
+                        </a>
+                        <a href="session.html" class="text-xs sm:text-sm font-semibold bg-gradient-to-r from-indigo-500 to-purple-500 text-white px-5 py-2.5 rounded-full hover:opacity-90 active:scale-95 transition-all shadow-md shadow-indigo-500/10 flex items-center gap-1.5">
+                            <i class="fa-solid fa-plus text-xs"></i> New Session
+                        </a>
+                        
+                        <div class="relative ml-1" id="profile-dropdown-wrapper">
+                            <button id="profile-menu-trigger-btn" aria-label="Open Profile Menu" class="flex items-center justify-center h-10 w-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 p-[1px] focus:outline-none transition-transform hover:scale-105" title="View Account Profile">
+                                <div class="h-full w-full bg-[#050507] rounded-[11px] flex items-center justify-center text-zinc-300 hover:text-white">
                                     <i class="fa-solid fa-user text-sm"></i>
                                 </div>
-                                <div class="overflow-hidden">
-                                    <h5 id="profile-box-name" class="text-sm font-bold text-white font-display truncate">Trader Pro</h5>
-                                    <p id="profile-box-email" class="text-xs text-zinc-500 truncate">sandbox@backtestlabpro.com</p>
-                                </div>
-                            </div>
-
-                            <button id="firebase-logout-btn" class="w-full py-2 rounded-xl bg-zinc-900 border border-white/5 text-zinc-400 hover:text-red-400 hover:border-red-500/20 hover:bg-red-500/5 transition-all text-xs font-semibold flex items-center justify-center gap-2 font-display min-h-[36px]">
-                                <i class="fa-solid fa-power-off text-xs"></i> Sign Out
                             </button>
+
+                            <div id="profile-overlay-dialog-box" class="hidden absolute right-0 mt-3 w-64 rounded-2xl border border-white/10 bg-[#0c0c0e]/95 backdrop-blur-xl p-4 shadow-2xl z-50 text-left">
+                                <div class="flex items-center gap-3 mb-3">
+                                    <div class="h-9 w-9 rounded-xl bg-white/5 flex items-center justify-center text-indigo-400 border border-white/10 flex-shrink-0">
+                                        <i class="fa-solid fa-user text-sm"></i>
+                                    </div>
+                                    <div class="overflow-hidden">
+                                        <h5 id="profile-box-name" class="text-sm font-bold text-white font-sans truncate">Trader Pro</h5>
+                                        <p id="profile-box-email" class="text-xs text-zinc-500 truncate font-mono">sandbox@backtestlabpro.com</p>
+                                    </div>
+                                </div>
+                                <button id="firebase-logout-btn" class="w-full py-2.5 rounded-xl bg-zinc-900 border border-white/5 text-zinc-400 hover:text-red-400 hover:border-red-500/20 hover:bg-red-500/5 transition-all text-xs font-semibold flex items-center justify-center gap-2 font-display min-h-[36px]">
+                                    <i class="fa-solid fa-power-off text-xs"></i> Sign Out
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <button id="mobile-menu-btn" class="md:hidden text-zinc-400 hover:text-white text-2xl focus:outline-none p-2 min-w-[48px] min-h-[48px] flex items-center justify-end">
-                <i class="fa-solid fa-bars-staggered"></i>
-            </button>
+            <!-- Mobile Controls -->
+            <div class="flex lg:hidden items-center gap-2">
+                <a href="session.html" class="flex items-center gap-1 px-3 py-1.5 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 text-xs font-semibold text-white shadow-md">
+                    <i class="fa-solid fa-plus text-[10px]"></i> Session
+                </a>
+                <button id="mobileMenuBtn" aria-label="Toggle Navigation" class="w-9 h-9 flex items-center justify-center rounded-lg bg-zinc-900 border border-white/10 text-zinc-300 hover:text-white focus:outline-none transition-transform active:scale-95">
+                    <i id="menuIcon" class="fa-solid fa-bars text-sm"></i>
+                </button>
+            </div>
         </div>
 
-        <div id="mobile-menu" class="hidden md:hidden border-t border-white/5 bg-brand-dark/95 backdrop-blur-lg px-4 pt-4 pb-8 space-y-3 absolute w-full left-0 transition-all duration-300 shadow-2xl z-50 max-h-[calc(100vh-5rem)] overflow-y-auto">
-            <a href="index.html" class="block text-zinc-300 hover:text-white py-3 px-2 rounded-lg hover:bg-white/5 transition-colors">Home</a>
-            <a href="index.html#markets" class="block text-zinc-300 hover:text-white py-3 px-2 rounded-lg hover:bg-white/5 transition-colors">Data Coverage</a>
-            <a href="bot_automation.html" class="block text-zinc-300 hover:text-white py-3 px-2 rounded-lg hover:bg-white/5 transition-colors">Bot Automation</a>
-            <a href="articles.html" class="block text-zinc-300 hover:text-white py-3 px-2 rounded-lg hover:bg-white/5 transition-colors">Articles</a>
-            <a href="index.html#about" class="block text-zinc-300 hover:text-white py-3 px-2 rounded-lg hover:bg-white/5 transition-colors">About Us</a>
-            <a href="index.html#contact" class="block text-zinc-300 hover:text-white py-3 px-2 rounded-lg hover:bg-white/5 transition-colors">Contact</a>
-            <hr class="border-white/5 my-3">
-            <div id="mobile-auth-placeholder" class="space-y-3 pt-2 auth-hidden"></div>
+        <!-- Mobile Drawer -->
+        <div id="mobileMenu" class="hidden lg:hidden border-t border-white/5 bg-[#09090d]/98 backdrop-blur-2xl px-4 py-4 space-y-2 max-h-[calc(100vh-4rem)] overflow-y-auto shadow-2xl transition-all">
+            <a href="index.html#features" class="block text-sm font-medium text-zinc-300 hover:text-white py-2 px-2 rounded-lg hover:bg-white/5">Features</a>
+            <a href="algo_store.html" class="block text-sm font-medium text-zinc-300 hover:text-white py-2 px-2 rounded-lg hover:bg-white/5">Bot Store</a>
+            <a href="bot_automation.html" class="block text-sm font-medium text-zinc-300 hover:text-white py-2 px-2 rounded-lg hover:bg-white/5">Bot Automation</a>
+            <a href="my-products.html" class="block text-sm font-medium text-zinc-300 hover:text-white py-2 px-2 rounded-lg hover:bg-white/5">My Products</a>
+            <a href="articles.html" class="block text-sm font-semibold text-indigo-400 py-2 px-2 rounded-lg bg-indigo-500/10 border border-indigo-500/20">Articles</a>
+            <a href="about.html" class="block text-sm font-medium text-zinc-300 hover:text-white py-2 px-2 rounded-lg hover:bg-white/5">About Us</a>
+            <a href="contact.html" class="block text-sm font-medium text-zinc-300 hover:text-white py-2 px-2 rounded-lg hover:bg-white/5">Contact</a>
+            
+            <div id="mobile-auth-placeholder" class="pt-3 border-t border-white/5 space-y-2 auth-hidden"></div>
         </div>
     </header>
 
     <!-- Content Workspace Container Layout -->
-    <main class="relative z-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto my-12 space-y-12">
+    <main class="relative z-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto my-8 sm:my-12 space-y-12 flex-grow w-full">
         
         <!-- Top Featured Spotlight Frame -->
         <section class="p-6 md:p-10 rounded-2xl border border-white/5 bg-gradient-to-b from-brand-card to-brand-dark/40 relative overflow-hidden flex flex-col md:flex-row items-center gap-8" id="hero-block">
@@ -207,7 +210,7 @@
             <!-- Primary Column Feed Stream (8 Cols) -->
             <div class="lg:col-span-8 space-y-6">
                 <h2 class="font-display font-bold text-2xl text-white flex items-center gap-3">
-                    <i class="fa-solid fa-newspaper text-brand-accent"></i> Recent Strategy Insights
+                    <i class="fa-solid fa-newspaper text-indigo-400"></i> Recent Strategy Insights
                 </h2>
                 
                 <div class="space-y-4" id="articles-wrapper">
@@ -220,26 +223,26 @@
                 
                 <!-- Category Filtering Tree Widget -->
                 <div class="p-6 rounded-2xl glass-card">
-                    <h3 class="font-display font-bold text-xs uppercase tracking-wider text-white border-b border-white/5 pb-3 mb-4">Categories</h3>
+                    <h3 class="font-display font-bold text-xs uppercase tracking-wider text-white border-b border-white/5 pb-3 mb-4 font-mono">Categories</h3>
                     <ul class="space-y-2.5 text-sm text-zinc-400">
-                        <li class="flex justify-between items-center cursor-pointer hover:text-brand-accent transition-colors">
-                            <span>Market Analysis</span><span class="text-xs bg-white/5 px-2.5 py-0.5 rounded-full text-zinc-500">12</span>
+                        <li class="flex justify-between items-center cursor-pointer hover:text-indigo-400 transition-colors">
+                            <span>Market Analysis</span><span class="text-xs bg-white/5 px-2.5 py-0.5 rounded-full text-zinc-500 font-mono">12</span>
                         </li>
-                        <li class="flex justify-between items-center cursor-pointer hover:text-brand-accent transition-colors">
-                            <span>Backtesting Guides</span><span class="text-xs bg-white/5 px-2.5 py-0.5 rounded-full text-zinc-500">11</span>
+                        <li class="flex justify-between items-center cursor-pointer hover:text-indigo-400 transition-colors">
+                            <span>Backtesting Guides</span><span class="text-xs bg-white/5 px-2.5 py-0.5 rounded-full text-zinc-500 font-mono">11</span>
                         </li>
-                        <li class="flex justify-between items-center cursor-pointer hover:text-brand-accent transition-colors">
-                            <span>Risk Management</span><span class="text-xs bg-white/5 px-2.5 py-0.5 rounded-full text-zinc-500">7</span>
+                        <li class="flex justify-between items-center cursor-pointer hover:text-indigo-400 transition-colors">
+                            <span>Risk Management</span><span class="text-xs bg-white/5 px-2.5 py-0.5 rounded-full text-zinc-500 font-mono">7</span>
                         </li>
-                        <li class="flex justify-between items-center cursor-pointer hover:text-brand-accent transition-colors">
-                            <span>Crypto Outlook</span><span class="text-xs bg-white/5 px-2.5 py-0.5 rounded-full text-zinc-500">16</span>
+                        <li class="flex justify-between items-center cursor-pointer hover:text-indigo-400 transition-colors">
+                            <span>Crypto Outlook</span><span class="text-xs bg-white/5 px-2.5 py-0.5 rounded-full text-zinc-500 font-mono">16</span>
                         </li>
                     </ul>
                 </div>
 
                 <!-- Live Notification Platform Note -->
                 <div class="p-6 rounded-2xl border border-dashed border-white/10 bg-transparent flex gap-4 items-start">
-                    <i class="fa-solid fa-square-rss text-brand-accent text-xl mt-0.5"></i>
+                    <i class="fa-solid fa-square-rss text-indigo-400 text-xl mt-0.5"></i>
                     <div>
                         <h4 class="text-sm font-bold text-white mb-1">Automated Stream Logs</h4>
                         <p class="text-xs text-zinc-500 leading-relaxed">New algorithmic breakdowns, performance models, and historical slice data logs deploy cleanly at market close daily.</p>
@@ -250,20 +253,97 @@
         </div>
     </main>
 
-    <!-- Global Application Footer Component -->
-    <footer class="mt-24 border-t border-white/5 bg-zinc-950/40 backdrop-blur-sm relative z-10 py-12 text-zinc-500 text-xs">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-6 text-center sm:text-left">
-            <div class="flex flex-col sm:flex-row items-center gap-3">
-                <div class="h-6 w-6 rounded bg-zinc-900 flex items-center justify-center text-[10px] text-zinc-400 mb-2 sm:mb-0"><i class="fa-solid fa-chart-line"></i></div>
-                <span>© 2026 BacktestLab Pro. Open-source public good utility architecture.</span>
-            </div>
+    <!-- Unified Global Footer Component -->
+    <footer class="mt-24 border-t border-white/10 bg-[#08080a] relative z-10 pt-16 pb-12 text-zinc-400 text-xs font-sans">
+        <div class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
             
-            <div class="flex flex-wrap items-center justify-center gap-6 text-zinc-400">
-                <a href="index.html#features" class="hover:text-white transition-colors">Features</a>
-                <a href="index.html#markets" class="hover:text-white transition-colors">Data</a>
-                <a href="index.html#pricing" class="hover:text-white transition-colors">Zero-Fee License</a>
-                <a href="https://github.com" target="_blank" class="hover:text-white text-lg transition-colors"><i class="fa-brands fa-github"></i></a>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10">
+                <div class="lg:col-span-2 space-y-4">
+                    <a href="index.html" class="flex items-center gap-3 group">
+                        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20 flex-shrink-0">
+                            <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                            </svg>
+                        </div>
+                        <span class="font-display font-bold text-lg text-white tracking-tight">BacktestLab <span class="text-indigo-400">Pro</span></span>
+                    </a>
+                    
+                    <p class="text-zinc-400 text-xs leading-relaxed max-w-sm">
+                        Institutional-grade strategy backtesting and trading bot development framework[cite: 19]. Built to eliminate paywalls, automate strategy validation, and bridge manual setups to algorithmic code[cite: 19].
+                    </p>
+
+                    <div class="flex items-center gap-3 pt-2">
+                        <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="h-9 w-9 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-white/10 transition-all" title="GitHub">
+                            <i class="fa-brands fa-github text-sm"></i>
+                        </a>
+                        <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" class="h-9 w-9 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-white/10 transition-all" title="Twitter / X">
+                            <i class="fa-brands fa-x-twitter text-sm"></i>
+                        </a>
+                        <a href="https://discord.com" target="_blank" rel="noopener noreferrer" class="h-9 w-9 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-white/10 transition-all" title="Discord Community">
+                            <i class="fa-brands fa-discord text-sm"></i>
+                        </a>
+                        <a href="contact.html" class="h-9 w-9 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-white/10 transition-all" title="Contact Us">
+                            <i class="fa-solid fa-envelope text-sm"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="space-y-3">
+                    <h4 class="font-display font-bold text-white text-sm tracking-wide uppercase">Platform</h4>
+                    <ul class="space-y-2.5">
+                        <li><a href="index.html#features" class="hover:text-white transition-colors">Platform Features</a></li>
+                        <li><a href="session.html" class="hover:text-white transition-colors">Start Backtest Session</a></li>
+                        <li><a href="algo_store.html" class="hover:text-white transition-colors">Algo Bot Store</a></li>
+                        <li><a href="bot_automation.html" class="hover:text-white transition-colors">Bot Automation Compiler</a></li>
+                        <li><a href="index.html#markets" class="hover:text-white transition-colors">Historical Feeds Pool</a></li>
+                    </ul>
+                </div>
+
+                <div class="space-y-3">
+                    <h4 class="font-display font-bold text-white text-sm tracking-wide uppercase">Resources</h4>
+                    <ul class="space-y-2.5">
+                        <li><a href="articles.html" class="hover:text-white transition-colors">Quant Articles &amp; Guides</a></li>
+                        <li><a href="about.html" class="hover:text-white transition-colors">About Us &amp; Mission</a></li>
+                        <li><a href="contact.html" class="hover:text-white transition-colors">Contact Support</a></li>
+                    </ul>
+                </div>
+
+                <div class="space-y-3">
+                    <h4 class="font-display font-bold text-white text-sm tracking-wide uppercase">Legal &amp; Risk</h4>
+                    <ul class="space-y-2.5">
+                        <li><a href="privacy.html" class="hover:text-white transition-colors">Privacy Policy</a></li>
+                        <li><a href="terms.html" class="hover:text-white transition-colors">Terms of Service</a></li>
+                        <li><a href="risk.html" class="hover:text-white transition-colors">Financial Risk Disclaimer</a></li>
+                        <li><a href="about.html#bot-policy" class="hover:text-white transition-colors">Bot Development Disclosure</a></li>
+                    </ul>
+                </div>
             </div>
+
+            <hr class="border-white/5">
+
+            <div class="p-5 rounded-2xl bg-zinc-950/80 border border-white/5 text-[11px] text-zinc-500 leading-relaxed space-y-2 font-mono">
+                <div class="flex items-center gap-2 font-bold text-zinc-400 text-xs">
+                    <i class="fa-solid fa-triangle-exclamation text-amber-400"></i> Financial &amp; Automation Risk Disclaimer
+                </div>
+                <p>
+                    <strong>BacktestLab Pro</strong> provides analytical simulation software, historical market datasets, and automated script translation services for educational and quantitative research purposes only[cite: 19]. Simulated past backtest performance is not indicative of future market results[cite: 19]. 
+                </p>
+                <p>
+                    We do not sell "guaranteed profit" algorithms or financial advice[cite: 19]. Trading foreign exchange (Forex), cryptocurrencies, and equities carries substantial financial risk and is not suitable for every investor[cite: 19]. Any trading script or bot executed on live accounts is used entirely at your own risk[cite: 19].
+                </p>
+            </div>
+
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4 text-zinc-500 text-xs pt-2 font-mono">
+                <div class="flex items-center gap-2">
+                    <span class="h-2 w-2 rounded-full bg-emerald-400"></span>
+                    <span>&copy; 2026 BacktestLab Pro. All rights reserved.</span>
+                </div>
+                <div class="flex items-center gap-4 text-[11px]">
+                    <span class="text-zinc-600">Engine Build: v1.04-Public</span>
+                    <a href="#top" class="hover:text-white transition-colors"><i class="fa-solid fa-arrow-up mr-1"></i> Back to Top</a>
+                </div>
+            </div>
+
         </div>
     </footer>
 
@@ -308,328 +388,274 @@
     </script>
 
     <!-- Global Layout Core Logic & Interface Handlers -->
-   <script>
-    let currentAuthStatusGlobal = false;
+    <script>
+        let currentAuthStatusGlobal = false;
 
-    // Database Array explicitly linking all your new and historical files
-    const articlesDatabase = [
-
-{
-            id: "art_pinescript_v6_convert",
-            isFeatured: false,
-            title: "How to Convert Pine Script v6 to Python & Node.js Without Repainting or Latency",
-            excerpt: "Translate TradingView strategy logic into robust, event-driven trading bots. Master lookback operators, dynamic requests, execution latency reduction, and zero-repainting safeguards.",
-            category: "Bot Automation",
-            tagColor: "text-cyan-400 bg-cyan-500/10 border-cyan-500/20",
-            author: "BacktestLab Research Team",
-            date: "Today",
-            readTime: "16 min read",
-            icon: "fa-solid fa-code-compare text-cyan-400",
-            url: "articles/pine-script-v6-to-python-bot-conversion.html"
-        },
-
-        {
-            id: "art_featured_2026",
-            isFeatured: true, // Key top banner card spotlight position
-            title: "Best Backtesting Software for Traders in 2026: A Complete Comparison",
-            excerpt: "An in-depth review comparing TradingView, MetaTrader, and Forex Tester workflows against modern cloud architectures to optimize your testing pipeline.",
-            category: "Product Review",
-            tagColor: "text-indigo-400 bg-indigo-500/10 border-indigo-500/20",
-            author: "BacktestLab Research",
-            date: "June 2026",
-            readTime: "8 min read",
-            icon: "fa-solid fa-chart-line text-brand-accent",
-            url: "articles/Walk-Forward Optimization in Algorithmic Backtesting Complete Guide.html"
-        },
-        {
-            id: "art_new_tv_grid",
-            isFeatured: false,
-            title: "Is TradingView Backtesting Accurate for Leverage Grid Bots?",
-            excerpt: "An exhaustive long-form breakdown unpacking high-frequency chart tick streams, memory limitations inside Pine Script, dynamic correlation metrics, and mitigation strategies for automated grids.",
-            category: "Backtesting Guides",
-            tagColor: "text-purple-400 bg-purple-500/10 border-purple-500/20",
-            author: "BacktestLab Research Team",
-            date: "Today",
-            readTime: "12 min read",
-            icon: "fa-solid fa-robot text-purple-400",
-            url: "articles/Is TradingView backtesting accurate for leverage grid bots.html"
-        },
-        {
-            id: "art_new_crypto_risk",
-            isFeatured: false,
-            title: "What is the Best Risk Management Formula for Backtesting Crypto?",
-            excerpt: "A systematic masterclass modeling mean-reversion anomalies, dynamic Z-Score bands, Engle's GARCH memory processes, and structural downside calculations across volatile token liquidity streams.",
-            category: "Risk Management",
-            tagColor: "text-amber-400 bg-amber-500/10 border-amber-500/20",
-            author: "BacktestLab Research Team",
-            date: "Today",
-            readTime: "10 min read",
-            icon: "fa-solid fa-shield-halved text-amber-500",
-            url: "articles/What is the Best Risk Management Formula for Backtesting Crypto.html"
-        },
-        {
-            id: "art_new_crypto_risk_v2",
-            isFeatured: false,
-            title: "Systematic Risk Modeling Frameworks & Mathematical Intuitions",
-            excerpt: "Alternative design parameters analyzing transaction friction metrics, broker slippage limits, and out-of-sample walk-forward checks to protect trading bots against curve-fitting.",
-            category: "Risk Management",
-            tagColor: "text-red-400 bg-red-500/10 border-red-500/20",
-            author: "BacktestLab Research Team",
-            date: "Today",
-            readTime: "9 min read",
-            icon: "fa-solid fa-calculator text-red-400",
-            url: "articles/Systematic Risk Modeling Frameworks & Mathematical Intuitions.html"
-        },
-        {
-            id: "art_legacy_xau",
-            isFeatured: false,
-            title: "Deconstructive Blueprint: Backtesting 20+ Years of XAUUSD Macro Cycles",
-            excerpt: "An engineering look into multi-decade Gold algorithmic structures. Learn how to optimize data slice servers for parsing 20-year MT5 histories cleanly without memory buffer bugs.",
-            category: "Market Analysis",
-            tagColor: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20",
-            author: "Dev Team Core",
-            date: "Yesterday",
-            readTime: "6 min read",
-            icon: "fa-solid fa-gem text-emerald-400",
-            url: "articles/xauusd-macro-cycles.html"
-        }
-    ];
-
-    window.addEventListener('DOMContentLoaded', () => {
-        setupMobileMenuLogic();
-        setupProfileDropdownToggle();
-        renderArticleHub();
-    });
-
-    window.triggerAuthFlow = function() { window.location.href = "login.html"; };
-
-    function setupMobileMenuLogic() {
-        const menuBtn = document.getElementById('mobile-menu-btn');
-        const mobileMenu = document.getElementById('mobile-menu');
-        menuBtn.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
-            const isOpen = !mobileMenu.classList.contains('hidden');
-            menuBtn.innerHTML = isOpen ? `<i class="fa-solid fa-xmark"></i>` : `<i class="fa-solid fa-bars-staggered"></i>`;
-        });
-    }
-
-    function setupProfileDropdownToggle() {
-        const trigger = document.getElementById('profile-menu-trigger-btn');
-        const dialogBox = document.getElementById('profile-overlay-dialog-box');
-        const wrapper = document.getElementById('profile-dropdown-wrapper');
-
-        trigger.addEventListener('click', (e) => {
-            e.stopPropagation();
-            dialogBox.classList.toggle('hidden');
-        });
-        document.addEventListener('click', (e) => {
-            if (!wrapper.contains(e.target)) dialogBox.classList.add('hidden');
-        });
-    }
-
-    window.updateAuthViewUI = function(isLoggedIn) {
-        currentAuthStatusGlobal = isLoggedIn;
-        const desktopContainer = document.getElementById('desktop-auth-container');
-        const loggedOutBar = document.getElementById('logged-out-actions');
-        const loggedInBar = document.getElementById('logged-in-actions');
-        const mobileAuthBox = document.getElementById('mobile-auth-placeholder');
-
-        if (isLoggedIn) {
-            loggedOutBar.classList.add('hidden');
-            loggedInBar.classList.remove('hidden');
-            mobileAuthBox.innerHTML = `
-                <a href="my-sessions.html" class="block w-full text-center py-3.5 rounded-xl border border-white/10 text-white bg-zinc-900 min-h-[48px]">My Sessions</a>
-                <a href="session.html" class="block w-full text-center py-3.5 rounded-xl bg-gradient-to-r from-brand-accent to-brand-purple text-white font-medium min-h-[48px]">New Session</a>
-                <button onclick="window.firebaseSignOutAction(window.firebaseAuthInstance)" class="block w-full text-center text-zinc-500 text-xs pt-2 min-h-[34px]">Sign Out</button>
-            `;
-        } else {
-            loggedOutBar.classList.remove('hidden');
-            loggedInBar.classList.add('hidden');
-            mobileAuthBox.innerHTML = `
-                <button onclick="triggerAuthFlow()" class="block w-full text-zinc-400 py-3 text-left font-medium min-h-[44px]">Sign In</button>
-                <button onclick="triggerAuthFlow()" class="block w-full py-3.5 rounded-xl bg-white text-brand-dark font-medium text-center min-h-[48px]">Get Free Account</button>
-            `;
-        }
-
-        if (desktopContainer) {
-            desktopContainer.classList.remove('auth-hidden');
-            desktopContainer.classList.add('auth-visible');
-        }
-        if (mobileAuthBox) {
-            mobileAuthBox.classList.remove('auth-hidden');
-            mobileAuthBox.classList.add('auth-visible');
-        }
-    }
-
-    function renderArticleHub() {
-        const heroBlock = document.getElementById('hero-block');
-        const wrapper = document.getElementById('articles-wrapper');
-
-        heroBlock.innerHTML = '';
-        wrapper.innerHTML = '';
-
-        articlesDatabase.forEach(art => {
-            if(art.isFeatured) {
-                heroBlock.innerHTML = `
-                    <div class="flex-1 space-y-4">
-                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-accent/10 border border-brand-accent/20 text-xs text-brand-accent font-medium">
-                            <span class="h-1.5 w-1.5 rounded-full bg-brand-accent animate-pulse"></span> Featured Breakdown
-                        </div>
-                        <a href="${art.url}" class="block group">
-                            <h1 class="font-display font-bold text-2xl md:text-4xl text-white tracking-tight leading-tight group-hover:text-brand-accent transition-colors duration-200">${art.title}</h1>
-                        </a>
-                        <p class="text-zinc-400 text-sm md:text-base leading-relaxed">${art.excerpt}</p>
-                        
-                        <div class="flex flex-wrap items-center justify-between gap-4 pt-2">
-                            <div class="flex items-center gap-3">
-                                <div class="h-10 w-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400">
-                                    <i class="fa-solid fa-user-shield text-sm"></i>
-                                </div>
-                                <div class="text-xs">
-                                    <h4 class="font-bold text-white">${art.author}</h4>
-                                    <p class="text-zinc-500 mt-0.5">${art.date} &bull; ${art.readTime}</p>
-                                </div>
-                            </div>
-                            <a href="${art.url}" class="text-xs font-semibold text-white bg-white/5 hover:bg-brand-accent border border-white/10 hover:border-brand-accent px-4 py-2 rounded-xl transition-all duration-200 flex items-center gap-2">
-                                Read Article <i class="fa-solid fa-arrow-right text-[10px]"></i>
-                            </a>
-                        </div>
-                    </div>
-                    <a href="${art.url}" class="w-full md:w-64 h-44 bg-brand-dark rounded-xl border border-white/5 flex flex-col justify-center items-center text-center p-4 gap-2 flex-shrink-0 hover:border-white/20 transition-colors group">
-                        <i class="${art.icon} text-4xl transition-transform group-hover:scale-110 duration-200"></i>
-                        <span class="text-[10px] font-mono tracking-widest text-zinc-500 uppercase mt-1">Quant Core</span>
-                    </a>
-                `;
-            } else {
-                const card = document.createElement('a');
-                card.href = art.url;
-                card.className = 'group p-5 rounded-2xl glass-card transition-all hover:border-white/20 flex flex-col md:flex-row gap-6 items-start md:items-center cursor-pointer block';
-                card.innerHTML = `
-                    <div class="h-24 w-full md:w-32 rounded-xl bg-zinc-950 flex items-center justify-center text-3xl border border-white/5 flex-shrink-0 group-hover:bg-zinc-900 transition-colors">
-                        <i class="${art.icon} transition-transform group-hover:scale-105 duration-200"></i>
-                    </div>
-                    <div class="space-y-2 flex-1 w-full">
-                        <div class="flex items-center justify-between gap-4">
-                            <span class="text-[10px] font-semibold tracking-wider uppercase border px-2.5 py-0.5 rounded-md ${art.tagColor}">${art.category}</span>
-                            <span class="text-xs text-zinc-500">${art.date}</span>
-                        </div>
-                        <h3 class="font-display font-bold text-lg text-white group-hover:text-brand-accent transition-colors duration-200">${art.title}</h3>
-                        <p class="text-zinc-400 text-xs sm:text-sm line-clamp-2 leading-relaxed">${art.excerpt}</p>
-                        <div class="flex justify-between items-center pt-2 text-xs text-zinc-500">
-                            <span>By <b class="text-zinc-400">${art.author}</b></span>
-                            <span class="flex items-center gap-1 group-hover:text-white transition-colors">${art.readTime} <i class="fa-solid fa-chevron-right text-[9px] ml-0.5 transform group-hover:translate-x-0.5 transition-transform"></i></span>
-                        </div>
-                    </div>
-                `;
-                wrapper.appendChild(card);
+        const articlesDatabase = [
+            {
+                id: "art_pinescript_v6_convert",
+                isFeatured: false,
+                title: "How to Convert Pine Script v6 to Python & Node.js Without Repainting or Latency",
+                excerpt: "Translate TradingView strategy logic into robust, event-driven trading bots. Master lookback operators, dynamic requests, execution latency reduction, and zero-repainting safeguards.",
+                category: "Bot Automation",
+                tagColor: "text-cyan-400 bg-cyan-500/10 border-cyan-500/20",
+                author: "BacktestLab Research Team",
+                date: "Today",
+                readTime: "16 min read",
+                icon: "fa-solid fa-code-compare text-cyan-400",
+                url: "articles/pine-script-v6-to-python-bot-conversion.html"
+            },
+            {
+                id: "art_featured_2026",
+                isFeatured: true,
+                title: "Best Backtesting Software for Traders in 2026: A Complete Comparison",
+                excerpt: "An in-depth review comparing TradingView, MetaTrader, and Forex Tester workflows against modern cloud architectures to optimize your testing pipeline.",
+                category: "Product Review",
+                tagColor: "text-indigo-400 bg-indigo-500/10 border-indigo-500/20",
+                author: "BacktestLab Research",
+                date: "June 2026",
+                readTime: "8 min read",
+                icon: "fa-solid fa-chart-line text-indigo-400",
+                url: "articles/Best Backtesting Software for Traders in 2026.html"
+            },
+            {
+                id: "art_walk_forward_guide",
+                isFeatured: false,
+                title: "Walk-Forward Optimization in Algorithmic Backtesting: The Definitive Guide",
+                excerpt: "Master walk-forward optimization (WFO) in trading bot backtesting. Learn mathematical rolling window design, WFE calculation, and out-of-sample validation to prevent curve-fitting.",
+                category: "Backtesting Guides",
+                tagColor: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20",
+                author: "BacktestLab Research Team",
+                date: "August 2026",
+                readTime: "18 min read",
+                icon: "fa-solid fa-microchip text-emerald-400",
+                url: "articles/Walk-Forward Optimization in Algorithmic Backtesting Complete Guide.html"
+            },
+            {
+                id: "art_new_tv_grid",
+                isFeatured: false,
+                title: "Is TradingView Backtesting Accurate for Leverage Grid Bots?",
+                excerpt: "An exhaustive long-form breakdown unpacking high-frequency chart tick streams, memory limitations inside Pine Script, dynamic correlation metrics, and mitigation strategies for automated grids.",
+                category: "Backtesting Guides",
+                tagColor: "text-purple-400 bg-purple-500/10 border-purple-500/20",
+                author: "BacktestLab Research Team",
+                date: "Today",
+                readTime: "12 min read",
+                icon: "fa-solid fa-robot text-purple-400",
+                url: "articles/Is TradingView backtesting accurate for leverage grid bots.html"
+            },
+            {
+                id: "art_new_crypto_risk",
+                isFeatured: false,
+                title: "What is the Best Risk Management Formula for Backtesting Crypto?",
+                excerpt: "A systematic masterclass modeling mean-reversion anomalies, dynamic Z-Score bands, Engle's GARCH memory processes, and structural downside calculations across volatile token liquidity streams.",
+                category: "Risk Management",
+                tagColor: "text-amber-400 bg-amber-500/10 border-amber-500/20",
+                author: "BacktestLab Research Team",
+                date: "Today",
+                readTime: "10 min read",
+                icon: "fa-solid fa-shield-halved text-amber-400",
+                url: "articles/What is the Best Risk Management Formula for Backtesting Crypto.html"
+            },
+            {
+                id: "art_new_crypto_risk_v2",
+                isFeatured: false,
+                title: "Systematic Risk Modeling Frameworks & Mathematical Intuitions",
+                excerpt: "Alternative design parameters analyzing transaction friction metrics, broker slippage limits, and out-of-sample walk-forward checks to protect trading bots against curve-fitting.",
+                category: "Risk Management",
+                tagColor: "text-red-400 bg-red-500/10 border-red-500/20",
+                author: "BacktestLab Research Team",
+                date: "Today",
+                readTime: "9 min read",
+                icon: "fa-solid fa-calculator text-red-400",
+                url: "articles/Systematic Risk Modeling Frameworks & Mathematical Intuitions.html"
+            },
+            {
+                id: "art_legacy_xau",
+                isFeatured: false,
+                title: "Deconstructive Blueprint: Backtesting 20+ Years of XAUUSD Macro Cycles",
+                excerpt: "An engineering look into multi-decade Gold algorithmic structures. Learn how to optimize data slice servers for parsing 20-year MT5 histories cleanly without memory buffer bugs.",
+                category: "Market Analysis",
+                tagColor: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20",
+                author: "Dev Team Core",
+                date: "Yesterday",
+                readTime: "6 min read",
+                icon: "fa-solid fa-gem text-emerald-400",
+                url: "articles/xauusd-macro-cycles.html"
+            },
+            {
+                id: "art_crypto_lifecycle",
+                isFeatured: false,
+                title: "Handling Cryptocurrency Lifecycle Volatility Across 10-Year Streams",
+                excerpt: "Evaluating older market regimes against present-day institutional setups. Master historical liquidity normalization, anomaly handling, and exchange outage filtering.",
+                category: "Crypto Outlook",
+                tagColor: "text-indigo-400 bg-indigo-500/10 border-indigo-500/20",
+                author: "Alex Rivers",
+                date: "June 2026",
+                readTime: "4 min read",
+                icon: "fa-brands fa-bitcoin text-indigo-400",
+                url: "articles/crypto-lifecycle-volatility.html"
+            },
+            {
+                id: "art_replay_ui",
+                isFeatured: false,
+                title: "Architecting Web-based Trading Replays: UI State Systems",
+                excerpt: "Front-end state machinery for high-frequency market playback. Optimizing animation loops with requestAnimationFrame and non-blocking canvas interactions.",
+                category: "Backtesting Guides",
+                tagColor: "text-purple-400 bg-purple-500/10 border-purple-500/20",
+                author: "M. Kovac",
+                date: "June 2026",
+                readTime: "9 min read",
+                icon: "fa-solid fa-rotate-left text-purple-400",
+                url: "articles/web-trading-replay-ui.html"
             }
+        ];
+
+        window.addEventListener('DOMContentLoaded', () => {
+            setupMobileMenuLogic();
+            setupProfileDropdownToggle();
+            renderArticleHub();
         });
-    }
-</script>
-<!-- ================= START BACKTESTLAB PRO FOOTER ================= -->
-<footer class="mt-24 border-t border-white/10 bg-brand-dark/90 backdrop-blur-xl relative z-10 pt-16 pb-8 text-zinc-400 text-xs">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-        
-        <!-- Top Section: Brand + Links Matrix -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10">
-            
-            <!-- Brand & Mission (Spans 2 columns on desktop) -->
-            <div class="lg:col-span-2 space-y-4">
-                <a href="index.html" class="flex items-center gap-3 group">
-                    <div class="brand-icon-box">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
-                        </svg>
-                    </div>
-                    <span class="font-display font-bold text-lg text-white tracking-tight">BacktestLab<span class="text-brand-accent">.pro</span></span>
-                </a>
-                
-                <p class="text-zinc-400 text-xs leading-relaxed max-w-sm">
-                    Institutional-grade strategy backtesting and trading bot development framework. Built to eliminate paywalls, automate strategy validation, and bridge manual setups to algorithmic code.
-                </p>
 
-                <!-- Social & Support Media Links -->
-                <div class="flex items-center gap-3 pt-2">
-                    <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="h-9 w-9 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-white/10 transition-all" title="GitHub">
-                        <i class="fa-brands fa-github text-sm"></i>
-                    </a>
-                    <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" class="h-9 w-9 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-white/10 transition-all" title="Twitter / X">
-                        <i class="fa-brands fa-x-twitter text-sm"></i>
-                    </a>
-                    <a href="https://discord.com" target="_blank" rel="noopener noreferrer" class="h-9 w-9 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-white/10 transition-all" title="Discord Community">
-                        <i class="fa-brands fa-discord text-sm"></i>
-                    </a>
-                    <a href="mailto:support@backtestlabpro.com" class="h-9 w-9 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-white/10 transition-all" title="Email Support">
-                        <i class="fa-solid fa-envelope text-sm"></i>
-                    </a>
-                </div>
-            </div>
+        window.triggerAuthFlow = function() { window.location.href = "login.html"; };
 
-            <!-- Column 1: Core Platform Navigation -->
-            <div class="space-y-3">
-                <h4 class="font-display font-bold text-white text-sm tracking-wide uppercase">Platform</h4>
-                <ul class="space-y-2.5">
-                    <li><a href="index.html#features" class="hover:text-white transition-colors">Platform Features</a></li>
-                    <li><a href="session.html" class="hover:text-white transition-colors">Start Backtest Session</a></li>
-                    <li><a href="algo_store.html" class="hover:text-white transition-colors">Algo Bot Store</a></li>
-                    <li><a href="bot_automation.html" class="hover:text-white transition-colors">Bot Automation Compiler</a></li>
-                    <li><a href="index.html#markets" class="hover:text-white transition-colors">Historical Feeds Pool</a></li>
-                </ul>
-            </div>
+        function setupMobileMenuLogic() {
+            const menuBtn = document.getElementById('mobileMenuBtn');
+            const mobileMenu = document.getElementById('mobileMenu');
+            const menuIcon = document.getElementById('menuIcon');
 
-            <!-- Column 2: Educational & Trust Resources -->
-            <div class="space-y-3">
-                <h4 class="font-display font-bold text-white text-sm tracking-wide uppercase">Resources</h4>
-                <ul class="space-y-2.5">
-                    <li><a href="articles.html" class="hover:text-white transition-colors">Quant Articles & Guides</a></li>
-                    <li><a href="about.html" class="hover:text-white transition-colors">About Us & Mission</a></li>
-                    <li><a href="contact.html" class="hover:text-white transition-colors">Contact Support</a></li>
-                    <li><a href="https://trustpilot.com" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors flex items-center gap-1.5"><i class="fa-solid fa-star text-amber-400 text-[10px]"></i> User Reviews</a></li>
-                </ul>
-            </div>
+            if (menuBtn && mobileMenu && menuIcon) {
+                menuBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const isHidden = mobileMenu.classList.toggle('hidden');
+                    menuIcon.className = isHidden ? 'fa-solid fa-bars text-sm' : 'fa-solid fa-xmark text-sm';
+                });
 
-            <!-- Column 3: Legal & Regulatory Compliance -->
-            <div class="space-y-3">
-                <h4 class="font-display font-bold text-white text-sm tracking-wide uppercase">Legal & Risk</h4>
-                <ul class="space-y-2.5">
-                    <li><a href="privacy.html" class="hover:text-white transition-colors">Privacy Policy</a></li>
-                    <li><a href="terms.html" class="hover:text-white transition-colors">Terms of Service</a></li>
-                    <li><a href="disclaimer.html" class="hover:text-white transition-colors">Financial Risk Disclaimer</a></li>
-                    <li><a href="about.html#bot-policy" class="hover:text-white transition-colors">Bot Development Disclosure</a></li>
-                </ul>
-            </div>
+                document.addEventListener('click', (e) => {
+                    if (!mobileMenu.contains(e.target) && !menuBtn.contains(e.target)) {
+                        mobileMenu.classList.add('hidden');
+                        menuIcon.className = 'fa-solid fa-bars text-sm';
+                    }
+                });
 
-        </div>
+                mobileMenu.querySelectorAll('a').forEach(link => {
+                    link.addEventListener('click', () => {
+                        mobileMenu.classList.add('hidden');
+                        menuIcon.className = 'fa-solid fa-bars text-sm';
+                    });
+                });
+            }
+        }
 
-        <hr class="border-white/5">
+        function setupProfileDropdownToggle() {
+            const trigger = document.getElementById('profile-menu-trigger-btn');
+            const dialogBox = document.getElementById('profile-overlay-dialog-box');
+            const wrapper = document.getElementById('profile-dropdown-wrapper');
 
-        <!-- Middle Section: Financial Risk & E-E-A-T Mandatory Disclaimer -->
-        <div class="p-5 rounded-2xl bg-zinc-950/80 border border-white/5 text-[11px] text-zinc-500 leading-relaxed space-y-2">
-            <div class="flex items-center gap-2 font-bold text-zinc-400 text-xs">
-                <i class="fa-solid fa-triangle-exclamation text-amber-500"></i> Financial & Automation Risk Disclaimer
-            </div>
-            <p>
-                <strong>BacktestLabPro.com</strong> provides analytical simulation software, historical market datasets, and automated script translation services for educational and quantitative research purposes only. Simulated past backtest performance is not indicative of future market results. 
-            </p>
-            <p>
-                We do not sell "guaranteed profit" algorithms or financial advice. Trading foreign exchange (Forex), cryptocurrencies, and equities carries substantial financial risk and is not suitable for every investor. Any trading script or bot executed on live accounts is used entirely at your own risk.
-            </p>
-        </div>
+            if (trigger && dialogBox && wrapper) {
+                trigger.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    dialogBox.classList.toggle('hidden');
+                });
+                document.addEventListener('click', (e) => {
+                    if (!wrapper.contains(e.target)) dialogBox.classList.add('hidden');
+                });
+            }
+        }
 
-        <!-- Bottom Section: Copyright & Status -->
-        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 text-zinc-500 text-xs pt-2">
-            <div class="flex items-center gap-2">
-                <span class="h-2 w-2 rounded-full bg-brand-success"></span>
-                <span>© 2026 BacktestLab Pro. All rights reserved.</span>
-            </div>
-            <div class="flex items-center gap-4 text-[11px]">
-                <span class="text-zinc-600">Engine Build: v1.04-Public</span>
-                <a href="#top" class="hover:text-white transition-colors"><i class="fa-solid fa-arrow-up mr-1"></i> Back to Top</a>
-            </div>
-        </div>
+        window.updateAuthViewUI = function(isLoggedIn) {
+            currentAuthStatusGlobal = isLoggedIn;
+            const desktopContainer = document.getElementById('desktop-auth-container');
+            const loggedOutBar = document.getElementById('logged-out-actions');
+            const loggedInBar = document.getElementById('logged-in-actions');
+            const mobileAuthBox = document.getElementById('mobile-auth-placeholder');
 
-    </div>
-</footer>
-<!-- ================= END BACKTESTLAB PRO FOOTER ================= -->
+            if (loggedOutBar) loggedOutBar.classList.toggle('hidden', isLoggedIn);
+            if (loggedInBar) loggedInBar.classList.toggle('hidden', !isLoggedIn);
+
+            if (mobileAuthBox) {
+                if (isLoggedIn) {
+                    mobileAuthBox.innerHTML = `
+                        <a href="my-sessions.html" class="block w-full text-center py-2.5 rounded-xl border border-white/10 text-white bg-zinc-900 text-xs font-semibold">My Sessions</a>
+                        <button onclick="window.firebaseSignOutAction(window.firebaseAuthInstance)" class="block w-full text-center text-zinc-400 hover:text-red-400 text-xs py-1.5 transition-colors">Sign Out</button>
+                    `;
+                } else {
+                    mobileAuthBox.innerHTML = `
+                        <button onclick="triggerAuthFlow()" class="block w-full text-zinc-300 py-2.5 text-center text-xs font-semibold bg-white/5 rounded-xl border border-white/5">Sign In</button>
+                        <button onclick="triggerAuthFlow()" class="block w-full py-2.5 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-semibold text-xs text-center shadow-md">Get Free Account</button>
+                    `;
+                }
+                mobileAuthBox.classList.remove('auth-hidden');
+            }
+
+            if (desktopContainer) desktopContainer.classList.remove('auth-hidden');
+        }
+
+        function renderArticleHub() {
+            const heroBlock = document.getElementById('hero-block');
+            const wrapper = document.getElementById('articles-wrapper');
+
+            if (!heroBlock || !wrapper) return;
+            heroBlock.innerHTML = '';
+            wrapper.innerHTML = '';
+
+            articlesDatabase.forEach(art => {
+                if(art.isFeatured) {
+                    heroBlock.innerHTML = `
+                        <div class="flex-1 space-y-4">
+                            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-xs text-indigo-400 font-medium font-mono">
+                                <span class="h-1.5 w-1.5 rounded-full bg-indigo-400 animate-pulse"></span> Featured Breakdown
+                            </div>
+                            <a href="${art.url}" class="block group">
+                                <h1 class="font-display font-bold text-2xl md:text-4xl text-white tracking-tight leading-tight group-hover:text-indigo-400 transition-colors duration-200">${art.title}</h1>
+                            </a>
+                            <p class="text-zinc-400 text-sm md:text-base leading-relaxed">${art.excerpt}</p>
+                            
+                            <div class="flex flex-wrap items-center justify-between gap-4 pt-2">
+                                <div class="flex items-center gap-3">
+                                    <div class="h-10 w-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400">
+                                        <i class="fa-solid fa-user-shield text-sm"></i>
+                                    </div>
+                                    <div class="text-xs">
+                                        <h4 class="font-bold text-white">${art.author}</h4>
+                                        <p class="text-zinc-500 mt-0.5 font-mono">${art.date} &bull; ${art.readTime}</p>
+                                    </div>
+                                </div>
+                                <a href="${art.url}" class="text-xs font-semibold text-white bg-white/5 hover:bg-indigo-600 border border-white/10 hover:border-indigo-500 px-4 py-2.5 rounded-xl transition-all duration-200 flex items-center gap-2">
+                                    Read Article <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <a href="${art.url}" class="w-full md:w-64 h-44 bg-brand-dark rounded-xl border border-white/5 flex flex-col justify-center items-center text-center p-4 gap-2 flex-shrink-0 hover:border-white/20 transition-colors group">
+                            <i class="${art.icon} text-4xl transition-transform group-hover:scale-110 duration-200"></i>
+                            <span class="text-[10px] font-mono tracking-widest text-zinc-500 uppercase mt-1">Quant Core</span>
+                        </a>
+                    `;
+                } else {
+                    const card = document.createElement('a');
+                    card.href = art.url;
+                    card.className = 'group p-5 rounded-2xl glass-card transition-all hover:border-white/20 flex flex-col md:flex-row gap-6 items-start md:items-center cursor-pointer block';
+                    card.innerHTML = `
+                        <div class="h-24 w-full md:w-32 rounded-xl bg-zinc-950 flex items-center justify-center text-3xl border border-white/5 flex-shrink-0 group-hover:bg-zinc-900 transition-colors">
+                            <i class="${art.icon} transition-transform group-hover:scale-105 duration-200"></i>
+                        </div>
+                        <div class="space-y-2 flex-1 w-full">
+                            <div class="flex items-center justify-between gap-4">
+                                <span class="text-[10px] font-semibold tracking-wider uppercase border px-2.5 py-0.5 rounded-md font-mono ${art.tagColor}">${art.category}</span>
+                                <span class="text-xs text-zinc-500 font-mono">${art.date}</span>
+                            </div>
+                            <h3 class="font-display font-bold text-lg text-white group-hover:text-indigo-400 transition-colors duration-200">${art.title}</h3>
+                            <p class="text-zinc-400 text-xs sm:text-sm line-clamp-2 leading-relaxed">${art.excerpt}</p>
+                            <div class="flex justify-between items-center pt-2 text-xs text-zinc-500">
+                                <span>By <b class="text-zinc-400">${art.author}</b></span>
+                                <span class="flex items-center gap-1 group-hover:text-white transition-colors font-mono">${art.readTime} <i class="fa-solid fa-chevron-right text-[9px] ml-0.5 transform group-hover:translate-x-0.5 transition-transform"></i></span>
+                            </div>
+                        </div>
+                    `;
+                    wrapper.appendChild(card);
+                }
+            });
+        }
+    </script>
 </body>
 </html>

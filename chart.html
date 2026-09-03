@@ -687,12 +687,36 @@ function openSessionModal() {
     if (sessionEnded) return;
     sessionEnded = true;
     window.pause();
+
+    // Check if user is logged in
+    if (!window.auth || !window.auth.currentUser) {
+        // Cache session snapshot so no progress is wiped out
+        const pendingSession = {
+            symbol: symbol,
+            timeframe: tf,
+            speed: speed,
+            final_time: lastReplayTime,
+            trades: trades,
+            balance: document.getElementById("balance").value,
+            risk: document.getElementById("riskPct").value,
+            total_pl: document.getElementById("totalPL").innerText,
+            equity: document.getElementById("currentEquity").innerText,
+            winrate: document.getElementById("winRate").innerText
+        };
+        sessionStorage.setItem("pending_session_data", JSON.stringify(pendingSession));
+        
+        alert("Replay ended! Please sign up or log in to save and analyze your session history.");
+        window.location.href = "login.html?redirect=chart.html";
+        return;
+    }
+
     document.getElementById("sessionModal").style.display = "flex";
 }
 
 function closeSessionModal() { document.getElementById("sessionModal").style.display = "none"; }
 function closeSuccessModal() { document.getElementById("successModal").style.display = "none"; }
 
+window.openSessionModal = openSessionModal;
 window.closeSessionModal = closeSessionModal;
 window.closeSuccessModal = closeSuccessModal;
 window.calcLots = calcLots;
@@ -1002,7 +1026,27 @@ window.saveSession = async function() {
     try {
         if (!window.auth || !window.db) return;
         const user = window.auth.currentUser;
-        if (!user) return;
+        
+        // Guard check for unauthenticated users
+        if (!user) {
+            const pendingSession = {
+                symbol: symbol,
+                timeframe: tf,
+                speed: speed,
+                final_time: lastReplayTime,
+                trades: trades,
+                balance: document.getElementById("balance").value,
+                risk: document.getElementById("riskPct").value,
+                total_pl: document.getElementById("totalPL").innerText,
+                equity: document.getElementById("currentEquity").innerText,
+                winrate: document.getElementById("winRate").innerText,
+                session_name: document.getElementById("sessionNameInput").value.trim() || `${symbol} Replay`
+            };
+            sessionStorage.setItem("pending_session_data", JSON.stringify(pendingSession));
+            alert("Please create an account or log in to save this session to your account.");
+            window.location.href = "login.html?redirect=chart.html";
+            return;
+        }
 
         const sessionName = document.getElementById("sessionNameInput").value.trim();
         if (!sessionName) {
@@ -1026,8 +1070,28 @@ window.saveSession = async function() {
     }
 };
 
-onAuthStateChanged(auth, (user) => {
+onAuthStateChanged(auth, async (user) => {
     console.log(user ? "USER LOGGED: " + user.email : "NO USER LOGGED");
+    
+    // Check if user came back from login with a pending session to auto-save
+    if (user) {
+        const cachedRaw = sessionStorage.getItem("pending_session_data");
+        if (cachedRaw) {
+            try {
+                const cached = JSON.parse(cachedRaw);
+                cached.user_id = user.uid;
+                cached.email = user.email;
+                cached.session_name = cached.session_name || `${cached.symbol || 'Gold'} Backtest`;
+                cached.created_at = new Date().toISOString();
+
+                await window.addDoc(window.collection(window.db, "users", user.uid, "sessions"), cached);
+                sessionStorage.removeItem("pending_session_data");
+                document.getElementById("successModal").style.display = "flex";
+            } catch(e) {
+                console.error("Auto-sync pending session error:", e);
+            }
+        }
+    }
 });
 
 window.load();
@@ -1047,7 +1111,7 @@ let startX = 0, startY = 0;
 let currentShape = null;
 let selected = null;
 let rightClickedShape = null;
-let draggingHandle = null; // 'p1', 'p2', 'target', 'stop' or 'body'
+let draggingHandle = null; 
 let dragStartVal = null;
 
 function resizeCanvas() {
@@ -1180,19 +1244,16 @@ function drawPositionTool(shape, preview) {
     let targetY = preview ? (isLong ? entryPx.y - 40 : entryPx.y + 40) : targetPx.y;
     let stopY = preview ? (isLong ? entryPx.y + 20 : entryPx.y - 20) : stopPx.y;
 
-    // Profit Box (Green)
     ctx.fillStyle = shape.targetColor || 'rgba(8, 153, 129, 0.25)';
     ctx.fillRect(leftX, Math.min(entryPx.y, targetY), width, Math.abs(entryPx.y - targetY));
     ctx.strokeStyle = '#089981';
     ctx.strokeRect(leftX, Math.min(entryPx.y, targetY), width, Math.abs(entryPx.y - targetY));
 
-    // Stop Loss Box (Red)
     ctx.fillStyle = shape.stopColor || 'rgba(242, 54, 69, 0.25)';
     ctx.fillRect(leftX, Math.min(entryPx.y, stopY), width, Math.abs(entryPx.y - stopY));
     ctx.strokeStyle = '#f23645';
     ctx.strokeRect(leftX, Math.min(entryPx.y, stopY), width, Math.abs(entryPx.y - stopY));
 
-    // Center Entry Line
     ctx.strokeStyle = '#ffffff';
     ctx.lineWidth = 1.5;
     ctx.beginPath();
@@ -1200,7 +1261,6 @@ function drawPositionTool(shape, preview) {
     ctx.lineTo(rightX, entryPx.y);
     ctx.stroke();
 
-    // R/R Metric Box
     if (!preview) {
         let entryP = shape.p1;
         let targetP = shape.targetPrice;
@@ -1360,8 +1420,8 @@ function convertToLogical(shape) {
 
     if (shape.type === 'long' || shape.type === 'short') {
         const isLong = shape.type === 'long';
-        shape.i2 = (v1.index || 0) + 12; // Fits 12 bars cleanly on view
-        const priceOffset = v1.price * 0.005; // Adaptive 0.5% Target / 0.25% Stop
+        shape.i2 = (v1.index || 0) + 12;
+        const priceOffset = v1.price * 0.005;
         shape.targetPrice = isLong ? v1.price + priceOffset : v1.price - priceOffset;
         shape.stopPrice = isLong ? v1.price - (priceOffset * 0.5) : v1.price + (priceOffset * 0.5);
         return;
@@ -1430,7 +1490,6 @@ function findShapeNear(x, y) {
     return null;
 }
 
-// Window-level mouse move to update hover states over chart vs items
 window.addEventListener('mousemove', e => {
     const rect = canvas.getBoundingClientRect();
     const x = e.clientX - rect.left;

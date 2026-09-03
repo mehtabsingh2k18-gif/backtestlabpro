@@ -233,18 +233,19 @@
             </nav>
 
             <div class="hidden lg:flex items-center gap-3">
+                <a href="session.html" class="text-xs sm:text-sm font-semibold bg-gradient-to-r from-indigo-500 to-purple-500 text-white px-5 py-2.5 rounded-full hover:opacity-90 active:scale-95 transition-all shadow-md shadow-indigo-500/10 flex items-center gap-1.5">
+                    <i class="fa-solid fa-play text-xs"></i> Open Simulator
+                </a>
+
                 <div id="desktop-auth-container" class="flex items-center gap-3 auth-hidden">
-                    <div id="logged-out-actions" class="hidden flex items-center gap-4">
+                    <div id="logged-out-actions" class="hidden flex items-center gap-3">
                         <button onclick="triggerAuthFlow()" class="text-sm font-semibold text-zinc-400 hover:text-white transition-colors min-w-[44px]">Sign In</button>
-                        <button onclick="triggerAuthFlow()" class="text-sm font-semibold bg-white text-zinc-950 px-4 py-2.5 rounded-xl hover:bg-zinc-200 transition-all font-display shadow-lg">Get Free Account</button>
+                        <button onclick="triggerAuthFlow()" class="text-xs sm:text-sm font-semibold border border-white/10 text-zinc-200 px-4 py-2 rounded-xl hover:bg-zinc-800 transition-all font-display">Create Account</button>
                     </div>
                     
                     <div id="logged-in-actions" class="hidden flex items-center gap-3 relative">
                         <a href="my-sessions.html" class="text-xs sm:text-sm font-semibold text-zinc-300 hover:text-white border border-white/10 px-4 py-2.5 rounded-full bg-[#0d0d11] hover:bg-zinc-900 transition-all flex items-center gap-2">
                             <i class="fa-solid fa-folder text-indigo-400 text-xs"></i> My Sessions
-                        </a>
-                        <a href="session.html" class="text-xs sm:text-sm font-semibold bg-gradient-to-r from-indigo-500 to-purple-500 text-white px-5 py-2.5 rounded-full hover:opacity-90 active:scale-95 transition-all shadow-md shadow-indigo-500/10 flex items-center gap-1.5">
-                            <i class="fa-solid fa-plus text-xs"></i> New Session
                         </a>
                         
                         <div class="relative ml-1" id="profile-dropdown-wrapper">
@@ -279,7 +280,7 @@
             <!-- Mobile Action & Hamburger Controls -->
             <div class="flex lg:hidden items-center gap-2">
                 <a href="session.html" class="flex items-center gap-1 px-3 py-1.5 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 text-xs font-semibold text-white shadow-md">
-                    <i class="fa-solid fa-plus text-[10px]"></i> Session
+                    <i class="fa-solid fa-play text-[10px]"></i> Simulator
                 </a>
                 <button id="mobileMenuBtn" aria-label="Toggle Navigation" class="w-9 h-9 flex items-center justify-center rounded-lg bg-zinc-900 border border-white/10 text-zinc-300 hover:text-white focus:outline-none transition-transform active:scale-95">
                     <i id="menuIcon" class="fa-solid fa-bars text-sm"></i>
@@ -289,6 +290,7 @@
 
         <!-- Mobile Navigation Drawer -->
         <div id="mobileMenu" class="hidden lg:hidden border-t border-white/5 bg-[#09090d]/98 backdrop-blur-2xl px-4 py-4 space-y-2 max-h-[calc(100vh-4rem)] overflow-y-auto shadow-2xl transition-all">
+            <a href="session.html" class="block text-sm font-semibold text-white py-2.5 px-3 rounded-lg bg-gradient-to-r from-indigo-500 to-purple-500 text-center shadow-md">Open Free Simulator</a>
             <a href="index.html" class="block text-sm font-semibold text-indigo-400 py-2 px-2 rounded-lg bg-indigo-500/10 border border-indigo-500/20">Home</a>
             <a href="algo_store.html" class="block text-sm font-medium text-zinc-300 hover:text-white py-2 px-2 rounded-lg hover:bg-white/5">Bot Store</a>
             <a href="bot_automation.html" class="block text-sm font-medium text-zinc-300 hover:text-white py-2 px-2 rounded-lg hover:bg-white/5">Bot Automation</a>
@@ -306,7 +308,7 @@
         <section class="pt-12 sm:pt-20 pb-12 text-center relative max-w-5xl mx-auto scroll-animate opacity-0 translate-y-8 transition-all duration-1000 ease-out">
             <div id="hero-status-banner-wrapper" class="inline-flex items-center mb-6 md:mb-8">
                 <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-xs text-indigo-400 font-medium font-mono">
-                    <span class="h-2 w-2 rounded-full bg-indigo-400 animate-ping"></span> 100% Free Forever • Absolutely Zero Ads
+                    <span class="h-2 w-2 rounded-full bg-indigo-400 animate-ping"></span> 100% Free Forever • Zero Sign-Up Required to Replay
                 </div>
             </div>
 
@@ -316,12 +318,12 @@
             </h1>
 
             <p class="text-zinc-400 text-base sm:text-lg md:text-xl max-w-2xl mx-auto mb-8 md:mb-10 font-normal leading-relaxed">
-                Learn how to backtest trading strategies for free across Crypto, Forex, and Global Equities. Replay up to 20 years of historical deep candle data with an institutional-grade manual and algorithmic backtester.
+                Learn how to backtest trading strategies for free across Crypto, Forex, and Global Equities. Replay up to 20 years of historical deep candle data instantly without creating an account.
             </p>
 
             <div class="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-md mx-auto mb-16 md:mb-20">
                 <button onclick="window.location.href='session.html'" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-white text-zinc-950 font-display font-semibold hover:bg-zinc-200 transition-all transform hover:-translate-y-0.5 shadow-xl flex items-center justify-center gap-3 min-h-[48px]">
-                    Start Free Session <i class="fa-solid fa-arrow-right text-xs"></i>
+                    Launch Backtest Free <i class="fa-solid fa-arrow-right text-xs"></i>
                 </button>
                 <a href="#markets" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-zinc-900/60 border border-white/10 text-zinc-300 font-display font-semibold hover:bg-zinc-800/80 transition-all flex items-center justify-center gap-2 backdrop-blur-sm min-h-[48px]">
                     Explore Historical Data
@@ -335,7 +337,7 @@
                 </div>
                 <div class="pt-4 sm:pt-0 sm:pl-4 md:pl-6">
                     <div class="text-2xl lg:text-3xl font-display font-bold text-indigo-400">0% Fees</div>
-                    <div class="text-xs text-zinc-500 mt-1 uppercase tracking-wider font-mono">No Hidden Subscriptions</div>
+                    <div class="text-xs text-zinc-500 mt-1 uppercase tracking-wider font-mono">No Mandatory Sign-Up</div>
                 </div>
                 <div class="pt-4 md:pt-0 md:pl-4 lg:pl-6">
                     <div class="text-2xl lg:text-3xl font-display font-bold text-purple-400">Unlimited</div>
@@ -351,8 +353,8 @@
         <!-- Dynamic User Workspace Area -->
         <section id="user-dashboard-area" class="py-4 hidden">
             <div class="max-w-3xl mx-auto mb-6">
-                <h2 class="font-display font-bold text-2xl text-white">Your Workspace Sandbox Tracks</h2>
-                <p class="text-zinc-400 text-sm">Pick up directly where you left your live database simulation matrices.</p>
+                <h2 class="font-display font-bold text-2xl text-white">Your Saved Sandbox Tracks</h2>
+                <p class="text-zinc-400 text-sm">Pick up directly where you left your verified simulation matrices.</p>
             </div>
             <div id="my-sessions" class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8"></div>
         </section>
@@ -369,9 +371,9 @@
                     <div class="h-12 w-12 rounded-xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center text-xl mb-6">
                         <i class="fa-solid fa-bolt"></i>
                     </div>
-                    <h3 class="font-display font-bold text-xl text-white mb-2">Zero Lag. No Ads.</h3>
+                    <h3 class="font-display font-bold text-xl text-white mb-2">Zero Lag. Instant Replay.</h3>
                     <p class="text-zinc-400 text-sm leading-relaxed">
-                        We don't pollute your trading space with commercial banner ads. Enjoy a clean, responsive workspace optimized for pure historical candlestick charts.
+                        Test immediately in your browser without registration friction. Enjoy an intuitive workspace optimized for pure historical candlestick charts and manual executions.
                     </p>
                 </div>
                 <div class="p-6 md:p-8 rounded-2xl glass-card transition-all">
@@ -406,7 +408,7 @@
                         Turn Proven Manual Edge <br class="hidden sm:inline">Into An <span class="bg-gradient-to-r from-purple-400 to-indigo-400 bg-clip-text text-transparent">Automated Algo Bot</span>
                     </h2>
                     <p class="text-zinc-400 text-sm sm:text-base leading-relaxed">
-                        We celebrate strategic discipline. Execute and record any setup rule sequence that holds an audited simulation win rate <strong>above 70%</strong> inside our performance matrices, and our server unlocks a complimentary automated trading bot generation script.
+                        We celebrate strategic discipline. Execute and record any setup rule sequence that holds an audited simulation win rate <strong>above 70%</strong> inside your saved performance matrices, and our server unlocks a complimentary automated trading bot generation script.
                     </p>
                 </div>
 
@@ -451,7 +453,7 @@
                     <h2 class="font-display font-bold text-3xl sm:text-5xl text-white mt-2">Comprehensive Market Data Coverage</h2>
                 </div>
                 <p class="text-zinc-400 max-w-md text-sm sm:text-base">
-                    Access high-density financial feeds instantly. Zero rate throttles, no chunk limitations, and zero premium data licensing costs.
+                    Click any feed to launch an instant replay sandbox. Zero sign-up required, no rate throttles, and zero data fees.
                 </p>
             </div>
 
@@ -484,14 +486,14 @@
                 <hr class="border-white/5 my-6">
 
                 <ul class="space-y-4 text-sm text-zinc-300 mb-8">
+                    <li class="flex items-center gap-3"><i class="fa-solid fa-check text-emerald-400 flex-shrink-0"></i> Instant Replay Without Sign-Up</li>
                     <li class="flex items-center gap-3"><i class="fa-solid fa-check text-emerald-400 flex-shrink-0"></i> Crypto, Forex & Stocks Feeds Included</li>
                     <li class="flex items-center gap-3"><i class="fa-solid fa-check text-emerald-400 flex-shrink-0"></i> 10 to 20-Year Candlestick Track Depth</li>
-                    <li class="flex items-center gap-3"><i class="fa-solid fa-check text-emerald-400 flex-shrink-0"></i> Unlimited Active Replay Environments</li>
-                    <li class="flex items-center gap-3"><i class="fa-solid fa-check text-emerald-400 flex-shrink-0"></i> Ultra Advanced Strategy Modules</li>
+                    <li class="flex items-center gap-3"><i class="fa-solid fa-check text-emerald-400 flex-shrink-0"></i> Save & Sync Profiles When You're Ready</li>
                 </ul>
 
                 <button onclick="handleHeroCTA()" class="w-full py-4 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-display font-bold text-center tracking-wide hover:opacity-90 transition-all shadow-lg shadow-indigo-500/20 min-h-[48px]">
-                    Get Instant Sandbox Access
+                    Launch Free Simulator Now
                 </button>
             </div>
         </section>
@@ -505,21 +507,21 @@
             
             <div class="space-y-4">
                 <div class="p-6 rounded-2xl glass-card">
+                    <h3 class="text-lg font-bold text-white font-display mb-2">Do I need to sign up to test my trading strategies?</h3>
+                    <p class="text-sm text-zinc-400 leading-relaxed">
+                        No. You can open the simulator immediately and replay data without creating an account. You only need to sign up if you wish to store, synchronize, and track multiple session results in your personal cloud profile.
+                    </p>
+                </div>
+                <div class="p-6 rounded-2xl glass-card">
                     <h3 class="text-lg font-bold text-white font-display mb-2">How to backtest trading strategies for free?</h3>
                     <p class="text-sm text-zinc-400 leading-relaxed">
-                        To backtest for free, click <strong>Start Session</strong> to open our interactive trading simulator. Choose your asset (such as Gold XAUUSD, Bitcoin, or EURUSD), pick your start date from over 20 years of historical data, and use the bar replay feature to execute trades according to your exact rules without risking real capital.
+                        To backtest for free, click <strong>Launch Backtest Free</strong> or <strong>Open Simulator</strong> to jump directly into the charting workspace. Choose your asset (such as Gold XAUUSD, Bitcoin, or EURUSD), pick your start date from over 20 years of historical data, and use the bar replay feature to execute trades according to your exact rules without risking real capital.
                     </p>
                 </div>
                 <div class="p-6 rounded-2xl glass-card">
                     <h3 class="text-lg font-bold text-white font-display mb-2">What makes BacktestLab Pro the best free backtest website?</h3>
                     <p class="text-sm text-zinc-400 leading-relaxed">
                         Unlike retail charting services that lock multi-year bar replay and tick data behind expensive monthly subscriptions, BacktestLab Pro provides institutional-grade data, multi-timeframe synchronization, and automated bot compilation completely free with zero ads.
-                    </p>
-                </div>
-                <div class="p-6 rounded-2xl glass-card">
-                    <h3 class="text-lg font-bold text-white font-display mb-2">Can I perform Walk-Forward Analysis and BPR testing?</h3>
-                    <p class="text-sm text-zinc-400 leading-relaxed">
-                        Yes. Our platform includes an advanced quantitative analytics engine supporting Walk-Forward Analysis to eliminate curve-fitting bias, as well as liquidity sweep and Balanced Price Range (BPR) pattern validation across customizable timeframes.
                     </p>
                 </div>
             </div>
@@ -686,7 +688,7 @@
                 bannerWrapper.className = "inline-flex items-center mb-6 md:mb-8";
                 bannerWrapper.innerHTML = `
                     <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-xs text-indigo-400 font-medium font-mono">
-                        <span class="h-2 w-2 rounded-full bg-indigo-400 animate-ping"></span> 100% Free Forever • Absolutely Zero Ads
+                        <span class="h-2 w-2 rounded-full bg-indigo-400 animate-ping"></span> 100% Free Forever • Zero Sign-Up Required to Replay
                     </div>
                 `;
             }
@@ -903,10 +905,10 @@
                 { ticker: 'USDJPY', range: '20 Years', src: 'OANDA Data Pipelines' }
             ],
             shares: [
-                { ticker: 'SPY (S&P 500)', range: '15 Years', src: 'CBOE / Nasdaq TotalView Feed' },
-                { ticker: 'QQQ (Nasdaq)', range: '15 Years', src: 'Nasdaq Historical Archive' },
-                { ticker: 'AAPL (Apple)', range: '15 Years', src: 'NYSE / TradeTape Pool' },
-                { ticker: 'NVDA (NVIDIA)', range: '12 Years', src: 'NYSE Institutional Feed' }
+                { ticker: 'SPY', name: 'SPY (S&P 500)', range: '15 Years', src: 'CBOE / Nasdaq TotalView Feed' },
+                { ticker: 'QQQ', name: 'QQQ (Nasdaq)', range: '15 Years', src: 'Nasdaq Historical Archive' },
+                { ticker: 'AAPL', name: 'AAPL (Apple)', range: '15 Years', src: 'NYSE / TradeTape Pool' },
+                { ticker: 'NVDA', name: 'NVDA (NVIDIA)', range: '12 Years', src: 'NYSE Institutional Feed' }
             ]
         };
 
@@ -1000,10 +1002,10 @@
                 container.innerHTML = `
                     <div class="col-span-1 md:col-span-3 p-8 rounded-2xl glass-card text-center space-y-4">
                         <div class="text-zinc-500 text-3xl"><i class="fa-solid fa-folder-open"></i></div>
-                        <h4 class="font-bold text-white text-base">No active sandbox tracks discovered</h4>
-                        <p class="text-xs text-zinc-400 max-w-sm mx-auto">Launch a fresh manual candlestick environment layout to track metrics data blocks.</p>
+                        <h4 class="font-bold text-white text-base">No active saved sessions yet</h4>
+                        <p class="text-xs text-zinc-400 max-w-sm mx-auto">Replay any candlestick setup and save your session when finished to track metrics here.</p>
                         <a href="session.html" class="inline-flex items-center gap-2 px-5 py-2 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 text-white text-xs font-semibold shadow-md min-h-[38px]">
-                            Launch First Session
+                            Launch Backtest Simulator
                         </a>
                     </div>
                 `;
@@ -1017,7 +1019,7 @@
                 const profitStyleClass = isNegative ? "text-red-500" : (session.profit !== "$0.00" ? "text-emerald-400" : "text-zinc-300");
                 
                 const card = document.createElement('div');
-                card.className = 'p-5 rounded-2xl glass-card flex flex-col justify-between transition-all duration-200';
+                card.className = 'p-5 rounded-2xl glass-card flex flex-col justify-between transition-all duration-200 cursor-pointer';
                 card.onclick = () => {
                     window.location.href = `analytics.html?userId=${window.authenticatedUidGlobal}&sessionId=${session.id}`;
                 };
@@ -1111,10 +1113,6 @@
             alert("Lock Exception:\nYou need an actual tracking session with a win rate above 70% to evaluate strategic previews.");
         }
 
-        function handleSessionAction(id) {
-            window.location.href = `session.html?id=${id}`;
-        }
-
         window.updateAuthViewUI = function(isLoggedIn) {
             currentAuthStatusGlobal = isLoggedIn;
             const desktopContainer = document.getElementById('desktop-auth-container');
@@ -1132,8 +1130,7 @@
                 
                 if(mobileAuthBox) {
                     mobileAuthBox.innerHTML = `
-                       <a href="my-sessions.html" class="block w-full text-center py-3 rounded-xl border border-white/10 text-white bg-zinc-900 text-xs font-semibold">My Sessions</a>
-                       <a href="session.html" class="block w-full text-center py-3 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-semibold text-xs shadow-md">New Session</a>
+                       <a href="my-sessions.html" class="block w-full text-center py-2.5 rounded-xl border border-white/10 text-white bg-zinc-900 text-xs font-semibold">My Sessions</a>
                        <button onclick="window.firebaseSignOutAction(window.firebaseAuthInstance)" class="block w-full text-center text-zinc-500 hover:text-red-400 text-xs py-1.5 transition-colors">Sign Out</button>
                     `;
                 }
@@ -1144,8 +1141,7 @@
 
                 if(mobileAuthBox) {
                     mobileAuthBox.innerHTML = `
-                        <button onclick="triggerAuthFlow()" class="block w-full text-zinc-300 py-2.5 text-center text-xs font-semibold bg-white/5 rounded-xl border border-white/5">Sign In</button>
-                        <button onclick="triggerAuthFlow()" class="block w-full py-3 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-semibold text-xs text-center shadow-md">Get Free Account</button>
+                        <button onclick="triggerAuthFlow()" class="block w-full text-zinc-300 py-2.5 text-center text-xs font-semibold bg-white/5 rounded-xl border border-white/5">Sign In / Create Account</button>
                     `;
                 }
             }
@@ -1159,11 +1155,12 @@
         }
 
         function handleHeroCTA() {
-            if (!currentAuthStatusGlobal) {
-                triggerAuthFlow();
-            } else {
-                window.location.href = 'session.html';
-            }
+            window.location.href = "session.html";
+        }
+
+        function launchMarketSession(symbol) {
+            localStorage.setItem("symbol", symbol);
+            window.location.href = "session.html";
         }
 
         function switchMarketTab(activeTabKey) {
@@ -1184,12 +1181,21 @@
             targetContainer.innerHTML = '';
 
             marketDataRepository[activeTabKey].forEach(item => {
+                const displayName = item.name || item.ticker;
+                const tickerCode = item.ticker;
                 const cardNode = document.createElement('div');
-                cardNode.className = 'p-5 rounded-2xl glass-card transition-all flex flex-col justify-between backdrop-blur-sm';
+                cardNode.className = 'p-5 rounded-2xl glass-card transition-all flex flex-col justify-between backdrop-blur-sm cursor-pointer hover:border-indigo-500/40 group';
+                cardNode.onclick = () => launchMarketSession(tickerCode);
+                
                 cardNode.innerHTML = `
                     <div>
-                        <div class="text-xs font-mono text-indigo-400 font-bold mb-1">M1 TO D1 SYNCED</div>
-                        <h4 class="font-display font-bold text-lg text-white">${item.ticker}</h4>
+                        <div class="flex items-center justify-between mb-1">
+                            <span class="text-xs font-mono text-indigo-400 font-bold">M1 TO D1 SYNCED</span>
+                            <span class="text-[10px] text-zinc-500 font-mono group-hover:text-white transition-colors flex items-center gap-1">
+                                Replay <i class="fa-solid fa-play text-[8px] text-indigo-400"></i>
+                            </span>
+                        </div>
+                        <h4 class="font-display font-bold text-lg text-white">${displayName}</h4>
                     </div>
                     <div class="mt-6">
                         <div class="text-xs text-zinc-400 font-medium"><i class="fa-solid fa-database text-[10px] text-zinc-600 mr-1"></i> Data Stream:</div>

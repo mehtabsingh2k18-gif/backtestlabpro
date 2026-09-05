@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+
+    <!-- Primary Keyword-Optimized SEO Meta Directives -->
+    <title>Monte Carlo Simulation in Backtesting: Stress-Testing Strategy Ruin Risk & Drawdowns</title>
+    <meta name="description" content="Master Monte Carlo simulation in trading strategy backtesting. Learn how to shuffle trade sequences, calculate mathematical Risk of Ruin, predict maximum drawdowns, and stress-test algorithmic bots on BacktestLab Pro.">
+    <meta name="keywords" content="monte carlo simulation backtesting, risk of ruin trading formula, stress test trading strategy, trading bot drawdowns, backtesting sequence risk, algorithmic risk analysis, backtestlab pro">
+    <link rel="canonical" href="https://backtestlabpro.com/articles/monte-carlo-simulation-backtesting-guide.html">
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+
+    <!-- Open Graph Directives -->
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="BacktestLab Pro">
+    <meta property="og:url" content="https://backtestlabpro.com/articles/monte-carlo-simulation-backtesting-guide.html">
+    <meta property="og:title" content="Monte Carlo Simulation in Backtesting: Stress-Testing Strategy Ruin Risk & Drawdowns">
+    <meta property="og:description" content="Why historical equity curves lie: Use Monte Carlo randomized sequence testing to determine realistic drawdown ceilings and probability of capital ruin.">
+    <meta property="og:image" content="https://backtestlabpro.com/og-banner.png">
+
+    <!-- Twitter Card Directives -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@BacktestLabPro">
+    <meta name="twitter:title" content="Monte Carlo Simulation in Trading Backtesting">
+    <meta name="twitter:description" content="Predict realistic drawdowns and verify true strategy resilience with Monte Carlo sequence randomized stress testing.">
+    <meta name="twitter:image" content="https://backtestlabpro.com/og-banner.png">
+
+    <!-- Favicon Assets -->
+    <link rel="icon" type="image/png" sizes="192x192" href="https://backtestlabpro.com/favicon.png">
+    <link rel="icon" type="image/svg+xml" href="https://backtestlabpro.com/favicon.svg">
+    <link rel="apple-touch-icon" href="https://backtestlabpro.com/favicon.png">
+
+    <!-- JSON-LD Structured Data: BreadcrumbList, Article & FAQPage -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://backtestlabpro.com/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Quant Articles",
+              "item": "https://backtestlabpro.com/articles.html"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "Monte Carlo Simulation Guide",
+              "item": "https://backtestlabpro.com/articles/monte-carlo-simulation-backtesting-guide.html"
+            }
+          ]
+        },
+        {
+          "@type": "Article",
+          "headline": "Monte Carlo Simulation in Backtesting: Stress-Testing Strategy Ruin Risk & Drawdowns",
+          "description": "Comprehensive quantitative guide explaining how to implement trade order reshuffling, resample trade distributions, compute maximum confidence-interval drawdowns, and avoid catastrophic failure.",
+          "mainEntityOfPage": "https://backtestlabpro.com/articles/monte-carlo-simulation-backtesting-guide.html",
+          "datePublished": "2026-09-05",
+          "dateModified": "2026-09-05",
+          "author": {
+            "@type": "Organization",
+            "name": "BacktestLab Quantitative Research Team"
+          },
+          "publisher": {
+            "@type": "Organization",
+            "name": "BacktestLab Pro",
+            "logo": {
+              "@type": "ImageObject",
+              "url": "https://backtestlabpro.com/favicon.png"
+            }
+          }
+        },
+        {
+          "@type": "FAQPage",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "What is a Monte Carlo simulation in trading strategy backtesting?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "A Monte Carlo simulation is a mathematical technique that models thousands of alternative possible trading histories by randomly rearranging the order and magnitude of closed trades, testing whether an algorithm survives bad luck and losing streaks."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Why is a standard historical backtest insufficient on its own?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "A standard backtest only represents one single linear path through history. If winning and losing trades happened in a different order, the strategy might experience a catastrophic drawdown that leads to capital liquidation or prop firm challenge failure."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What is an acceptable Risk of Ruin percentage for live deployment?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Institutional quantitative trading standards require a Risk of Ruin (probability of losing 20% to 50% of starting capital) of strictly less than 1% across at least 5,000 to 10,000 Monte Carlo iterations."
+              }
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+
+    <!-- Tailwind Framework & Custom Typography -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            dark: '#050507',
+                            card: '#0c0c0e',
+                            accent: '#6366f1',
+                            success: '#10b981',
+                            purple: '#a855f7',
+                            warning: '#f59e0b',
+                            danger: '#ef4444'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { background-color: #050507; color: #f4f4f5; overflow-x: hidden; }
+        .glow-orb { position: absolute; border-radius: 50%; filter: blur(100px); opacity: 0.15; z-index: 0; pointer-events: none; }
+        @media (min-width: 768px) { .glow-orb { filter: blur(140px); opacity: 0.18; } }
+        .glass-card { background: rgba(12, 12, 14, 0.6); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.06); }
+        .brand-icon-box { width: 38px; height: 38px; background: linear-gradient(135deg, #503bf5, #863bf5); border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .article-content h2 { margin-top: 2rem; margin-bottom: 0.75rem; }
+        @media (min-width: 768px) { .article-content h2 { margin-top: 2.75rem; margin-bottom: 1rem; } }
+        .article-content h3 { margin-top: 1.5rem; margin-bottom: 0.5rem; }
+        .article-content p { margin-bottom: 1.25rem; line-height: 1.8; }
+    </style>
+</head>
+<body class="font-sans antialiased relative selection:bg-brand-accent selection:text-white">
+
+    <!-- Ambient Illumination Nodes -->
+    <div class="glow-orb w-[280px] h-[280px] md:w-[600px] md:h-[600px] bg-brand-accent top-[-60px] left-[-60px]"></div>
+    <div class="glow-orb w-[300px] h-[300px] md:w-[700px] md:h-[700px] bg-brand-purple top-[25%] right-[-100px]"></div>
+    <div class="glow-orb w-[250px] h-[250px] md:w-[500px] md:h-[500px] bg-brand-success bottom-[15%] left-[-80px]"></div>
+
+    <!-- RESPONSIVE NAVBAR -->
+    <header class="sticky top-0 z-50 w-full border-b border-white/5 bg-brand-dark/80 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full h-16 sm:h-20 flex items-center justify-between">
+            
+            <a href="../index.html" class="flex items-center gap-2.5 sm:gap-3 group min-h-[44px]" aria-label="BacktestLab Pro Home">
+                <div class="brand-icon-box">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                    </svg>
+                </div>
+                <span class="font-display font-bold text-base sm:text-lg text-white tracking-tight">BacktestLab<span class="text-brand-accent">.pro</span></span>
+            </a>
+
+            <nav class="hidden md:flex items-center gap-6 lg:gap-8 text-sm font-medium text-zinc-400" aria-label="Desktop Navigation">
+                <a href="../index.html#features" class="hover:text-white transition-colors">Features</a>
+                <a href="../algo_store.html" class="hover:text-white transition-colors">Bot Store</a>
+                <a href="../bot_automation.html" class="hover:text-white transition-colors">Bot Automation</a>
+                <a href="../articles.html" class="text-white hover:text-white transition-colors">Quant Articles</a>
+                <a href="../about.html" class="hover:text-white transition-colors">About Us</a>
+            </nav>
+
+            <div class="hidden md:flex items-center gap-4">
+                <a href="../session.html" class="text-sm font-medium bg-gradient-to-r from-brand-accent to-brand-purple text-white px-5 py-2.5 rounded-xl hover:opacity-90 transition-all font-display shadow-md flex items-center gap-2 min-h-[44px]">
+                    <i class="fa-solid fa-play text-xs"></i> Start Backtest
+                </a>
+            </div>
+
+            <button id="mobile-menu-toggle-btn" class="md:hidden text-zinc-400 hover:text-white text-2xl focus:outline-none p-2 min-w-[48px] min-h-[48px] flex items-center justify-center rounded-lg hover:bg-white/5 active:scale-95 transition-transform" aria-label="Toggle Mobile Menu" aria-expanded="false">
+                <i class="fa-solid fa-bars-staggered" id="menu-icon"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Drawer -->
+        <div id="mobile-menu-drawer" class="hidden md:hidden border-t border-white/5 bg-brand-dark/95 backdrop-blur-xl px-4 pt-4 pb-8 space-y-2 absolute w-full left-0 shadow-2xl transition-all duration-300 max-h-[calc(100vh-4rem)] overflow-y-auto z-50">
+            <a href="../index.html" class="block text-zinc-300 hover:text-white py-3 px-3 rounded-xl hover:bg-white/5 font-medium text-sm transition-colors">Home</a>
+            <a href="../index.html#features" class="block text-zinc-300 hover:text-white py-3 px-3 rounded-xl hover:bg-white/5 font-medium text-sm transition-colors">Features</a>
+            <a href="../algo_store.html" class="block text-zinc-300 hover:text-white py-3 px-3 rounded-xl hover:bg-white/5 font-medium text-sm transition-colors">Bot Store</a>
+            <a href="../bot_automation.html" class="block text-zinc-300 hover:text-white py-3 px-3 rounded-xl hover:bg-white/5 font-medium text-sm transition-colors">Bot Automation</a>
+            <a href="../articles.html" class="block text-white bg-brand-accent/10 border border-brand-accent/20 py-3 px-3 rounded-xl font-medium text-sm transition-colors">Quant Articles</a>
+            <a href="../about.html" class="block text-zinc-300 hover:text-white py-3 px-3 rounded-xl hover:bg-white/5 font-medium text-sm transition-colors">About Us</a>
+            
+            <div class="pt-4 border-t border-white/5">
+                <a href="../session.html" class="block w-full text-center py-3.5 rounded-xl bg-gradient-to-r from-brand-accent to-brand-purple text-white font-display font-semibold text-sm shadow-lg min-h-[48px] flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-play text-xs"></i> Start Backtest Session
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- CONTENT WRAPPER -->
+    <main class="relative z-10 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto my-6 sm:my-12 space-y-8 sm:space-y-12">
+
+        <!-- Mobile Breadcrumbs -->
+        <nav aria-label="Breadcrumb" class="text-xs text-zinc-500 font-mono overflow-x-auto no-scrollbar py-1">
+            <ol class="flex items-center gap-2 whitespace-nowrap min-w-max">
+                <li><a href="../index.html" class="hover:text-zinc-300">Home</a></li>
+                <li><span>/</span></li>
+                <li><a href="../articles.html" class="hover:text-zinc-300">Quant Articles</a></li>
+                <li><span>/</span></li>
+                <li class="text-brand-accent font-semibold">Monte Carlo Backtesting Simulation</li>
+            </ol>
+        </nav>
+
+        <!-- ARTICLE HERO HEADER -->
+        <header class="space-y-4 sm:space-y-6 text-left">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-accent/10 border border-brand-accent/20 text-xs text-brand-accent font-medium">
+                <i class="fa-solid fa-dice text-xs"></i> Quantitative Stress-Testing
+            </div>
+
+            <h1 class="font-display font-bold text-2xl sm:text-4xl md:text-5xl lg:text-6xl text-white tracking-tight leading-[1.2]">
+                Monte Carlo Simulation in Backtesting: Stress-Testing Strategy Ruin Risk & Drawdowns
+            </h1>
+
+            <p class="text-zinc-400 text-sm sm:text-lg md:text-xl font-normal leading-relaxed">
+                Why standard backtests present an illusion of certainty, and how to simulate thousands of randomized market paths to verify real live trading survival.
+            </p>
+
+            <div class="flex flex-wrap items-center gap-3 sm:gap-4 text-[11px] sm:text-xs text-zinc-400 border-y border-white/5 py-3 sm:py-4">
+                <div class="flex items-center gap-2">
+                    <div class="h-6 w-6 sm:h-7 sm:w-7 rounded-lg bg-brand-accent/20 border border-brand-accent/30 flex items-center justify-center text-brand-accent font-bold text-[10px]">
+                        QL
+                    </div>
+                    <span>By <strong class="text-white">BacktestLab Quantitative Research Team</strong></span>
+                </div>
+                <span class="hidden sm:inline">&bull;</span>
+                <span>Published September 2026</span>
+                <span class="hidden sm:inline">&bull;</span>
+                <span><i class="fa-solid fa-clock mr-1 text-zinc-500"></i> 15 min read</span>
+                <span class="hidden sm:inline">&bull;</span>
+                <span class="text-brand-success font-medium"><i class="fa-solid fa-chart-pie mr-1"></i> Probability Audited</span>
+            </div>
+        </header>
+
+        <!-- ARTICLE CONTENT BODY -->
+        <article class="article-content text-zinc-300 leading-relaxed text-sm sm:text-base">
+
+            <!-- SECTION 1 -->
+            <section>
+                <h2 class="font-display font-bold text-xl sm:text-3xl text-white flex items-center gap-2.5">
+                    <i class="fa-solid fa-dice-d20 text-brand-purple text-base sm:text-xl flex-shrink-0"></i>
+                    <span>The Fallacy of the Single Linear Backtest</span>
+                </h2>
+                <p>
+                    When you run a historical backtest across 10 or 20 years of tick data, your software produces a single, linear performance timeline. You see an aggregate profit factor, a maximum drawdown percentage, and a total net profit. The critical flaw with this metric set is that it represents <strong>only one exact historical timeline out of an infinite number of possible permutations</strong>.
+                </p>
+                <p>
+                    In live trading, you do not experience the exact sequence of wins and losses that occurred in the past. If a strategy had 60 wins and 40 losses over a 100-trade sample, the historical backtest might have distributed those losses in alternating pairs, showing a mild 8% maximum drawdown. 
+                </p>
+                <p>
+                    However, if those exact same 40 losing trades cluster together into a string of 7 or 8 consecutive losses, the resulting drawdown could exceed 25% or 30%, triggering account liquidation or prop firm challenge disqualification. <strong>Monte Carlo Simulation</strong> solves this sequence risk problem by re-ordering, resampling, and stress-testing trades across thousands of simulated runs.
+                </p>
+            </section>
+
+            <!-- SECTION 2 -->
+            <section>
+                <h2 class="font-display font-bold text-xl sm:text-3xl text-white">
+                    Core Monte Carlo Methodologies: Shuffling vs. Bootstrapping
+                </h2>
+                <p>
+                    Quantitative analysts employ two distinct Monte Carlo models to stress-test trading algorithms on BacktestLab Pro:
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 my-6">
+                    <div class="p-5 sm:p-6 rounded-2xl glass-card border-brand-accent/20">
+                        <div class="text-[10px] sm:text-xs font-mono text-brand-accent font-bold uppercase tracking-wider mb-2">Methodology 01</div>
+                        <h3 class="font-display font-bold text-lg sm:text-xl text-white mb-2">Trade Order Reshuffling (Without Replacement)</h3>
+                        <p class="text-xs text-zinc-400 mb-4">Takes the exact historical set of completed trade returns and randomly shuffles their sequence 5,000 to 10,000 times.</p>
+                        <ul class="text-xs space-y-2 text-zinc-300">
+                            <li class="flex items-start gap-2"><i class="fa-solid fa-check text-brand-success mt-0.5"></i> <span>Preserves exact overall winrate and average risk/reward.</span></li>
+                            <li class="flex items-start gap-2"><i class="fa-solid fa-check text-brand-success mt-0.5"></i> <span>Exposes extreme sequence clustering and consecutive loss risks.</span></li>
+                            <li class="flex items-start gap-2"><i class="fa-solid fa-shield-halved text-brand-accent mt-0.5"></i> <span>Identifies realistic maximum drawdown boundaries.</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="p-5 sm:p-6 rounded-2xl glass-card border-brand-purple/20">
+                        <div class="text-[10px] sm:text-xs font-mono text-brand-purple font-bold uppercase tracking-wider mb-2">Methodology 02</div>
+                        <h3 class="font-display font-bold text-lg sm:text-xl text-white mb-2">Bootstrap Resampling (With Replacement)</h3>
+                        <p class="text-xs text-zinc-400 mb-4">Picks trades randomly from your pool with replacement, meaning a single trade could appear multiple times or not at all in a simulation.</p>
+                        <ul class="text-xs space-y-2 text-zinc-300">
+                            <li class="flex items-start gap-2"><i class="fa-solid fa-check text-brand-success mt-0.5"></i> <span>Tests robustness against regime changes and outlier clusters.</span></li>
+                            <li class="flex items-start gap-2"><i class="fa-solid fa-check text-brand-success mt-0.5"></i> <span>Models severe adverse market scenarios.</span></li>
+                            <li class="flex items-start gap-2"><i class="fa-solid fa-triangle-exclamation text-brand-warning mt-0.5"></i> <span>May exaggerate variance if sample size is under 150 trades.</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 3: CONFIDENCE INTERVAL METRIC MATRIX -->
+            <section>
+                <h2 class="font-display font-bold text-xl sm:text-3xl text-white">
+                    Interpreting Confidence Intervals and Risk of Ruin
+                </h2>
+                <p>
+                    Rather than relying on a single maximum drawdown number, Monte Carlo analysis outputs drawdown percentiles across 5,000 iterations:
+                </p>
+
+                <!-- RESPONSIVE COMPARATIVE DATA TABLE -->
+                <div class="overflow-x-auto my-6 border border-white/5 rounded-2xl">
+                    <table class="w-full text-left text-xs sm:text-sm text-zinc-400 min-w-[620px]">
+                        <thead class="bg-zinc-900 text-white font-display text-[10px] sm:text-xs uppercase tracking-wider">
+                            <tr>
+                                <th class="p-3 sm:p-4">Confidence Metric</th>
+                                <th class="p-3 sm:p-4">Simulated Drawdown</th>
+                                <th class="p-3 sm:p-4">Statistical Meaning</th>
+                                <th class="p-3 sm:p-4">Risk Recommendation</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-white/5 bg-brand-card/50 font-sans">
+                            <tr>
+                                <td class="p-3 sm:p-4 font-bold text-white">50% Percentile (Median)</td>
+                                <td class="p-3 sm:p-4 text-brand-success font-mono font-bold">-11.4%</td>
+                                <td class="p-3 sm:p-4 text-xs">Standard expected baseline performance under normal conditions.</td>
+                                <td class="p-3 sm:p-4 text-xs font-semibold text-brand-success">Normal Operations</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 sm:p-4 font-bold text-white">90% Confidence Interval</td>
+                                <td class="p-3 sm:p-4 text-brand-warning font-mono font-bold">-18.2%</td>
+                                <td class="p-3 sm:p-4 text-xs">90% of all simulated runs had a drawdown shallower than this mark.</td>
+                                <td class="p-3 sm:p-4 text-xs font-semibold text-brand-warning">Size Capital for -20%</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 sm:p-4 font-bold text-white">99% Confidence Interval</td>
+                                <td class="p-3 sm:p-4 text-brand-danger font-mono font-bold">-26.8%</td>
+                                <td class="p-3 sm:p-4 text-xs">Severe tail-risk scenario caused by consecutive loss clustering.</td>
+                                <td class="p-3 sm:p-4 text-xs font-semibold text-brand-danger">Hard Circuit Breaker Floor</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 sm:p-4 font-bold text-brand-purple">Risk of Ruin (&gt;30% Drop)</td>
+                                <td class="p-3 sm:p-4 text-brand-purple font-mono font-bold">0.4% Chance</td>
+                                <td class="p-3 sm:p-4 text-xs">Probability of reaching account termination boundary.</td>
+                                <td class="p-3 sm:p-4 text-xs font-semibold text-brand-purple">Passes Institutional Gate</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- SECTION 4: PRODUCTION SIMULATION SCRIPT -->
+            <section>
+                <h2 class="font-display font-bold text-xl sm:text-3xl text-white">
+                    Step-by-Step Monte Carlo Implementation in JavaScript / Node.js
+                </h2>
+                <p>
+                    Below is an engine script built to run across BacktestLab Pro session results, generating 5,000 reshuffled equity paths and computing max drawdown distributions:
+                </p>
+
+                <div class="p-4 sm:p-5 rounded-2xl bg-zinc-950 border border-white/10 font-mono text-[11px] sm:text-xs overflow-x-auto text-zinc-300 my-6 leading-relaxed no-scrollbar">
+<pre><code><span class="text-zinc-500">/**
+ * BacktestLab Pro - Monte Carlo Strategy Stress Tester
+ * Simulates thousands of reshuffled paths to evaluate realistic drawdown risks.
+ */</span>
+
+<span class="text-purple-400">class</span> <span class="text-blue-400">MonteCarloSimulator</span> {
+    <span class="text-purple-400">constructor</span>(tradePnLList, initialCapital = 50000, iterations = 5000) {
+        <span class="text-purple-400">this</span>.trades = tradePnLList; <span class="text-zinc-500">// Array of trade dollar returns</span>
+        <span class="text-purple-400">this</span>.initialCapital = initialCapital;
+        <span class="text-purple-400">this</span>.iterations = iterations;
+        <span class="text-purple-400">this</span>.maxDrawdownResults = [];
+    }
+
+    <span class="text-blue-400">runSimulation</span>() {
+        <span class="text-purple-400">for</span> (<span class="text-purple-400">let</span> i = 0; i &lt; <span class="text-purple-400">this</span>.iterations; i++) {
+            <span class="text-purple-400">const</span> shuffled = <span class="text-purple-400">this</span>.shuffleArray([...<span class="text-purple-400">this</span>.trades]);
+            <span class="text-purple-400">const</span> dd = <span class="text-purple-400">this</span>.calculateMaxDrawdown(shuffled);
+            <span class="text-purple-400">this</span>.maxDrawdownResults.push(dd);
+        }
+
+        <span class="text-purple-400">this</span>.maxDrawdownResults.sort((a, b) => a - b);
+
+        <span class="text-purple-400">return</span> {
+            medianDrawdown: <span class="text-purple-400">this</span>.getPercentile(50),
+            ninetyPercentDrawdown: <span class="text-purple-400">this</span>.getPercentile(90),
+            ninetyNinePercentDrawdown: <span class="text-purple-400">this</span>.getPercentile(99),
+            riskOfRuinThirtyPercent: (<span class="text-purple-400">this</span>.maxDrawdownResults.filter(dd => dd >= 30).length / <span class="text-purple-400">this</span>.iterations * 100).toFixed(2) + <span class="text-emerald-400">'%'</span>
+        };
+    }
+
+    <span class="text-blue-400">calculateMaxDrawdown</span>(pnlSequence) {
+        <span class="text-purple-400">let</span> equity = <span class="text-purple-400">this</span>.initialCapital;
+        <span class="text-purple-400">let</span> peak = equity;
+        <span class="text-purple-400">let</span> maxDD = 0;
+
+        <span class="text-purple-400">for</span> (<span class="text-purple-400">const</span> trade <span class="text-purple-400">of</span> pnlSequence) {
+            equity += trade;
+            <span class="text-purple-400">if</span> (equity > peak) peak = equity;
+            <span class="text-purple-400">const</span> currentDD = ((peak - equity) / peak) * 100;
+            <span class="text-purple-400">if</span> (currentDD > maxDD) maxDD = currentDD;
+        }
+
+        <span class="text-purple-400">return</span> maxDD;
+    }
+
+    <span class="text-blue-400">shuffleArray</span>(array) {
+        <span class="text-zinc-500">// Fisher-Yates shuffle algorithm</span>
+        <span class="text-purple-400">for</span> (<span class="text-purple-400">let</span> i = array.length - 1; i > 0; i--) {
+            <span class="text-purple-400">const</span> j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        <span class="text-purple-400">return</span> array;
+    }
+
+    <span class="text-blue-400">getPercentile</span>(p) {
+        <span class="text-purple-400">const</span> index = Math.floor((p / 100) * <span class="text-purple-400">this</span>.maxDrawdownResults.length);
+        <span class="text-purple-400">return</span> <span class="text-purple-400">this</span>.maxDrawdownResults[index].toFixed(2) + <span class="text-emerald-400">'%'</span>;
+    }
+}</code></pre>
+                </div>
+            </section>
+
+            <!-- SECTION 5: FAQS -->
+            <section class="space-y-4 sm:space-y-6 pt-6 border-t border-white/5">
+                <h2 class="font-display font-bold text-xl sm:text-3xl text-white">
+                    Frequently Asked Questions: Monte Carlo Backtest Analysis
+                </h2>
+
+                <div class="space-y-3 sm:space-y-4">
+                    <div class="p-5 sm:p-6 rounded-2xl glass-card">
+                        <h3 class="font-display font-bold text-sm sm:text-base text-white mb-1.5">How many trades are required before a Monte Carlo test is statistically valid?</h3>
+                        <p class="text-xs sm:text-sm text-zinc-400">
+                            A minimum of 100 to 150 closed trades is necessary. Running a Monte Carlo simulation on fewer than 50 trades produces unreliably wide confidence bands that fail to reflect actual distribution characteristics.
+                        </p>
+                    </div>
+
+                    <div class="p-5 sm:p-6 rounded-2xl glass-card">
+                        <h3 class="font-display font-bold text-sm sm:text-base text-white mb-1.5">What should I do if my 95% Monte Carlo drawdown breaches prop firm limits?</h3>
+                        <p class="text-xs sm:text-sm text-zinc-400">
+                            Reduce your base position size by half or implement dynamic ATR risk weighting. If your strategy breaches limits at the 95th percentile, it indicates that a normal streak of consecutive losses will eventually eliminate your funded account.
+                        </p>
+                    </div>
+
+                    <div class="p-5 sm:p-6 rounded-2xl glass-card">
+                        <h3 class="font-display font-bold text-sm sm:text-base text-white mb-1.5">How does BacktestLab Pro support Monte Carlo analysis?</h3>
+                        <p class="text-xs sm:text-sm text-zinc-400">
+                            BacktestLab Pro records sub-second tick precision and detailed trade journals. Strategies demonstrating consistent win rates and controlled drawdown across stress-tests qualify for automatic translation into algorithmic bot execution files.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- FINAL CALL-TO-ACTION BLOCK -->
+            <section class="p-6 sm:p-10 md:p-12 rounded-3xl bg-gradient-to-r from-brand-accent/20 via-brand-purple/20 to-zinc-950 border border-brand-accent/30 text-center space-y-4 sm:space-y-6 my-8 sm:my-12">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-success/10 border border-brand-success/20 text-xs text-brand-success font-medium">
+                    <span class="h-2 w-2 rounded-full bg-brand-success animate-ping"></span> Public Good Utility • Zero Platform Fees
+                </div>
+                <h2 class="font-display font-bold text-2xl sm:text-3xl md:text-4xl text-white tracking-tight leading-tight">
+                    Stress-Test Your Strategy Across 20+ Years of Historical Market Data
+                </h2>
+                <p class="text-zinc-400 text-xs sm:text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
+                    Test manual rules or compile automated trading bots using BacktestLab Pro's zero-cost simulation engine. Replay deep tick data across Crypto, Forex, and Global Equities.
+                </p>
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 pt-2">
+                    <a href="../session.html" class="w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl bg-white text-brand-dark font-display font-bold text-xs sm:text-sm hover:bg-zinc-200 transition-all shadow-xl flex items-center justify-center gap-2 min-h-[48px]">
+                        Launch Free Sandbox <i class="fa-solid fa-arrow-right text-xs"></i>
+                    </a>
+                    <a href="../bot_automation.html" class="w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl bg-zinc-900 border border-white/10 text-zinc-300 font-display font-bold text-xs sm:text-sm hover:bg-zinc-800 transition-all min-h-[48px] flex items-center justify-center">
+                        Explore Bot Compiler
+                    </a>
+                </div>
+            </section>
+
+        </article>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="mt-16 sm:mt-24 border-t border-white/10 bg-brand-dark/90 backdrop-blur-xl py-12 sm:py-16 text-zinc-400 text-xs">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 sm:space-y-12">
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 sm:gap-10">
+                <div class="lg:col-span-2 space-y-3 sm:space-y-4">
+                    <a href="../index.html" class="flex items-center gap-2.5 sm:gap-3">
+                        <div class="brand-icon-box">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                        </div>
+                        <span class="font-display font-bold text-base sm:text-lg text-white tracking-tight">BacktestLab<span class="text-brand-accent">.pro</span></span>
+                    </a>
+                    <p class="text-zinc-400 text-xs leading-relaxed max-w-sm">
+                        Institutional-grade strategy backtesting and trading bot development framework. Built to eliminate paywalls, automate strategy validation, and bridge manual setups to algorithmic code.
+                    </p>
+                </div>
+
+                <div class="space-y-2.5 sm:space-y-3">
+                    <h4 class="font-display font-bold text-white text-xs sm:text-sm uppercase tracking-wider">Platform</h4>
+                    <ul class="space-y-2">
+                        <li><a href="../index.html#features" class="hover:text-white transition-colors">Platform Features</a></li>
+                        <li><a href="../session.html" class="hover:text-white transition-colors">Start Session</a></li>
+                        <li><a href="../algo_store.html" class="hover:text-white transition-colors">Algo Bot Store</a></li>
+                        <li><a href="../bot_automation.html" class="hover:text-white transition-colors">Bot Automation</a></li>
+                    </ul>
+                </div>
+
+                <div class="space-y-2.5 sm:space-y-3">
+                    <h4 class="font-display font-bold text-white text-xs sm:text-sm uppercase tracking-wider">Resources</h4>
+                    <ul class="space-y-2">
+                        <li><a href="../articles.html" class="hover:text-white transition-colors">Quant Articles</a></li>
+                        <li><a href="../about.html" class="hover:text-white transition-colors">About Us</a></li>
+                        <li><a href="../contact.html" class="hover:text-white transition-colors">Contact Support</a></li>
+                    </ul>
+                </div>
+
+                <div class="space-y-2.5 sm:space-y-3">
+                    <h4 class="font-display font-bold text-white text-xs sm:text-sm uppercase tracking-wider">Legal</h4>
+                    <ul class="space-y-2">
+                        <li><a href="../privacy.html" class="hover:text-white transition-colors">Privacy Policy</a></li>
+                        <li><a href="../terms.html" class="hover:text-white transition-colors">Terms of Service</a></li>
+                        <li><a href="../disclaimer.html" class="hover:text-white transition-colors">Risk Disclaimer</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t border-white/5 pt-6 sm:pt-8 text-center text-zinc-500 text-[11px] sm:text-xs">
+                <p>© 2026 BacktestLab Pro. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT: MOBILE MENU TOGGLE -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const menuToggleBtn = document.getElementById('mobile-menu-toggle-btn');
+            const menuDrawer = document.getElementById('mobile-menu-drawer');
+            const menuIcon = document.getElementById('menu-icon');
+
+            if (menuToggleBtn && menuDrawer) {
+                menuToggleBtn.addEventListener('click', () => {
+                    const isExpanded = menuToggleBtn.getAttribute('aria-expanded') === 'true';
+                    menuToggleBtn.setAttribute('aria-expanded', !isExpanded);
+                    menuDrawer.classList.toggle('hidden');
+                    menuIcon.classList.toggle('fa-bars-staggered', isExpanded);
+                    menuIcon.classList.toggle('fa-xmark', !isExpanded);
+                });
+
+                menuDrawer.querySelectorAll('a').forEach(link => {
+                    link.addEventListener('click', () => {
+                        menuDrawer.classList.add('hidden');
+                        menuToggleBtn.setAttribute('aria-expanded', 'false');
+                        menuIcon.classList.remove('fa-xmark');
+                        menuIcon.classList.add('fa-bars-staggered');
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+</html>

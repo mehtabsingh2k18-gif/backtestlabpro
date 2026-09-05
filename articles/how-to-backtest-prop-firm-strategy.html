@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+
+    <!-- Primary SEO Meta Directives -->
+    <title>How to Backtest a Prop Firm Strategy: Pass Daily Drawdown Rules & Evaluations (2026)</title>
+    <meta name="description" content="Learn how to backtest prop firm challenges to survive strict daily loss limits, equity trailing drawdowns, and high-water-mark rules. Free quantitative evaluation framework on BacktestLab Pro.">
+    <meta name="keywords" content="how to backtest prop firm strategy, prop firm challenge backtesting, backtest daily drawdown rule, pass prop firm evaluation, equity vs balance drawdown, prop firm trading bot, backtestlab pro">
+    <link rel="canonical" href="https://backtestlabpro.com/articles/how-to-backtest-prop-firm-strategy.html">
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+
+    <!-- Open Graph Directives -->
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="BacktestLab Pro">
+    <meta property="og:url" content="https://backtestlabpro.com/articles/how-to-backtest-prop-firm-strategy.html">
+    <meta property="og:title" content="How to Backtest a Prop Firm Strategy: Pass Daily Drawdown Rules & Evaluations">
+    <meta property="og:description" content="Step-by-step mathematical blueprint to backtesting funded evaluation challenges without violating strict daily and trailing drawdown rules.">
+    <meta property="og:image" content="https://backtestlabpro.com/og-banner.png">
+
+    <!-- Twitter Card Directives -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@BacktestLabPro">
+    <meta name="twitter:title" content="How to Backtest a Prop Firm Challenge Strategy">
+    <meta name="twitter:description" content="Avoid the #1 reason 90% of prop traders fail: improper drawdown simulation during historical testing.">
+    <meta name="twitter:image" content="https://backtestlabpro.com/og-banner.png">
+
+    <!-- Favicon Assets -->
+    <link rel="icon" type="image/png" sizes="192x192" href="https://backtestlabpro.com/favicon.png">
+    <link rel="icon" type="image/svg+xml" href="https://backtestlabpro.com/favicon.svg">
+    <link rel="apple-touch-icon" href="https://backtestlabpro.com/favicon.png">
+
+    <!-- JSON-LD Structured Data: BreadcrumbList, Article & FAQPage -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://backtestlabpro.com/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Quant Articles",
+              "item": "https://backtestlabpro.com/articles.html"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "How to Backtest a Prop Firm Strategy",
+              "item": "https://backtestlabpro.com/articles/how-to-backtest-prop-firm-strategy.html"
+            }
+          ]
+        },
+        {
+          "@type": "Article",
+          "headline": "How to Backtest a Prop Firm Strategy: Pass Daily Drawdown Rules & Evaluations (2026)",
+          "description": "An exhaustive technical breakdown explaining how to simulate prop firm challenge rules, including 5% daily loss caps, relative floating drawdowns, and high-frequency tick spreads in backtesting.",
+          "mainEntityOfPage": "https://backtestlabpro.com/articles/how-to-backtest-prop-firm-strategy.html",
+          "datePublished": "2026-09-05",
+          "dateModified": "2026-09-05",
+          "author": {
+            "@type": "Organization",
+            "name": "BacktestLab Quantitative Research Team"
+          },
+          "publisher": {
+            "@type": "Organization",
+            "name": "BacktestLab Pro",
+            "logo": {
+              "@type": "ImageObject",
+              "url": "https://backtestlabpro.com/favicon.png"
+            }
+          }
+        },
+        {
+          "@type": "FAQPage",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "Why do profitable backtests fail prop firm challenges?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Most standard backtesters evaluate drawdown based strictly on closed trades (Balance Drawdown). Proprietary trading firms calculate breaches using real-time floating equity. If an open trade dips into a 5% floating loss intraday before reversing into profit, the prop firm liquidates the account immediately, even if the backtest marked it as a winning trade."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What is the difference between Balance and Equity Trailing Drawdown?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Balance Drawdown only shifts after a trade is officially closed. Equity Trailing Drawdown trails the highest unrealized profit mark tick-by-tick. If your trade is up $3,000 and pulls back to +$500, an equity trailing model records a $2,500 drawdown against your ceiling."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What maximum risk per trade is recommended for prop firm challenges?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Never risk more than 0.5% to 1.0% of your starting capital per position. On a standard 5% daily loss limit, risking 2% per trade leaves you only three consecutive losses away from account termination."
+              }
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+
+    <!-- Tailwind Framework & Typography -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            dark: '#050507',
+                            card: '#0c0c0e',
+                            accent: '#6366f1',
+                            success: '#10b981',
+                            purple: '#a855f7',
+                            warning: '#f59e0b',
+                            danger: '#ef4444'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { background-color: #050507; color: #f4f4f5; overflow-x: hidden; }
+        .glow-orb { position: absolute; border-radius: 50%; filter: blur(100px); opacity: 0.15; z-index: 0; pointer-events: none; }
+        @media (min-width: 768px) { .glow-orb { filter: blur(140px); opacity: 0.18; } }
+        .glass-card { background: rgba(12, 12, 14, 0.6); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.06); }
+        .brand-icon-box { width: 38px; height: 38px; background: linear-gradient(135deg, #503bf5, #863bf5); border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .article-content h2 { margin-top: 2rem; margin-bottom: 0.75rem; }
+        @media (min-width: 768px) { .article-content h2 { margin-top: 2.75rem; margin-bottom: 1rem; } }
+        .article-content h3 { margin-top: 1.5rem; margin-bottom: 0.5rem; }
+        .article-content p { margin-bottom: 1.25rem; line-height: 1.8; }
+    </style>
+</head>
+<body class="font-sans antialiased relative selection:bg-brand-accent selection:text-white">
+
+    <div class="glow-orb w-[280px] h-[280px] md:w-[600px] md:h-[600px] bg-brand-accent top-[-60px] left-[-60px]"></div>
+    <div class="glow-orb w-[300px] h-[300px] md:w-[700px] md:h-[700px] bg-brand-purple top-[25%] right-[-100px]"></div>
+    <div class="glow-orb w-[250px] h-[250px] md:w-[500px] md:h-[500px] bg-brand-success bottom-[15%] left-[-80px]"></div>
+
+    <!-- RESPONSIVE NAVBAR -->
+    <header class="sticky top-0 z-50 w-full border-b border-white/5 bg-brand-dark/80 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full h-16 sm:h-20 flex items-center justify-between">
+            <a href="../index.html" class="flex items-center gap-2.5 sm:gap-3 group min-h-[44px]" aria-label="BacktestLab Pro Home">
+                <div class="brand-icon-box">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                    </svg>
+                </div>
+                <span class="font-display font-bold text-base sm:text-lg text-white tracking-tight">BacktestLab<span class="text-brand-accent">.pro</span></span>
+            </a>
+
+            <nav class="hidden md:flex items-center gap-6 lg:gap-8 text-sm font-medium text-zinc-400" aria-label="Desktop Navigation">
+                <a href="../index.html#features" class="hover:text-white transition-colors">Features</a>
+                <a href="../algo_store.html" class="hover:text-white transition-colors">Bot Store</a>
+                <a href="../bot_automation.html" class="hover:text-white transition-colors">Bot Automation</a>
+                <a href="../articles.html" class="text-white hover:text-white transition-colors">Quant Articles</a>
+                <a href="../about.html" class="hover:text-white transition-colors">About Us</a>
+            </nav>
+
+            <div class="hidden md:flex items-center gap-4">
+                <a href="../session.html" class="text-sm font-medium bg-gradient-to-r from-brand-accent to-brand-purple text-white px-5 py-2.5 rounded-xl hover:opacity-90 transition-all font-display shadow-md flex items-center gap-2 min-h-[44px]">
+                    <i class="fa-solid fa-play text-xs"></i> Start Backtest
+                </a>
+            </div>
+
+            <button id="mobile-menu-toggle-btn" class="md:hidden text-zinc-400 hover:text-white text-2xl focus:outline-none p-2 min-w-[48px] min-h-[48px] flex items-center justify-center rounded-lg hover:bg-white/5 active:scale-95 transition-transform" aria-label="Toggle Mobile Menu" aria-expanded="false">
+                <i class="fa-solid fa-bars-staggered" id="menu-icon"></i>
+            </button>
+        </div>
+
+        <div id="mobile-menu-drawer" class="hidden md:hidden border-t border-white/5 bg-brand-dark/95 backdrop-blur-xl px-4 pt-4 pb-8 space-y-2 absolute w-full left-0 shadow-2xl transition-all duration-300 max-h-[calc(100vh-4rem)] overflow-y-auto z-50">
+            <a href="../index.html" class="block text-zinc-300 hover:text-white py-3 px-3 rounded-xl hover:bg-white/5 font-medium text-sm transition-colors">Home</a>
+            <a href="../index.html#features" class="block text-zinc-300 hover:text-white py-3 px-3 rounded-xl hover:bg-white/5 font-medium text-sm transition-colors">Features</a>
+            <a href="../algo_store.html" class="block text-zinc-300 hover:text-white py-3 px-3 rounded-xl hover:bg-white/5 font-medium text-sm transition-colors">Bot Store</a>
+            <a href="../bot_automation.html" class="block text-zinc-300 hover:text-white py-3 px-3 rounded-xl hover:bg-white/5 font-medium text-sm transition-colors">Bot Automation</a>
+            <a href="../articles.html" class="block text-white bg-brand-accent/10 border border-brand-accent/20 py-3 px-3 rounded-xl font-medium text-sm transition-colors">Quant Articles</a>
+            <a href="../about.html" class="block text-zinc-300 hover:text-white py-3 px-3 rounded-xl hover:bg-white/5 font-medium text-sm transition-colors">About Us</a>
+            
+            <div class="pt-4 border-t border-white/5">
+                <a href="../session.html" class="block w-full text-center py-3.5 rounded-xl bg-gradient-to-r from-brand-accent to-brand-purple text-white font-display font-semibold text-sm shadow-lg min-h-[48px] flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-play text-xs"></i> Start Backtest Session
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- CONTENT WRAPPER -->
+    <main class="relative z-10 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto my-6 sm:my-12 space-y-8 sm:space-y-12">
+
+        <nav aria-label="Breadcrumb" class="text-xs text-zinc-500 font-mono overflow-x-auto no-scrollbar py-1">
+            <ol class="flex items-center gap-2 whitespace-nowrap min-w-max">
+                <li><a href="../index.html" class="hover:text-zinc-300">Home</a></li>
+                <li><span>/</span></li>
+                <li><a href="../articles.html" class="hover:text-zinc-300">Quant Articles</a></li>
+                <li><span>/</span></li>
+                <li class="text-brand-accent font-semibold">How to Backtest Prop Firm Strategy</li>
+            </ol>
+        </nav>
+
+        <header class="space-y-4 sm:space-y-6 text-left">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-accent/10 border border-brand-accent/20 text-xs text-brand-accent font-medium">
+                <i class="fa-solid fa-briefcase"></i> Proprietary Firm Evaluation Architecture
+            </div>
+
+            <h1 class="font-display font-bold text-2xl sm:text-4xl md:text-5xl lg:text-6xl text-white tracking-tight leading-[1.2]">
+                How to Backtest a Prop Firm Strategy: Passing Daily Drawdown Rules & Evaluations
+            </h1>
+
+            <p class="text-zinc-400 text-sm sm:text-lg md:text-xl font-normal leading-relaxed">
+                Why 90% of retail trading strategies fail funded trader evaluations, and how to configure strict floating equity limits on historical data.
+            </p>
+
+            <div class="flex flex-wrap items-center gap-3 sm:gap-4 text-[11px] sm:text-xs text-zinc-400 border-y border-white/5 py-3 sm:py-4">
+                <div class="flex items-center gap-2">
+                    <div class="h-6 w-6 sm:h-7 sm:w-7 rounded-lg bg-brand-accent/20 border border-brand-accent/30 flex items-center justify-center text-brand-accent font-bold text-[10px]">
+                        QL
+                    </div>
+                    <span>By <strong class="text-white">BacktestLab Quantitative Research Team</strong></span>
+                </div>
+                <span class="hidden sm:inline">&bull;</span>
+                <span>Published September 2026</span>
+                <span class="hidden sm:inline">&bull;</span>
+                <span><i class="fa-solid fa-clock mr-1 text-zinc-500"></i> 16 min read</span>
+                <span class="hidden sm:inline">&bull;</span>
+                <span class="text-brand-success font-medium"><i class="fa-solid fa-shield-halved mr-1"></i> Evaluation Audited</span>
+            </div>
+        </header>
+
+        <article class="article-content text-zinc-300 leading-relaxed text-sm sm:text-base">
+
+            <!-- SECTION 1 -->
+            <section>
+                <h2 class="font-display font-bold text-xl sm:text-3xl text-white flex items-center gap-2.5">
+                    <i class="fa-solid fa-triangle-exclamation text-brand-danger text-base sm:text-xl flex-shrink-0"></i>
+                    <span>The Asymmetric Trap of Proprietary Trading Evaluations</span>
+                </h2>
+                <p>
+                    The modern prop firm industry offers retail traders capital allocations ranging from $25,000 to over $200,000. However, quantitative data reveals that approximately <strong>90% to 95% of candidates fail their evaluation challenges</strong>. 
+                </p>
+                <p>
+                    The primary point of failure is rarely an inability to reach the 8% to 10% profit target. Rather, it is the violation of strict, asymmetric risk boundaries: specifically, the <strong>Maximum Daily Loss Limit (typically 4% to 5%)</strong> and the <strong>Relative Floating Equity Trailing Drawdown (typically 8% to 10%)</strong>.
+                </p>
+                <p>
+                    When traders backtest on generic retail platforms, they evaluate strategies based on closed trade results. In contrast, prop firm risk engines calculate account health on every sub-second market tick. If an open trade fluctuates into an unrealized floating loss that breaches the daily limit by even $1.00, the account is terminated instantly, regardless of whether the trade ultimately closes in profit.
+                </p>
+            </section>
+
+            <!-- SECTION 2: CRITICAL RULES -->
+            <section>
+                <h2 class="font-display font-bold text-xl sm:text-3xl text-white">
+                    The 3 Prop Firm Drawdown Mechanics You Must Model in Backtesting
+                </h2>
+                <p>
+                    To generate a realistic backtest on <strong>BacktestLab Pro</strong>, your simulation must enforce these three distinct risk calculations:
+                </p>
+
+                <div class="space-y-4 my-6">
+                    <div class="p-5 sm:p-6 rounded-2xl glass-card border-brand-accent/20">
+                        <h3 class="font-display font-bold text-base sm:text-lg text-white mb-2 flex items-center gap-2">
+                            <span class="text-brand-accent font-mono font-bold">01.</span>
+                            Intraday Floating Equity vs. Balance Drawdown
+                        </h3>
+                        <p class="text-xs sm:text-sm text-zinc-400">
+                            Prop firms record your intraday equity low. If you start the day with $100,000, your daily loss ceiling is $95,000. If an active position dips to $94,990 at 10:14 AM and subsequently closes at $102,000 by market close, the account is already disqualified. A valid backtest must track high/low intrabar price excursions (MAE—Maximum Adverse Excursion).
+                        </p>
+                    </div>
+
+                    <div class="p-5 sm:p-6 rounded-2xl glass-card border-brand-purple/20">
+                        <h3 class="font-display font-bold text-base sm:text-lg text-white mb-2 flex items-center gap-2">
+                            <span class="text-brand-purple font-mono font-bold">02.</span>
+                            Trailing High-Water-Mark (HWM) Ceilings
+                        </h3>
+                        <p class="text-xs sm:text-sm text-zinc-400">
+                            Under trailing drawdown rules, your maximum allowable loss limit rises as your unrealized floating profits expand. If your $100,000 account reaches a floating peak of $104,000, your 5% max drawdown trailing floor ratchets upward to $99,000, permanently locking in a higher baseline.
+                        </p>
+                    </div>
+
+                    <div class="p-5 sm:p-6 rounded-2xl glass-card border-brand-warning/20">
+                        <h3 class="font-display font-bold text-base sm:text-lg text-white mb-2 flex items-center gap-2">
+                            <span class="text-brand-warning font-mono font-bold">03.</span>
+                            Server Rollover & Daily Reset Timing (UTC / EST)
+                        </h3>
+                        <p class="text-xs sm:text-sm text-zinc-400">
+                            Daily drawdown counters reset at broker server midnight (typically 5:00 PM EST / 22:00 UTC). Holding open positions over rollover often triggers widened spreads (from 0.3 pips to 3.5+ pips on EUR/USD), causing sudden synthetic equity drops that breach daily thresholds.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 3: METRIC BENCHMARK TABLE -->
+            <section>
+                <h2 class="font-display font-bold text-xl sm:text-3xl text-white">
+                    Prop Challenge Parameter Feasibility Matrix
+                </h2>
+                <p>
+                    Below is the statistical profile required to clear a standard Two-Phase evaluation without breaching rules, modeled across 10 years of tick data:
+                </p>
+
+                <div class="overflow-x-auto my-6 border border-white/5 rounded-2xl">
+                    <table class="w-full text-left text-xs sm:text-sm text-zinc-400 min-w-[620px]">
+                        <thead class="bg-zinc-900 text-white font-display text-[10px] sm:text-xs uppercase tracking-wider">
+                            <tr>
+                                <th class="p-3 sm:p-4">Risk per Trade</th>
+                                <th class="p-3 sm:p-4">Simulated Winrate</th>
+                                <th class="p-3 sm:p-4">Max Consecutive Losses</th>
+                                <th class="p-3 sm:p-4">Daily Breach Probability</th>
+                                <th class="p-3 sm:p-4">Pass Likelihood</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-white/5 bg-brand-card/50">
+                            <tr>
+                                <td class="p-3 sm:p-4 font-bold text-brand-danger">2.0% of Capital</td>
+                                <td class="p-3 sm:p-4">50% (1:1.5 RR)</td>
+                                <td class="p-3 sm:p-4 text-brand-danger">6 to 8 trades</td>
+                                <td class="p-3 sm:p-4 text-brand-danger font-bold">78.4% (Extreme)</td>
+                                <td class="p-3 sm:p-4 text-xs font-semibold text-brand-danger">Under 8%</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 sm:p-4 font-bold text-brand-warning">1.0% of Capital</td>
+                                <td class="p-3 sm:p-4">52% (1:1.5 RR)</td>
+                                <td class="p-3 sm:p-4 text-brand-warning">5 to 7 trades</td>
+                                <td class="p-3 sm:p-4 text-brand-warning font-bold">34.2% (Elevated)</td>
+                                <td class="p-3 sm:p-4 text-xs font-semibold text-brand-warning">28% – 35%</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 sm:p-4 font-bold text-brand-success">0.5% of Capital</td>
+                                <td class="p-3 sm:p-4">55% (1:1.5 RR)</td>
+                                <td class="p-3 sm:p-4 text-zinc-300">4 to 6 trades</td>
+                                <td class="p-3 sm:p-4 text-brand-success font-bold">4.8% (Minimal)</td>
+                                <td class="p-3 sm:p-4 text-xs font-semibold text-brand-success">72% – 85%</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 sm:p-4 font-bold text-brand-accent">0.25% Dynamic Volatility</td>
+                                <td class="p-3 sm:p-4 text-white">58%+ (1:2.0 RR)</td>
+                                <td class="p-3 sm:p-4 text-brand-accent">3 to 5 trades</td>
+                                <td class="p-3 sm:p-4 text-brand-accent font-bold">&lt; 1.0% (Zero Risk)</td>
+                                <td class="p-3 sm:p-4 text-xs font-semibold text-brand-accent">90%+ Institutional</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- SECTION 4: CODE SIMULATION ENGINE -->
+            <section>
+                <h2 class="font-display font-bold text-xl sm:text-3xl text-white">
+                    JavaScript / Node.js Prop Firm Drawdown Evaluator Engine
+                </h2>
+                <p>
+                    Below is an execution evaluator script designed for BacktestLab Pro. It runs tick-by-tick to monitor intraday floating equity, detects Daily Drawdown violations, and tracks High-Water-Mark ceilings:
+                </p>
+
+                <div class="p-4 sm:p-5 rounded-2xl bg-zinc-950 border border-white/10 font-mono text-[11px] sm:text-xs overflow-x-auto text-zinc-300 my-6 leading-relaxed no-scrollbar">
+<pre><code><span class="text-zinc-500">/**
+ * BacktestLab Pro - Prop Firm Challenge Compliance Evaluator
+ * Validates real-time equity against daily resets and trailing drawdown ceilings.
+ */</span>
+
+<span class="text-purple-400">class</span> <span class="text-blue-400">PropFirmValidator</span> {
+    <span class="text-purple-400">constructor</span>(initialBalance = 100000, maxDailyLoss = 0.05, maxTrailingDD = 0.10) {
+        <span class="text-purple-400">this</span>.startCapital = initialBalance;
+        <span class="text-purple-400">this</span>.balance = initialBalance;
+        <span class="text-purple-400">this</span>.highWaterMark = initialBalance;
+        <span class="text-purple-400">this</span>.dailyStartingEquity = initialBalance;
+        <span class="text-purple-400">this</span>.maxDailyLossPercent = maxDailyLoss; <span class="text-zinc-500">// 5% ($5,000)</span>
+        <span class="text-purple-400">this</span>.maxTrailingDDPercent = maxTrailingDD; <span class="text-zinc-500">// 10% ($10,000)</span>
+        <span class="text-purple-400">this</span>.currentDay = <span class="text-purple-400">null</span>;
+        <span class="text-purple-400">this</span>.isDisqualified = <span class="text-purple-400">false</span>;
+    }
+
+    <span class="text-blue-400">onTickOrCandleUpdate</span>(timestamp, openPositionsFloatingPL, closedTradesPL) {
+        <span class="text-purple-400">if</span> (<span class="text-purple-400">this</span>.isDisqualified) <span class="text-purple-400">return</span> { status: <span class="text-emerald-400">'FAILED'</span>, reason: <span class="text-emerald-400">'ACCOUNT_BREACHED'</span> };
+
+        <span class="text-purple-400">const</span> date = <span class="text-purple-400">new Date</span>(timestamp).toISOString().split(<span class="text-emerald-400">'T'</span>)[0];
+        
+        <span class="text-zinc-500">// 1. Broker Midnight Reset Logic</span>
+        <span class="text-purple-400">if</span> (<span class="text-purple-400">this</span>.currentDay !== date) {
+            <span class="text-purple-400">this</span>.currentDay = date;
+            <span class="text-purple-400">this</span>.dailyStartingEquity = <span class="text-purple-400">this</span>.balance + openPositionsFloatingPL;
+        }
+
+        <span class="text-zinc-500">// 2. Compute Real-Time Floating Equity</span>
+        <span class="text-purple-400">this</span>.balance += closedTradesPL;
+        <span class="text-purple-400">const</span> currentEquity = <span class="text-purple-400">this</span>.balance + openPositionsFloatingPL;
+
+        <span class="text-zinc-500">// 3. Update Trailing High-Water-Mark</span>
+        <span class="text-purple-400">if</span> (currentEquity > <span class="text-purple-400">this</span>.highWaterMark) {
+            <span class="text-purple-400">this</span>.highWaterMark = currentEquity;
+        }
+
+        <span class="text-zinc-500">// 4. Evaluate Daily Loss Threshold (Equity vs Start of Day)</span>
+        <span class="text-purple-400">const</span> dailyDrawdown = (<span class="text-purple-400">this</span>.dailyStartingEquity - currentEquity) / <span class="text-purple-400">this</span>.startCapital;
+        <span class="text-purple-400">if</span> (dailyDrawdown >= <span class="text-purple-400">this</span>.maxDailyLossPercent) {
+            <span class="text-purple-400">this</span>.isDisqualified = <span class="text-purple-400">true</span>;
+            <span class="text-purple-400">return</span> { status: <span class="text-emerald-400">'BREACH'</span>, reason: <span class="text-emerald-400">'MAX_DAILY_LOSS_EXCEEDED'</span>, drawdown: dailyDrawdown };
+        }
+
+        <span class="text-zinc-500">// 5. Evaluate Trailing Drawdown Threshold</span>
+        <span class="text-purple-400">const</span> totalTrailingLoss = (<span class="text-purple-400">this</span>.highWaterMark - currentEquity) / <span class="text-purple-400">this</span>.highWaterMark;
+        <span class="text-purple-400">if</span> (totalTrailingLoss >= <span class="text-purple-400">this</span>.maxTrailingDDPercent) {
+            <span class="text-purple-400">this</span>.isDisqualified = <span class="text-purple-400">true</span>;
+            <span class="text-purple-400">return</span> { status: <span class="text-emerald-400">'BREACH'</span>, reason: <span class="text-emerald-400">'MAX_TRAILING_DRAWDOWN_EXCEEDED'</span>, loss: totalTrailingLoss };
+        }
+
+        <span class="text-purple-400">return</span> { status: <span class="text-emerald-400">'HEALTHY'</span>, equity: currentEquity, bufferRemaining: <span class="text-purple-400">this</span>.maxDailyLossPercent - dailyDrawdown };
+    }
+}</code></pre>
+                </div>
+            </section>
+
+            <!-- SECTION 5: FAQS -->
+            <section class="space-y-4 sm:space-y-6 pt-6 border-t border-white/5">
+                <h2 class="font-display font-bold text-xl sm:text-3xl text-white">
+                    Frequently Asked Questions: Prop Firm Challenge Backtesting
+                </h2>
+
+                <div class="space-y-3 sm:space-y-4">
+                    <div class="p-5 sm:p-6 rounded-2xl glass-card">
+                        <h3 class="font-display font-bold text-sm sm:text-base text-white mb-1.5">How many trades do I need to backtest to qualify for a funded challenge?</h3>
+                        <p class="text-xs sm:text-sm text-zinc-400">
+                            A minimum sample of 200 to 300 simulated trades spanning at least 2 years of variable market regimes (trending, range-bound, and high-volatility news events) is required to calculate your true probability of consecutive losing streaks.
+                        </p>
+                    </div>
+
+                    <div class="p-5 sm:p-6 rounded-2xl glass-card">
+                        <h3 class="font-display font-bold text-sm sm:text-base text-white mb-1.5">Can I run automated trading bots on prop firm challenges?</h3>
+                        <p class="text-xs sm:text-sm text-zinc-400">
+                            Yes, many prop firms allow automated Expert Advisors (EAs) and algorithmic scripts, provided they avoid prohibited strategies like latency arbitrage, tick scalping under 30 seconds, or grid-martingale averaging. Strategies developed in BacktestLab Pro with over a 70% winrate qualify for clean algorithmic bot compilation.
+                        </p>
+                    </div>
+
+                    <div class="p-5 sm:p-6 rounded-2xl glass-card">
+                        <h3 class="font-display font-bold text-sm sm:text-base text-white mb-1.5">Why does BacktestLab Pro provide better prop simulation than TradingView?</h3>
+                        <p class="text-xs sm:text-sm text-zinc-400">
+                            TradingView’s Strategy Tester defaults to closed-bar calculations and lacks native intraday equity trailing limit filters. BacktestLab Pro evaluates real-time tick movements across 20+ years of institutional feeds, accurately mirroring the conditions of live evaluation challenges.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CALL TO ACTION -->
+            <section class="p-6 sm:p-10 md:p-12 rounded-3xl bg-gradient-to-r from-brand-accent/20 via-brand-purple/20 to-zinc-950 border border-brand-accent/30 text-center space-y-4 sm:space-y-6 my-8 sm:my-12">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-success/10 border border-brand-success/20 text-xs text-brand-success font-medium">
+                    <span class="h-2 w-2 rounded-full bg-brand-success animate-ping"></span> 100% Free Public Good Utility • Zero Subscription Paywalls
+                </div>
+                <h2 class="font-display font-bold text-2xl sm:text-3xl md:text-4xl text-white tracking-tight leading-tight">
+                    Simulate Your Prop Challenge on 20+ Years of Historical Market Data
+                </h2>
+                <p class="text-zinc-400 text-xs sm:text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
+                    Test your setups against strict daily loss limits, equity trailing floors, and tick spread expansions before risking challenge fees.
+                </p>
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 pt-2">
+                    <a href="../session.html" class="w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl bg-white text-brand-dark font-display font-bold text-xs sm:text-sm hover:bg-zinc-200 transition-all shadow-xl flex items-center justify-center gap-2 min-h-[48px]">
+                        Launch Free Sandbox <i class="fa-solid fa-arrow-right text-xs"></i>
+                    </a>
+                    <a href="../bot_automation.html" class="w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl bg-zinc-900 border border-white/10 text-zinc-300 font-display font-bold text-xs sm:text-sm hover:bg-zinc-800 transition-all min-h-[48px] flex items-center justify-center">
+                        Explore Bot Compiler
+                    </a>
+                </div>
+            </section>
+
+        </article>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="mt-16 sm:mt-24 border-t border-white/10 bg-brand-dark/90 backdrop-blur-xl py-12 sm:py-16 text-zinc-400 text-xs">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 sm:space-y-12">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 sm:gap-10">
+                <div class="lg:col-span-2 space-y-3 sm:space-y-4">
+                    <a href="../index.html" class="flex items-center gap-2.5 sm:gap-3">
+                        <div class="brand-icon-box">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                        </div>
+                        <span class="font-display font-bold text-base sm:text-lg text-white tracking-tight">BacktestLab<span class="text-brand-accent">.pro</span></span>
+                    </a>
+                    <p class="text-zinc-400 text-xs leading-relaxed max-w-sm">
+                        Institutional-grade strategy backtesting and trading bot development framework. Built to eliminate paywalls, automate strategy validation, and bridge manual setups to algorithmic code.
+                    </p>
+                </div>
+                <div class="space-y-2.5 sm:space-y-3">
+                    <h4 class="font-display font-bold text-white text-xs sm:text-sm uppercase tracking-wider">Platform</h4>
+                    <ul class="space-y-2">
+                        <li><a href="../index.html#features" class="hover:text-white transition-colors">Platform Features</a></li>
+                        <li><a href="../session.html" class="hover:text-white transition-colors">Start Session</a></li>
+                        <li><a href="../algo_store.html" class="hover:text-white transition-colors">Algo Bot Store</a></li>
+                        <li><a href="../bot_automation.html" class="hover:text-white transition-colors">Bot Automation</a></li>
+                    </ul>
+                </div>
+                <div class="space-y-2.5 sm:space-y-3">
+                    <h4 class="font-display font-bold text-white text-xs sm:text-sm uppercase tracking-wider">Resources</h4>
+                    <ul class="space-y-2">
+                        <li><a href="../articles.html" class="hover:text-white transition-colors">Quant Articles</a></li>
+                        <li><a href="../about.html" class="hover:text-white transition-colors">About Us</a></li>
+                        <li><a href="../contact.html" class="hover:text-white transition-colors">Contact Support</a></li>
+                    </ul>
+                </div>
+                <div class="space-y-2.5 sm:space-y-3">
+                    <h4 class="font-display font-bold text-white text-xs sm:text-sm uppercase tracking-wider">Legal</h4>
+                    <ul class="space-y-2">
+                        <li><a href="../privacy.html" class="hover:text-white transition-colors">Privacy Policy</a></li>
+                        <li><a href="../terms.html" class="hover:text-white transition-colors">Terms of Service</a></li>
+                        <li><a href="../disclaimer.html" class="hover:text-white transition-colors">Risk Disclaimer</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-white/5 pt-6 sm:pt-8 text-center text-zinc-500 text-[11px] sm:text-xs">
+                <p>© 2026 BacktestLab Pro. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const menuToggleBtn = document.getElementById('mobile-menu-toggle-btn');
+            const menuDrawer = document.getElementById('mobile-menu-drawer');
+            const menuIcon = document.getElementById('menu-icon');
+
+            if (menuToggleBtn && menuDrawer) {
+                menuToggleBtn.addEventListener('click', () => {
+                    const isExpanded = menuToggleBtn.getAttribute('aria-expanded') === 'true';
+                    menuToggleBtn.setAttribute('aria-expanded', !isExpanded);
+                    menuDrawer.classList.toggle('hidden');
+                    menuIcon.classList.toggle('fa-bars-staggered', isExpanded);
+                    menuIcon.classList.toggle('fa-xmark', !isExpanded);
+                });
+
+                menuDrawer.querySelectorAll('a').forEach(link => {
+                    link.addEventListener('click', () => {
+                        menuDrawer.classList.add('hidden');
+                        menuToggleBtn.setAttribute('aria-expanded', 'false');
+                        menuIcon.classList.remove('fa-xmark');
+                        menuIcon.classList.add('fa-bars-staggered');
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+</html>

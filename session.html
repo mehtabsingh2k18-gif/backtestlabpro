@@ -225,12 +225,25 @@ body{
     font-size:14px;
 }
 
+.pairMeta{
+    display:flex;
+    flex-direction:column;
+    align-items:flex-end;
+    gap:4px;
+}
+
 .pairBadge{
     font-size:9px;
-    padding:3px 6px;
+    padding:2px 6px;
     border-radius:5px;
     text-transform:uppercase;
     font-weight:700;
+}
+
+.pairSpaceTag{
+    font-size:8px;
+    color:#7e8b9b;
+    font-weight:600;
 }
 
 .type-forex { background: rgba(16, 185, 129, 0.12); color: #10b981; }
@@ -272,44 +285,66 @@ input:focus, select:focus{
     font-size:11px;
 }
 
+.dataNotice {
+    background: rgba(41, 98, 255, 0.08);
+    border: 1px solid rgba(41, 98, 255, 0.25);
+    color: #82aaff;
+    padding: 14px 16px;
+    border-radius: 12px;
+    font-size: 12px;
+    margin-bottom: 18px;
+}
+
+.dataNoticeHeader {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:4px;
+    flex-wrap:wrap;
+    gap:6px;
+}
+
+.noticeRangeBadge {
+    font-weight: 700;
+    color: #ffffff;
+    background: rgba(41, 98, 255, 0.25);
+    padding: 2px 8px;
+    border-radius: 6px;
+}
+
+.dataNoticeSub {
+    color: #94a3b8;
+    font-size: 11px;
+}
+
 .presets {
     display:flex;
     gap:6px;
-    margin-top:8px;
+    margin-top:6px;
+    margin-bottom:8px;
+    flex-wrap:wrap;
 }
 
 .presetBtn {
     flex:1;
+    min-width:65px;
     background:#1a202c;
     border:1px solid #2d3548;
     color:#8c95a8;
-    padding:7px 10px;
-    border-radius:6px;
+    padding:8px 6px;
+    border-radius:8px;
     font-size:11px;
+    font-weight:600;
     cursor:pointer;
     transition:all 0.2s ease;
     text-align:center;
 }
 
-.presetBtn:hover {
+.presetBtn:hover, .presetBtn.active {
     background:#2962ff;
     border-color:#2962ff;
     color:white;
-}
-
-.dataNotice {
-    background: rgba(41, 98, 255, 0.08);
-    border: 1px solid rgba(41, 98, 255, 0.25);
-    color: #82aaff;
-    padding: 12px 16px;
-    border-radius: 12px;
-    font-size: 12px;
-    margin-bottom: 15px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    flex-wrap:wrap;
-    gap:6px;
+    box-shadow:0 4px 12px rgba(41,98,255,0.3);
 }
 
 .errorBanner {
@@ -320,7 +355,7 @@ input:focus, select:focus{
     padding: 12px;
     border-radius: 10px;
     font-size: 12px;
-    margin-top: 12px;
+    margin-top: 14px;
 }
 
 .summary{
@@ -393,7 +428,6 @@ input:focus, select:focus{
     box-shadow:0 12px 30px rgba(41,98,255,0.5);
 }
 
-/* Mobile Breakpoint Optimization */
 @media (max-width: 900px) {
     body {
         padding: 10px 5px;
@@ -431,7 +465,7 @@ input:focus, select:focus{
         </div>
         <div class="engineStatus">
             <span class="pulseDot"></span>
-            <span>Historical Engine Ready</span>
+            <span id="scanStatus">Scanning Data Roots...</span>
         </div>
     </div>
 
@@ -440,7 +474,8 @@ input:focus, select:focus{
         <div class="leftPanel">
 
             <div class="sectionTitle">
-                Select Trading Instrument
+                <span>Select Trading Instrument</span>
+                <span id="totalPairsBadge" style="font-size:12px; color:#2962ff; font-weight:600;">Detecting...</span>
             </div>
 
             <input
@@ -457,7 +492,11 @@ input:focus, select:focus{
                 <button class="cat" data-cat="metals">Metals</button>
             </div>
 
-            <div id="pairGrid" class="pairGrid"></div>
+            <div id="pairGrid" class="pairGrid">
+                <div style="grid-column: span 3; text-align:center; padding: 40px 10px; color:#7e8b9b;">
+                    Discovering symbols across all storage roots...
+                </div>
+            </div>
 
         </div>
 
@@ -467,26 +506,37 @@ input:focus, select:focus{
                 Replay Environment
             </div>
 
+            <!-- Dynamic Archive Range Notice -->
             <div id="dataNotice" class="dataNotice">
-                <span>Available Coverage:</span>
-                <strong id="noticeRange">Checking market data availability...</strong>
+                <div class="dataNoticeHeader">
+                    <span>Available Historical Archive:</span>
+                    <span id="noticeRange" class="noticeRangeBadge">Scanning storage...</span>
+                </div>
+                <div class="dataNoticeSub" id="noticeSummary">
+                    Checking root folders for dates. Defaulting to recent 1-year window for speed.
+                </div>
             </div>
 
-            <label>History Beginning</label>
-            <input type="date" id="from">
-            <div class="hint">How far back chart data starts loading.</div>
+            <label>Quick Window Presets</label>
+            <div class="presets">
+                <button type="button" class="presetBtn" data-span="6m" onclick="applyQuickWindow('6m')">6 Months</button>
+                <button type="button" class="presetBtn active" data-span="1y" onclick="applyQuickWindow('1y')">1 Year (Default)</button>
+                <button type="button" class="presetBtn" data-span="2y" onclick="applyQuickWindow('2y')">2 Years</button>
+                <button type="button" class="presetBtn" data-span="5y" onclick="applyQuickWindow('5y')">5 Years</button>
+                <button type="button" class="presetBtn" data-span="max" onclick="applyQuickWindow('max')">Max Data</button>
+            </div>
 
             <label>Replay Start Point</label>
             <input type="date" id="start">
-            <div class="hint">Candle playback starts here (+10 days context).</div>
+            <div class="hint">Candles will start playing forward from this day.</div>
 
             <label>Backtest End Date</label>
             <input type="date" id="to">
-            <div class="presets">
-                <button class="presetBtn" onclick="applyPreset('1y')">1 Year</button>
-                <button class="presetBtn" onclick="applyPreset('2y')">2 Years</button>
-                <button class="presetBtn" onclick="applyPreset('max')">Max Available</button>
-            </div>
+            <div class="hint">Session finishes when the replay reaches this date.</div>
+
+            <label>History Context (Indicator Warmup)</label>
+            <input type="date" id="from">
+            <div class="hint">Auto-set 10 days before replay start so indicators have initial context.</div>
 
             <div id="errorBanner" class="errorBanner"></div>
 
@@ -509,13 +559,23 @@ input:focus, select:focus{
                             <div class="miniCandle green" style="height: 18px;"></div>
                             <div class="miniCandle green" style="height: 14px;"></div>
                         </div>
-                        <span id="pvPair" class="summaryVal">XAUUSD</span>
+                        <span id="pvPair" class="summaryVal">--</span>
                     </div>
                 </div>
 
                 <div class="summaryRow">
-                    <span>History Context</span>
-                    <span id="pvFrom" class="summaryVal">Loading...</span>
+                    <span>Data Source Root</span>
+                    <span id="pvSpace" class="summaryVal">--</span>
+                </div>
+
+                <div class="summaryRow">
+                    <span>Full Data Available</span>
+                    <span id="pvArchive" class="summaryVal">Loading...</span>
+                </div>
+
+                <div class="summaryRow">
+                    <span>Selected Replay Window</span>
+                    <span id="pvDuration" class="summaryVal">--</span>
                 </div>
 
                 <div class="summaryRow">
@@ -542,33 +602,44 @@ input:focus, select:focus{
 
 <script>
 
-const symbols = [
-    {symbol:"AUDJPY", type:"forex"},
-    {symbol:"BNBUSDT", type:"crypto"},
-    {symbol:"BTCUSD", type:"crypto"},
-    {symbol:"CHFJPY", type:"forex"},
-    {symbol:"DOGEUSDT", type:"crypto"},
-    {symbol:"EURCAD", type:"forex"},
-    {symbol:"EURCHF", type:"forex"},
-    {symbol:"EURGBP", type:"forex"},
-    {symbol:"EURJPY", type:"forex"},
-    {symbol:"EURUSD", type:"forex"},
-    {symbol:"GBPJPY", type:"forex"},
-    {symbol:"GBPUSD", type:"forex"},
-    {symbol:"NASDAQ", type:"indices"},
-    {symbol:"SOLUSDT", type:"crypto"},
-    {symbol:"TRXUSDT", type:"crypto"},
-    {symbol:"US30", type:"indices"},
-    {symbol:"US500", type:"indices"},
-    {symbol:"USDCAD", type:"forex"},
-    {symbol:"USDJPY", type:"forex"},
-    {symbol:"XAGUSD", type:"metals"},
-    {symbol:"XAUUSD", type:"metals"},
-    {symbol:"XRPUSDT", type:"crypto"}
+// All active Hugging Face storage spaces
+const DATA_SPACES = [
+    "mehtab13/backtestlab-data",
+    "mehtab13/backtestlab-data-2",
+    "mehtab13/fx-4",
+    "mehtab13/fx-3",
+    "mehtab13/fx-2"
 ];
 
+// Fallback seed list used immediately while scanning runs
+const initialFallback = [
+    {symbol:"AUDJPY", type:"forex", space:"mehtab13/fx-2"},
+    {symbol:"BNBUSDT", type:"crypto", space:"mehtab13/backtestlab-data"},
+    {symbol:"BTCUSD", type:"crypto", space:"mehtab13/backtestlab-data"},
+    {symbol:"CHFJPY", type:"forex", space:"mehtab13/fx-2"},
+    {symbol:"DOGEUSDT", type:"crypto", space:"mehtab13/backtestlab-data"},
+    {symbol:"EURCAD", type:"forex", space:"mehtab13/fx-3"},
+    {symbol:"EURCHF", type:"forex", space:"mehtab13/fx-3"},
+    {symbol:"EURGBP", type:"forex", space:"mehtab13/fx-3"},
+    {symbol:"EURJPY", type:"forex", space:"mehtab13/fx-3"},
+    {symbol:"EURUSD", type:"forex", space:"mehtab13/fx-3"},
+    {symbol:"GBPJPY", type:"forex", space:"mehtab13/fx-4"},
+    {symbol:"GBPUSD", type:"forex", space:"mehtab13/fx-4"},
+    {symbol:"NASDAQ", type:"indices", space:"mehtab13/backtestlab-data-2"},
+    {symbol:"SOLUSDT", type:"crypto", space:"mehtab13/backtestlab-data"},
+    {symbol:"TRXUSDT", type:"crypto", space:"mehtab13/backtestlab-data"},
+    {symbol:"US30", type:"indices", space:"mehtab13/backtestlab-data-2"},
+    {symbol:"US500", type:"indices", space:"mehtab13/backtestlab-data-2"},
+    {symbol:"USDCAD", type:"forex", space:"mehtab13/fx-2"},
+    {symbol:"USDJPY", type:"forex", space:"mehtab13/fx-2"},
+    {symbol:"XAGUSD", type:"metals", space:"mehtab13/fx-4"},
+    {symbol:"XAUUSD", type:"metals", space:"mehtab13/fx-4"},
+    {symbol:"XRPUSDT", type:"crypto", space:"mehtab13/backtestlab-data"}
+];
+
+let symbols = [...initialFallback];
 let selectedPair = "XAUUSD";
-let activeDataLimits = { min: "2003-05-01", max: "2026-08-28" };
+let activeDataLimits = { min: "2003-05-01", max: "2026-08-28", space: DATA_SPACES[0] };
 const symbolCache = {};
 
 const grid = document.getElementById("pairGrid");
@@ -578,6 +649,9 @@ const startInput = document.getElementById("start");
 const toInput = document.getElementById("to");
 const errorBanner = document.getElementById("errorBanner");
 const noticeRange = document.getElementById("noticeRange");
+const noticeSummary = document.getElementById("noticeSummary");
+const scanStatus = document.getElementById("scanStatus");
+const totalPairsBadge = document.getElementById("totalPairsBadge");
 
 function formatDate(dateObj) {
     return dateObj.toISOString().split('T')[0];
@@ -589,6 +663,57 @@ function addDays(dateStr, days) {
     return formatDate(d);
 }
 
+function categorizeSymbol(sym) {
+    const s = sym.toUpperCase();
+    if (s.includes("XAU") || s.includes("XAG")) return "metals";
+    if (s.includes("BTC") || s.includes("ETH") || s.includes("USDT") || s.includes("SOL") || s.includes("DOGE") || s.includes("BNB") || s.includes("TRX") || s.includes("XRP")) return "crypto";
+    if (s.includes("US30") || s.includes("US500") || s.includes("NASDAQ") || s.includes("SPX") || s.includes("NAS")) return "indices";
+    return "forex";
+}
+
+// Scans the root of all data spaces to identify every present folder (pair)
+async function discoverAllPairsAcrossRoots() {
+    scanStatus.innerText = "Indexing multi-space roots...";
+    const pairMap = new Map();
+
+    const rootRequests = DATA_SPACES.map(async (space) => {
+        try {
+            const rootApiUrl = `https://huggingface.co/api/spaces/${space}/tree/main`;
+            const res = await fetch(rootApiUrl);
+            if (!res.ok) return;
+            const items = await res.json();
+
+            // Folders at root that are not system files (.git, README, etc.)
+            const ignored = ['readme.md', 'app.py', 'requirements.txt', '.gitattributes', 'index.html'];
+            items.forEach(item => {
+                const folderName = item.path.split('/')[0].toUpperCase();
+                const cleanName = folderName.replace('_MT5', '');
+                
+                if (!ignored.includes(item.path.toLowerCase()) && !pairMap.has(cleanName)) {
+                    pairMap.set(cleanName, {
+                        symbol: cleanName,
+                        type: categorizeSymbol(cleanName),
+                        space: space
+                    });
+                }
+            });
+        } catch (err) {
+            console.warn(`Could not index root of ${space}:`, err);
+        }
+    });
+
+    await Promise.all(rootRequests);
+
+    if (pairMap.size > 0) {
+        symbols = Array.from(pairMap.values()).sort((a, b) => a.symbol.localeCompare(b.symbol));
+    }
+
+    scanStatus.innerText = "Historical Engine Ready";
+    totalPairsBadge.innerText = `${symbols.length} Pairs Online`;
+    renderPairs(document.querySelector(".cat.active").dataset.cat, search.value);
+}
+
+// Discovers exact starting/ending years and months for the selected pair in its space
 async function fetchSymbolLimitsFromStorage(symbol) {
     const cleanSymbol = symbol.toLowerCase().replace('_mt5', '');
     
@@ -596,73 +721,135 @@ async function fetchSymbolLimitsFromStorage(symbol) {
         return symbolCache[cleanSymbol];
     }
 
-    noticeRange.innerText = "Checking market data availability...";
+    noticeRange.innerText = "Scanning data boundaries...";
 
-    try {
-        const yearsApiUrl = `https://huggingface.co/api/spaces/mehtab13/backtestlab-data/tree/main/${cleanSymbol}/m1`;
-        const response = await fetch(yearsApiUrl);
-        
-        if (!response.ok) {
-            throw new Error(`Directory path not found for ${cleanSymbol}`);
-        }
+    // Determine the space hosting this pair
+    const foundEntry = symbols.find(s => s.symbol.toLowerCase() === cleanSymbol);
+    const candidateSpaces = foundEntry ? [foundEntry.space, ...DATA_SPACES.filter(s => s !== foundEntry.space)] : DATA_SPACES;
 
-        const yearItems = await response.json();
-        
-        const years = yearItems
-            .map(item => parseInt(item.path.split('/').pop()))
-            .filter(y => !isNaN(y))
-            .sort((a, b) => a - b);
+    let matchedSpace = null;
+    let availableYears = [];
 
-        if (years.length > 0) {
-            const earliestYear = years[0];
-            const latestYear = years[years.length - 1];
+    for (const space of candidateSpaces) {
+        try {
+            const url = `https://huggingface.co/api/spaces/${space}/tree/main/${cleanSymbol}/m1`;
+            const res = await fetch(url);
+            if (res.ok) {
+                const items = await res.json();
+                const years = items
+                    .map(item => parseInt(item.path.split('/').pop()))
+                    .filter(y => !isNaN(y))
+                    .sort((a, b) => a - b);
 
-            const firstYearUrl = `https://huggingface.co/api/spaces/mehtab13/backtestlab-data/tree/main/${cleanSymbol}/m1/${earliestYear}`;
-            const firstYearRes = await fetch(firstYearUrl);
-            let minMonth = "01";
+                if (years.length > 0) {
+                    matchedSpace = space;
+                    availableYears = years;
+                    break;
+                }
+            }
+        } catch (e) {}
+    }
 
-            if (firstYearRes.ok) {
-                const firstYearFiles = await firstYearRes.json();
-                const months = firstYearFiles
+    if (matchedSpace && availableYears.length > 0) {
+        const earliestYear = availableYears[0];
+        const latestYear = availableYears[availableYears.length - 1];
+
+        // Discover starting month
+        let minMonth = "01";
+        try {
+            const firstRes = await fetch(`https://huggingface.co/api/spaces/${matchedSpace}/tree/main/${cleanSymbol}/m1/${earliestYear}`);
+            if (firstRes.ok) {
+                const files = await firstRes.json();
+                const months = files
                     .map(f => f.path.split('/').pop().replace('.json', ''))
                     .filter(m => /^\d{2}$/.test(m))
                     .sort();
                 if (months.length > 0) minMonth = months[0];
             }
+        } catch (e) {}
 
-            const lastYearUrl = `https://huggingface.co/api/spaces/mehtab13/backtestlab-data/tree/main/${cleanSymbol}/m1/${latestYear}`;
-            const lastYearRes = await fetch(lastYearUrl);
-            let maxMonth = "12";
-
-            if (lastYearRes.ok) {
-                const lastYearFiles = await lastYearRes.json();
-                const months = lastYearFiles
+        // Discover ending month
+        let maxMonth = "12";
+        try {
+            const lastRes = await fetch(`https://huggingface.co/api/spaces/${matchedSpace}/tree/main/${cleanSymbol}/m1/${latestYear}`);
+            if (lastRes.ok) {
+                const files = await lastRes.json();
+                const months = files
                     .map(f => f.path.split('/').pop().replace('.json', ''))
                     .filter(m => /^\d{2}$/.test(m))
                     .sort();
                 if (months.length > 0) maxMonth = months[months.length - 1];
             }
+        } catch (e) {}
 
-            const limits = {
-                min: `${earliestYear}-${minMonth}-01`,
-                max: `${latestYear}-${maxMonth}-28`
-            };
-            
-            symbolCache[cleanSymbol] = limits;
-            return limits;
-        }
-    } catch (err) {
-        console.warn(`Market data fetch fallback for ${cleanSymbol}:`, err);
+        const limits = {
+            min: `${earliestYear}-${minMonth}-01`,
+            max: `${latestYear}-${maxMonth}-28`,
+            space: matchedSpace
+        };
+        
+        symbolCache[cleanSymbol] = limits;
+        return limits;
     }
 
-    const fallbackLimits = { min: "2010-01-01", max: "2026-08-28" };
+    // Default safety limits
+    const fallbackLimits = { min: "2003-05-01", max: "2026-08-28", space: DATA_SPACES[0] };
     symbolCache[cleanSymbol] = fallbackLimits;
     return fallbackLimits;
 }
 
+// Preset engine anchored backwards from latest available date
+function applyQuickWindow(span) {
+    if (!activeDataLimits.max) return;
+
+    document.querySelectorAll(".presetBtn").forEach(b => {
+        b.classList.toggle("active", b.dataset.span === span);
+    });
+
+    const maxLimitDate = new Date(activeDataLimits.max);
+    const minLimitDate = new Date(activeDataLimits.min);
+    let startDate = new Date(maxLimitDate);
+
+    if (span === '6m') {
+        startDate.setMonth(startDate.getMonth() - 6);
+    } else if (span === '1y') {
+        startDate.setFullYear(startDate.getFullYear() - 1);
+    } else if (span === '2y') {
+        startDate.setFullYear(startDate.getFullYear() - 2);
+    } else if (span === '5y') {
+        startDate.setFullYear(startDate.getFullYear() - 5);
+    } else if (span === 'max') {
+        startDate = new Date(minLimitDate);
+        startDate.setDate(startDate.getDate() + 10);
+    }
+
+    if (startDate < minLimitDate) {
+        startDate = new Date(minLimitDate);
+        startDate.setDate(startDate.getDate() + 10);
+    }
+
+    toInput.value = formatDate(maxLimitDate);
+    startInput.value = formatDate(startDate);
+    
+    const calculatedFrom = addDays(startInput.value, -10);
+    fromInput.value = (new Date(calculatedFrom) < minLimitDate) ? activeDataLimits.min : calculatedFrom;
+
+    validateDates();
+    updatePreview();
+}
+
 async function loadDynamicSymbolSettings(symbol) {
     activeDataLimits = await fetchSymbolLimitsFromStorage(symbol);
-    noticeRange.innerText = `${activeDataLimits.min} to ${activeDataLimits.max}`;
+
+    const yStart = parseInt(activeDataLimits.min.split('-')[0]);
+    const yEnd = parseInt(activeDataLimits.max.split('-')[0]);
+    const totalYears = yEnd - yStart;
+
+    noticeRange.innerText = `${activeDataLimits.min} → ${activeDataLimits.max}`;
+    noticeSummary.innerText = `Full ${totalYears}+ years data verified (${yStart} to ${yEnd}) inside space [${activeDataLimits.space.split('/').pop()}]. Practical 1-Year default applied for optimal performance.`;
+
+    document.getElementById("pvArchive").innerText = `${yStart} – ${yEnd} (${totalYears} Yrs)`;
+    document.getElementById("pvSpace").innerText = activeDataLimits.space.split('/').pop();
 
     fromInput.min = activeDataLimits.min;
     fromInput.max = activeDataLimits.max;
@@ -671,50 +858,30 @@ async function loadDynamicSymbolSettings(symbol) {
     toInput.min = activeDataLimits.min;
     toInput.max = activeDataLimits.max;
 
-    const baseDate = activeDataLimits.min;
-    fromInput.value = baseDate;
-    startInput.value = addDays(baseDate, 10);
-    toInput.value = activeDataLimits.max;
-
-    validateDates();
-    updatePreview();
+    // Default to the practical recent 1-year view
+    applyQuickWindow('1y');
 }
 
-function applyPreset(type) {
-    if (!startInput.value) return;
-    const startDate = new Date(startInput.value);
-    
-    if (type === '1y') {
-        startDate.setFullYear(startDate.getFullYear() + 1);
-        toInput.value = formatDate(startDate);
-    } else if (type === '2y') {
-        startDate.setFullYear(startDate.getFullYear() + 2);
-        toInput.value = formatDate(startDate);
-    } else if (type === 'max') {
-        toInput.value = activeDataLimits.max;
+startInput.addEventListener("change", () => {
+    if (startInput.value) {
+        const calculatedFrom = addDays(startInput.value, -10);
+        fromInput.value = (new Date(calculatedFrom) < new Date(activeDataLimits.min)) 
+            ? activeDataLimits.min 
+            : calculatedFrom;
     }
-    
-    validateDates();
-    updatePreview();
-}
-
-fromInput.addEventListener("change", () => {
-    if (fromInput.value) {
-        startInput.value = addDays(fromInput.value, 10);
-    }
+    document.querySelectorAll(".presetBtn").forEach(b => b.classList.remove("active"));
     validateDates();
     updatePreview();
 });
 
-startInput.addEventListener("change", () => {
-    if (startInput.value) {
-        fromInput.value = addDays(startInput.value, -10);
-    }
+fromInput.addEventListener("change", () => {
+    document.querySelectorAll(".presetBtn").forEach(b => b.classList.remove("active"));
     validateDates();
     updatePreview();
 });
 
 toInput.addEventListener("change", () => {
+    document.querySelectorAll(".presetBtn").forEach(b => b.classList.remove("active"));
     validateDates();
     updatePreview();
 });
@@ -731,25 +898,25 @@ function validateDates() {
     errorBanner.innerText = "";
 
     if (userFrom < minLimit) {
-        errorBanner.innerText = `Data Limit Warning: Historical data for ${selectedPair} starts from ${activeDataLimits.min}.`;
+        errorBanner.innerText = `Data Limit Warning: Historical data for ${selectedPair} begins on ${activeDataLimits.min}.`;
         errorBanner.style.display = "block";
         return false;
     }
 
     if (userTo > maxLimit) {
-        errorBanner.innerText = `Data Limit Warning: Selected end date exceeds available historical records (${activeDataLimits.max}).`;
+        errorBanner.innerText = `Data Limit Warning: Selected end date exceeds available records (${activeDataLimits.max}).`;
         errorBanner.style.display = "block";
         return false;
     }
 
     if (userStart <= userFrom) {
-        errorBanner.innerText = `Invalid Sequence: Replay Start Point must be after History Beginning.`;
+        errorBanner.innerText = `Invalid Sequence: Replay Start must be after History Beginning.`;
         errorBanner.style.display = "block";
         return false;
     }
 
     if (userTo <= userStart) {
-        errorBanner.innerText = `Invalid Sequence: Backtest End Date must be after Replay Start Point.`;
+        errorBanner.innerText = `Invalid Sequence: Session End must be after Replay Start.`;
         errorBanner.style.display = "block";
         return false;
     }
@@ -760,20 +927,30 @@ function validateDates() {
 function renderPairs(category="all", term=""){
     grid.innerHTML="";
 
-    symbols
-    .filter(x=>{
+    const filtered = symbols.filter(x=>{
         const cat = category==="all" || x.type===category;
         const txt = x.symbol.toLowerCase().includes(term.toLowerCase());
         return cat && txt;
-    })
-    .forEach(pair=>{
+    });
+
+    if (filtered.length === 0) {
+        grid.innerHTML = `<div style="grid-column: span 3; text-align:center; padding: 30px; color:#5a6678;">No matching pairs found.</div>`;
+        return;
+    }
+
+    filtered.forEach(pair=>{
         const card = document.createElement("div");
         card.className="pairCard";
 
         if(pair.symbol===selectedPair) card.classList.add("selected");
 
+        const spaceShort = pair.space ? pair.space.split('/').pop() : 'data';
+
         card.innerHTML=`
-            <div class="pairName">${pair.symbol}</div>
+            <div>
+                <div class="pairName">${pair.symbol}</div>
+                <div class="pairSpaceTag">${spaceShort}</div>
+            </div>
             <div class="pairBadge type-${pair.type}">${pair.type}</div>
         `;
 
@@ -789,8 +966,6 @@ function renderPairs(category="all", term=""){
         grid.appendChild(card);
     });
 }
-
-renderPairs();
 
 document.querySelectorAll(".cat").forEach(btn=>{
     btn.onclick=()=>{
@@ -809,12 +984,25 @@ search.addEventListener("input",()=>{
 
 function updatePreview(){
     document.getElementById("pvPair").innerText = selectedPair;
-    document.getElementById("pvFrom").innerText = fromInput.value;
     document.getElementById("pvStart").innerText = startInput.value;
     document.getElementById("pvEnd").innerText = toInput.value;
+
+    if (startInput.value && toInput.value) {
+        const msDiff = new Date(toInput.value) - new Date(startInput.value);
+        const days = Math.round(msDiff / (1000 * 60 * 60 * 24));
+        if (days > 0) {
+            const yrs = (days / 365).toFixed(1);
+            document.getElementById("pvDuration").innerText = `${days} Days (~${yrs} yrs)`;
+        } else {
+            document.getElementById("pvDuration").innerText = "Invalid Dates";
+        }
+    }
 }
 
+// Initial discovery & setting load
+renderPairs();
 loadDynamicSymbolSettings(selectedPair);
+discoverAllPairsAcrossRoots();
 
 function go(){
     if(!validateDates()) {
@@ -827,12 +1015,15 @@ function go(){
     const start = document.getElementById("start").value;
     const to = document.getElementById("to").value;
     const speed = document.getElementById("speed").value;
+    const cleanSymbol = symbol.toLowerCase().replace('_mt5', '');
+    const space = symbolCache[cleanSymbol]?.space || DATA_SPACES[0];
 
     localStorage.setItem("symbol", symbol);
     localStorage.setItem("from", from);
     localStorage.setItem("initial", start);
     localStorage.setItem("to", to);
     localStorage.setItem("speed", speed);
+    localStorage.setItem("dataSpace", space);
 
     window.location.href = "chart.html";
 }

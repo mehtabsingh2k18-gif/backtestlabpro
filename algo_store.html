@@ -13,7 +13,770 @@
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <script>
         tailwind.config = {
+            theme: {a<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5.0">
+    <meta name="theme-color" content="#050507">
+    <title>Global Bot Hub & Community Arena | BacktestLab Pro</title>
+    <meta name="description" content="Community Commons for algorithmic bots. Benchmark strategies head-to-head on live chart replays, inspect entry parameters, and export production MQL5 code.">
+
+    <!-- Tailwind & Lightweight Frameworks -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" sizes="192x192" href="favicon.png">
+
+    <script>
+        tailwind.config = {
             theme: {
+                extend: {
+                    screens: { 'xs': '380px' },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            dark: '#050507',
+                            card: '#0c0c0e',
+                            accent: '#6366f1',
+                            purple: '#a855f7',
+                            success: '#10b981'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        :root { color-scheme: dark; }
+        body { background-color: #050507; color: #f4f4f5; overflow-x: hidden; width: 100%; }
+        .glass-card {
+            background: rgba(12, 12, 14, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+        }
+        .glass-card:hover {
+            border-color: rgba(99, 102, 241, 0.4);
+            box-shadow: 0 0 30px rgba(99, 102, 241, 0.09);
+        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .tab-btn-active {
+            background: #ffffff !important;
+            color: #09090b !important;
+        }
+        .auth-hidden { display: none !important; }
+        .auth-visible { display: flex !important; }
+    </style>
+</head>
+<body class="font-sans antialiased min-h-screen flex flex-col justify-between" id="top">
+
+    <!-- Primary Unified Header Navigation -->
+    <header class="sticky top-0 z-50 w-full border-b border-white/5 bg-[#050507]/90 backdrop-blur-xl">
+        <div class="max-w-[1700px] mx-auto px-4 sm:px-6 lg:px-8 w-full h-16 sm:h-20 flex items-center justify-between gap-4">
+            
+            <!-- Left: Brand Logo -->
+            <a href="index.html" class="flex items-center gap-2.5 sm:gap-3 group flex-shrink-0" title="BacktestLab Pro Homepage">
+                <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20 flex-shrink-0 transition-transform group-hover:scale-105">
+                    <svg class="w-4 h-4 sm:w-5 sm:h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                    </svg>
+                </div>
+                <span class="text-base sm:text-xl font-bold tracking-tight text-white font-sans whitespace-nowrap">BacktestLab <span class="text-indigo-400">Pro</span></span>
+            </a>
+
+            <!-- Center: Navigation Links -->
+            <nav class="hidden xl:flex items-center gap-5 2xl:gap-7 text-[13px] 2xl:text-sm font-medium text-zinc-400">
+                <a href="index.html#how-it-works" class="hover:text-white transition-colors whitespace-nowrap py-1">How It Works</a>
+                <a href="index.html#markets" class="hover:text-white transition-colors whitespace-nowrap py-1">Historical Feeds</a>
+                <a href="algo_store.html" class="text-white font-semibold flex items-center gap-1.5 whitespace-nowrap py-1">
+                    <span class="h-1.5 w-1.5 rounded-full bg-purple-400 animate-pulse"></span> Global Bot Store
+                </a>
+                <a href="bot_automation.html" class="hover:text-white transition-colors whitespace-nowrap py-1">BYO-API Builder</a>
+                <a href="index.html#pricing" class="hover:text-white transition-colors whitespace-nowrap py-1">Pricing &amp; Export</a>
+                <a href="articles.html" class="hover:text-white transition-colors whitespace-nowrap py-1">Articles</a>
+                <a href="about.html" class="hover:text-white transition-colors whitespace-nowrap py-1">About Us</a>
+            </nav>
+
+            <!-- Right: Action Bar / Multi-Bot Tray / Profile Controls -->
+            <div class="hidden lg:flex items-center gap-2.5 xl:gap-3 flex-shrink-0">
+                
+                <!-- Arena Multi-Bot Floating Action Button -->
+                <button id="battle-tray-btn" class="hidden items-center gap-2 px-3.5 py-2 rounded-full bg-purple-500/10 border border-purple-500/30 text-purple-300 font-mono text-xs hover:bg-purple-500/20 active:scale-95 transition-all" onclick="launchArenaBattle()">
+                    <i class="fa-solid fa-bolt text-amber-400"></i>
+                    <span>Selected: <strong id="battle-count" class="text-white">0</strong>/3</span>
+                    <span class="bg-purple-600 text-white px-2 py-0.5 rounded-full text-[10px] font-bold">Battle Now</span>
+                </button>
+
+                <!-- Plan Quota Status Badge -->
+                <div id="user-plan-status-pill" class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-900 border border-white/10 font-mono text-xs text-zinc-400">
+                    <span class="h-2 w-2 rounded-full bg-zinc-500"></span>
+                    <span>Checking Status...</span>
+                </div>
+
+                <!-- Replay Simulator Link -->
+                <a href="session.html" class="text-xs sm:text-sm font-semibold bg-gradient-to-r from-indigo-500 to-purple-500 text-white px-4 xl:px-5 py-2.5 rounded-full hover:opacity-90 active:scale-95 transition-all shadow-md shadow-indigo-500/20 flex items-center gap-1.5 whitespace-nowrap">
+                    <i class="fa-solid fa-play text-xs"></i> Open Simulator
+                </a>
+
+                <!-- Desktop Authentication Controls -->
+                <div id="desktop-auth-container" class="flex items-center gap-2.5 xl:gap-3 auth-hidden">
+                    <div id="logged-out-actions" class="hidden flex items-center gap-2.5">
+                        <button onclick="triggerAuthFlow()" class="text-xs sm:text-sm font-semibold text-zinc-400 hover:text-white transition-colors px-2 py-2">Sign In</button>
+                        <button onclick="triggerAuthFlow()" class="text-xs sm:text-sm font-semibold border border-white/10 text-zinc-200 px-3.5 py-2 rounded-xl hover:bg-zinc-800 transition-all font-display">Create Account</button>
+                    </div>
+                    
+                    <div id="logged-in-actions" class="hidden flex items-center gap-2.5 relative">
+                        <a href="my-sessions.html" class="text-xs sm:text-sm font-semibold text-zinc-300 hover:text-white border border-white/10 px-3.5 xl:px-4 py-2 rounded-full bg-[#0d0d11] hover:bg-zinc-900 transition-all flex items-center gap-2 whitespace-nowrap">
+                            <i class="fa-solid fa-folder text-indigo-400 text-xs"></i> My Workspace
+                        </a>
+                        
+                        <div class="relative ml-0.5" id="profile-dropdown-wrapper">
+                            <button id="profile-menu-trigger-btn" aria-label="Open Profile Menu" class="flex items-center justify-center h-9 w-9 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 p-[1px] focus:outline-none transition-transform hover:scale-105 active:scale-95">
+                                <div class="h-full w-full bg-[#050507] rounded-[10px] flex items-center justify-center text-zinc-300 hover:text-white">
+                                    <i class="fa-solid fa-user text-xs"></i>
+                                </div>
+                            </button>
+
+                            <div id="profile-overlay-dialog-box" class="hidden absolute right-0 mt-3 w-64 rounded-2xl border border-white/10 bg-[#0c0c0e]/95 backdrop-blur-xl p-4 shadow-2xl z-50 text-left">
+                                <div class="flex items-center gap-3 mb-3">
+                                    <div class="h-9 w-9 rounded-xl bg-white/5 flex items-center justify-center text-indigo-400 border border-white/10 flex-shrink-0">
+                                        <i class="fa-solid fa-user text-sm"></i>
+                                    </div>
+                                    <div class="overflow-hidden">
+                                        <div class="flex items-center gap-2">
+                                            <h5 id="profile-box-name" class="text-sm font-bold text-white font-sans truncate">Trader Pro</h5>
+                                            <span id="profile-box-plan" class="hidden text-[9px] font-black tracking-wider px-1.5 py-0.5 rounded uppercase font-mono"></span>
+                                        </div>
+                                        <p id="profile-box-email" class="text-xs text-zinc-500 truncate font-mono">sandbox@backtestlabpro.com</p>
+                                    </div>
+                                </div>
+                                <button id="firebase-logout-btn" class="w-full py-2.5 rounded-xl bg-zinc-900 border border-white/5 text-zinc-400 hover:text-red-400 hover:border-red-500/20 hover:bg-red-500/5 transition-all text-xs font-semibold flex items-center justify-center gap-2 font-display min-h-[36px]">
+                                    <i class="fa-solid fa-power-off text-xs"></i> Sign Out
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mobile Action & Hamburger Toggle -->
+            <div class="flex lg:hidden items-center gap-2 flex-shrink-0">
+                <a href="session.html" class="flex items-center gap-1.5 px-3 py-1.5 sm:py-2 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 text-xs font-semibold text-white shadow-md active:scale-95 transition-all">
+                    <i class="fa-solid fa-play text-[10px]"></i> Simulator
+                </a>
+                <button id="mobileMenuBtn" aria-label="Toggle Navigation" class="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-xl bg-zinc-900/90 border border-white/10 text-zinc-300 hover:text-white focus:outline-none transition-all active:scale-90">
+                    <i id="menuIcon" class="fa-solid fa-bars text-sm"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Drawer Navigation -->
+        <div id="mobileMenu" class="hidden lg:hidden border-t border-white/10 bg-[#09090d]/98 backdrop-blur-2xl px-4 py-5 space-y-2.5 max-h-[85vh] overflow-y-auto shadow-2xl transition-all">
+            <a href="session.html" class="block text-sm font-semibold text-white py-3 px-4 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 text-center shadow-lg active:scale-95 transition-transform">Open Free Simulator</a>
+            <a href="index.html" class="block text-sm font-medium text-zinc-300 hover:text-white py-2.5 px-3 rounded-xl hover:bg-white/5 transition-colors">Home</a>
+            <a href="index.html#how-it-works" class="block text-sm font-medium text-zinc-300 hover:text-white py-2.5 px-3 rounded-xl hover:bg-white/5 transition-colors">How It Works</a>
+            <a href="index.html#markets" class="block text-sm font-medium text-zinc-300 hover:text-white py-2.5 px-3 rounded-xl hover:bg-white/5 transition-colors">Historical Feeds</a>
+            <a href="algo_store.html" class="block text-sm font-semibold text-indigo-400 py-2.5 px-3 rounded-xl bg-indigo-500/10 border border-indigo-500/20">Global Bot Store</a>
+            <a href="bot_automation.html" class="block text-sm font-medium text-zinc-300 hover:text-white py-2.5 px-3 rounded-xl hover:bg-white/5 transition-colors">BYO-API Builder</a>
+            <a href="index.html#pricing" class="block text-sm font-medium text-zinc-300 hover:text-white py-2.5 px-3 rounded-xl hover:bg-white/5 transition-colors">Pricing &amp; Export</a>
+            <a href="articles.html" class="block text-sm font-medium text-zinc-300 hover:text-white py-2.5 px-3 rounded-xl hover:bg-white/5 transition-colors">Articles</a>
+            <a href="about.html" class="block text-sm font-medium text-zinc-300 hover:text-white py-2.5 px-3 rounded-xl hover:bg-white/5 transition-colors">About Us</a>
+            
+            <div id="mobile-auth-placeholder" class="pt-4 border-t border-white/5 space-y-2.5 auth-hidden"></div>
+        </div>
+    </header>
+
+    <!-- Main Community Canvas -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex-grow w-full space-y-10">
+        
+        <!-- Hero Header -->
+        <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 border-b border-white/5 pb-8">
+            <div class="space-y-2">
+                <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 font-mono text-[11px] font-semibold">
+                    <span class="h-1.5 w-1.5 rounded-full bg-indigo-400 animate-ping"></span>
+                    <span>Community Commons • Open Algorithmic Arena</span>
+                </div>
+                <h1 class="font-display font-bold text-3xl sm:text-5xl text-white">Quant Hub &amp; Bot Arena</h1>
+                <p class="text-zinc-400 text-xs sm:text-sm max-w-xl leading-relaxed">
+                    Inspect strategies built by independent quants. Drag them straight into live historical charts, test them side-by-side, or export raw audited <code class="text-indigo-300">.mq5</code> code to your local machine.
+                </p>
+            </div>
+
+            <!-- Community Global Pulse Stats -->
+            <div class="grid grid-cols-3 gap-3 bg-zinc-950/70 border border-white/5 p-3 sm:p-4 rounded-2xl font-mono text-xs">
+                <div class="pr-3 border-r border-white/5">
+                    <span class="text-[9px] text-zinc-500 uppercase block">Public Algos</span>
+                    <strong id="stat-total-bots" class="text-white text-base font-display font-bold">0</strong>
+                </div>
+                <div class="px-3 border-r border-white/5">
+                    <span class="text-[9px] text-zinc-500 uppercase block">Community Replays</span>
+                    <strong class="text-indigo-400 text-base font-display font-bold">14.2K</strong>
+                </div>
+                <div class="pl-3">
+                    <span class="text-[9px] text-zinc-500 uppercase block">Active Quants</span>
+                    <strong class="text-emerald-400 text-base font-display font-bold">890+</strong>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter & Search Toolbar -->
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-1.5 bg-zinc-900/60 p-1 rounded-xl border border-white/5 overflow-x-auto no-scrollbar w-full sm:w-auto">
+                <button onclick="filterByTag('all')" class="filter-tab px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all tab-btn-active" data-tag="all">All Bots</button>
+                <button onclick="filterByTag('Breakout')" class="filter-tab px-3.5 py-1.5 rounded-lg text-xs font-semibold text-zinc-400 hover:text-white transition-all" data-tag="Breakout">Breakout / Liquidity</button>
+                <button onclick="filterByTag('Momentum')" class="filter-tab px-3.5 py-1.5 rounded-lg text-xs font-semibold text-zinc-400 hover:text-white transition-all" data-tag="Momentum">Momentum / Trend</button>
+                <button onclick="filterByTag('Scalper')" class="filter-tab px-3.5 py-1.5 rounded-lg text-xs font-semibold text-zinc-400 hover:text-white transition-all" data-tag="Scalper">Scalpers (M1/M5)</button>
+            </div>
+
+            <div class="relative w-full sm:w-64">
+                <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-xs text-zinc-500"></i>
+                <input type="text" id="bot-search-input" onkeyup="handleSearchInput()" placeholder="Search creator or strategy..." class="w-full pl-9 pr-3 py-2 rounded-xl bg-zinc-900/80 border border-white/5 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-indigo-500/50">
+            </div>
+        </div>
+
+        <!-- Dynamic Bot Cards Grid -->
+        <div id="bots-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="col-span-full text-center py-20 text-zinc-500 font-mono text-xs">
+                <i class="fa-solid fa-circle-notch fa-spin text-xl mb-2 block text-indigo-500"></i>
+                Syncing with Global Bot Repository...
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal: Quota Reached / Upgrade Notice -->
+    <div id="quota-modal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-[#0e1017] border border-white/10 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl relative">
+            <button onclick="closeQuotaModal()" class="absolute top-4 right-4 text-zinc-400 hover:text-white text-sm">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center text-xl">
+                <i class="fa-solid fa-lock"></i>
+            </div>
+            <h3 id="modal-title" class="text-lg font-bold text-white font-display">Download Quota Notice</h3>
+            <p id="modal-body" class="text-xs text-zinc-400 leading-relaxed"></p>
+            <div class="pt-2">
+                <button onclick="closeQuotaModal()" class="w-full py-2.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-semibold text-xs">
+                    Understood
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Unified Site Footer -->
+    <footer class="mt-16 sm:mt-24 border-t border-white/10 bg-[#08080a] relative z-10 pt-12 sm:pt-16 pb-12 text-zinc-400 text-xs font-sans">
+        <div class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 space-y-10 sm:space-y-12">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 sm:gap-10">
+                <div class="lg:col-span-2 space-y-4">
+                    <a href="index.html" class="flex items-center gap-3 group">
+                        <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20 flex-shrink-0">
+                            <svg class="w-4 h-4 sm:w-5 sm:h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                        </div>
+                        <span class="font-display font-bold text-base sm:text-lg text-white tracking-tight">BacktestLab <span class="text-indigo-400">Pro</span></span>
+                    </a>
+                    <p class="text-zinc-400 text-xs leading-relaxed max-w-sm">
+                        Institutional strategy tester and collaborative bot arena. Run unlimited replays and drag-and-drop algorithms with zero fees.
+                    </p>
+                </div>
+                <div class="space-y-3">
+                    <h4 class="font-display font-bold text-white text-xs sm:text-sm tracking-wide uppercase">Platform</h4>
+                    <ul class="space-y-2 text-xs">
+                        <li><a href="session.html" class="hover:text-white transition-colors">Start Free Replay</a></li>
+                        <li><a href="algo_store.html" class="hover:text-white transition-colors">Global Bot Store</a></li>
+                        <li><a href="bot_automation.html" class="hover:text-white transition-colors">BYO-API Builder</a></li>
+                    </ul>
+                </div>
+                <div class="space-y-3">
+                    <h4 class="font-display font-bold text-white text-xs sm:text-sm tracking-wide uppercase">Resources</h4>
+                    <ul class="space-y-2 text-xs">
+                        <li><a href="articles.html" class="hover:text-white transition-colors">Quant Guides</a></li>
+                        <li><a href="about.html" class="hover:text-white transition-colors">About Us</a></li>
+                        <li><a href="contact.html" class="hover:text-white transition-colors">Contact Support</a></li>
+                    </ul>
+                </div>
+                <div class="space-y-3">
+                    <h4 class="font-display font-bold text-white text-xs sm:text-sm tracking-wide uppercase">Legal</h4>
+                    <ul class="space-y-2 text-xs">
+                        <li><a href="privacy.html" class="hover:text-white transition-colors">Privacy Policy</a></li>
+                        <li><a href="terms.html" class="hover:text-white transition-colors">Terms of Service</a></li>
+                        <li><a href="risk.html" class="hover:text-white transition-colors">Risk Disclaimer</a></li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="border-white/5">
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4 text-zinc-500 text-xs font-mono">
+                <span>&copy; 2026 BacktestLab Pro. All rights reserved.</span>
+                <a href="#top" class="hover:text-white transition-colors"><i class="fa-solid fa-arrow-up mr-1"></i> Back to Top</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Firebase Script Orchestration -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getFirestore, collection, doc, getDoc, getDocs, runTransaction, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAensfI53w49Fd4A7Lz5_K9N1JOxZsW7Kk",
+            authDomain: "backtestlabpro.firebaseapp.com",
+            projectId: "backtestlabpro",
+            storageBucket: "backtestlabpro.firebasestorage.app",
+            messagingSenderId: "560146824734",
+            appId: "1:560146824734:web:5287d0ded3a1024e75780f"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let currentUid = null;
+        let activePlan = null;
+        let globalBotsList = [];
+        let selectedForBattle = [];
+
+        window.firebaseAuthInstance = auth;
+        window.firebaseSignOutAction = signOut;
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUid = user.uid;
+                const nameDisplay = document.getElementById('profile-box-name');
+                const emailDisplay = document.getElementById('profile-box-email');
+                if (nameDisplay) nameDisplay.textContent = user.displayName || "Anonymous Trader";
+                if (emailDisplay) emailDisplay.textContent = user.email || "sandbox@backtestlabpro.com";
+
+                await syncUserPlan();
+                updateAuthViewUI(true);
+            } else {
+                currentUid = null;
+                activePlan = null;
+                updatePlanBadge();
+                updateAuthViewUI(false);
+            }
+            await loadGlobalBotsCollection();
+        });
+
+        function updateAuthViewUI(isLoggedIn) {
+            const desktopContainer = document.getElementById('desktop-auth-container');
+            const loggedOutBar = document.getElementById('logged-out-actions');
+            const loggedInBar = document.getElementById('logged-in-actions');
+            const mobileAuthBox = document.getElementById('mobile-auth-placeholder');
+
+            if (isLoggedIn) {
+                if(loggedOutBar) loggedOutBar.classList.add('hidden');
+                if(loggedInBar) loggedInBar.classList.remove('hidden');
+                if(mobileAuthBox) {
+                    mobileAuthBox.innerHTML = `
+                       <a href="my-sessions.html" class="block w-full text-center py-2.5 rounded-xl border border-white/10 text-white bg-zinc-900 text-xs font-semibold">My Workspace</a>
+                       <button onclick="window.firebaseSignOutAction(window.firebaseAuthInstance)" class="block w-full text-center text-zinc-500 hover:text-red-400 text-xs py-2 transition-colors">Sign Out</button>
+                    `;
+                }
+            } else {
+                if(loggedOutBar) loggedOutBar.classList.remove('hidden');
+                if(loggedInBar) loggedInBar.classList.add('hidden');
+                if(mobileAuthBox) {
+                    mobileAuthBox.innerHTML = `
+                        <button onclick="triggerAuthFlow()" class="block w-full text-zinc-300 py-3 text-center text-xs font-semibold bg-white/5 rounded-xl border border-white/5 active:scale-95 transition-transform">Sign In / Create Account</button>
+                    `;
+                }
+            }
+
+            if (desktopContainer) {
+                desktopContainer.classList.remove('auth-hidden');
+                desktopContainer.classList.add('auth-visible');
+            }
+            if (mobileAuthBox) {
+                mobileAuthBox.classList.remove('auth-hidden');
+                mobileAuthBox.classList.add('auth-visible');
+            }
+        }
+
+        async function syncUserPlan() {
+            try {
+                const planRef = doc(db, "users", currentUid, "plan", "active");
+                const planSnap = await getDoc(planRef);
+                const planDisplay = document.getElementById('profile-box-plan');
+
+                if (planSnap.exists()) {
+                    activePlan = planSnap.data();
+                    if (planDisplay && activePlan.tier === "pro") {
+                        planDisplay.textContent = "PRO";
+                        planDisplay.className = "text-[9px] font-black tracking-wider px-1.5 py-0.5 rounded uppercase bg-gradient-to-r from-amber-400 to-amber-600 text-gray-950 shadow-sm font-mono";
+                        planDisplay.classList.remove('hidden');
+                    }
+                } else {
+                    activePlan = { tier: "free", global_bot_download_quota: 0, global_bots_downloaded: [] };
+                    if (planDisplay) {
+                        planDisplay.textContent = "FREE";
+                        planDisplay.className = "text-[9px] font-black tracking-wider px-1.5 py-0.5 rounded uppercase bg-zinc-800 text-zinc-400 font-mono";
+                        planDisplay.classList.remove('hidden');
+                    }
+                }
+            } catch (e) {
+                console.error("Plan sync error:", e);
+                activePlan = { tier: "free", global_bot_download_quota: 0, global_bots_downloaded: [] };
+            }
+            updatePlanBadge();
+        }
+
+        function updatePlanBadge() {
+            const pill = document.getElementById("user-plan-status-pill");
+            if (!pill) return;
+
+            if (!currentUid) {
+                pill.innerHTML = `<span class="h-2 w-2 rounded-full bg-zinc-500"></span><a href="login.html" class="hover:text-white font-semibold">Sign In</a>`;
+                return;
+            }
+
+            const isPro = activePlan && activePlan.tier === "pro" && activePlan.status === "active";
+            const downloadedCount = activePlan?.global_bots_downloaded?.length || 0;
+            const quota = activePlan?.global_bot_download_quota ?? Math.max(0, 5 - downloadedCount);
+
+            if (isPro) {
+                pill.className = "flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 font-mono text-xs text-emerald-400";
+                pill.innerHTML = `
+                    <span class="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span class="font-bold">PRO [${quota}/5 DL LEFT]</span>
+                `;
+            } else {
+                pill.className = "flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-900 border border-white/10 font-mono text-xs text-zinc-400";
+                pill.innerHTML = `
+                    <span class="h-2 w-2 rounded-full bg-zinc-500"></span>
+                    <span>FREE TIER</span>
+                    <a href="pricing.html" class="text-indigo-400 font-bold hover:underline ml-1">Upgrade</a>
+                `;
+            }
+        }
+
+        async function loadGlobalBotsCollection() {
+            try {
+                const querySnap = await getDocs(collection(db, "global_bots"));
+                globalBotsList = [];
+                querySnap.forEach((doc) => {
+                    globalBotsList.push({ id: doc.id, ...doc.data() });
+                });
+            } catch (err) {
+                console.error("Could not load bots from Firestore:", err);
+            }
+
+            document.getElementById("stat-total-bots").innerText = globalBotsList.length;
+            renderBotCards(globalBotsList);
+        }
+
+        function renderBotCards(bots) {
+            const grid = document.getElementById("bots-grid");
+            if (!grid) return;
+
+            if (bots.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full text-center py-20 text-zinc-500 font-mono text-xs">
+                        No matching algorithmic bots found.
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = "";
+            const downloadedList = activePlan?.global_bots_downloaded || [];
+
+            bots.forEach(bot => {
+                const isAlreadyDownloaded = downloadedList.includes(bot.id);
+                const isSelected = selectedForBattle.includes(bot.id);
+
+                const js = (bot.js_code || "").toLowerCase();
+                let categoryBadge = "Breakout";
+                if (js.includes("rsi") || js.includes("ema") || js.includes("direction")) categoryBadge = "Momentum";
+                if (js.includes("fvg") || js.includes("range") || js.includes("highest")) categoryBadge = "Liquidity";
+
+                const inputsMap = bot.inputs || {};
+                const inputChips = Object.keys(inputsMap).map(key => {
+                    const item = inputsMap[key];
+                    return `<span class="px-2 py-0.5 rounded bg-zinc-900/80 border border-white/5 text-[10px] text-zinc-400 font-mono">${item.label || key}: <strong class="text-zinc-200">${item.value}</strong></span>`;
+                }).join(" ");
+
+                let dateFormatted = "Active";
+                if (bot.created_at && bot.created_at.seconds) {
+                    dateFormatted = new Date(bot.created_at.seconds * 1000).toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' });
+                }
+
+                const card = document.createElement("div");
+                card.className = `glass-card rounded-2xl p-5 sm:p-6 flex flex-col justify-between transition-all duration-200 ${isSelected ? 'border-purple-500/80 shadow-lg shadow-purple-500/10' : ''}`;
+
+                card.innerHTML = `
+                    <div>
+                        <!-- Creator Row & Battle Select -->
+                        <div class="flex items-center justify-between mb-3 text-[11px] font-mono">
+                            <div class="flex items-center gap-2">
+                                <div class="w-6 h-6 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center text-white text-[10px] font-bold">
+                                    ${(bot.author_name || 'Q').charAt(0)}
+                                </div>
+                                <span class="text-zinc-300 font-sans font-semibold">${bot.author_name || 'Community Quant'}</span>
+                                <span class="text-[9px] px-1.5 py-0.2 rounded bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">Verified</span>
+                            </div>
+
+                            <button onclick="toggleArenaSelect('${bot.id}')" class="px-2 py-0.5 rounded text-[10px] font-mono border transition-all ${isSelected ? 'bg-purple-500 text-white border-purple-400' : 'bg-zinc-900 border-white/10 text-zinc-400 hover:text-white'}">
+                                <i class="fa-solid fa-shield-halved mr-1"></i> ${isSelected ? 'Mounted' : '+ Arena'}
+                            </button>
+                        </div>
+
+                        <!-- Strategy Title & Category -->
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-purple-500/10 text-purple-300 border border-purple-500/20 uppercase">${categoryBadge}</span>
+                            <span class="text-zinc-500 text-[10px] font-mono">${dateFormatted}</span>
+                        </div>
+                        <h3 class="font-display font-bold text-lg text-white mb-2">${bot.name || 'Untitled Bot'}</h3>
+
+                        <p class="text-zinc-400 text-xs leading-relaxed mb-4 line-clamp-2">
+                            Automated rule engine monitoring price velocity and volatility thresholds. Automatically registers stop-loss and take-profit targets via chart API.
+                        </p>
+
+                        <!-- Configured Inputs Parameters -->
+                        <div class="mb-4">
+                            <span class="text-[9px] font-mono text-zinc-500 uppercase tracking-wider block mb-1.5">Configured Inputs</span>
+                            <div class="flex flex-wrap gap-1.5">
+                                ${inputChips || '<span class="text-zinc-600 text-[10px] font-mono">Dynamic Settings</span>'}
+                            </div>
+                        </div>
+
+                        <!-- Social Metric Bar -->
+                        <div class="flex items-center justify-between p-3 rounded-xl bg-black/40 border border-white/5 text-xs font-mono mb-5">
+                            <span class="text-zinc-400"><i class="fa-solid fa-download text-zinc-500 text-[10px] mr-1"></i> ${bot.downloads ?? 0} downloads</span>
+                            <span class="text-emerald-400 font-bold"><i class="fa-solid fa-check-double text-[10px] mr-1"></i> MQL5 Verified</span>
+                        </div>
+                    </div>
+
+                    <!-- Action Row -->
+                    <div class="pt-4 border-t border-white/5 flex flex-col sm:flex-row items-center gap-2">
+                        <button onclick="testBotOnChart('${bot.id}')" class="w-full sm:flex-1 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs transition-all flex items-center justify-center gap-2 shadow-lg shadow-indigo-600/20 active:scale-95">
+                            <i class="fa-solid fa-play text-[10px]"></i> Test On Chart
+                        </button>
+
+                        <button onclick="downloadBotSource('${bot.id}')" class="w-full sm:w-auto px-4 py-2.5 rounded-xl text-xs font-mono font-semibold border ${
+                            isAlreadyDownloaded 
+                            ? 'border-emerald-500/30 text-emerald-300 bg-emerald-500/10 hover:bg-emerald-500/20' 
+                            : 'border-white/10 bg-zinc-900 hover:bg-zinc-800 text-zinc-200'
+                        } transition-all flex items-center justify-center gap-1.5 active:scale-95">
+                            <i class="fa-solid ${isAlreadyDownloaded ? 'fa-check' : 'fa-download'} text-[10px]"></i>
+                            <span>${isAlreadyDownloaded ? 'Re-Save' : '.mq5'}</span>
+                        </button>
+                    </div>
+                `;
+
+                grid.appendChild(card);
+            });
+        }
+
+        // Multi-Bot Battle Arena Handler
+        window.toggleArenaSelect = function(botId) {
+            const index = selectedForBattle.indexOf(botId);
+            if (index > -1) {
+                selectedForBattle.splice(index, 1);
+            } else {
+                if (selectedForBattle.length >= 3) {
+                    alert("You can select up to 3 bots to benchmark head-to-head simultaneously.");
+                    return;
+                }
+                selectedForBattle.push(botId);
+            }
+
+            const tray = document.getElementById("battle-tray-btn");
+            const count = document.getElementById("battle-count");
+            if (selectedForBattle.length > 0) {
+                tray.classList.remove("hidden");
+                tray.classList.add("flex");
+                count.innerText = selectedForBattle.length;
+            } else {
+                tray.classList.add("hidden");
+                tray.classList.remove("flex");
+            }
+            renderBotCards(globalBotsList);
+        };
+
+        window.launchArenaBattle = function() {
+            if (selectedForBattle.length === 0) return;
+            const botsParam = selectedForBattle.join(",");
+            window.location.href = `chart_auto_run.html?battleBots=${encodeURIComponent(botsParam)}`;
+        };
+
+        window.testBotOnChart = function(botId) {
+            window.location.href = `chart_auto_run.html?botId=${encodeURIComponent(botId)}`;
+        };
+
+        window.downloadBotSource = async function(botId) {
+            if (!currentUid) {
+                openModal("Account Required", "Please sign in or create an account to download algorithmic source code.");
+                return;
+            }
+
+            const isPro = activePlan && activePlan.tier === "pro" && activePlan.status === "active";
+            if (!isPro) {
+                openModal("Pro License Required", "Source code downloads require an active Pro Plan ($89). Upgrading unlocks 5 community strategy code files.");
+                return;
+            }
+
+            const planRef = doc(db, "users", currentUid, "plan", "active");
+            const botRef = doc(db, "global_bots", botId);
+            const downloadedList = activePlan.global_bots_downloaded || [];
+            const isAlreadyOwned = downloadedList.includes(botId);
+
+            if (!isAlreadyOwned && ((activePlan.global_bot_download_quota ?? 0) <= 0 || downloadedList.length >= 5)) {
+                openModal("Download Limit Reached", "You have utilized all 5 of your community bot download credits. You can still test any bot indefinitely on the live chart.");
+                return;
+            }
+
+            try {
+                let mql5Code = "";
+                let botName = "Strategy_Bot";
+
+                await runTransaction(db, async (transaction) => {
+                    const freshPlan = await transaction.get(planRef);
+                    if (!freshPlan.exists()) throw new Error("Plan not found");
+
+                    const pData = freshPlan.data();
+                    const curList = pData.global_bots_downloaded || [];
+
+                    if (!curList.includes(botId)) {
+                        const newQuota = Math.max(0, (pData.global_bot_download_quota ?? 5) - 1);
+                        transaction.update(planRef, {
+                            global_bot_download_quota: newQuota,
+                            global_bots_downloaded: [...curList, botId]
+                        });
+                    }
+
+                    const botDoc = await transaction.get(botRef);
+                    if (botDoc.exists()) {
+                        mql5Code = botDoc.data().mql5_code || "// No MQL5 code provided";
+                        botName = botDoc.data().name || botName;
+                    }
+                });
+
+                try {
+                    await updateDoc(botRef, { downloads: increment(1) });
+                } catch(e) {}
+
+                const blob = new Blob([mql5Code], { type: "text/plain;charset=utf-8" });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = `${botName.replace(/[^a-zA-Z0-9_-]/g, '_')}.mq5`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+
+                await syncUserPlan();
+                renderBotCards(globalBotsList);
+
+            } catch (err) {
+                console.error("Download failed:", err);
+                alert("Download failed: " + err.message);
+            }
+        };
+
+        window.filterByTag = function(tag) {
+            document.querySelectorAll(".filter-tab").forEach(t => {
+                t.classList.remove("tab-btn-active");
+                t.classList.add("text-zinc-400");
+            });
+            const activeBtn = document.querySelector(`.filter-tab[data-tag="${tag}"]`);
+            if (activeBtn) {
+                activeBtn.classList.add("tab-btn-active");
+                activeBtn.classList.remove("text-zinc-400");
+            }
+
+            if (tag === 'all') {
+                renderBotCards(globalBotsList);
+            } else {
+                renderBotCards(globalBotsList.filter(b => {
+                    const js = (b.js_code || "").toLowerCase();
+                    if (tag === 'Breakout') return js.includes("pdh") || js.includes("pdl") || js.includes("break");
+                    if (tag === 'Momentum') return js.includes("ema") || js.includes("rsi") || js.includes("direction");
+                    if (tag === 'Scalper') return js.includes("slpips") || js.includes("1440");
+                    return true;
+                }));
+            }
+        };
+
+        window.handleSearchInput = function() {
+            const query = document.getElementById("bot-search-input").value.toLowerCase();
+            renderBotCards(globalBotsList.filter(b => {
+                return (b.name || '').toLowerCase().includes(query) || (b.author_name || '').toLowerCase().includes(query);
+            }));
+        };
+
+        function openModal(title, msg) {
+            document.getElementById("modal-title").innerText = title;
+            document.getElementById("modal-body").innerText = msg;
+            document.getElementById("quota-modal").classList.remove("hidden");
+        }
+
+        window.closeQuotaModal = function() {
+            document.getElementById("quota-modal").classList.add("hidden");
+        };
+
+        window.triggerAuthFlow = function() {
+            window.location.href = "login.html";
+        };
+
+        const logoutBtn = document.getElementById('firebase-logout-btn');
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', () => {
+                signOut(auth).then(() => {
+                    document.getElementById('profile-overlay-dialog-box').classList.add('hidden');
+                }).catch((error) => console.error('Sign out error: ', error));
+            });
+        }
+    </script>
+
+    <!-- UI Menu Toggles -->
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const mobileMenu = document.getElementById('mobileMenu');
+            const menuIcon = document.getElementById('menuIcon');
+
+            if (mobileMenuBtn && mobileMenu && menuIcon) {
+                mobileMenuBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const isHidden = mobileMenu.classList.toggle('hidden');
+                    menuIcon.className = isHidden ? 'fa-solid fa-bars text-sm' : 'fa-solid fa-xmark text-sm';
+                    document.body.style.overflow = isHidden ? '' : 'hidden';
+                });
+
+                document.addEventListener('click', (e) => {
+                    if (!mobileMenu.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
+                        mobileMenu.classList.add('hidden');
+                        menuIcon.className = 'fa-solid fa-bars text-sm';
+                        document.body.style.overflow = '';
+                    }
+                });
+            }
+
+            const trigger = document.getElementById('profile-menu-trigger-btn');
+            const dialogBox = document.getElementById('profile-overlay-dialog-box');
+            const wrapper = document.getElementById('profile-dropdown-wrapper');
+            if (trigger && dialogBox && wrapper) {
+                trigger.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    dialogBox.classList.toggle('hidden');
+                });
+                document.addEventListener('click', (e) => {
+                    if (!wrapper.contains(e.target)) dialogBox.classList.add('hidden');
+                });
+            }
+        });
+    </script>
+</body>
+</html>
                 extend: {
                     fontFamily: { 
                         sans: ['Plus Jakarta Sans', 'sans-serif'],

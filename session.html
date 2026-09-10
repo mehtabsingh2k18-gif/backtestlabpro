@@ -7,11 +7,11 @@
 <title>BacktestLabPro - Create Session</title>
 
 <style>
-
 *{
     margin:0;
     padding:0;
     box-sizing:border-box;
+    -webkit-tap-highlight-color: transparent;
 }
 
 body{
@@ -124,6 +124,63 @@ body{
     justify-content:space-between;
 }
 
+/* Engine Target Switcher */
+.engine-select-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.engine-card {
+    background: #181e2b;
+    border: 1px solid #262d3d;
+    border-radius: 12px;
+    padding: 12px 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    user-select: none;
+}
+
+.engine-card:hover {
+    border-color: #3b4761;
+    background: #1e2638;
+}
+
+.engine-card.active {
+    border-color: #2962ff;
+    background: rgba(41, 98, 255, 0.1);
+    box-shadow: 0 0 15px rgba(41, 98, 255, 0.25);
+}
+
+.engine-card-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #fff;
+}
+
+.engine-card-header svg {
+    width: 16px;
+    height: 16px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.engine-card-desc {
+    font-size: 10px;
+    color: #7e8b9b;
+    line-height: 1.35;
+}
+
 .searchBox{
     width:100%;
     background:#1a202c;
@@ -181,7 +238,7 @@ body{
     display:grid;
     grid-template-columns:repeat(3, 1fr);
     gap:10px;
-    max-height:480px;
+    max-height:440px;
     overflow-y:auto;
     padding-right:5px;
 }
@@ -253,7 +310,7 @@ body{
 
 label{
     display:block;
-    margin-top:16px;
+    margin-top:14px;
     margin-bottom:6px;
     font-size:11px;
     color:#7e8b9b;
@@ -280,7 +337,7 @@ input:focus, select:focus{
 }
 
 .hint{
-    margin-top:5px;
+    margin-top:4px;
     color:#5a6678;
     font-size:11px;
 }
@@ -292,7 +349,7 @@ input:focus, select:focus{
     padding: 14px 16px;
     border-radius: 12px;
     font-size: 12px;
-    margin-bottom: 18px;
+    margin-bottom: 16px;
 }
 
 .dataNoticeHeader {
@@ -359,18 +416,18 @@ input:focus, select:focus{
 }
 
 .summary{
-    margin-top:22px;
+    margin-top:20px;
     background:#181e2b;
     border:1px solid #262d3d;
     border-radius:14px;
-    padding:18px;
+    padding:16px;
 }
 
 .summaryRow{
     display:flex;
     justify-content:space-between;
     align-items:center;
-    margin-bottom:12px;
+    margin-bottom:10px;
     font-size:13px;
 }
 
@@ -410,17 +467,21 @@ input:focus, select:focus{
 
 .launchBtn{
     width:100%;
-    margin-top:25px;
+    margin-top:20px;
     border:none;
     background:linear-gradient(135deg, #2962ff 0%, #1a4cd2 100%);
     color:white;
     padding:16px;
     border-radius:12px;
-    font-size:16px;
+    font-size:15px;
     font-weight:700;
     cursor:pointer;
     box-shadow:0 8px 25px rgba(41,98,255,0.35);
     transition:all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
 }
 
 .launchBtn:hover{
@@ -451,7 +512,6 @@ input:focus, select:focus{
         padding: 15px;
     }
 }
-
 </style>
 </head>
 <body>
@@ -506,6 +566,25 @@ input:focus, select:focus{
                 Replay Environment
             </div>
 
+            <!-- Workspace Mode Switcher -->
+            <label>Workspace Target Mode</label>
+            <div class="engine-select-container">
+                <div class="engine-card active" id="engineManual" onclick="selectEngineMode('manual')">
+                    <div class="engine-card-header">
+                        <svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+                        <span>Manual Replay</span>
+                    </div>
+                    <div class="engine-card-desc">Discretionary chart replay with execution buttons and technical drawing tools.</div>
+                </div>
+                <div class="engine-card" id="engineAlgo" onclick="selectEngineMode('algo')">
+                    <div class="engine-card-header">
+                        <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                        <span>AI Algo Sandbox</span>
+                    </div>
+                    <div class="engine-card-desc">Automated backtester with AI Copilot, dynamic tester inputs, and MQL5 export.</div>
+                </div>
+            </div>
+
             <!-- Dynamic Archive Range Notice -->
             <div id="dataNotice" class="dataNotice">
                 <div class="dataNoticeHeader">
@@ -540,15 +619,35 @@ input:focus, select:focus{
 
             <div id="errorBanner" class="errorBanner"></div>
 
-            <label>Initial Replay Speed</label>
-            <select id="speed">
-                <option value="1000">1 Candle / Sec (1x)</option>
-                <option value="500" selected>2 Candles / Sec (2x)</option>
-                <option value="250">4 Candles / Sec (4x)</option>
-                <option value="100">10 Candles / Sec (10x)</option>
-            </select>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <div>
+                    <label>Timeframe</label>
+                    <select id="tf">
+                        <option value="m1">1m</option>
+                        <option value="m5" selected>5m</option>
+                        <option value="m15">15m</option>
+                        <option value="m30">30m</option>
+                        <option value="h1">1h</option>
+                        <option value="h4">4h</option>
+                        <option value="d1">1d</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Initial Speed</label>
+                    <select id="speed">
+                        <option value="1000">1 Candle / Sec (1x)</option>
+                        <option value="500">2 Candles / Sec (2x)</option>
+                        <option value="120" selected>3 Candles / Sec (3x)</option>
+                        <option value="30">10 Candles / Sec (10x)</option>
+                    </select>
+                </div>
+            </div>
 
             <div class="summary">
+                <div class="summaryRow">
+                    <span>Engine Target</span>
+                    <span id="pvEngine" class="summaryVal" style="color: var(--accent);">Manual Replay (chart.html)</span>
+                </div>
 
                 <div class="summaryRow">
                     <span>Instrument</span>
@@ -587,11 +686,10 @@ input:focus, select:focus{
                     <span>Session End</span>
                     <span id="pvEnd" class="summaryVal">Loading...</span>
                 </div>
-
             </div>
 
-            <button class="launchBtn" onclick="go()">
-                Launch Replay Engine
+            <button class="launchBtn" id="btnLaunch" onclick="go()">
+                <span>Launch Replay Engine</span>
             </button>
 
         </div>
@@ -601,7 +699,6 @@ input:focus, select:focus{
 </div>
 
 <script>
-
 // All active Hugging Face storage spaces
 const DATA_SPACES = [
     "mehtab13/backtestlab-data",
@@ -640,6 +737,7 @@ const initialFallback = [
 let symbols = [...initialFallback];
 let selectedPair = "XAUUSD";
 let activeDataLimits = { min: "2003-05-01", max: "2026-08-28", space: DATA_SPACES[0] };
+let selectedEngine = "manual"; // 'manual' -> chart.html, 'algo' -> chart_auto_run.html
 const symbolCache = {};
 
 const grid = document.getElementById("pairGrid");
@@ -647,11 +745,28 @@ const search = document.getElementById("pairSearch");
 const fromInput = document.getElementById("from");
 const startInput = document.getElementById("start");
 const toInput = document.getElementById("to");
+const tfInput = document.getElementById("tf");
 const errorBanner = document.getElementById("errorBanner");
 const noticeRange = document.getElementById("noticeRange");
 const noticeSummary = document.getElementById("noticeSummary");
 const scanStatus = document.getElementById("scanStatus");
 const totalPairsBadge = document.getElementById("totalPairsBadge");
+const pvEngine = document.getElementById("pvEngine");
+const btnLaunch = document.getElementById("btnLaunch");
+
+function selectEngineMode(mode) {
+    selectedEngine = mode;
+    document.getElementById("engineManual").classList.toggle("active", mode === "manual");
+    document.getElementById("engineAlgo").classList.toggle("active", mode === "algo");
+    
+    if (mode === "manual") {
+        pvEngine.innerText = "Manual Replay (chart.html)";
+        btnLaunch.innerHTML = "<span>Launch Manual Replay</span>";
+    } else {
+        pvEngine.innerText = "AI Algo Sandbox (chart_auto_run.html)";
+        btnLaunch.innerHTML = "<span>Launch AI Strategy Tester</span>";
+    }
+}
 
 function formatDate(dateObj) {
     return dateObj.toISOString().split('T')[0];
@@ -671,7 +786,6 @@ function categorizeSymbol(sym) {
     return "forex";
 }
 
-// Scans the root of all data spaces to identify every present folder (pair)
 async function discoverAllPairsAcrossRoots() {
     scanStatus.innerText = "Indexing multi-space roots...";
     const pairMap = new Map();
@@ -683,7 +797,6 @@ async function discoverAllPairsAcrossRoots() {
             if (!res.ok) return;
             const items = await res.json();
 
-            // Folders at root that are not system files (.git, README, etc.)
             const ignored = ['readme.md', 'app.py', 'requirements.txt', '.gitattributes', 'index.html'];
             items.forEach(item => {
                 const folderName = item.path.split('/')[0].toUpperCase();
@@ -713,7 +826,6 @@ async function discoverAllPairsAcrossRoots() {
     renderPairs(document.querySelector(".cat.active").dataset.cat, search.value);
 }
 
-// Discovers exact starting/ending years and months for the selected pair in its space
 async function fetchSymbolLimitsFromStorage(symbol) {
     const cleanSymbol = symbol.toLowerCase().replace('_mt5', '');
     
@@ -723,7 +835,6 @@ async function fetchSymbolLimitsFromStorage(symbol) {
 
     noticeRange.innerText = "Scanning data boundaries...";
 
-    // Determine the space hosting this pair
     const foundEntry = symbols.find(s => s.symbol.toLowerCase() === cleanSymbol);
     const candidateSpaces = foundEntry ? [foundEntry.space, ...DATA_SPACES.filter(s => s !== foundEntry.space)] : DATA_SPACES;
 
@@ -754,7 +865,6 @@ async function fetchSymbolLimitsFromStorage(symbol) {
         const earliestYear = availableYears[0];
         const latestYear = availableYears[availableYears.length - 1];
 
-        // Discover starting month
         let minMonth = "01";
         try {
             const firstRes = await fetch(`https://huggingface.co/api/spaces/${matchedSpace}/tree/main/${cleanSymbol}/m1/${earliestYear}`);
@@ -768,7 +878,6 @@ async function fetchSymbolLimitsFromStorage(symbol) {
             }
         } catch (e) {}
 
-        // Discover ending month
         let maxMonth = "12";
         try {
             const lastRes = await fetch(`https://huggingface.co/api/spaces/${matchedSpace}/tree/main/${cleanSymbol}/m1/${latestYear}`);
@@ -792,13 +901,11 @@ async function fetchSymbolLimitsFromStorage(symbol) {
         return limits;
     }
 
-    // Default safety limits
     const fallbackLimits = { min: "2003-05-01", max: "2026-08-28", space: DATA_SPACES[0] };
     symbolCache[cleanSymbol] = fallbackLimits;
     return fallbackLimits;
 }
 
-// Preset engine anchored backwards from latest available date
 function applyQuickWindow(span) {
     if (!activeDataLimits.max) return;
 
@@ -858,7 +965,6 @@ async function loadDynamicSymbolSettings(symbol) {
     toInput.min = activeDataLimits.min;
     toInput.max = activeDataLimits.max;
 
-    // Default to the practical recent 1-year view
     applyQuickWindow('1y');
 }
 
@@ -1015,19 +1121,34 @@ function go(){
     const start = document.getElementById("start").value;
     const to = document.getElementById("to").value;
     const speed = document.getElementById("speed").value;
+    const tf = document.getElementById("tf").value;
     const cleanSymbol = symbol.toLowerCase().replace('_mt5', '');
     const space = symbolCache[cleanSymbol]?.space || DATA_SPACES[0];
 
+    const initialIso = new Date(start + "T00:00:00Z").toISOString();
+    const toIso = new Date(to + "T23:59:59Z").toISOString();
+    const fromIso = new Date(from + "T00:00:00Z").toISOString();
+
+    // 1. Sync Universal LocalStorage for both chart engines
     localStorage.setItem("symbol", symbol);
     localStorage.setItem("from", from);
     localStorage.setItem("initial", start);
     localStorage.setItem("to", to);
     localStorage.setItem("speed", speed);
+    localStorage.setItem("tf", tf);
     localStorage.setItem("dataSpace", space);
+    localStorage.setItem("engineMode", selectedEngine);
 
-    window.location.href = "chart.html";
+    // 2. Prepare Query Parameters
+    const queryParams = `?symbol=${encodeURIComponent(symbol)}&tf=${encodeURIComponent(tf)}&initial=${encodeURIComponent(initialIso)}&current=${encodeURIComponent(fromIso)}&to=${encodeURIComponent(toIso)}`;
+
+    // 3. Route to target workspace
+    if (selectedEngine === "manual") {
+        window.location.href = `chart.html${queryParams}`;
+    } else {
+        window.location.href = `chart_auto_run.html${queryParams}`;
+    }
 }
-
 </script>
 
 </body>

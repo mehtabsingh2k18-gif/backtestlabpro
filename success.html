@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Successful — BacktestLab Pro</title>
+    <style>
+        :root {
+            --bg-base: #080a0f;
+            --bg-panel: #0e121b;
+            --border: #232936;
+            --text: #d6d9e0;
+            --text-muted: #747b8c;
+            --accent: #2962ff;
+            --accent-hover: #1e53e5;
+            --up: #089981;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background: var(--bg-base);
+            color: var(--text);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .success-card {
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            width: 480px;
+            max-width: 100%;
+            padding: 36px 28px;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.7);
+        }
+
+        .success-icon-wrap {
+            width: 64px;
+            height: 64px;
+            background: rgba(8, 153, 129, 0.15);
+            border: 2px solid var(--up);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px auto;
+        }
+        .success-icon-wrap svg {
+            width: 32px;
+            height: 32px;
+            stroke: var(--up);
+        }
+
+        .title {
+            font-size: 22px;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.5;
+            margin-bottom: 24px;
+        }
+
+        .status-box {
+            background: #080a0f;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 14px;
+            font-family: monospace;
+            font-size: 12px;
+            text-align: left;
+            margin-bottom: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .status-line {
+            display: flex;
+            justify-content: space-between;
+        }
+        .status-line span:first-child { color: var(--text-muted); }
+        .status-line span:last-child { color: #fff; font-weight: 700; }
+
+        .btn-launch {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background: var(--accent);
+            color: #fff;
+            font-weight: 700;
+            font-size: 13px;
+            border-radius: 6px;
+            text-decoration: none;
+            transition: background 0.15s;
+        }
+        .btn-launch:hover {
+            background: var(--accent-hover);
+        }
+    </style>
+</head>
+<body>
+
+<div class="success-card">
+    <div class="success-icon-wrap">
+        <svg fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg>
+    </div>
+
+    <h1 class="title">License Activated!</h1>
+    <p class="subtitle">Your <b>$89 Real Market Pass</b> has been synchronized with your account. You can now download your personal strategy source code and up to 5 global community bots.</p>
+
+    <div class="status-box">
+        <div class="status-line">
+            <span>Plan:</span>
+            <span style="color: var(--up);">PRO REAL MARKET ($89)</span>
+        </div>
+        <div class="status-line">
+            <span>Account:</span>
+            <span id="displayEmail">Synchronizing...</span>
+        </div>
+        <div class="status-line">
+            <span>Personal .mq5 Files:</span>
+            <span style="color: var(--up);">UNRESTRICTED</span>
+        </div>
+        <div class="status-line">
+            <span>Global Bot Quota:</span>
+            <span>5 / 5 DOWNLOADS REMAINING</span>
+        </div>
+        <div class="status-line">
+            <span>Sync Status:</span>
+            <span id="syncStatus" style="color: #f59e0b;">WRITING TO FIRESTORE...</span>
+        </div>
+    </div>
+
+    <a href="chart_auto_run.html" class="btn-launch">OPEN STRATEGY STUDIO NOW</a>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, doc, setDoc, addDoc, collection, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyAensfI53w49Fd4A7Lz5_K9N1JOxZsW7Kk",
+    authDomain: "backtestlabpro.firebaseapp.com",
+    projectId: "backtestlabpro",
+    storageBucket: "backtestlabpro.firebasestorage.app",
+    messagingSenderId: "560146824734",
+    appId: "1:560146824734:web:5287d0ded3a1024e75780f"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+
+async function recordProPurchase(user) {
+    const syncStatusEl = document.getElementById("syncStatus");
+    const displayEmailEl = document.getElementById("displayEmail");
+    
+    displayEmailEl.innerText = user.email;
+
+    try {
+        // 1. Record purchase record in /users/{userId}/purchases/
+        await addDoc(collection(db, "users", user.uid, "purchases"), {
+            plan_id: "pro_market_pass_89",
+            plan_name: "Real Market License",
+            amount: 89.00,
+            currency: "USD",
+            provider: "paypal",
+            status: "COMPLETED",
+            purchased_at: serverTimestamp()
+        });
+
+        // 2. Set active entitlements in /users/{userId}/plan/active
+        await setDoc(doc(db, "users", user.uid, "plan", "active"), {
+            tier: "pro",
+            price: 89.00,
+            status: "active",
+            can_download_personal_mq5: true,
+            can_save_private_bots: true,
+            global_bot_download_quota: 5,
+            global_bots_downloaded: [],
+            activated_at: serverTimestamp()
+        }, { merge: true });
+
+        // 3. Update client storage flags
+        localStorage.setItem("btl_is_pro", "true");
+        localStorage.setItem("btl_global_bot_quota", "5");
+
+        syncStatusEl.innerText = "SUCCESSFULLY LINKED";
+        syncStatusEl.style.color = "var(--up)";
+    } catch (err) {
+        console.error("Firestore sync error:", err);
+        syncStatusEl.innerText = "LOCAL ACTIVE (CLOUD RETRYING)";
+        syncStatusEl.style.color = "#f59e0b";
+        localStorage.setItem("btl_is_pro", "true");
+    }
+}
+
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        recordProPurchase(user);
+    } else {
+        const cachedUid = localStorage.getItem("btl_checkout_uid");
+        const cachedEmail = localStorage.getItem("btl_checkout_email");
+        if (cachedUid) {
+            recordProPurchase({ uid: cachedUid, email: cachedEmail || "Registered User" });
+        } else {
+            document.getElementById("displayEmail").innerText = "Anonymous / Pending Login";
+            document.getElementById("syncStatus").innerText = "SAVED TO BROWSER (LOGIN TO SYNC CLOUD)";
+            localStorage.setItem("btl_is_pro", "true");
+        }
+    }
+});
+</script>
+
+</body>
+</html>

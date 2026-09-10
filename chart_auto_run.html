@@ -1,141 +1,369 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>BacktestLabPro - AI Automated Script Execution Terminal</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>BacktestLab Pro — Universal AI Engine</title>
     <script src="https://unpkg.com/lightweight-charts@4.2.0/dist/lightweight-charts.standalone.production.js"></script>
-    <link rel="icon" type="image/svg+xml" href="favicon.svg">
-
     <style>
-        :root { 
-            --bg: #0b0e14; 
-            --panel: #131722; 
-            --panel-subtle: #1c2030;
-            --text: #d1d4dc; 
-            --text-muted: #787b86;
-            --accent: #2962ff; 
+        :root {
+            --bg-base: #080a0f;
+            --bg-panel: #0e121b;
+            --bg-elevated: #161b26;
+            --border: #232936;
+            --border-hover: #323b4e;
+            --text: #d6d9e0;
+            --text-muted: #747b8c;
+            --accent: #2962ff;
             --accent-hover: #1e53e5;
-            --up: #089981; 
-            --down: #f23645; 
-            --border: #2a2e39; 
+            --accent-glow: rgba(41, 98, 255, 0.22);
+            --up: #089981;
+            --up-bg: rgba(8, 153, 129, 0.15);
+            --down: #f23645;
+            --down-bg: rgba(242, 54, 69, 0.15);
+            --gold: #f59e0b;
+            --gold-bg: rgba(245, 158, 11, 0.15);
+            --chat-w: 360px;
+            --dock-w: 340px;
+            --topbar-h: 48px;
+            --ease: cubic-bezier(0.16, 1, 0.3, 1);
         }
-        * { box-sizing: border-box; }
-        body { margin: 0; background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Trebuchet MS", Roboto, Ubuntu, sans-serif; overflow: hidden; display: flex; flex-direction: column; height: 100vh; }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        html, body { height: 100%; width: 100%; overflow: hidden; background: var(--bg-base); }
+        body {
+            color: var(--text);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+            display: flex; flex-direction: column;
+        }
+
+        .icon {
+            width: 14px; height: 14px; fill: none; stroke: currentColor;
+            stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+            display: inline-block; vertical-align: middle; flex-shrink: 0;
+        }
+
+        /* TOPBAR NAVIGATION */
+        .topbar {
+            height: var(--topbar-h); background: var(--bg-panel); display: flex;
+            align-items: center; padding: 0 12px; border-bottom: 1px solid var(--border);
+            gap: 8px; z-index: 50; overflow-x: auto; overflow-y: hidden;
+            white-space: nowrap; scrollbar-width: none;
+        }
+        .topbar::-webkit-scrollbar { display: none; }
+
+        .brand {
+            display: flex; align-items: center; gap: 8px; font-weight: 700;
+            font-size: 13px; color: #fff; letter-spacing: -0.2px; padding-right: 6px;
+        }
+        .brand span { color: var(--accent); }
+        .badge {
+            font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 3px;
+            text-transform: uppercase; background: var(--accent-glow); color: var(--accent);
+            letter-spacing: 0.5px;
+        }
+
+        .tier-pill {
+            cursor: pointer; font-size: 11px; padding: 5px 12px; border-radius: 4px;
+            font-weight: 700; display: inline-flex; align-items: center; gap: 6px;
+            user-select: none; transition: 0.2s ease; letter-spacing: 0.2px;
+        }
+        .tier-free { 
+            background: linear-gradient(90deg, rgba(245, 158, 11, 0.16), rgba(242, 54, 69, 0.16)); 
+            color: #ffb74d; border: 1px solid rgba(245, 158, 11, 0.45);
+            box-shadow: 0 0 10px rgba(245, 158, 11, 0.12);
+        }
+        .tier-free:hover {
+            background: linear-gradient(90deg, rgba(245, 158, 11, 0.28), rgba(242, 54, 69, 0.25)); 
+            border-color: var(--gold); color: #fff; transform: translateY(-1px);
+        }
+        .tier-pro { 
+            background: var(--up-bg); color: var(--up); border: 1px solid rgba(8, 153, 129, 0.4); 
+        }
+
+        .btn-group {
+            display: inline-flex; background: var(--bg-elevated); border-radius: 4px;
+            padding: 2px; border: 1px solid var(--border); gap: 2px; flex-shrink: 0;
+        }
+
+        button, select {
+            background: transparent; border: none; color: var(--text); padding: 5px 10px;
+            cursor: pointer; font-size: 11px; border-radius: 3px; font-weight: 500;
+            outline: none; display: inline-flex; align-items: center; justify-content: center;
+            gap: 5px; transition: background 0.15s, color 0.15s;
+        }
+        select {
+            appearance: none; -webkit-appearance: none;
+            padding-right: 18px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%23747b8c' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+            background-repeat: no-repeat; background-position: right 6px center;
+        }
+        button:hover:not(:disabled) { background: #222938; color: #fff; }
+        button:active:not(:disabled) { transform: scale(0.98); }
+        button:disabled { opacity: 0.35; cursor: not-allowed; }
         
+        .btn-accent { background: var(--accent); color: #fff; font-weight: 600; padding: 6px 14px; }
+        .btn-accent:hover:not(:disabled) { background: var(--accent-hover); color: #fff; }
+        .btn-gold { background: var(--gold); color: #000; font-weight: 700; padding: 6px 14px; }
+        .btn-gold:hover:not(:disabled) { background: #d97706; color: #000; }
+        .btn-outline { background: var(--bg-elevated); border: 1px solid var(--border); }
+        .btn-outline:hover:not(:disabled) { border-color: var(--accent); color: #fff; }
+
+        .session-tag {
+            background: rgba(41, 98, 255, 0.1); border: 1px solid rgba(41, 98, 255, 0.25);
+            color: #82aaff; padding: 3px 8px; border-radius: 4px; font-size: 11px;
+            font-family: monospace; font-weight: 700; display: inline-flex; align-items: center; gap: 4px;
+        }
+
+        .status-txt {
+            margin-left: auto; font-size: 10px; color: var(--text-muted);
+            font-family: monospace; padding: 0 4px; flex-shrink: 0;
+        }
+
+        .workspace {
+            display: flex; flex: 1; height: calc(100% - var(--topbar-h));
+            position: relative; overflow: hidden;
+        }
+
+        .copilot-pane {
+            position: relative; width: var(--chat-w); height: 100%;
+            background: var(--bg-panel); border-right: 1px solid var(--border);
+            display: flex; flex-direction: column; z-index: 40;
+            transition: transform 0.32s var(--ease), width 0.32s var(--ease), margin-left 0.32s var(--ease);
+            will-change: transform, margin-left;
+        }
+        .copilot-pane.minimized {
+            margin-left: calc(-1 * var(--chat-w));
+        }
+
+        .chat-toggle-handle {
+            position: absolute; top: 12px; left: var(--chat-w); z-index: 45;
+            width: 28px; height: 36px; background: var(--bg-elevated);
+            border: 1px solid var(--border); border-left: none;
+            border-top-right-radius: 6px; border-bottom-right-radius: 6px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; color: var(--text-muted);
+            transition: left 0.32s var(--ease), background 0.15s, color 0.15s;
+            box-shadow: 2px 2px 8px rgba(0,0,0,0.35);
+        }
+        .copilot-pane.minimized + .chat-toggle-handle { left: 0; }
+        .chat-toggle-handle:hover { color: #fff; background: #1c2331; }
+        .chat-toggle-handle .chevron { transition: transform 0.32s var(--ease); }
+        .copilot-pane.minimized + .chat-toggle-handle .chevron { transform: rotate(180deg); }
+
+        .pane-header {
+            padding: 12px 14px; background: #0b0e14; border-bottom: 1px solid var(--border);
+            display: flex; justify-content: space-between; align-items: center;
+            font-size: 11px; font-weight: 700; color: #fff; letter-spacing: 0.5px;
+        }
+
+        .chat-stream {
+            flex: 1; overflow-y: auto; padding: 14px; display: flex; flex-direction: column;
+            gap: 12px; scrollbar-width: thin; scrollbar-color: var(--border) transparent;
+        }
+        .msg {
+            padding: 10px 12px; border-radius: 6px; font-size: 12px; line-height: 1.5;
+            max-width: 90%; word-break: break-word;
+        }
+        .msg-user { align-self: flex-end; background: var(--accent); color: #fff; }
+        .msg-ai { align-self: flex-start; background: var(--bg-elevated); border: 1px solid var(--border); color: var(--text); }
+        .msg-card {
+            margin-top: 8px; background: #0a0d13; border: 1px solid var(--border);
+            border-radius: 4px; padding: 8px 10px; font-size: 11px; font-family: monospace;
+        }
+
+        .guide-box {
+            background: rgba(41, 98, 255, 0.08); border: 1px solid rgba(41, 98, 255, 0.25);
+            border-radius: 6px; padding: 10px; font-size: 11px; line-height: 1.45;
+            display: flex; flex-direction: column; gap: 6px;
+        }
+        .guide-title { font-weight: 700; color: #fff; display: flex; align-items: center; gap: 5px; }
+        .guide-link { color: var(--accent); text-decoration: none; font-weight: 600; cursor: pointer; }
+        .guide-link:hover { text-decoration: underline; }
+
+        .chat-input-area {
+            padding: 10px 12px; background: #0b0e14; border-top: 1px solid var(--border);
+            display: flex; flex-direction: column; gap: 8px;
+        }
+        .chat-textarea {
+            width: 100%; height: 60px; background: var(--bg-base);
+            border: 1px solid var(--border); border-radius: 4px; padding: 8px 10px;
+            color: #fff; font-size: 12px; resize: none; outline: none; transition: border-color 0.15s;
+        }
+        .chat-textarea:focus { border-color: var(--accent); }
+
+        .chart-viewport { flex: 1; position: relative; background: var(--bg-base); min-width: 0; }
+        #chartContainer { width: 100%; height: 100%; }
+
+        .drag-drop-target {
+            position: absolute; inset: 0; border: 2px dashed var(--accent);
+            background: rgba(41, 98, 255, 0.08); display: none; align-items: center;
+            justify-content: center; z-index: 50; pointer-events: none;
+        }
+        .drag-drop-target.hover { display: flex; }
+        .drag-drop-label {
+            background: var(--bg-panel); border: 1px solid var(--accent);
+            padding: 12px 20px; border-radius: 6px; font-weight: 700; font-size: 12px;
+            color: #fff; display: flex; align-items: center; gap: 8px;
+        }
+
+        .chart-hud {
+            position: absolute; top: 12px; left: 40px; background: rgba(14, 18, 27, 0.94);
+            border: 1px solid var(--border); border-radius: 6px; padding: 6px 12px;
+            display: flex; align-items: center; gap: 10px; z-index: 10;
+            backdrop-filter: blur(8px); max-width: calc(100% - 60px);
+        }
+        .hud-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--up); box-shadow: 0 0 6px var(--up); flex-shrink: 0; }
+        .hud-btn { font-size: 10px; font-weight: 600; padding: 4px 8px; border-radius: 3px; cursor: pointer; transition: 0.15s; }
+        .hud-btn-save { background: var(--up-bg); color: var(--up); border: 1px solid rgba(8, 153, 129, 0.4); }
+        .hud-btn-save:hover { background: var(--up); color: #fff; }
+        .hud-btn-edit { background: rgba(245, 158, 11, 0.15); color: var(--gold); border: 1px solid rgba(245, 158, 11, 0.4); }
+        .hud-btn-edit:hover { background: var(--gold); color: #000; }
+
+        .dock-pane {
+            width: var(--dock-w); background: var(--bg-panel); border-left: 1px solid var(--border);
+            display: flex; flex-direction: column; z-index: 30;
+        }
+        .dock-tabs { display: flex; border-bottom: 1px solid var(--border); background: #0b0e14; }
+        .dock-tab {
+            flex: 1; padding: 10px 4px; font-size: 11px; font-weight: 600; text-align: center;
+            color: var(--text-muted); cursor: pointer; border-bottom: 2px solid transparent;
+            display: flex; align-items: center; justify-content: center; gap: 5px;
+            transition: color 0.15s, border-color 0.15s;
+        }
+        .dock-tab.active { color: #fff; border-bottom-color: var(--accent); }
+        .dock-content {
+            flex: 1; overflow-y: auto; padding: 12px; display: flex;
+            flex-direction: column; gap: 10px; scrollbar-width: thin;
+        }
+
+        .metric-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .metric-box { background: var(--bg-elevated); border: 1px solid var(--border); padding: 8px 10px; border-radius: 4px; }
+        .metric-label { font-size: 9px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.3px; }
+        .metric-val { font-size: 14px; font-weight: 700; font-family: monospace; margin-top: 2px; }
+
+        .inputs-card { background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 6px; padding: 10px; display: flex; flex-direction: column; gap: 8px; }
+        .inputs-header { font-size: 10px; font-weight: 700; color: #fff; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 6px; }
+        .input-row { display: flex; justify-content: space-between; align-items: center; font-size: 11px; }
+        .input-row label { color: var(--text-muted); }
+        .input-row input { width: 80px; background: #080a0f; border: 1px solid var(--border); color: #fff; padding: 4px 6px; border-radius: 3px; font-family: monospace; font-size: 11px; text-align: right; outline: none; }
+        .input-row input:focus { border-color: var(--accent); }
+
+        .journal-container { flex: 1; overflow-y: auto; background: #07090e; border: 1px solid var(--border); border-radius: 4px; min-height: 120px; max-height: 200px; font-size: 11px; font-family: monospace; }
+        .journal-entry { padding: 5px 8px; border-bottom: 1px solid #141824; display: flex; justify-content: space-between; }
+
+        .bot-nav-toggle {
+            display: flex; background: #0a0d14; border: 1px solid var(--border);
+            border-radius: 4px; padding: 2px; gap: 2px;
+        }
+        .bot-nav-btn {
+            flex: 1; padding: 6px 0; font-size: 10px; font-weight: 700;
+            color: var(--text-muted); text-align: center; border-radius: 3px;
+            cursor: pointer; transition: 0.15s;
+        }
+        .bot-nav-btn.active {
+            background: var(--bg-elevated); color: #fff; border: 1px solid var(--border-hover);
+        }
+
+        .bot-card { background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 6px; padding: 10px; display: flex; flex-direction: column; gap: 6px; cursor: grab; }
+        .bot-card.active { border-color: var(--accent); background: rgba(41, 98, 255, 0.05); }
+        .bot-header { display: flex; justify-content: space-between; align-items: center; font-size: 12px; font-weight: 700; color: #fff; }
+        .bot-meta { font-size: 10px; color: var(--text-muted); font-family: monospace; }
+        .drag-indicator { font-size: 9px; color: var(--accent); font-weight: 600; display: inline-flex; align-items: center; gap: 3px; }
+
+        .save-option-card {
+            background: var(--bg-base); border: 1px solid var(--border);
+            border-radius: 6px; padding: 12px; display: flex; flex-direction: column;
+            gap: 6px; cursor: pointer; transition: 0.2s; position: relative;
+        }
+        .save-option-card:hover { border-color: var(--border-hover); }
+        .save-option-card.selected { border-color: var(--accent); background: rgba(41, 98, 255, 0.06); }
+        .save-badge {
+            font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 3px;
+            text-transform: uppercase;
+        }
+
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: none; align-items: center; justify-content: center; z-index: 9999; padding: 16px; }
+        .modal-window { background: #131722; border: 1px solid #283042; border-radius: 8px; width: 620px; max-width: 100%; overflow: hidden; max-height: 90vh; display: flex; flex-direction: column; }
+        .modal-bar { padding: 10px 14px; background: #0a0d13; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; font-size: 12px; font-weight: 700; color: #fff; }
+        .modal-body { padding: 14px; display: flex; flex-direction: column; gap: 12px; overflow-y: auto; }
+        .code-display { background: #06080d; border: 1px solid var(--border); border-radius: 4px; padding: 10px; font-family: monospace; font-size: 11px; color: #7ee787; height: 260px; overflow-y: auto; white-space: pre; }
+        
+        .pro-pricing-banner {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(41, 98, 255, 0.15));
+            border: 1px solid rgba(245, 158, 11, 0.4); border-radius: 6px; padding: 16px; text-align: center;
+        }
+        .pro-features-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 10px 0;
+        }
+        .pro-feat-card {
+            background: var(--bg-base); border: 1px solid var(--border); border-radius: 6px;
+            padding: 10px; display: flex; gap: 8px; align-items: flex-start;
+        }
+        .pro-feat-icon {
+            color: var(--gold); background: var(--gold-bg); padding: 5px; border-radius: 4px; flex-shrink: 0;
+        }
+
+        .vault-input-group {
+            display: flex; flex-direction: column; gap: 4px; background: var(--bg-base);
+            padding: 10px; border-radius: 6px; border: 1px solid var(--border);
+        }
+        .vault-label-row {
+            display: flex; justify-content: space-between; align-items: center; font-size: 11px; font-weight: 700;
+        }
+        .vault-link {
+            font-size: 10px; color: var(--accent); text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 3px;
+        }
+        .vault-link:hover { text-decoration: underline; }
+
         .app-preloader { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #0b0e14; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 999999; transition: opacity 0.4s ease, visibility 0.4s ease; }
         .app-preloader.fade-out { opacity: 0; visibility: hidden; pointer-events: none; }
-        
         .loader-logo-container { display: flex; flex-direction: column; align-items: center; gap: 20px; animation: brandPulse 1.2s ease-in-out infinite; }
-        .loader-logo-container svg { width: 90px; height: 90px; }
-        .loader-text { color: #ffffff; font-size: 18px; font-weight: 600; letter-spacing: 0.5px; }
+        .loader-logo-container svg { width: 100px; height: 100px; }
+        .loader-text { color: #ffffff; font-size: 18px; font-weight: 600; letter-spacing: 0.5px; font-family: sans-serif; }
         .loader-text span { color: var(--accent); }
-        .loader-subtext { color: var(--text-muted); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; margin-top: -10px; }
+        .loader-subtext { color: #787b86; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; margin-top: -10px; }
 
         @keyframes brandPulse {
-            0%, 100% { transform: scale(0.98); opacity: 0.4; }
+            0% { transform: scale(0.98); opacity: 0.4; }
             50% { transform: scale(1.02); opacity: 1.0; }
+            100% { transform: scale(0.98); opacity: 0.4; }
         }
 
-        /* Top Bar */
-        .topbar { height: 48px; background: var(--panel); display: flex; align-items: center; padding: 0 12px; border-bottom: 1px solid var(--border); gap: 10px; z-index: 30; }
-        .group { display: flex; background: #1e222d; border-radius: 4px; padding: 2px; }
-        button, select { background: transparent; border: none; color: var(--text); padding: 6px 12px; cursor: pointer; font-size: 13px; transition: background 0.15s ease, color 0.15s ease; outline: none; }
-        button:hover:not(:disabled) { background: #2a2e39; border-radius: 3px; }
-        button:disabled { opacity: 0.3; cursor: not-allowed !important; }
-
-        .btn-ai-creator { background: var(--accent); color: #fff; font-weight: 600; border-radius: 4px; display: flex; align-items: center; gap: 6px; padding: 6px 14px; }
-        .btn-ai-creator:hover { background: var(--accent-hover); }
-
-        .main-container { display: flex; flex: 1; width: 100vw; overflow: hidden; position: relative; }
-        #chartRoot { flex: 1; position: relative; overflow: hidden; }
-        #chart { width: 100%; height: 100%; position: absolute; top: 0; left: 0; background: var(--bg); }
-
-        /* Drag & Drop Visual Target Overlay */
-        .drop-target-overlay {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(41, 98, 255, 0.08); border: 2px dashed var(--accent);
-            z-index: 40; display: none; align-items: center; justify-content: center;
-            pointer-events: none;
-        }
-        .drop-target-box { background: rgba(19, 23, 34, 0.95); border: 1px solid var(--accent); padding: 20px 30px; border-radius: 8px; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.6); }
-        .drop-target-text { font-size: 15px; font-weight: 600; color: #fff; margin-top: 8px; }
-
-        /* Active Script Floating HUD Ribbon */
-        .script-hud {
-            position: absolute; top: 12px; right: 16px; background: rgba(19, 23, 34, 0.92);
-            border: 1px solid var(--border); border-radius: 6px; padding: 10px 14px;
-            display: flex; align-items: center; gap: 14px; z-index: 20; box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-            backdrop-filter: blur(8px);
-        }
-        .hud-status-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--down); }
-        .hud-status-dot.active { background: var(--up); box-shadow: 0 0 10px var(--up); }
-        .hud-title { font-size: 13px; font-weight: 600; color: #fff; }
-        .hud-meta { font-size: 11px; color: var(--text-muted); }
-        .btn-detach { background: #2a2e39; color: #fff; font-size: 11px; padding: 4px 8px; border-radius: 3px; }
-        .btn-detach:hover { background: var(--down); }
-
-        /* Right Sidebar */
-        .right-sidebar { width: 360px; background: var(--panel); border-left: 1px solid var(--border); display: flex; flex-direction: column; z-index: 25; }
-        .sidebar-header { padding: 12px 16px; font-size: 11px; font-weight: bold; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid var(--border); background: #1a1e2a; display: flex; justify-content: space-between; align-items: center; }
-        
-        .script-list-container { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 10px; }
-        .script-card {
-            background: #191c28; border: 1px solid var(--border); border-radius: 6px; padding: 12px;
-            cursor: grab; transition: 0.15s; display: flex; flex-direction: column; gap: 8px;
-        }
-        .script-card:hover { border-color: var(--accent); transform: translateY(-1px); }
-        .script-card.active-mounted { border-color: var(--up); background: rgba(8, 153, 129, 0.08); }
-        .script-card-header { display: flex; justify-content: space-between; align-items: center; }
-        .script-name { font-size: 13px; font-weight: 600; color: #fff; display: flex; align-items: center; gap: 6px; }
-        .script-file-tag { font-family: monospace; font-size: 10px; color: #64ffda; background: rgba(100, 255, 218, 0.1); padding: 1px 5px; border-radius: 3px; }
-        .script-badge { font-size: 9px; font-weight: bold; padding: 2px 5px; border-radius: 3px; background: #2a2e39; color: var(--text-muted); }
-        .script-card.active-mounted .script-badge { background: rgba(8, 153, 129, 0.2); color: var(--up); }
-        .script-summary { font-size: 11px; color: var(--text-muted); }
-
-        .script-card-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #242938; padding-top: 6px; margin-top: 2px; }
-        .btn-card-action { background: #252a38; border-radius: 3px; font-size: 10px; padding: 4px 8px; color: #d1d4dc; border: none; cursor: pointer; }
-        .btn-card-action:hover { background: var(--accent); color: #fff; }
-        .btn-view-code { background: transparent; color: var(--accent); border: none; font-size: 11px; cursor: pointer; padding: 4px 6px; text-decoration: underline; }
-        .btn-view-code:hover { color: #fff; }
-
-        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-        .stat-card { background: var(--panel); padding: 10px 12px; display: flex; flex-direction: column; }
-        .stat-label { font-size: 10px; color: var(--text-muted); margin-bottom: 3px; }
-        .stat-value { font-size: 15px; font-weight: bold; font-family: monospace; }
-
-        #autoExecutionJournal { height: 210px; overflow-y: auto; background: var(--bg); border-top: 1px solid var(--border); }
-        .journal-item { padding: 8px 12px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; font-size: 11px; }
-        .tag { padding: 2px 4px; border-radius: 3px; font-size: 10px; font-weight: bold; margin-right: 5px; }
-        .tag-buy { background: var(--up); color: white; }
-        .tag-sell { background: var(--down); color: white; }
-
-        .tv-overlay { position: absolute; z-index: 10; pointer-events: none; }
-        .symbol-info { top: 10px; left: 10px; display: flex; flex-direction: column; }
-        .symbol-title { font-size: 16px; font-weight: bold; color: #fff; }
-        .symbol-values { font-size: 12px; font-family: monospace; margin-top: 4px; }
-        .val-label { color: var(--text-muted); margin-right: 2px; }
-        .time-box { position: absolute; bottom: 30px; right: 20px; background: #131722; padding: 5px 10px; border: 1px solid #363a45; border-radius: 4px; font-family: monospace; z-index: 10; pointer-events: none; }
-        #status { margin-left: auto; font-size: 11px; color: var(--text-muted); font-weight: bold; padding-right: 15px; }
-
-        /* Modals */
-        .premium-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.75); z-index: 99999; align-items: center; justify-content: center; }
-        .premium-modal-content { background: #1c2030; border: 1px solid #363a45; border-radius: 6px; width: 480px; max-width: 95vw; box-shadow: 0 16px 40px rgba(0,0,0,0.5); overflow: hidden; }
-        .modal-large { width: 720px; max-width: 95vw; }
-        .premium-modal-header { background: #131722; padding: 14px 18px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-        .premium-modal-title { font-size: 14px; font-weight: 600; color: #ffffff; }
-        .premium-modal-close { color: var(--text-muted); cursor: pointer; font-size: 16px; }
-        .premium-modal-close:hover { color: #fff; }
-        .premium-modal-body { padding: 18px; display: flex; flex-direction: column; gap: 12px; }
-        .code-input { width: 100%; height: 110px; background: #0b0e14; border: 1px solid #363a45; color: #64ffda; font-family: monospace; font-size: 12px; padding: 10px; border-radius: 4px; resize: vertical; outline: none; }
-        
-        .code-viewer-container {
-            width: 100%; height: 350px; background: #0b0e14; border: 1px solid var(--border);
-            border-radius: 4px; overflow: auto; padding: 12px; font-family: "Consolas", "Courier New", monospace;
-            font-size: 12px; line-height: 1.5; color: #d1d4dc; white-space: pre;
+        .chat-backdrop {
+            display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.6);
+            z-index: 35; backdrop-filter: blur(2px);
         }
 
-        .premium-btn { padding: 8px 16px; font-size: 13px; border-radius: 4px; font-weight: 500; border: none; cursor: pointer; }
-        .premium-btn-primary { background: var(--accent); color: white; }
+        @media (max-width: 900px) {
+            .copilot-pane {
+                position: fixed; top: var(--topbar-h); left: 0; bottom: 0;
+                width: 82%; max-width: 340px; z-index: 60;
+                transform: translate3d(0, 0, 0); margin-left: 0;
+                box-shadow: 4px 0 20px rgba(0,0,0,0.6);
+            }
+            .copilot-pane.minimized {
+                transform: translate3d(-100%, 0, 0);
+                margin-left: 0;
+            }
+            .chat-toggle-handle { display: none; }
+            .chat-backdrop.active { display: block; }
+            .workspace { flex-direction: column; }
+            .dock-pane {
+                width: 100%; height: 230px; border-left: none;
+                border-top: 1px solid var(--border); flex-shrink: 0;
+            }
+            .chart-viewport { flex: 1; min-height: 250px; }
+            .chart-hud { top: 8px; left: 8px; padding: 4px 8px; }
+            .pro-features-grid { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 600px) {
+            .brand span.badge { display: none; }
+            .session-tag { display: none; }
+            .metric-grid { grid-template-columns: 1fr 1fr; gap: 6px; }
+            .metric-val { font-size: 13px; }
+            .dock-pane { height: 210px; }
+        }
     </style>
 </head>
 <body>
@@ -156,659 +384,1970 @@
             <polygon points="48,68 55,72 48,76" fill="#089981"/>
         </svg>
         <div class="loader-text">BacktestLab <span>Pro</span></div>
-        <div class="loader-subtext">AI Automated Strategy Terminal</div>
+        <div class="loader-subtext">Dynamic Auto Engine</div>
     </div>
 </div>
 
+<!-- TOPBAR CONTROLS -->
 <div class="topbar">
-    <button class="btn-ai-creator" onclick="openChatGPTPromptBox()">
-        <span>🤖 + Build AI Strategy</span>
-    </button>
-    <button style="background:#2a2e39; color:#fff; border-radius:4px;" onclick="openPasteModal()">
-        <span>📋 Paste Script Link</span>
+    <button class="btn-outline" id="btnToggleCopilot" onclick="toggleCopilotPane()" title="Toggle Copilot Drawer">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <span>Copilot</span>
     </button>
 
-    <div class="group" id="group-replay">
-        <button id="btnPlay" onclick="play()" disabled title="Attach a script first">▶ PLAY</button>
-        <button id="btnPause" onclick="pause()" disabled>⏸ PAUSE</button>
-        <button id="btnStep" onclick="next()" disabled>⏭ STEP</button>
+    <div class="brand">
+        BacktestLab <span>Pro</span>
+        <span class="badge">Tester</span>
     </div>
-    
-    <div class="group">
-        <select id="tf" onchange="changeTF()">
+
+    <div class="session-tag" id="sessionBadge" title="Session Parameters Loaded">
+        <span id="badgeSymbol">XAUUSD</span> · <span id="badgeDates">Loading...</span>
+    </div>
+
+    <!-- Active Plan State Display -->
+    <div class="tier-pill tier-free" id="tierSwitchBtn" onclick="handlePlanPillClick()" title="View Subscription Details">
+        <svg class="icon" id="tierIconLock" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        <span id="tierLabel">🔒 GET REAL CODE / EXECUTE IN MARKET</span>
+    </div>
+
+    <button class="btn-outline" onclick="openKeyVault()" title="Configure Client API Keys">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+        <span>Keys</span>
+    </button>
+
+    <div class="btn-group">
+        <button id="btnRun" onclick="togglePlayback()" disabled title="Start/Pause Replay">
+            <svg class="icon" id="playIcon" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            <span id="playTxt">Play</span>
+        </button>
+        <button id="btnStep" onclick="stepForward()" disabled title="Step 1 Bar">
+            <svg class="icon" viewBox="0 0 24 24"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg>
+        </button>
+        <button id="btnReset" onclick="resetToBeginning()" disabled title="Reset Backtest">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+        </button>
+    </div>
+
+    <div class="btn-group">
+        <select id="tfSelect" onchange="changeTimeframe()">
             <option value="m1">1m</option>
-            <option value="m5">5m</option>
+            <option value="m5" selected>5m</option>
             <option value="m15">15m</option>
             <option value="m30">30m</option>
             <option value="h1">1h</option>
-            <option value="h4" selected>4h</option>
+            <option value="h4">4h</option>
             <option value="d1">1d</option>
         </select>
     </div>
-    
-    <div class="group">
-        <select id="speed" onchange="changeSpeed()">
+
+    <div class="btn-group">
+        <select id="speedSelect" onchange="changeReplaySpeed()">
             <option value="1000">1x</option>
-            <option value="300" selected>3x</option>
-            <option value="80">10x</option>
-            <option value="15">Max</option>
+            <option value="500">2x</option>
+            <option value="120" selected>3x</option>
+            <option value="30">10x</option>
+            <option value="5">Turbo</option>
         </select>
     </div>
 
-    <button onclick="goLive()" style="color: var(--accent); border-radius: 4px;">GO LIVE</button>
-    <div id="status">NO SCRIPT ATTACHED</div>
+    <div class="status-txt" id="statusIndicator">INITIALIZING...</div>
 </div>
 
-<div class="main-container">
-    <div id="chartRoot" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
-        <div id="chart"></div>
-        
-        <div id="dropOverlay" class="drop-target-overlay">
-            <div class="drop-target-box">
-                <div style="font-size: 32px;">⚡</div>
-                <div class="drop-target-text">Drop Script to Compile & Run on Chart</div>
+<div class="workspace">
+    <div class="chat-backdrop" id="chatBackdrop" onclick="minimizeCopilotPane()"></div>
+
+    <div class="copilot-pane" id="copilotPane">
+        <div class="pane-header">
+            <div style="display: flex; align-items: center; gap: 6px;">
+                <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 4.24 4.24"/><path d="m14.83 9.17 4.24-4.24"/><path d="m14.83 14.83 4.24 4.24"/><path d="m9.17 14.83-4.24 4.24"/></svg>
+                <span>QUANT ARCHITECT</span>
+            </div>
+            <div style="display: flex; gap: 4px;">
+                <button onclick="clearChatHistory()" style="font-size: 10px; color: var(--text-muted);" title="Reset conversation">Clear</button>
+                <button onclick="minimizeCopilotPane()" style="padding: 2px 4px; color: var(--text-muted);" title="Minimize Panel">
+                    <svg class="icon" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+                </button>
             </div>
         </div>
 
-        <div id="scriptHud" class="script-hud" style="display: none;">
-            <div class="hud-status-dot" id="hudDot"></div>
-            <div>
-                <div class="hud-title" id="hudScriptName">No Script Attached</div>
-                <div class="hud-meta" id="hudScriptParams">-</div>
+        <div class="chat-stream" id="chatStream">
+            <div class="guide-box">
+                <div class="guide-title">
+                    <svg class="icon" style="stroke: var(--accent);" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                    <span>Connect Your AI API Key</span>
+                </div>
+                <div>To synthesize or adjust strategies with AI, connect your provider key in the <a href="javascript:void(0)" class="guide-link" onclick="openKeyVault()">Keys Vault</a>. Gemini and Groq offer direct free-tier developer keys.</div>
             </div>
-            <button class="btn-detach" onclick="detachCurrentScript()">✕ Detach</button>
-        </div>
 
-        <div class="tv-overlay symbol-info">
-            <div class="symbol-title" id="displaySymbol">XAUUSD · 4H</div>
-            <div class="symbol-values">
-                <span class="val-label">O</span><span id="vO">-</span>
-                <span class="val-label">H</span><span id="vH">-</span>
-                <span class="val-label">L</span><span id="vL">-</span>
-                <span class="val-label">C</span><span id="vC">-</span>
+            <div class="msg msg-ai">
+                Specify algorithmic conditions, technical indicators, and risk parameters. The compiler will structure execution logic and register editable parameters in the <b>Inputs</b> panel.
             </div>
         </div>
 
-        <div id="timeBox" class="time-box">--:--</div>
+        <div class="chat-input-area">
+            <select id="chatProvider" style="width: 100%; background: #080a0f; border: 1px solid var(--border); font-size: 11px; padding: 5px 8px; color: var(--text); border-radius: 4px;">
+                <option value="gemini">Google Gemini 3.6 Flash (Recommended)</option>
+                <option value="groq">Groq Llama-3.3 70B (Fast & Free)</option>
+                <option value="openai">OpenAI GPT-4o-mini</option>
+            </select>
+            <textarea id="chatInput" class="chat-textarea" placeholder="Enter execution criteria, indicator filters, or risk constraints..." onkeydown="handleChatKeyDown(event)"></textarea>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <a href="javascript:void(0)" class="guide-link" onclick="openKeyVault()" style="font-size: 10px;">Get Free API Keys ↗</a>
+                <button id="btnSendChat" class="btn-accent" onclick="sendChatPrompt()">
+                    <span>Send</span>
+                    <svg class="icon" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                </button>
+            </div>
+        </div>
     </div>
+
+    <div class="chat-toggle-handle" id="chatToggleHandle" onclick="toggleCopilotPane()" title="Toggle Copilot Panel">
+        <svg class="icon chevron" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+    </div>
+
+    <div class="chart-viewport" id="viewportArea">
+        <div id="chartContainer"></div>
+        <div class="drag-drop-target" id="dragDropTarget">
+            <div class="drag-drop-label">
+                <svg class="icon" style="width: 16px; height: 16px; stroke: var(--accent);" viewBox="0 0 24 24"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
+                <span>DROP STRATEGY TO LOAD REPLAY</span>
+            </div>
+        </div>
+        
+        <div class="chart-hud" id="activeBotHud" style="display: none;">
+            <div class="hud-dot"></div>
+            <div style="overflow: hidden;">
+                <div style="font-size: 11px; font-weight: 700; color: #fff; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;" id="hudBotName">No Bot</div>
+                <div style="font-size: 9px; color: var(--text-muted); font-family: monospace;">Inputs Live</div>
+            </div>
+            <button class="hud-btn hud-btn-save" onclick="openSaveBotModal()" title="Save strategy options">Save</button>
+            <button class="hud-btn hud-btn-edit" onclick="handleEditCurrentBot()" title="Chat revise">Edit</button>
+            <button onclick="detachActiveBot()" style="font-size: 10px; color: var(--down); padding: 2px 5px;" title="Unload bot">Detach</button>
+        </div>
+    </div>
+
+    <div class="dock-pane">
+        <div class="dock-tabs">
+            <div class="dock-tab active" id="tabBtnAnalytics" onclick="selectDockTab('analytics')">
+                <svg class="icon" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                <span>Performance</span>
+            </div>
+            <div class="dock-tab" id="tabBtnInputs" onclick="selectDockTab('inputs')">
+                <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                <span>Inputs</span>
+            </div>
+            <div class="dock-tab" id="tabBtnBots" onclick="selectDockTab('bots')">
+                <svg class="icon" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                <span>Bots (<span id="botCount">0</span>)</span>
+            </div>
+        </div>
+        
+        <div class="dock-content" id="analyticsView">
+            <div class="metric-grid">
+                <div class="metric-box"><div class="metric-label">Balance</div><div class="metric-val" id="valBalance">$10,000.00</div></div>
+                <div class="metric-box"><div class="metric-label">Net Profit</div><div class="metric-val" id="valProfit" style="color: var(--up);">+$0.00</div></div>
+                <div class="metric-box"><div class="metric-label">Win Rate</div><div class="metric-val" id="valWinRate">0.0%</div></div>
+                <div class="metric-box"><div class="metric-label">Open / Closed</div><div class="metric-val" id="valTotalTrades">0 / 0</div></div>
+            </div>
+            <div style="font-size: 9px; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Order Journal</div>
+            <div class="journal-container" id="journalContainer"></div>
+            <div style="margin-top: auto; display: flex; flex-direction: column; gap: 6px; padding-top: 6px;">
+                <button class="btn-outline" style="width: 100%; justify-content: center;" onclick="openCodeInspector('js')">Inspect JS Sandbox</button>
+                <button class="btn-accent" style="width: 100%; justify-content: center; font-weight: 700;" onclick="openCodeInspector('mql5')">Export MetaTrader 5 EA (.mq5)</button>
+            </div>
+        </div>
+
+        <div class="dock-content" id="inputsView" style="display: none;">
+            <div class="inputs-card">
+                <div class="inputs-header">
+                    <span>STRATEGY PARAMETERS</span>
+                    <button class="hud-btn hud-btn-save" onclick="applyInputsAndRestart()" style="font-size: 9px;">Apply & Restart</button>
+                </div>
+                <div id="dynamicInputsContainer" style="display: flex; flex-direction: column; gap: 8px;">
+                    <div style="color: var(--text-muted); font-size: 11px;">Mount a bot to modify its live execution parameters.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="dock-content" id="botsView" style="display: none;">
+            <div class="bot-nav-toggle">
+                <div class="bot-nav-btn active" id="btnSubNavMyBots" onclick="switchBotSubNav('my')">My Bots (<span id="myBotCount">0</span>)</div>
+                <div class="bot-nav-btn" id="btnSubNavGlobalBots" onclick="switchBotSubNav('global')">Global Hub (<span id="globalBotCount">0</span>)</div>
+            </div>
+
+            <div style="font-size: 10px; color: var(--text-muted);" id="botSubNavDesc">Personal local/account strategies. Drag to chart or tap Load Replay.</div>
+            <div id="botCardsContainer" style="display: flex; flex-direction: column; gap: 8px;"></div>
+        </div>
+    </div>
+</div>
+
+<!-- HIGH-CONVERTING $89 ALL-IN-ONE REAL MARKET PLAN MODAL -->
+<div class="modal-overlay" id="planModal">
+    <div class="modal-window" style="width: 540px;">
+        <div class="modal-bar">
+            <span>Unlock Real Market Bot Execution</span>
+            <button onclick="closeModal('planModal')">
+                <svg class="icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="pro-pricing-banner">
+                <div style="font-size: 10px; font-weight: 800; color: var(--gold); letter-spacing: 1px; text-transform: uppercase;">Real Market License</div>
+                <div style="font-size: 26px; font-weight: 800; color: #fff; margin: 4px 0;">$89 <span style="font-size: 13px; font-weight: 500; color: var(--text-muted);">/ Lifetime Access</span></div>
+                <div style="font-size: 12px; color: var(--text); line-height: 1.4;">
+                    Download real executable strategy files and trade live on any MetaTrader 5 broker.
+                </div>
+            </div>
+
+            <div class="pro-features-grid">
+                <div class="pro-feat-card">
+                    <div class="pro-feat-icon">
+                        <svg class="icon" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    </div>
+                    <div>
+                        <div style="font-size: 11px; font-weight: 700; color: #fff;">Raw Downloadable .mq5 Files</div>
+                        <div style="font-size: 10px; color: var(--text-muted); margin-top: 2px;">Export complete, production-ready MetaTrader 5 Expert Advisor source code.</div>
+                    </div>
+                </div>
+
+                <div class="pro-feat-card">
+                    <div class="pro-feat-icon">
+                        <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                    </div>
+                    <div>
+                        <div style="font-size: 11px; font-weight: 700; color: #fff;">100% Private Strategy Vault</div>
+                        <div style="font-size: 10px; color: var(--text-muted); margin-top: 2px;">Keep your custom code hidden from public commons and community clones.</div>
+                    </div>
+                </div>
+
+                <div class="pro-feat-card">
+                    <div class="pro-feat-icon">
+                        <svg class="icon" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                    </div>
+                    <div>
+                        <div style="font-size: 11px; font-weight: 700; color: #fff;">Real Execution Blueprint</div>
+                        <div style="font-size: 10px; color: var(--text-muted); margin-top: 2px;">Complete deployment manual: live broker hookup, latency, and VPS hosting.</div>
+                    </div>
+                </div>
+
+                <div class="pro-feat-card">
+                    <div class="pro-feat-icon">
+                        <svg class="icon" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                    </div>
+                    <div>
+                        <div style="font-size: 11px; font-weight: 700; color: #fff;">5 Global Community Downloads</div>
+                        <div style="font-size: 10px; color: var(--text-muted); margin-top: 2px;">Download 5 community strategies with raw uncompiled code included.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+                <button class="btn-gold" style="width: 100%; padding: 12px; font-size: 13px; justify-content: center;" onclick="redirectToPayment(89)">
+                    BUY REAL MARKET PASS — $89 LIFETIME
+                </button>
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 0 4px;">
+                    <span style="font-size: 10px; color: var(--text-muted);">Secure checkout with PayPal Hosted Button</span>
+                    <button onclick="toggleUserTier()" style="font-size: 10px; color: var(--text-muted); text-decoration: underline;">Developer Mock Mode</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- STRATEGY SAVE & PRIVACY SELECTION MODAL -->
+<div class="modal-overlay" id="saveBotModal">
+    <div class="modal-window" style="width: 460px;">
+        <div class="modal-bar">
+            <span>Save Strategy & Privacy Settings</span>
+            <button onclick="closeModal('saveBotModal')">
+                <svg class="icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="vault-input-group">
+                <label style="font-size: 11px; font-weight: 700;">Strategy Title</label>
+                <input type="text" id="saveBotNameInput" class="chat-textarea" style="height: 34px;" placeholder="e.g. Gold Liquidity Scalper v1">
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+                <div class="save-option-card selected" id="optSaveGlobal" onclick="selectSavePrivacyOption('global')">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-size: 12px; font-weight: 700; color: #fff;">Publish to Global Hub</span>
+                        <span class="save-badge" style="background: var(--accent-glow); color: var(--accent);">100% FREE</span>
+                    </div>
+                    <div style="font-size: 11px; color: var(--text-muted); line-height: 1.4;">
+                        Saved to your dashboard and published to the Global Hub. Note: Free users cannot export or download raw production code files.
+                    </div>
+                </div>
+
+                <div class="save-option-card" id="optSavePrivate" onclick="selectSavePrivacyOption('private')">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div style="display: flex; align-items: center; gap: 5px;">
+                            <svg class="icon" style="stroke: var(--gold);" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                            <span style="font-size: 12px; font-weight: 700; color: #fff;">Save as 100% Private</span>
+                        </div>
+                        <span class="save-badge" id="privatePriceBadge" style="background: var(--gold-bg); color: var(--gold); border: 1px solid rgba(245, 158, 11, 0.4);">$89 PRO PASS</span>
+                    </div>
+                    <div style="font-size: 11px; color: var(--text-muted); line-height: 1.4;">
+                        Confidential private vault + unrestricted raw .mq5 code file downloads for live brokers.
+                    </div>
+                </div>
+            </div>
+
+            <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 6px;">
+                <button class="btn-outline" onclick="closeModal('saveBotModal')">Cancel</button>
+                <button class="btn-accent" id="btnConfirmSaveAction" onclick="executeSelectedSaveAction()">Save to Global Hub (Free)</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CODE MODAL -->
+<div class="modal-overlay" id="codeModal">
+    <div class="modal-window">
+        <div class="modal-bar">
+            <span>Strategy Code Inspector</span>
+            <button onclick="closeModal('codeModal')">
+                <svg class="icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div id="freePaywallNotice" class="paywall-box" style="display: none;">
+                <div style="font-size: 13px; font-weight: 700; color: #fff; margin-bottom: 6px;">Real Market MQL5 Export Locked</div>
+                <div style="font-size: 11px; color: var(--text-muted); line-height: 1.5; margin-bottom: 12px;">
+                    This strategy is in free sandbox mode. Downloadable production .mq5 files are locked on free tier. Upgrade to unlock full files and execution guides.
+                </div>
+                <button class="btn-gold" onclick="openPlanModal()" style="padding: 7px 18px; margin: 0 auto;">Unlock Real Code & MQL5 Exporter ($89)</button>
+            </div>
+            <pre class="code-display" id="codeOutput"></pre>
+            <div style="display: flex; justify-content: flex-end; gap: 8px;">
+                <button class="btn-outline" onclick="copyCodeOutput()">Copy Code</button>
+                <button class="btn-accent" id="btnDownloadMql" onclick="downloadMqlSource()" style="display: none;">Download .mq5</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- KEY VAULT MODAL -->
+<div class="modal-overlay" id="keyVaultModal">
+    <div class="modal-window" style="width: 500px;">
+        <div class="modal-bar">
+            <span>API Key Storage & Provider Setup</span>
+            <button onclick="closeModal('keyVaultModal')">
+                <svg class="icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="guide-box">
+                <div class="guide-title">
+                    <svg class="icon" style="stroke: var(--up);" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                    <span>100% Private & Direct Local Storage</span>
+                </div>
+                <div>Your keys are saved directly into your browser's private localStorage. They are never stored on our server, ensuring zero third-party exposure.</div>
+            </div>
+
+            <!-- Google Gemini -->
+            <div class="vault-input-group">
+                <div class="vault-label-row">
+                    <span>Google Gemini API Key (Recommended)</span>
+                    <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener noreferrer" class="vault-link">
+                        <span>Get Free Key (Google AI Studio)</span>
+                        <svg class="icon" style="width: 10px; height: 10px;" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                    </a>
+                </div>
+                <input type="password" id="keyGemini" class="chat-textarea" style="height: 34px; margin-top: 2px;" placeholder="AIzaSy...">
+                <span style="font-size: 10px; color: var(--text-muted);">Sign in with Google → Click 'Create API key' → Paste here.</span>
+            </div>
+
+            <!-- Groq Cloud -->
+            <div class="vault-input-group">
+                <div class="vault-label-row">
+                    <span>Groq Cloud API Key (Ultra-Fast)</span>
+                    <a href="https://console.groq.com/keys" target="_blank" rel="noopener noreferrer" class="vault-link">
+                        <span>Get Free Key (Groq Console)</span>
+                        <svg class="icon" style="width: 10px; height: 10px;" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                    </a>
+                </div>
+                <input type="password" id="keyGroq" class="chat-textarea" style="height: 34px; margin-top: 2px;" placeholder="gsk_...">
+                <span style="font-size: 10px; color: var(--text-muted);">Free & provides lightning-fast code generation using Llama-3.3 70B.</span>
+            </div>
+
+            <!-- OpenAI -->
+            <div class="vault-input-group">
+                <div class="vault-label-row">
+                    <span>OpenAI API Key (Optional)</span>
+                    <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener noreferrer" class="vault-link">
+                        <span>Get Key (OpenAI Platform)</span>
+                        <svg class="icon" style="width: 10px; height: 10px;" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                    </a>
+                </div>
+                <input type="password" id="keyOpenAI" class="chat-textarea" style="height: 34px; margin-top: 2px;" placeholder="sk-...">
+                <span style="font-size: 10px; color: var(--text-muted);">Requires an active account balance or trial credits with OpenAI.</span>
+            </div>
+
+            <div style="display: flex; justify-content: flex-end; margin-top: 4px;">
+                <button class="btn-accent" onclick="saveKeyVault()">Save API Keys</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- FIREBASE MODULE INTEGRATION & CLOUD ENTITLEMENT ENGINE -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, collection, addDoc, getDocs, getDoc, updateDoc, deleteDoc, doc, serverTimestamp, query, limit, arrayUnion, increment } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyAensfI53w49Fd4A7Lz5_K9N1JOxZsW7Kk",
+    authDomain: "backtestlabpro.firebaseapp.com",
+    projectId: "backtestlabpro",
+    storageBucket: "backtestlabpro.firebasestorage.app",
+    messagingSenderId: "560146824734",
+    appId: "1:560146824734:web:5287d0ded3a1024e75780f"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+
+window.db = db;
+window.auth = auth;
+window.collection = collection;
+window.addDoc = addDoc;
+window.getDocs = getDocs;
+window.getDoc = getDoc;
+window.updateDoc = updateDoc;
+window.deleteDoc = deleteDoc;
+window.doc = doc;
+window.serverTimestamp = serverTimestamp;
+window.query = query;
+window.limit = limit;
+window.arrayUnion = arrayUnion;
+window.increment = increment;
+
+// Live Cloud User & Entitlement Observer
+onAuthStateChanged(auth, async (user) => {
+    window.currentUser = user;
     
-    <div class="right-sidebar">
-        <div class="sidebar-header">
-            <span>MY SAVED SCRIPTS</span>
-            <span style="font-size: 9px; color: var(--accent);">DRAG TO CHART</span>
-        </div>
+    if (user) {
+        console.log("CLOUD AUTHENTICATED: " + user.email);
         
-        <div class="script-list-container" id="scriptListContainer"></div>
+        try {
+            // Check active plan document in users/{userId}/plan/active
+            const planDocRef = doc(db, "users", user.uid, "plan", "active");
+            const planSnap = await getDoc(planDocRef);
 
-        <div class="stats-grid">
-            <div class="stat-card"><span class="stat-label">STRATEGY EQUITY</span><span class="stat-value" id="scriptEquity">$10,000</span></div>
-            <div class="stat-card"><span class="stat-label">NET PROFIT</span><span class="stat-value" id="scriptPL">$0.00</span></div>
-            <div class="stat-card"><span class="stat-label">TOTAL TRADES</span><span class="stat-value" id="scriptTradeCount">0</span></div>
-            <div class="stat-card"><span class="stat-label">WIN RATE</span><span class="stat-value" id="scriptWinRate">0%</span></div>
-        </div>
+            if (planSnap.exists()) {
+                const planData = planSnap.data();
+                if (planData.status === "active" && planData.tier === "pro") {
+                    window.userPlan = planData;
+                    window.isPro = true;
+                    localStorage.setItem("btl_is_pro", "true");
+                    
+                    const quota = planData.global_bot_download_quota !== undefined ? planData.global_bot_download_quota : 5;
+                    window.globalDownloadQuota = quota;
 
-        <div id="autoExecutionJournal"></div>
-    </div>
-</div>
+                    // Display verified status on UI & Terminal
+                    syncTierUI();
+                    document.getElementById("statusIndicator").innerText = `PRO PLAN ($89) · [${quota}/5 DL LEFT] · READY`;
+                    
+                    appendMsg(`
+                        <div class="msg-card">
+                            <span style="color: var(--up); font-weight: 700;">✓ Cloud License Verified: Pro Tier ($89 Lifetime)</span><br>
+                            • Personal .mq5 Exports: <b>Unrestricted</b><br>
+                            • Private Cloud Storage: <b>Active</b><br>
+                            • Global Bot Downloads: <b>${quota} of 5 Available</b>
+                        </div>
+                    `, "ai");
+                }
+            } else {
+                console.log("No active paid plan found in Firestore, running sandbox.");
+                window.userPlan = null;
+                window.isPro = false;
+                localStorage.setItem("btl_is_pro", "false");
+                syncTierUI();
+            }
+        } catch (e) {
+            console.error("Entitlements check exception:", e);
+        }
 
-<!-- Modal: Script Source Inspector -->
-<div id="codeViewerModal" class="premium-modal">
-    <div class="premium-modal-content modal-large">
-        <div class="premium-modal-header">
-            <span class="premium-modal-title" id="viewerModalTitle">Script Source</span>
-            <span class="premium-modal-close" onclick="closeCodeViewerModal()">✕</span>
-        </div>
-        <div class="premium-modal-body">
-            <div style="display:flex; justify-content:space-between; font-size:12px; color:var(--text-muted);">
-                <span>Generated File: <b id="viewerFileName" style="color:#64ffda; font-family:monospace;">-</b></span>
-                <span id="viewerFileMeta">Algorithm Logic</span>
-            </div>
-            <pre id="viewerCodeContent" class="code-viewer-container"></pre>
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-                <button class="premium-btn" style="background:#2a2e39; color:#fff;" onclick="copyActiveCode()">Copy Code</button>
-                <button class="premium-btn premium-btn-primary" onclick="compileActiveInspectedScript()">Attach & Run on Chart</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal: Paste Strategy Link -->
-<div id="pasteModal" class="premium-modal">
-    <div class="premium-modal-content">
-        <div class="premium-modal-header">
-            <span class="premium-modal-title">Paste Strategy Link or Token</span>
-            <span class="premium-modal-close" onclick="closePasteModal()">✕</span>
-        </div>
-        <div class="premium-modal-body">
-            <div style="font-size:12px; color:var(--text-muted);">
-                Paste the return URL or `#pkg=...` token from ChatGPT:
-            </div>
-            <textarea id="rawPayloadInput" class="code-input" placeholder="Paste link (https://...#pkg=...) or token here"></textarea>
-            <div style="display:flex; justify-content:flex-end; gap:8px;">
-                <button class="premium-btn premium-btn-primary" onclick="applyManualPayload()">Compile to Chart</button>
-            </div>
-        </div>
-    </div>
-</div>
+        if (window.loadBotLibrary) {
+            window.loadBotLibrary();
+        }
+    } else {
+        console.log("GUEST / SANDBOX MODE");
+        window.userPlan = null;
+        window.isPro = false;
+        localStorage.setItem("btl_is_pro", "false");
+        syncTierUI();
+    }
+});
+</script>
 
 <script>
-let symbol = "XAUUSD";
-let tf = "h4";
-let speed = 300;
-let isPlaying = false;
-let isAutoFollow = true;
+/* =========================================================================
+   GLOBAL BROWSER COMPATIBILITY BRIDGE (NODE -> BROWSER FIX)
+   ========================================================================= */
+if (typeof window.global === "undefined") {
+    window.global = window;
+}
+if (typeof window.globalThis === "undefined") {
+    window.globalThis = window;
+}
+
+/* =========================================================================
+   1. GLOBAL STATE & SESSION SYNC
+   ========================================================================= */
+let isPro = localStorage.getItem("btl_is_pro") === "true";
+let activeBot = null;
+let symbol = localStorage.getItem("symbol") || getSessionParam("symbol", "XAUUSD");
+let tf = localStorage.getItem("tf") || getSessionParam("tf", "m5");
 let isFetching = false;
 let lastReplayTime = null;
-let data = [];
-let historyData = [];
-window.historyData = historyData;
-let index = 0;
-let timer = null;
 
-let activeMountedScript = null;
-let scriptTrades = [];
-let activePosition = null;
-let activeInspectedScript = null;
+let currentCandles = [];       
+let futureCandlesQueue = [];   
+let replayTimer = null;
+let replaySpeedMs = 120;
+let isSimulating = false;
 
-const DEFAULT_SCRIPTS = [
-    { 
-        id: "def-1", 
-        name: "EMA 9/21 Trend Crossover", 
-        fileName: "ema_cross_fast.pine",
-        fastEma: 9, 
-        slowEma: 21, 
-        slPips: 25, 
-        tpPips: 50, 
-        lotSize: 0.4,
-        sourceCode: `//@version=5\nstrategy("EMA 9/21 Trend Crossover", overlay=true)\n\nfastEMA = ta.ema(close, 9)\nslowEMA = ta.ema(close, 21)\n\nplot(fastEMA, color=color.blue, title="Fast EMA 9")\nplot(slowEMA, color=color.orange, title="Slow EMA 21")\n\nlongCondition = ta.crossover(fastEMA, slowEMA)\nif (longCondition)\n    strategy.entry("Long", strategy.long)\n\nshortCondition = ta.crossunder(fastEMA, slowEMA)\nif (shortCondition)\n    strategy.entry("Short", strategy.short)`
-    },
-    { 
-        id: "def-2", 
-        name: "Gold 20/50 Scalper", 
-        fileName: "gold_scalper_20_50.pine",
-        fastEma: 20, 
-        slowEma: 50, 
-        slPips: 35, 
-        tpPips: 70, 
-        lotSize: 0.5,
-        sourceCode: `//@version=5\nstrategy("Gold 20/50 Scalper", overlay=true)\n\nfastEMA = ta.ema(close, 20)\nslowEMA = ta.ema(close, 50)\n\nplot(fastEMA, color=color.teal, title="Fast EMA 20")\nplot(slowEMA, color=color.red, title="Slow EMA 50")\n\nif (ta.crossover(fastEMA, slowEMA))\n    strategy.entry("Scalp Buy", strategy.long)\n\nif (ta.crossunder(fastEMA, slowEMA))\n    strategy.entry("Scalp Sell", strategy.short)`
+let activeTradeMarkers = [];
+let nextPositionTicket = 1;
+
+let account = { 
+    balance: 10000.00, 
+    equity: 10000.00, 
+    positions: [],
+    closedTrades: [] 
+};
+
+let chatConversationHistory = [];
+let currentCandleObj = null; 
+
+let chartInstance = null;
+let candleSeries = null;
+let volumeSeries = null;
+
+let activeBotSubTab = "my";
+let globalBotsCache = [];
+let selectedSavePrivacy = "global";
+
+const TF_CONFIG = {
+    "m1":  { initialDays: 7,   stepDays: 4 },
+    "m5":  { initialDays: 25,  stepDays: 15 },
+    "m15": { initialDays: 75,  stepDays: 30 },
+    "m30": { initialDays: 150, stepDays: 60 },
+    "h1":  { initialDays: 200, stepDays: 90 },
+    "h4":  { initialDays: 400, stepDays: 180 },
+    "d1":  { initialDays: 800, stepDays: 365 }
+};
+
+function getSessionParam(key, fallback) {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get(key)) return urlParams.get(key);
+    if (localStorage.getItem(key)) return localStorage.getItem(key);
+    return fallback;
+}
+
+/* =========================================================================
+   2. SLIDING DRAWER CONTROLLER
+   ========================================================================= */
+function toggleCopilotPane() {
+    const pane = document.getElementById("copilotPane");
+    const backdrop = document.getElementById("chatBackdrop");
+    const isMin = pane.classList.toggle("minimized");
+    
+    if (window.innerWidth <= 900) {
+        backdrop.classList.toggle("active", !isMin);
     }
-];
-
-const chartEl = document.getElementById("chart");
-const chart = LightweightCharts.createChart(chartEl, {
-    layout: { background: { color: '#0b0e14' }, textColor: '#d1d4dc' },
-    grid: { vertLines: { color: '#1e222d' }, horzLines: { color: '#1e222d' } },
-    timeScale: { timeVisible: true, secondsVisible: false, borderColor: '#2a2e39', shiftVisibleRangeOnNewBar: true, rightOffset: 12 },
-    rightPriceScale: { borderColor: '#2a2e39', autoScale: true },
-    crosshair: { mode: LightweightCharts.CrosshairMode.Normal }
-});
-
-const series = chart.addCandlestickSeries({
-    upColor: '#089981', downColor: '#f23645', borderVisible: true,
-    borderUpColor: '#089981', borderDownColor: '#f23645',
-    wickUpColor: '#089981', wickDownColor: '#f23645',
-    priceFormat: { type: 'price', precision: 2, minMove: 0.01 }
-});
-
-const volumeSeries = chart.addHistogramSeries({
-    color: '#26a69a', priceFormat: { type: 'volume' }, priceScaleId: ''
-});
-volumeSeries.priceScale().applyOptions({ scaleMargins: { top: 0.8, bottom: 0 } });
-
-function updateTime(ts) {
-    if (!ts) return;
-    const d = new Date(ts * 1000);
-    document.getElementById("timeBox").innerText = d.toLocaleString('en-GB').toUpperCase();
+    setTimeout(() => {
+        if (chartInstance) {
+            const container = document.getElementById("chartContainer");
+            chartInstance.resize(container.clientWidth, container.clientHeight);
+        }
+    }, 330);
 }
 
-function setReplayControlsState(enabled) {
-    document.getElementById("btnPlay").disabled = !enabled;
-    document.getElementById("btnPause").disabled = !enabled;
-    document.getElementById("btnStep").disabled = !enabled;
-    document.getElementById("status").innerText = enabled ? (isPlaying ? "RUNNING SCRIPT" : "SCRIPT READY") : "NO SCRIPT ATTACHED";
+function minimizeCopilotPane() {
+    document.getElementById("copilotPane").classList.add("minimized");
+    document.getElementById("chatBackdrop").classList.remove("active");
+    setTimeout(() => {
+        if (chartInstance) {
+            const container = document.getElementById("chartContainer");
+            chartInstance.resize(container.clientWidth, container.clientHeight);
+        }
+    }, 330);
 }
 
-// Drag & Drop Handlers
-function handleDragOver(e) { e.preventDefault(); document.getElementById("dropOverlay").style.display = "flex"; }
-function handleDragLeave(e) { e.preventDefault(); document.getElementById("dropOverlay").style.display = "none"; }
-function handleDrop(e) {
-    e.preventDefault();
-    document.getElementById("dropOverlay").style.display = "none";
-    const scriptJson = e.dataTransfer.getData("application/json");
-    if (scriptJson) {
-        try { mountScriptToChart(JSON.parse(scriptJson)); } catch(err) {}
+function openCopilotPane() {
+    document.getElementById("copilotPane").classList.remove("minimized");
+    if (window.innerWidth <= 900) {
+        document.getElementById("chatBackdrop").classList.add("active");
     }
+    setTimeout(() => {
+        if (chartInstance) {
+            const container = document.getElementById("chartContainer");
+            chartInstance.resize(container.clientWidth, container.clientHeight);
+        }
+    }, 330);
 }
 
-function mountScriptToChart(script) {
-    activeMountedScript = {
-        id: script.id || 'script-' + Date.now(),
-        name: script.name || "AI Strategy",
-        fileName: script.fileName || (script.name ? script.name.toLowerCase().replace(/\s+/g, '_') + '.pine' : 'strategy.pine'),
-        fastEma: parseInt(script.fastEma) || 9,
-        slowEma: parseInt(script.slowEma) || 21,
-        slPips: parseFloat(script.slPips) || 25,
-        tpPips: parseFloat(script.tpPips) || 50,
-        lotSize: parseFloat(script.lotSize) || 0.4,
-        sourceCode: script.sourceCode || `// Executable compile ready\n// Strategy: ${script.name}`
-    };
+/* =========================================================================
+   3. CHART INITIALIZATION & BOOTSTRAP
+   ========================================================================= */
+document.addEventListener("DOMContentLoaded", () => {
+    if (window.innerWidth <= 900) {
+        document.getElementById("copilotPane").classList.add("minimized");
+    }
 
-    const hud = document.getElementById("scriptHud");
-    hud.style.display = "flex";
-    document.getElementById("hudDot").classList.add("active");
-    document.getElementById("hudScriptName").innerText = `${activeMountedScript.name} (${activeMountedScript.fileName})`;
-    document.getElementById("hudScriptParams").innerText = `Fast EMA: ${activeMountedScript.fastEma} | Slow EMA: ${activeMountedScript.slowEma} | SL: ${activeMountedScript.slPips}p | TP: ${activeMountedScript.tpPips}p`;
+    const savedSpeed = parseInt(getSessionParam("speed", "120"));
+    replaySpeedMs = isNaN(savedSpeed) ? 120 : savedSpeed;
+    const speedSelect = document.getElementById("speedSelect");
+    if (speedSelect) speedSelect.value = replaySpeedMs.toString();
 
-    document.querySelectorAll(".script-card").forEach(el => el.classList.remove("active-mounted"));
-    const targetCard = document.getElementById(`script-card-${activeMountedScript.id}`);
-    if (targetCard) targetCard.classList.add("active-mounted");
+    initChart();
+    setupDragAndDrop();
+    syncTierUI();
+    loadSessionDataset();
+});
 
-    setReplayControlsState(true);
+function initChart() {
+    const container = document.getElementById("chartContainer");
+    chartInstance = LightweightCharts.createChart(container, {
+        layout: { background: { color: '#080a0f' }, textColor: '#747b8c' },
+        grid: { vertLines: { color: '#121620' }, horzLines: { color: '#121620' } },
+        timeScale: { 
+            borderColor: '#1f2533', 
+            timeVisible: true,
+            secondsVisible: false,
+            shiftVisibleRangeOnNewBar: true,
+            rightOffset: 12,
+            barSpacing: 7,
+            minBarSpacing: 3
+        },
+        rightPriceScale: { borderColor: '#1f2533', autoScale: true },
+        crosshair: { mode: LightweightCharts.CrosshairMode.Normal }
+    });
+    candleSeries = chartInstance.addCandlestickSeries({
+        upColor: '#089981', downColor: '#f23645', borderUpColor: '#089981', borderDownColor: '#f23645',
+        wickUpColor: '#089981', wickDownColor: '#f23645', priceFormat: { type: 'price', precision: 2, minMove: 0.01 }
+    });
+    volumeSeries = chartInstance.addHistogramSeries({
+        color: '#2962ff', priceFormat: { type: 'volume' }, priceScaleId: ''
+    });
+    volumeSeries.priceScale().applyOptions({ scaleMargins: { top: 0.85, bottom: 0 } });
+
+    new ResizeObserver(() => {
+        if (container.clientWidth > 0 && container.clientHeight > 0) {
+            chartInstance.resize(container.clientWidth, container.clientHeight);
+        }
+    }).observe(container);
 }
 
-function detachCurrentScript() {
-    window.pause();
-    activeMountedScript = null;
-    activePosition = null;
-    document.getElementById("scriptHud").style.display = "none";
-    document.getElementById("hudDot").classList.remove("active");
-    document.querySelectorAll(".script-card").forEach(el => el.classList.remove("active-mounted"));
-    setReplayControlsState(false);
+/* =========================================================================
+   4. DATA PIPELINE WITH PRELOADED CONTEXT CANDLES
+   ========================================================================= */
+function parseCandleTime(t) {
+    if (typeof t === "number") return t > 10000000000 ? Math.floor(t / 1000) : t;
+    return Math.floor(new Date(t).getTime() / 1000);
 }
 
-// Client-Side Execution Engine
-function calculateEma(candles, period) {
-    if (candles.length < period) return null;
-    const k = 2 / (period + 1);
-    let ema = candles.slice(0, period).reduce((acc, c) => acc + c.close, 0) / period;
-    for (let i = period; i < candles.length; i++) ema = candles[i].close * k + ema * (1 - k);
-    return ema;
+function normalizeCandles(arr) {
+    if (!Array.isArray(arr)) return [];
+    const parsed = arr.map(c => ({
+        time: parseCandleTime(c.time || c.datetime || c.date),
+        open: parseFloat(c.open),
+        high: parseFloat(c.high),
+        low: parseFloat(c.low),
+        close: parseFloat(c.close),
+        volume: parseFloat(c.volume || c.tick_volume || 25)
+    })).filter(c => !isNaN(c.time) && !isNaN(c.close));
+
+    parsed.sort((a, b) => a.time - b.time);
+    const unique = [];
+    const seen = new Set();
+    for (const c of parsed) {
+        if (!seen.has(c.time)) {
+            seen.add(c.time);
+            unique.push(c);
+        }
+    }
+    return unique;
 }
 
-function evaluateScriptOnCandle(candle) {
-    if (!activeMountedScript || window.historyData.length < Math.max(activeMountedScript.fastEma, activeMountedScript.slowEma)) return;
+function loadSessionDataset(customInitial = null) {
+    if (isFetching) return;
+    isFetching = true;
 
-    const fast = calculateEma(window.historyData, activeMountedScript.fastEma);
-    const slow = calculateEma(window.historyData, activeMountedScript.slowEma);
-    if (!fast || !slow) return;
+    stopPlayback();
 
-    if (activePosition) {
+    const preloader = document.getElementById("appPreloader");
+    if (preloader) preloader.classList.remove("fade-out");
+
+    const tfSelect = document.getElementById("tfSelect");
+    if (tfSelect) tfSelect.value = tf;
+
+    document.getElementById("badgeSymbol").innerText = `${symbol} (${tf.toUpperCase()})`;
+    document.getElementById("statusIndicator").innerText = `FETCHING ${symbol} ${tf.toUpperCase()}...`;
+
+    const initialParam = customInitial || localStorage.getItem("initial") || "2023-01-01T00:00:00.000Z";
+    const finalTo = localStorage.getItem("to") || new Date().toISOString();
+    let currentISO = lastReplayTime ? new Date(lastReplayTime * 1000).toISOString() : initialParam;
+
+    const startDateShort = initialParam.split("T")[0];
+    const endDateShort = finalTo.split("T")[0];
+    document.getElementById("badgeDates").innerText = `${startDateShort} → ${endDateShort}`;
+
+    const targetUrl = `https://mehtab13-backtestlab-pro.hf.space/data?symbol=${encodeURIComponent(symbol)}&tf=${encodeURIComponent(tf)}&initial=${encodeURIComponent(initialParam)}&current=${encodeURIComponent(currentISO)}&to=${encodeURIComponent(finalTo)}`;
+
+    fetch(targetUrl)
+        .then(async (response) => {
+            if (!response.ok) throw new Error(`HTTP Error ${response.status}`);
+            return response.json();
+        })
+        .then((res) => {
+            let fetchedHistory = res.history || [];
+            let fetchedFuture = res.data || [];
+
+            if (fetchedHistory.length === 0 && fetchedFuture.length === 0 && Array.isArray(res)) {
+                fetchedFuture = res;
+            }
+
+            let cleanHistory = normalizeCandles(fetchedHistory);
+            let cleanFuture = normalizeCandles(fetchedFuture);
+
+            const allBars = [...cleanHistory, ...cleanFuture];
+
+            if (allBars.length === 0) {
+                throw new Error("Zero valid bars received");
+            }
+
+            const minPreloadBars = Math.min(140, Math.floor(allBars.length * 0.5));
+
+            if (cleanHistory.length < minPreloadBars && allBars.length > minPreloadBars) {
+                currentCandles = allBars.slice(0, minPreloadBars);
+                futureCandlesQueue = allBars.slice(minPreloadBars);
+            } else {
+                currentCandles = cleanHistory.length > 0 ? cleanHistory : allBars.slice(0, minPreloadBars);
+                futureCandlesQueue = cleanHistory.length > 0 ? cleanFuture : allBars.slice(minPreloadBars);
+            }
+
+            candleSeries.setData(currentCandles);
+            volumeSeries.setData(currentCandles.map(d => ({
+                time: d.time,
+                value: d.volume || 25,
+                color: d.close >= d.open ? 'rgba(8,153,129,0.35)' : 'rgba(242,54,69,0.35)'
+            })));
+
+            if (currentCandles.length > 0) {
+                const lastBar = currentCandles[currentCandles.length - 1];
+                lastReplayTime = lastBar.time;
+                currentCandleObj = lastBar;
+            }
+
+            if (window.isPro) {
+                document.getElementById("statusIndicator").innerText = `PRO PLAN ($89) · READY`;
+            } else {
+                document.getElementById("statusIndicator").innerText = isSimulating ? "REPLAY RUNNING" : "READY (PLAY TO START)";
+            }
+            isFetching = false;
+
+            setTimeout(() => {
+                if (chartInstance) {
+                    chartInstance.timeScale().fitContent();
+                    chartInstance.timeScale().scrollToPosition(10, false);
+                }
+            }, 60);
+
+            if (preloader) preloader.classList.add("fade-out");
+        })
+        .catch((err) => {
+            console.error("Data fetch failed:", err);
+            document.getElementById("statusIndicator").innerText = "CONNECTION ERROR";
+            isFetching = false;
+            if (preloader) preloader.classList.add("fade-out");
+        });
+}
+
+function fetchNextChunk() {
+    if (isFetching || !lastReplayTime) return;
+    isFetching = true;
+    document.getElementById("statusIndicator").innerText = "STREAMING...";
+
+    const currentISO = new Date(lastReplayTime * 1000).toISOString();
+    const finalTo = localStorage.getItem("to") || new Date().toISOString();
+
+    const url = `https://mehtab13-backtestlab-pro.hf.space/data?symbol=${encodeURIComponent(symbol)}&tf=${encodeURIComponent(tf)}&initial=${encodeURIComponent(currentISO)}&current=${encodeURIComponent(currentISO)}&to=${encodeURIComponent(finalTo)}`;
+
+    fetch(url)
+        .then(r => r.json())
+        .then(res => {
+            isFetching = false;
+            let fetched = normalizeCandles(res.data || []);
+            if (fetched.length > 0) {
+                futureCandlesQueue = fetched;
+                document.getElementById("statusIndicator").innerText = isSimulating ? "REPLAY RUNNING" : "PAUSED";
+            } else {
+                stopPlayback();
+                document.getElementById("statusIndicator").innerText = "REPLAY COMPLETED";
+            }
+        })
+        .catch(err => {
+            console.error("Failed to stream next chunk:", err);
+            isFetching = false;
+        });
+}
+
+function changeTimeframe() {
+    stopPlayback();
+    tf = document.getElementById("tfSelect").value;
+    localStorage.setItem("tf", tf);
+
+    const anchorTs = lastReplayTime 
+        ? lastReplayTime 
+        : Math.floor(new Date(localStorage.getItem("initial") || "2023-01-01T00:00:00.000Z").getTime() / 1000);
+
+    let initialISO;
+    if (TF_CONFIG[tf]) {
+        const lookbackSeconds = TF_CONFIG[tf].initialDays * 86400;
+        initialISO = new Date((anchorTs - lookbackSeconds) * 1000).toISOString();
+    } else {
+        initialISO = localStorage.getItem("initial") || "2023-01-01T00:00:00.000Z";
+    }
+
+    loadSessionDataset(initialISO);
+}
+
+/* =========================================================================
+   5. REPLAY CONTROLS & STEPPING
+   ========================================================================= */
+function togglePlayback() { isSimulating ? stopPlayback() : startPlayback(); }
+
+function startPlayback() {
+    if (!activeBot) return;
+    isSimulating = true;
+    document.getElementById("playTxt").innerText = "Pause";
+    document.getElementById("playIcon").innerHTML = '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>';
+    document.getElementById("statusIndicator").innerText = "REPLAY RUNNING";
+    replayTimer = setInterval(stepForward, replaySpeedMs);
+}
+
+function stopPlayback() {
+    isSimulating = false;
+    clearInterval(replayTimer);
+    replayTimer = null;
+    document.getElementById("playTxt").innerText = "Play";
+    document.getElementById("playIcon").innerHTML = '<polygon points="5 3 19 12 5 21 5 3"/>';
+    document.getElementById("statusIndicator").innerText = "REPLAY PAUSED";
+}
+
+function changeReplaySpeed() {
+    replaySpeedMs = parseInt(document.getElementById("speedSelect").value);
+    localStorage.setItem("speed", replaySpeedMs);
+    if (isSimulating) { stopPlayback(); startPlayback(); }
+}
+
+function resetToBeginning() {
+    stopPlayback();
+    resetAccountState();
+    lastReplayTime = null;
+    loadSessionDataset();
+}
+
+function resetAccountState() {
+    account = { balance: 10000.00, equity: 10000.00, positions: [], closedTrades: [] };
+    activeTradeMarkers = [];
+    nextPositionTicket = 1;
+    candleSeries.setMarkers([]);
+    document.getElementById("journalContainer").innerHTML = "";
+    updateMetricReadouts();
+}
+
+function stepForward() {
+    if (futureCandlesQueue.length === 0) {
+        if (!isFetching && lastReplayTime) {
+            fetchNextChunk();
+        } else if (!isFetching) {
+            stopPlayback();
+            document.getElementById("statusIndicator").innerText = "REPLAY COMPLETED";
+        }
+        return;
+    }
+
+    const nextCandle = futureCandlesQueue.shift();
+    currentCandleObj = nextCandle;
+    lastReplayTime = nextCandle.time;
+
+    candleSeries.update(nextCandle);
+    volumeSeries.update({
+        time: nextCandle.time,
+        value: nextCandle.volume || 25, 
+        color: nextCandle.close >= nextCandle.open ? 'rgba(8,153,129,0.35)' : 'rgba(242,54,69,0.35)'
+    });
+
+    checkAllPositionsSLTP(nextCandle);
+
+    if (activeBot && activeBot.js_code) {
+        try {
+            const executeBotLogic = new Function("candle", "history", "api", "inputs", "global", activeBot.js_code);
+            const rawInputs = {};
+            if (activeBot.inputs) {
+                for (const [k, v] of Object.entries(activeBot.inputs)) rawInputs[k] = v.value;
+            }
+            executeBotLogic(nextCandle, currentCandles, terminalApi, rawInputs, window);
+        } catch (e) {
+            console.error("Execution Exception:", e);
+            stopPlayback();
+            document.getElementById("statusIndicator").innerText = "EXECUTION ERROR";
+        }
+    }
+
+    currentCandles.push(nextCandle);
+    updateMetricReadouts();
+}
+
+function checkAllPositionsSLTP(candle) {
+    if (account.positions.length === 0) return;
+
+    const remainingPositions = [];
+
+    for (let i = 0; i < account.positions.length; i++) {
+        const p = account.positions[i];
         let closed = false;
-        let pnl = 0;
+        let exitPrice = 0;
 
-        if (activePosition.type === 'BUY') {
-            if (candle.low <= activePosition.sl) {
-                pnl = (activePosition.sl - activePosition.entry) * activePosition.lots * 100;
-                closed = true;
-            } else if (candle.high >= activePosition.tp) {
-                pnl = (activePosition.tp - activePosition.entry) * activePosition.lots * 100;
-                closed = true;
-            }
+        if (p.type === 'BUY') {
+            if (p.sl && candle.low <= p.sl) { exitPrice = p.sl; closed = true; }
+            else if (p.tp && candle.high >= p.tp) { exitPrice = p.tp; closed = true; }
         } else {
-            if (candle.high >= activePosition.sl) {
-                pnl = (activePosition.entry - activePosition.sl) * activePosition.lots * 100;
-                closed = true;
-            } else if (candle.low <= activePosition.tp) {
-                pnl = (activePosition.entry - activePosition.tp) * activePosition.lots * 100;
-                closed = true;
-            }
+            if (p.sl && candle.high >= p.sl) { exitPrice = p.sl; closed = true; }
+            else if (p.tp && candle.low <= p.tp) { exitPrice = p.tp; closed = true; }
         }
 
         if (closed) {
-            scriptTrades.push({ type: activePosition.type, pl: pnl });
-            activePosition = null;
-            updateMetricsDashboard();
+            const pnl = (p.type === 'BUY' ? (exitPrice - p.entry) : (p.entry - exitPrice)) * p.lots * 100;
+            account.balance += pnl;
+            account.closedTrades.push({ id: p.id, type: p.type, pnl, exitPrice, time: candle.time });
+
+            activeTradeMarkers.push({
+                time: candle.time,
+                position: p.type === 'BUY' ? 'aboveBar' : 'belowBar',
+                color: pnl >= 0 ? '#089981' : '#f23645',
+                shape: pnl >= 0 ? 'circle' : 'square',
+                text: `${p.type} Exit (${pnl >= 0 ? '+' : ''}${pnl.toFixed(0)})`
+            });
+            appendTradeLog(p.type, pnl, exitPrice, `Exit #${p.id}`);
+        } else {
+            remainingPositions.push(p);
         }
     }
 
-    if (!activePosition) {
-        const pipVal = 0.1;
-        const slDist = activeMountedScript.slPips * pipVal;
-        const tpDist = activeMountedScript.tpPips * pipVal;
+    account.positions = remainingPositions;
+    candleSeries.setMarkers(activeTradeMarkers);
+}
 
-        if (fast > slow) {
-            activePosition = {
-                type: 'BUY', entry: candle.close,
-                sl: candle.close - slDist, tp: candle.close + tpDist,
-                lots: activeMountedScript.lotSize
-            };
-        } else if (fast < slow) {
-            activePosition = {
-                type: 'SELL', entry: candle.close,
-                sl: candle.close + slDist, tp: candle.close - tpDist,
-                lots: activeMountedScript.lotSize
-            };
+function appendTradeLog(type, pnl, exit, label = "") {
+    const journal = document.getElementById("journalContainer");
+    const div = document.createElement("div");
+    div.className = "journal-entry";
+    div.innerHTML = `
+        <span><b style="color: ${type === 'BUY' ? 'var(--up)' : 'var(--down)'}">${type}</b> ${label} @ ${exit.toFixed(2)}</span>
+        <span style="color: ${pnl >= 0 ? 'var(--up)' : 'var(--down)'}">${pnl >= 0 ? '+' : ''}$${pnl.toFixed(2)}</span>
+    `;
+    journal.prepend(div);
+}
+
+function updateMetricReadouts() {
+    const closed = account.closedTrades;
+    const wins = closed.filter(t => t.pnl > 0).length;
+    const profit = closed.reduce((acc, t) => acc + t.pnl, 0);
+    const wr = closed.length ? ((wins / closed.length) * 100).toFixed(1) : "0.0";
+
+    document.getElementById("valBalance").innerText = "$" + (10000 + profit).toLocaleString(undefined, { minimumFractionDigits: 2 });
+    document.getElementById("valProfit").innerText = (profit >= 0 ? "+$" : "-$") + Math.abs(profit).toFixed(2);
+    document.getElementById("valProfit").style.color = profit >= 0 ? "var(--up)" : "var(--down)";
+    document.getElementById("valTotalTrades").innerText = `${account.positions.length} / ${closed.length}`;
+    document.getElementById("valWinRate").innerText = wr + "%";
+}
+
+/* =========================================================================
+   6. SANDBOX TOOLKIT
+   ========================================================================= */
+const terminalApi = {
+    ema: (period = 14) => {
+        if (!currentCandles || currentCandles.length < period) return null;
+        const k = 2 / (period + 1);
+        let val = currentCandles.slice(0, period).reduce((s, c) => s + c.close, 0) / period;
+        for (let i = period; i < currentCandles.length; i++) {
+            val = currentCandles[i].close * k + val * (1 - k);
         }
-    }
-}
+        return val;
+    },
 
-function updateMetricsDashboard() {
-    const totalPL = scriptTrades.reduce((acc, t) => acc + t.pl, 0);
-    const wins = scriptTrades.filter(t => t.pl > 0).length;
-    const winrate = scriptTrades.length > 0 ? ((wins / scriptTrades.length) * 100).toFixed(1) : 0;
+    sma: (period = 14) => {
+        if (!currentCandles || currentCandles.length < period) return null;
+        const slice = currentCandles.slice(-period);
+        return slice.reduce((s, c) => s + c.close, 0) / period;
+    },
 
-    document.getElementById("scriptTradeCount").innerText = scriptTrades.length;
-    document.getElementById("scriptPL").innerText = (totalPL >= 0 ? "+$" : "-$") + Math.abs(totalPL).toFixed(2);
-    document.getElementById("scriptPL").style.color = totalPL >= 0 ? "var(--up)" : "var(--down)";
-    document.getElementById("scriptEquity").innerText = "$" + (10000 + totalPL).toLocaleString();
-    document.getElementById("scriptWinRate").innerText = winrate + "%";
+    rsi: (period = 14) => {
+        if (!currentCandles || currentCandles.length < period + 1) return 50;
+        let gains = 0, losses = 0;
+        for (let i = currentCandles.length - period; i < currentCandles.length; i++) {
+            const diff = currentCandles[i].close - currentCandles[i - 1].close;
+            if (diff >= 0) gains += diff;
+            else losses -= diff;
+        }
+        if (losses === 0) return 100;
+        const rs = (gains / period) / (losses / period);
+        return 100 - (100 / (1 + rs));
+    },
 
-    const journal = document.getElementById("autoExecutionJournal");
-    const t = scriptTrades[scriptTrades.length - 1];
-    if (t) {
-        const row = document.createElement("div");
-        row.className = "journal-item";
-        row.innerHTML = `
-            <span><span class="tag ${t.type === 'BUY' ? 'tag-buy' : 'tag-sell'}">${t.type}</span>Execution Fill</span>
-            <span style="color:${t.pl >= 0 ? 'var(--up)' : 'var(--down)'}">${t.pl >= 0 ? '+' : ''}${t.pl.toFixed(2)}</span>
-        `;
-        journal.prepend(row);
-    }
-}
+    rvol: (period = 20) => {
+        if (!currentCandles || currentCandles.length < period) return 1.0;
+        const slice = currentCandles.slice(-period);
+        const avg = slice.reduce((s, c) => s + (c.volume || 25), 0) / period;
+        const curVol = currentCandleObj ? (currentCandleObj.volume || 25) : 25;
+        return avg > 0 ? (curVol / avg) : 1.0;
+    },
 
-// Replay Ticking
-window.next = function() {
-    if (!activeMountedScript) return;
-    if (index >= data.length) return;
+    highest: (bars = 20) => {
+        if (!currentCandles || currentCandles.length < bars) return currentCandleObj ? currentCandleObj.high : 0;
+        return Math.max(...currentCandles.slice(-bars).map(c => c.high));
+    },
 
-    const candle = data[index];
-    historyData.push(candle);
-    series.update(candle);
+    lowest: (bars = 20) => {
+        if (!currentCandles || currentCandles.length < bars) return currentCandleObj ? currentCandleObj.low : 0;
+        return Math.min(...currentCandles.slice(-bars).map(c => c.low));
+    },
 
-    volumeSeries.update({
-        time: candle.time, value: candle.volume || 10,
-        color: candle.close >= candle.open ? 'rgba(8,153,129,0.2)' : 'rgba(242,54,69,0.2)'
-    });
+    buy: (slDist, tpDist, lots) => {
+        if (!currentCandleObj) return;
+        const inputs = activeBot && activeBot.inputs ? activeBot.inputs : {};
+        const lotVal = lots !== undefined ? lots : (inputs.lotSize ? inputs.lotSize.value : 0.1);
+        const slVal = slDist !== undefined ? slDist : (inputs.slPips ? inputs.slPips.value : 25);
+        
+        let tpVal = tpDist;
+        if (tpVal === undefined) {
+            if (inputs.riskReward && inputs.riskReward.value) {
+                tpVal = slVal * inputs.riskReward.value;
+            } else if (inputs.tpPips) {
+                tpVal = inputs.tpPips.value;
+            } else {
+                tpVal = slVal * 2;
+            }
+        }
 
-    evaluateScriptOnCandle(candle);
-    lastReplayTime = candle.time;
-    updateTime(lastReplayTime);
-
-    if (isAutoFollow) chart.timeScale().scrollToRealTime();
-    index++;
-};
-
-window.play = function() {
-    if (!activeMountedScript) return;
-    if (!timer) timer = setInterval(window.next, speed);
-    isPlaying = true;
-    document.getElementById("status").innerText = "RUNNING SCRIPT";
-};
-
-window.pause = function() {
-    clearInterval(timer);
-    timer = null;
-    isPlaying = false;
-    document.getElementById("status").innerText = activeMountedScript ? "SCRIPT READY" : "NO SCRIPT ATTACHED";
-};
-
-window.changeSpeed = function() {
-    speed = parseInt(document.getElementById("speed").value);
-    if (isPlaying) { window.pause(); window.play(); }
-};
-
-window.changeTF = function() {
-    window.pause();
-    tf = document.getElementById("tf").value;
-    window.load();
-};
-
-window.goLive = function() {
-    isAutoFollow = true;
-    chart.timeScale().scrollToRealTime();
-};
-
-// Market Data Fetch
-window.load = function() {
-    const preloader = document.getElementById("appPreloader");
-    if (preloader) preloader.classList.remove("fade-out");
-    document.getElementById("status").innerText = "LOADING MARKET DATA...";
+        const entry = currentCandleObj.close;
+        const sl = slVal ? (entry - (parseFloat(slVal) * 0.1)) : null; 
+        const tp = tpVal ? (entry + (parseFloat(tpVal) * 0.1)) : null;
+        
+        const pos = {
+            id: nextPositionTicket++,
+            type: 'BUY',
+            entry: entry,
+            sl: sl,
+            tp: tp,
+            lots: parseFloat(lotVal) || 0.1,
+            time: currentCandleObj.time
+        };
+        account.positions.push(pos);
+        
+        activeTradeMarkers.push({ 
+            time: currentCandleObj.time, 
+            position: 'belowBar', 
+            color: '#089981', 
+            shape: 'arrowUp', 
+            text: `BUY #${pos.id}` 
+        });
+        candleSeries.setMarkers(activeTradeMarkers);
+        updateMetricReadouts();
+    },
     
-    const url = `https://mehtab13-backtestlab-pro.hf.space/data?symbol=${symbol}&tf=${tf}&initial=2023-01-01T00:00:00.000Z&current=2023-01-01T00:00:00.000Z&to=${new Date().toISOString()}`;
+    sell: (slDist, tpDist, lots) => {
+        if (!currentCandleObj) return;
+        const inputs = activeBot && activeBot.inputs ? activeBot.inputs : {};
+        const lotVal = lots !== undefined ? lots : (inputs.lotSize ? inputs.lotSize.value : 0.1);
+        const slVal = slDist !== undefined ? slDist : (inputs.slPips ? inputs.slPips.value : 25);
+        
+        let tpVal = tpDist;
+        if (tpVal === undefined) {
+            if (inputs.riskReward && inputs.riskReward.value) {
+                tpVal = slVal * inputs.riskReward.value;
+            } else if (inputs.tpPips) {
+                tpVal = inputs.tpPips.value;
+            } else {
+                tpVal = slVal * 2;
+            }
+        }
+
+        const entry = currentCandleObj.close;
+        const sl = slVal ? (entry + (parseFloat(slVal) * 0.1)) : null;
+        const tp = tpVal ? (entry - (parseFloat(tpVal) * 0.1)) : null;
+        
+        const pos = {
+            id: nextPositionTicket++,
+            type: 'SELL',
+            entry: entry,
+            sl: sl,
+            tp: tp,
+            lots: parseFloat(lotVal) || 0.1,
+            time: currentCandleObj.time
+        };
+        account.positions.push(pos);
+
+        activeTradeMarkers.push({ 
+            time: currentCandleObj.time, 
+            position: 'aboveBar', 
+            color: '#f23645', 
+            shape: 'arrowDown', 
+            text: `SELL #${pos.id}` 
+        });
+        candleSeries.setMarkers(activeTradeMarkers);
+        updateMetricReadouts();
+    },
+
+    hasPosition: () => account.positions.length > 0,
+    openPositionCount: () => account.positions.length,
     
-    fetch(url)
-    .then(r => r.json())
-    .then(res => {
-        let fetchedHistory = res.history || [];
-        let fetchedFuture = res.data || [];
-
-        if (fetchedHistory.length === 0 && fetchedFuture.length > 0) {
-            fetchedHistory = fetchedFuture.slice(0, 50);
-            fetchedFuture = fetchedFuture.slice(50);
+    closeAllPositions: () => {
+        if (!currentCandleObj || account.positions.length === 0) return;
+        const exitPrice = currentCandleObj.close;
+        
+        while (account.positions.length > 0) {
+            const p = account.positions.pop();
+            const pnl = (p.type === 'BUY' ? (exitPrice - p.entry) : (p.entry - exitPrice)) * p.lots * 100;
+            account.balance += pnl;
+            account.closedTrades.push({ id: p.id, type: p.type, pnl, exitPrice, time: currentCandleObj.time });
+            appendTradeLog(p.type, pnl, exitPrice, `Close #${p.id}`);
         }
-
-        window.historyData = fetchedHistory;
-        historyData = window.historyData;
-        data = fetchedFuture;
-        index = 0;
-
-        series.setData(historyData);
-        volumeSeries.setData(historyData.map(d => ({
-            time: d.time, value: d.volume || 10, color: d.close >= d.open ? 'rgba(8,153,129,0.2)' : 'rgba(242,54,69,0.2)'
-        })));
-
-        document.getElementById("status").innerText = activeMountedScript ? "SCRIPT READY" : "NO SCRIPT ATTACHED";
-        if (preloader) preloader.classList.add("fade-out");
-    })
-    .catch(() => {
-        let t = Math.floor(Date.now() / 1000) - (200 * 3600);
-        let p = 2000.0;
-        let mock = [];
-        for (let i = 0; i < 150; i++) {
-            let change = (Math.random() - 0.49) * 4;
-            let o = p;
-            let c = p + change;
-            let h = Math.max(o, c) + Math.random() * 2;
-            let l = Math.min(o, c) - Math.random() * 2;
-            mock.push({ time: t, open: o, high: h, low: l, close: c, volume: 50 });
-            p = c;
-            t += 3600;
-        }
-        window.historyData = mock.slice(0, 80);
-        historyData = window.historyData;
-        data = mock.slice(80);
-        index = 0;
-        series.setData(historyData);
-        document.getElementById("status").innerText = activeMountedScript ? "SCRIPT READY" : "NO SCRIPT ATTACHED";
-        if (preloader) preloader.classList.add("fade-out");
-    });
+        account.equity = account.balance;
+        updateMetricReadouts();
+    }
 };
 
-/* Universal Safe Base64 & Unicode Parsers */
-function encodeUnicodeBase64(str) {
-    return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, (match, p1) => String.fromCharCode('0x' + p1)));
+/* =========================================================================
+   7. DRAG-AND-DROP & MOUNT LOGIC
+   ========================================================================= */
+function setupDragAndDrop() {
+    const viewport = document.getElementById("viewportArea");
+    const overlay = document.getElementById("dragDropTarget");
+
+    viewport.addEventListener("dragover", (e) => { e.preventDefault(); overlay.classList.add("hover"); });
+    viewport.addEventListener("dragleave", () => overlay.classList.remove("hover"));
+    viewport.addEventListener("drop", (e) => {
+        e.preventDefault();
+        overlay.classList.remove("hover");
+        const botDataRaw = e.dataTransfer.getData("application/json");
+        if (botDataRaw) mountStrategy(JSON.parse(botDataRaw));
+    });
 }
 
-function decodeUnicodeBase64(str) {
-    return decodeURIComponent(atob(str).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''));
+function handleBotDragStart(e, bot) {
+    e.dataTransfer.setData("application/json", JSON.stringify(bot));
+    e.dataTransfer.effectAllowed = "copy";
 }
 
-/* ChatGPT Prompt with Full Pine/JS Script and File Name Generation */
-function openChatGPTPromptBox() {
-    const returnBaseUrl = window.location.origin.includes("127.0.0.1") || window.location.origin.includes("localhost")
-        ? "https://backtestlabpro.com/chart_auto_run.html"
-        : window.location.origin + window.location.pathname;
+function mountStrategy(bot) {
+    stopPlayback();
+    activeBot = bot;
+    
+    if (!activeBot.inputs) {
+        activeBot.inputs = {
+            lotSize: { label: "Lot Size", value: 0.1, step: 0.01 },
+            slPips: { label: "Stop Loss (Pips)", value: 25, step: 1 },
+            tpPips: { label: "Take Profit (Pips)", value: 50, step: 1 }
+        };
+    }
 
-    const setupPrompt = 
-`Act as the official BacktestLab Pro strategy architect and compiler.
-When the user gives you strategy rules or indicator ideas:
-1. Choose an appropriate strategy name and a clean filename ending in .pine or .js (e.g. "ema_scalp_v1.pine").
-2. Generate the complete source code for the strategy.
-3. Parse the core engine parameters:
-   - "name": strategy title
-   - "fileName": clean filename (e.g., "macd_trend.pine")
-   - "fastEma": fast period integer (default 9)
-   - "slowEma": slow period integer (default 21)
-   - "slPips": stop loss pips (e.g. 25)
-   - "tpPips": take profit pips (e.g. 50)
-   - "lotSize": trading volume lot (e.g. 0.4)
-   - "sourceCode": the full generated script code
-4. Bundle this into a single JSON object:
-   {"name":"...","fileName":"...","fastEma":9,"slowEma":21,"slPips":25,"tpPips":50,"lotSize":0.4,"sourceCode":"..."}
-5. Convert that JSON string to Base64.
-6. Return the full code in a code block, give a brief overview, and provide this exact link:
-👉 [Import Strategy to BacktestLab Pro](${returnBaseUrl}#pkg=[BASE64])
-
-Reply now with: "⚡ BacktestLab Pro Strategy Compiler Ready. Please describe your strategy parameters and logic."`;
-
-    window.open("https://chatgpt.com/?prompt=" + encodeURIComponent(setupPrompt), "_blank");
+    document.getElementById("activeBotHud").style.display = "flex";
+    document.getElementById("hudBotName").innerText = bot.name;
+    document.getElementById("btnRun").disabled = false;
+    document.getElementById("btnStep").disabled = false;
+    document.getElementById("btnReset").disabled = false;
+    
+    renderInputsCard();
+    renderBotCards();
+    resetToBeginning();
 }
 
-function openPasteModal() { document.getElementById("pasteModal").style.display = "flex"; }
-function closePasteModal() { document.getElementById("pasteModal").style.display = "none"; }
-
-/* Code Inspector Modal */
-function viewScriptCode(scriptId) {
-    const userScripts = JSON.parse(localStorage.getItem("btl_user_scripts") || "[]");
-    const all = [...DEFAULT_SCRIPTS, ...userScripts];
-    const target = all.find(s => s.id === scriptId);
-    if (!target) return;
-
-    activeInspectedScript = target;
-    document.getElementById("viewerModalTitle").innerText = `${target.name} — Source Code`;
-    document.getElementById("viewerFileName").innerText = target.fileName || 'strategy.pine';
-    document.getElementById("viewerCodeContent").textContent = target.sourceCode || "// No raw source code attached.";
-    document.getElementById("codeViewerModal").style.display = "flex";
+function detachActiveBot() {
+    stopPlayback();
+    activeBot = null;
+    document.getElementById("activeBotHud").style.display = "none";
+    document.getElementById("btnRun").disabled = true;
+    document.getElementById("btnStep").disabled = true;
+    document.getElementById("btnReset").disabled = true;
+    document.getElementById("dynamicInputsContainer").innerHTML = '<div style="color: var(--text-muted); font-size: 11px;">Mount a bot to modify its live execution parameters.</div>';
+    resetAccountState();
+    renderBotCards();
 }
 
-function closeCodeViewerModal() {
-    document.getElementById("codeViewerModal").style.display = "none";
-    activeInspectedScript = null;
-}
-
-function copyActiveCode() {
-    if (!activeInspectedScript || !activeInspectedScript.sourceCode) return;
-    navigator.clipboard.writeText(activeInspectedScript.sourceCode);
-    alert("Script code copied to clipboard!");
-}
-
-function compileActiveInspectedScript() {
-    if (activeInspectedScript) {
-        mountScriptToChart(activeInspectedScript);
-        closeCodeViewerModal();
+/* =========================================================================
+   PLAN MODAL & MONETIZATION ROUTING
+   ========================================================================= */
+function handlePlanPillClick() {
+    if (window.isPro) {
+        const quota = window.globalDownloadQuota !== undefined ? window.globalDownloadQuota : 5;
+        alert(`★ ACTIVE LICENSE: Pro Real Market Pass\n• Personal .mq5 Downloads: Unrestricted\n• Private Cloud Storage: Enabled\n• Global Community Downloads: ${quota} of 5 Remaining`);
+    } else {
+        openPlanModal();
     }
 }
 
-/* Ingestion and Storage Engine */
-function applyManualPayload() {
-    let raw = document.getElementById("rawPayloadInput").value.trim();
-    if (!raw) return;
+function openPlanModal() {
+    document.getElementById("planModal").style.display = "flex";
+}
+
+function redirectToPayment(price = 89) {
+    window.location.href = "payment.html";
+}
+
+function openSaveBotModal() {
+    if (!activeBot) return;
+    const user = window.currentUser || (window.auth ? window.auth.currentUser : null);
+    if (!user) {
+        alert("Please log in or sign up to save strategies to your account.");
+        window.location.href = "login.html?redirect=chart_auto_run.html";
+        return;
+    }
+
+    document.getElementById("saveBotNameInput").value = activeBot.name;
+    
+    // If Pro, default to Private save; if Free, default to Global
+    selectSavePrivacyOption(window.isPro ? "private" : "global");
+    
+    const priceBadge = document.getElementById("privatePriceBadge");
+    if (window.isPro) {
+        priceBadge.innerText = "PRO UNLOCKED (FREE)";
+        priceBadge.style.color = "var(--up)";
+        priceBadge.style.borderColor = "var(--up)";
+    } else {
+        priceBadge.innerText = "$89 PRO PASS";
+        priceBadge.style.color = "var(--gold)";
+        priceBadge.style.borderColor = "rgba(245, 158, 11, 0.4)";
+    }
+
+    document.getElementById("saveBotModal").style.display = "flex";
+}
+
+function selectSavePrivacyOption(type) {
+    selectedSavePrivacy = type;
+    const optGlobal = document.getElementById("optSaveGlobal");
+    const optPrivate = document.getElementById("optSavePrivate");
+    const btn = document.getElementById("btnConfirmSaveAction");
+
+    if (type === "global") {
+        optGlobal.classList.add("selected");
+        optPrivate.classList.remove("selected");
+        btn.innerText = "Save to Global Hub (Free)";
+        btn.className = "btn-accent";
+        btn.style.background = "";
+        btn.style.color = "";
+    } else {
+        optGlobal.classList.remove("selected");
+        optPrivate.classList.add("selected");
+        if (window.isPro) {
+            btn.innerText = "Save Privately (Pro Vault)";
+            btn.className = "btn-accent";
+            btn.style.background = "";
+            btn.style.color = "";
+        } else {
+            btn.innerText = "Unlock Private Vault & Real Code ($89)";
+            btn.className = "btn-gold";
+        }
+    }
+}
+
+async function executeSelectedSaveAction() {
+    if (!activeBot) return;
+    const user = window.currentUser || (window.auth ? window.auth.currentUser : null);
+    if (!user) {
+        window.location.href = "login.html?redirect=chart_auto_run.html";
+        return;
+    }
+
+    const nameInput = document.getElementById("saveBotNameInput").value.trim();
+    if (!nameInput) {
+        alert("Please enter a strategy title.");
+        return;
+    }
+    activeBot.name = nameInput;
+
+    // Check if free user is attempting to save private
+    if (selectedSavePrivacy === "private" && !window.isPro) {
+        closeModal("saveBotModal");
+        openPlanModal();
+        return;
+    }
+
+    const isPrivate = selectedSavePrivacy === "private" && window.isPro;
+    const btn = document.getElementById("btnConfirmSaveAction");
+    btn.disabled = true;
+    btn.innerText = "Saving...";
 
     try {
-        let token = raw;
-        if (token.includes("#pkg=")) token = token.split("#pkg=")[1];
-        token = token.trim();
+        let globalDocId = null;
 
-        let strat;
-        try {
-            strat = JSON.parse(decodeUnicodeBase64(token));
-        } catch(e) {
-            strat = JSON.parse(atob(token));
+        // 1. If public/free: write to permanent global_bots repository in backend
+        if (!isPrivate) {
+            const globalRef = await window.addDoc(window.collection(window.db, "global_bots"), {
+                name: activeBot.name,
+                inputs: activeBot.inputs || {},
+                js_code: activeBot.js_code || "",
+                mql5_code: activeBot.mql5_code || "",
+                author_id: user.uid,
+                author_name: user.displayName || user.email.split('@')[0],
+                downloads: 0,
+                created_at: window.serverTimestamp()
+            });
+            globalDocId = globalRef.id;
         }
 
-        const cleanName = strat.name || "AI Strategy";
-        const generatedFile = strat.fileName || (cleanName.toLowerCase().replace(/[^a-z0-9]/g, '_') + '.pine');
+        // 2. Personal collection write (User End Cloud Synchronization)
+        await window.addDoc(window.collection(window.db, "users", user.uid, "saved_bots"), {
+            name: activeBot.name,
+            inputs: activeBot.inputs || {},
+            js_code: activeBot.js_code || "",
+            mql5_code: activeBot.mql5_code || "",
+            is_private: isPrivate,
+            global_ref_id: globalDocId,
+            created_at: window.serverTimestamp()
+        });
 
-        let newScript = {
-            id: 'ai-' + Date.now(),
-            name: cleanName,
-            fileName: generatedFile,
-            fastEma: parseInt(strat.fastEma) || 9,
-            slowEma: parseInt(strat.slowEma) || 21,
-            slPips: parseFloat(strat.slPips) || 25,
-            tpPips: parseFloat(strat.tpPips) || 50,
-            lotSize: parseFloat(strat.lotSize) || 0.4,
-            sourceCode: strat.sourceCode || `//@version=5\n// Strategy: ${cleanName}\n// File: ${generatedFile}\n\nstrategy("${cleanName}", overlay=true)`
-        };
-
-        let cached = JSON.parse(localStorage.getItem("btl_user_scripts") || "[]");
-        cached.unshift(newScript);
-        localStorage.setItem("btl_user_scripts", JSON.stringify(cached));
-
-        renderScriptCards();
-        mountScriptToChart(newScript);
-        closePasteModal();
-        viewScriptCode(newScript.id);
-    } catch(err) {
-        alert("Invalid strategy payload or corrupted Base64 token. Please verify.");
+        saveBotToLibrary(activeBot);
+        closeModal("saveBotModal");
+        appendMsg(`Strategy <b>${activeBot.name}</b> saved to your profile (${isPrivate ? '100% Private Vault' : 'Public Global Hub'}).`, "ai");
+        loadBotLibrary();
+    } catch (err) {
+        console.error("Save error:", err);
+        alert("Sync failed: " + err.message);
+    } finally {
+        btn.disabled = false;
+        btn.innerText = "Save to Cloud";
+        btn.style.background = "";
+        btn.style.color = "";
     }
 }
 
-// Ingest from URL hash when arriving via ChatGPT link
-window.addEventListener('DOMContentLoaded', () => {
-    const hash = window.location.hash;
-    if (hash && hash.includes('#pkg=')) {
-        document.getElementById("rawPayloadInput").value = hash;
-        applyManualPayload();
-        window.history.replaceState({}, document.title, window.location.pathname);
-    }
-    renderScriptCards();
-    window.load();
-});
-
-function deleteUserScript(e, scriptId) {
-    e.stopPropagation();
-    let cached = JSON.parse(localStorage.getItem("btl_user_scripts") || "[]");
-    cached = cached.filter(s => s.id !== scriptId);
-    localStorage.setItem("btl_user_scripts", JSON.stringify(cached));
-    if (activeMountedScript && activeMountedScript.id === scriptId) {
-        detachCurrentScript();
-    }
-    renderScriptCards();
+function handleEditCurrentBot() {
+    if (!activeBot) return;
+    openCopilotPane();
+    const input = document.getElementById("chatInput");
+    appendMsg(`Editing <b>${activeBot.name}</b>. Describe revisions to modify the algorithm:`, "ai");
+    input.placeholder = `Describe edits for ${activeBot.name}...`;
+    input.focus();
 }
 
-function renderScriptCards() {
-    const container = document.getElementById("scriptListContainer");
+function renderInputsCard() {
+    const container = document.getElementById("dynamicInputsContainer");
+    if (!activeBot || !activeBot.inputs) {
+        container.innerHTML = '<div style="color: var(--text-muted); font-size: 11px;">No parameters configurable for this bot.</div>';
+        return;
+    }
+
+    container.innerHTML = "";
+    for (const [key, config] of Object.entries(activeBot.inputs)) {
+        const row = document.createElement("div");
+        row.className = "input-row";
+        row.innerHTML = `
+            <label>${config.label || key}</label>
+            <input type="number" step="${config.step || 1}" value="${config.value}" onchange="updateInputValue('${key}', this.value)">
+        `;
+        container.appendChild(row);
+    }
+}
+
+function updateInputValue(key, val) {
+    if (!activeBot || !activeBot.inputs[key]) return;
+    activeBot.inputs[key].value = parseFloat(val);
+    saveBotToLibrary(activeBot);
+}
+
+function applyInputsAndRestart() {
+    if (!activeBot) return;
+    resetToBeginning();
+    appendMsg(`Strategy parameters applied to <b>${activeBot.name}</b>. Replay reset ready.`, "ai");
+}
+
+/* =========================================================================
+   8. AI COPILOT ARCHITECT (ACTIVE GEMINI 3.6 FLASH ENDPOINT)
+   ========================================================================= */
+const ARCHITECT_PROMPT = `You are the AI Strategy Architect for BacktestLab Pro.
+The user wants to configure an algorithmic trading bot.
+
+BUILT-IN API TOOLS AVAILABLE IN JS SANDBOX:
+- api.ema(period)
+- api.sma(period)
+- api.rsi(period)
+- api.rvol(period)
+- api.highest(bars)
+- api.lowest(bars)
+- api.buy(slPips, tpPips, lots)
+- api.sell(slPips, tpPips, lots)
+- api.hasPosition()
+- api.closeAllPositions()
+- 'candle': The current bar object { open, high, low, close, time, volume }
+- 'history': Array of all previous bars up to current candle
+- 'inputs': Object containing user customizable numbers (e.g. inputs.slPips, inputs.tpPips, inputs.lotSize)
+- 'global': Object for storing persistent state across ticks (e.g. global.lastTrackedDay, global.pdh, global.pdl)
+
+RESPONSE REQUIREMENTS:
+1. If conversational query:
+{ "reply": "Response text", "bot": null }
+
+2. If strategy logic is specified:
+{
+  "reply": "Clear concise summary of logic",
+  "bot": {
+    "name": "Strategy Name",
+    "inputs": {
+      "lotSize": { "label": "Trade Lot Size", "value": 0.1, "step": 0.01 },
+      "slPips": { "label": "Stop Loss (Pips)", "value": 25, "step": 1 },
+      "tpPips": { "label": "Take Profit (Pips)", "value": 50, "step": 1 },
+      "riskReward": { "label": "Risk Reward Ratio", "value": 2.0, "step": 0.1 }
+    },
+    "js_code": "// JS execution code",
+    "mql5_code": "// Full production MetaTrader 5 code here\\n..."
+  }
+}
+Return strict JSON with no markdown formatting.`;
+
+function handleChatKeyDown(e) { 
+    if (e.key === "Enter" && !e.shiftKey) { 
+        e.preventDefault(); 
+        sendChatPrompt(); 
+    } 
+}
+
+async function sendChatPrompt() {
+    const input = document.getElementById("chatInput");
+    const query = input.value.trim();
+    if (!query) return;
+
+    appendMsg(query, "user");
+    input.value = "";
+    input.placeholder = "Enter execution criteria, indicator filters, or risk constraints...";
+
+    const provider = document.getElementById("chatProvider").value;
+    const apiKey = localStorage.getItem(`btl_key_${provider}`);
+    if (!apiKey) { 
+        appendMsg(`
+            ⚠️ <b>API Key Missing for ${provider.toUpperCase()}</b><br>
+            Please set your API key in the <a href="javascript:void(0)" class="guide-link" onclick="openKeyVault()">Keys Vault</a> to continue.
+        `, "ai"); 
+        return; 
+    }
+
+    const btn = document.getElementById("btnSendChat"); 
+    btn.disabled = true; 
+
+    chatConversationHistory.push({ role: "user", text: query });
+    if (chatConversationHistory.length > 6) {
+        chatConversationHistory = chatConversationHistory.slice(-6);
+    }
+
+    let contextAddition = "";
+    if (activeBot) {
+        contextAddition = `\n[ACTIVE BOT: "${activeBot.name}". CURRENT INPUTS: ${JSON.stringify(activeBot.inputs || {})}. CURRENT JS: ${activeBot.js_code}]`;
+    }
+
+    try {
+        let payload = null;
+
+        if (provider === "gemini") {
+            const geminiModels = ["gemini-3.6-flash", "gemini-3.5-flash", "gemini-2.5-flash"];
+            let success = false;
+            let lastErr = null;
+
+            for (const model of geminiModels) {
+                try {
+                    const contentsPayload = [
+                        { role: "user", parts: [{ text: ARCHITECT_PROMPT + contextAddition }] },
+                        ...chatConversationHistory.map(m => ({ 
+                            role: m.role === "user" ? "user" : "model", 
+                            parts: [{ text: m.text }] 
+                        }))
+                    ];
+
+                    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
+                        method: "POST", 
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ 
+                            contents: contentsPayload, 
+                            generationConfig: { responseMimeType: "application/json" } 
+                        })
+                    });
+
+                    const data = await res.json();
+                    if (data.error) {
+                        lastErr = data.error.message;
+                        continue;
+                    }
+
+                    if (data.candidates && data.candidates[0]?.content?.parts?.[0]?.text) {
+                        payload = JSON.parse(data.candidates[0].content.parts[0].text);
+                        success = true;
+                        break;
+                    }
+                } catch (err) {
+                    lastErr = err.message;
+                }
+            }
+
+            if (!success || !payload) {
+                throw new Error(lastErr || "API service busy. Please check your Gemini key or try Groq.");
+            }
+
+        } else {
+            const endpoint = provider === "openai" ? "https://api.openai.com/v1/chat/completions" : "https://api.groq.com/openai/v1/chat/completions";
+            const modelName = provider === "openai" ? "gpt-4o-mini" : "llama-3.3-70b-versatile";
+            const res = await fetch(endpoint, {
+                method: "POST", 
+                headers: { "Content-Type": "application/json", "Authorization": `Bearer ${apiKey}` },
+                body: JSON.stringify({
+                    model: modelName, 
+                    response_format: { type: "json_object" },
+                    messages: [ 
+                        { role: "system", content: ARCHITECT_PROMPT + contextAddition }, 
+                        ...chatConversationHistory.map(m => ({ role: m.role, content: m.text })) 
+                    ]
+                })
+            });
+            const data = await res.json();
+            if (data.error) throw new Error(data.error.message);
+            payload = JSON.parse(data.choices[0].message.content);
+        }
+
+        chatConversationHistory.push({ role: "assistant", text: payload.reply });
+
+        if (payload.bot && payload.bot.js_code) {
+            let targetBotId = activeBot ? activeBot.id : ("bot-" + Date.now());
+            const newBot = { 
+                id: targetBotId, 
+                name: payload.bot.name || (activeBot ? activeBot.name : "Custom Strategy"), 
+                inputs: payload.bot.inputs || {
+                    lotSize: { label: "Lot Size", value: 0.1, step: 0.01 },
+                    slPips: { label: "Stop Loss (Pips)", value: 25, step: 1 },
+                    tpPips: { label: "Take Profit (Pips)", value: 50, step: 1 }
+                },
+                js_code: payload.bot.js_code, 
+                mql5_code: payload.bot.mql5_code 
+            };
+            
+            saveBotToLibrary(newBot);
+            mountStrategy(newBot);
+
+            appendMsg(`
+                ${payload.reply}
+                <div class="msg-card">
+                    <b>${newBot.name}</b><br>
+                    <span style="color: var(--up);">Compiled & Mounted. Adjust parameters in the Inputs tab anytime.</span>
+                </div>
+            `, "ai");
+        } else { 
+            appendMsg(payload.reply, "ai"); 
+        }
+
+    } catch (err) { 
+        appendMsg(`Error: ${err.message}`, "ai"); 
+    } finally { 
+        btn.disabled = false; 
+    }
+}
+
+function appendMsg(html, role) {
+    const stream = document.getElementById("chatStream");
+    const el = document.createElement("div");
+    el.className = `msg msg-${role}`; 
+    el.innerHTML = html;
+    stream.appendChild(el); 
+    stream.scrollTop = stream.scrollHeight;
+}
+
+function clearChatHistory() { 
+    chatConversationHistory = []; 
+    document.getElementById("chatStream").innerHTML = `
+        <div class="guide-box">
+            <div class="guide-title">
+                <svg class="icon" style="stroke: var(--up);" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Session Memory Cleared</span>
+            </div>
+            <div>Specify strategy parameters to compile a new model.</div>
+        </div>
+        <div class="msg msg-ai">Specify algorithmic conditions, technical indicators, and risk parameters. The compiler will structure execution logic and register editable parameters in the <b>Inputs</b> panel.</div>
+    `; 
+}
+
+/* =========================================================================
+   9. BOT REPOSITORY, DUAL SUB-NAV & CLOUD DOWNLOAD SYNC
+   ========================================================================= */
+function selectDockTab(tab) {
+    document.getElementById("tabBtnAnalytics").classList.toggle("active", tab === 'analytics');
+    document.getElementById("tabBtnInputs").classList.toggle("active", tab === 'inputs');
+    document.getElementById("tabBtnBots").classList.toggle("active", tab === 'bots');
+    document.getElementById("analyticsView").style.display = tab === 'analytics' ? 'flex' : 'none';
+    document.getElementById("inputsView").style.display = tab === 'inputs' ? 'flex' : 'none';
+    document.getElementById("botsView").style.display = tab === 'bots' ? 'flex' : 'none';
+    if (tab === 'bots') loadBotLibrary();
+}
+
+function switchBotSubNav(subTab) {
+    activeBotSubTab = subTab;
+    document.getElementById("btnSubNavMyBots").classList.toggle("active", subTab === 'my');
+    document.getElementById("btnSubNavGlobalBots").classList.toggle("active", subTab === 'global');
+    document.getElementById("botSubNavDesc").innerText = subTab === 'my' 
+        ? "Personal local/account strategies. Drag to chart or tap Load Replay."
+        : "Community Commons Hub. Pro members can download 5 strategies directly.";
+    renderBotCards();
+}
+
+function syncTierUI() {
+    const btn = document.getElementById("tierSwitchBtn");
+    const lbl = document.getElementById("tierLabel");
+    const icon = document.getElementById("tierIconLock");
+
+    if (window.isPro) {
+        btn.className = "tier-pill tier-pro";
+        lbl.innerText = "★ PRO LICENSE ACTIVE ($89)";
+        icon.innerHTML = '<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>';
+    } else {
+        btn.className = "tier-pill tier-free";
+        lbl.innerText = "🔒 GET REAL CODE / EXECUTE IN MARKET";
+        icon.innerHTML = '<rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>';
+    }
+}
+
+function toggleUserTier() { 
+    window.isPro = !window.isPro; 
+    localStorage.setItem("btl_is_pro", window.isPro ? "true" : "false"); 
+    syncTierUI(); 
+    if (window.isPro) {
+        alert("Developer Override: Pro Real Market Mode Activated!");
+        document.getElementById("statusIndicator").innerText = `PRO PLAN ($89) · READY`;
+    } else {
+        document.getElementById("statusIndicator").innerText = "READY (PLAY TO START)";
+    }
+}
+
+async function loadBotLibrary() {
+    if (window.db && window.getDocs) {
+        try {
+            const q = window.query(window.collection(window.db, "global_bots"), window.limit(50));
+            const snap = await window.getDocs(q);
+            globalBotsCache = [];
+            snap.forEach(docSnap => {
+                globalBotsCache.push({ id: docSnap.id, ...docSnap.data() });
+            });
+            document.getElementById("globalBotCount").innerText = globalBotsCache.length;
+        } catch (e) {
+            console.warn("Global bots fetch deferred:", e);
+        }
+    }
+
+    let localBots = JSON.parse(localStorage.getItem("btl_bot_library") || "[]");
+    
+    const defaultBot = {
+        id: "bot-demo-1", 
+        name: "Previous Day High-Low Breakout",
+        inputs: {
+            lotSize: { label: "Lot Size", value: 0.2, step: 0.01 },
+            slPips: { label: "Stop Loss (Pips)", value: 30, step: 1 },
+            tpPips: { label: "Take Profit (Pips)", value: 60, step: 1 },
+            riskReward: { label: "Risk Reward", value: 2.0, step: 0.1 }
+        },
+        js_code: `// Multi-Day PDH/PDL Engine (One trade per day on breakout)
+const currentDayId = Math.floor(candle.time / 86400);
+
+if (global.lastTradeDayId !== currentDayId) {
+    global.lastTradeDayId = currentDayId;
+    global.tradedToday = false;
+    
+    if (history.length > 0) {
+        const prevBar = history[history.length - 1];
+        global.pdh = prevBar.high;
+        global.pdl = prevBar.low;
+    }
+}
+
+// Check breakout of previous day's high or low
+if (global.pdh && global.pdl && !global.tradedToday && !api.hasPosition()) {
+    if (candle.high >= global.pdh) {
+        api.buy(inputs.slPips, inputs.tpPips, inputs.lotSize);
+        global.tradedToday = true;
+    } else if (candle.low <= global.pdl) {
+        api.sell(inputs.slPips, inputs.tpPips, inputs.lotSize);
+        global.tradedToday = true;
+    }
+}`,
+        mql5_code: `//+------------------------------------------------------------------+
+//|                  Previous Day High-Low Breakout EA               |
+//+------------------------------------------------------------------+
+#property strict
+input double InpLotSize = 0.2;
+input int    InpSLPips  = 30;
+input int    InpTPPips  = 60;
+
+datetime lastDayChecked = 0;
+double pdh = 0, pdl = 0;
+
+void OnTick() {
+   MqlDateTime dt;
+   TimeCurrent(dt);
+   datetime todayStart = StringToTime(StringFormat("%04d.%02d.%02d 00:00", dt.year, dt.mon, dt.day));
+   
+   if(todayStart != lastDayChecked) {
+      lastDayChecked = todayStart;
+      MqlRates rates[];
+      ArraySetAsSeries(rates, true);
+      if(CopyRates(_Symbol, PERIOD_D1, 1, 1, rates) > 0) {
+         pdh = rates[0].high;
+         pdl = rates[0].low;
+      }
+   }
+   
+   if(PositionsTotal() == 0 && pdh > 0 && pdl > 0) {
+      double ask = SymbolInfoDouble(_Symbol, SYMBOL_ASK);
+      double bid = SymbolInfoDouble(_Symbol, SYMBOL_BID);
+      if(bid >= pdh) {
+         // Open BUY Order
+      } else if(ask <= pdl) {
+         // Open SELL Order
+      }
+   }
+}`
+    };
+
+    if (!localBots.length) {
+        localBots = [defaultBot];
+        localStorage.setItem("btl_bot_library", JSON.stringify(localBots));
+    } else {
+        const idx = localBots.findIndex(b => b.id === "bot-demo-1");
+        if (idx >= 0) {
+            localBots[idx] = defaultBot;
+            localStorage.setItem("btl_bot_library", JSON.stringify(localBots));
+        }
+    }
+    
+    document.getElementById("myBotCount").innerText = localBots.length;
+    document.getElementById("botCount").innerText = activeBotSubTab === 'my' ? localBots.length : globalBotsCache.length;
+    renderBotCards();
+}
+
+function saveBotToLibrary(bot) { 
+    let list = JSON.parse(localStorage.getItem("btl_bot_library") || "[]"); 
+    const idx = list.findIndex(b => b.id === bot.id);
+    if (idx >= 0) {
+        list[idx] = bot;
+    } else {
+        list.unshift(bot);
+    }
+    localStorage.setItem("btl_bot_library", JSON.stringify(list)); 
+    loadBotLibrary();
+}
+
+async function removeBot(id, isGlobalItem = false) {
+    if (isGlobalItem) {
+        alert("Community strategies in the Global Hub cannot be deleted by users.");
+        return;
+    }
+
+    let list = JSON.parse(localStorage.getItem("btl_bot_library") || "[]").filter(b => b.id !== id); 
+    localStorage.setItem("btl_bot_library", JSON.stringify(list)); 
+
+    const user = window.currentUser || (window.auth ? window.auth.currentUser : null);
+    if (user && window.db && window.deleteDoc) {
+        try {
+            await window.deleteDoc(window.doc(window.db, "users", user.uid, "saved_bots", id));
+        } catch (e) {
+            console.warn("Cloud personal delete skipped:", e);
+        }
+    }
+
+    if (activeBot && activeBot.id === id) detachActiveBot(); 
+    loadBotLibrary();
+}
+
+// Download Global Hub Bot with Quota Verification
+async function downloadGlobalBotFile(bot) {
+    if (!window.isPro) {
+        openPlanModal();
+        return;
+    }
+
+    const user = window.currentUser || (window.auth ? window.auth.currentUser : null);
+    if (!user) {
+        alert("Please login to verify your license.");
+        return;
+    }
+
+    let quota = window.globalDownloadQuota !== undefined ? window.globalDownloadQuota : 5;
+    if (quota <= 0) {
+        alert("You have reached your 5 Global Bot Download quota under your plan.");
+        return;
+    }
+
+    if (!bot.mql5_code) {
+        alert("This community strategy does not contain uncompiled MQL5 source code.");
+        return;
+    }
+
+    // Decrement download quota in Firestore
+    try {
+        const planDocRef = window.doc(window.db, "users", user.uid, "plan", "active");
+        await window.updateDoc(planDocRef, {
+            global_bot_download_quota: window.increment(-1),
+            global_bots_downloaded: window.arrayUnion(bot.id || bot.name)
+        });
+
+        window.globalDownloadQuota = quota - 1;
+        document.getElementById("statusIndicator").innerText = `PRO PLAN ($89) · [${window.globalDownloadQuota}/5 DL LEFT] · READY`;
+    } catch (e) {
+        console.warn("Quota decrement warning:", e);
+    }
+
+    // Trigger direct .mq5 file generation
+    const blob = new Blob([bot.mql5_code], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${bot.name.replace(/\s+/g, '_')}_global.mq5`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+function renderBotCards() {
+    const isGlobal = activeBotSubTab === "global";
+    const list = isGlobal ? globalBotsCache : JSON.parse(localStorage.getItem("btl_bot_library") || "[]");
+    
+    document.getElementById("botCount").innerText = list.length;
+    const container = document.getElementById("botCardsContainer");
     container.innerHTML = "";
 
-    const userScripts = JSON.parse(localStorage.getItem("btl_user_scripts") || "[]");
-    const all = [...DEFAULT_SCRIPTS, ...userScripts];
+    if (list.length === 0) {
+        container.innerHTML = `<div style="color: var(--text-muted); font-size: 11px; text-align: center; padding: 20px 0;">No strategies found in ${isGlobal ? 'Global Hub' : 'My Bots'}.</div>`;
+        return;
+    }
 
-    all.forEach(script => {
-        const isUserScript = script.id.startsWith("ai-");
+    list.forEach(bot => {
         const card = document.createElement("div");
-        card.className = `script-card ${activeMountedScript && activeMountedScript.id === script.id ? 'active-mounted' : ''}`;
-        card.id = `script-card-${script.id}`;
-        card.draggable = true;
-
-        card.ondragstart = (e) => {
-            e.dataTransfer.setData("application/json", JSON.stringify(script));
-        };
-
-        const safeScriptData = JSON.stringify(script).replace(/'/g, "&apos;");
+        card.className = `bot-card ${activeBot && activeBot.id === bot.id ? 'active' : ''}`;
+        card.draggable = true; 
+        card.ondragstart = (e) => handleBotDragStart(e, bot);
+        
+        let actionButtonsHTML = "";
+        if (isGlobal) {
+            actionButtonsHTML = `
+                <div style="display: flex; gap: 4px; align-items: center;">
+                    <button class="btn-outline" onclick='downloadGlobalBotFile(${JSON.stringify(bot).replace(/'/g, "&#39;")})' style="font-size: 9px; padding: 3px 6px; color: var(--gold); border-color: rgba(245,158,11,0.3);">Download .mq5</button>
+                    <button class="btn-accent" onclick='mountStrategy(${JSON.stringify(bot).replace(/'/g, "&#39;")})' style="font-size: 10px; padding: 3px 8px;">Load Replay</button>
+                </div>
+            `;
+        } else {
+            actionButtonsHTML = `
+                <div style="display: flex; gap: 4px; align-items: center;">
+                    <button onclick="removeBot('${bot.id}', false)" style="color: var(--down); font-size: 10px; padding: 2px 4px;">Delete</button>
+                    <button class="btn-accent" onclick='mountStrategy(${JSON.stringify(bot).replace(/'/g, "&#39;")})' style="font-size: 10px; padding: 3px 8px;">Load Replay</button>
+                </div>
+            `;
+        }
 
         card.innerHTML = `
-            <div class="script-card-header">
-                <span class="script-name">
-                    ${script.name}
-                    <span class="script-file-tag">${script.fileName || 'strategy.pine'}</span>
+            <div class="bot-header">
+                <span>${bot.name}</span>
+                <span class="drag-indicator">
+                    <svg class="icon" viewBox="0 0 24 24"><circle cx="9" cy="12" r="1"/><circle cx="9" cy="5" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="19" r="1"/></svg>
+                    Drag
                 </span>
-                <span class="script-badge">${isUserScript ? 'AI CUSTOM' : 'PRESET'}</span>
             </div>
-            <div class="script-summary">EMA: ${script.fastEma}/${script.slowEma} · SL: ${script.slPips}p · TP: ${script.tpPips}p · Lots: ${script.lotSize}</div>
-            <div class="script-card-footer">
-                <div>
-                    <button class="btn-view-code" onclick="viewScriptCode('${script.id}')">View Code</button>
-                    ${isUserScript ? `<button class="btn-view-code" style="color:var(--down);" onclick="deleteUserScript(event, '${script.id}')">Delete</button>` : ''}
-                </div>
-                <button class="btn-card-action" onclick='mountScriptToChart(${safeScriptData})'>Attach ⚡</button>
+            <div class="bot-meta">${isGlobal ? `Author: ${bot.author_name || 'Community Member'}` : (bot.is_private ? '🔒 Private Workspace Strategy' : '🌐 Synchronized Strategy')}</div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
+                <span style="font-size: 9px; color: ${isGlobal ? 'var(--accent)' : 'var(--text-muted)'}; font-weight: 600;">${isGlobal ? 'COMMUNITY' : 'PERSONAL'}</span>
+                ${actionButtonsHTML}
             </div>
         `;
         container.appendChild(card);
     });
 }
 
-chart.subscribeCrosshairMove(param => {
-    if (!param || !param.time) return;
-    const candle = param.seriesData.get(series);
-    if (candle) {
-        document.getElementById("vO").innerText = candle.open;
-        document.getElementById("vH").innerText = candle.high;
-        document.getElementById("vL").innerText = candle.low;
-        document.getElementById("vC").innerText = candle.close;
+/* =========================================================================
+   10. MODAL UTILITIES (WITH PRO ENTITLEMENT SECURITY)
+   ========================================================================= */
+function openCodeInspector(type) {
+    if (!activeBot) return alert("Select or synthesize a strategy first.");
+    const modal = document.getElementById("codeModal");
+    const paywall = document.getElementById("freePaywallNotice");
+    const codeArea = document.getElementById("codeOutput");
+    const dlBtn = document.getElementById("btnDownloadMql");
+
+    if (type === 'js') {
+        paywall.style.display = "none"; 
+        dlBtn.style.display = "none";
+        codeArea.textContent = `// Inputs Schema:\n${JSON.stringify(activeBot.inputs || {}, null, 2)}\n\n// Logic Function:\nfunction(candle, history, api, inputs, global) {\n${activeBot.js_code}\n}`;
+    } else {
+        if (!window.isPro) {
+            paywall.style.display = "block"; 
+            dlBtn.style.display = "none";
+            codeArea.textContent = "// Real Market Production .mq5 code is protected behind the Pro License.\n// Free accounts run within the sandbox, but cannot export or download files.\n// Unlock the Real Market Pass ($89) to download raw .mq5 files, private vault, and execution blueprints.";
+        } else {
+            paywall.style.display = "none"; 
+            dlBtn.style.display = "block";
+            codeArea.textContent = activeBot.mql5_code || "// Production MQL5 Source Code Ready";
+        }
     }
-});
+    modal.style.display = "flex";
+}
+
+function downloadMqlSource() {
+    if (!window.isPro) {
+        openPlanModal();
+        return;
+    }
+    if (!activeBot || !activeBot.mql5_code) {
+        alert("Mount or synthesize a strategy first.");
+        return;
+    }
+    const blob = new Blob([activeBot.mql5_code], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; 
+    a.download = `${activeBot.name.replace(/\s+/g, '_')}.mq5`;
+    document.body.appendChild(a);
+    a.click(); 
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+function copyCodeOutput() { 
+    if (!window.isPro && document.getElementById("freePaywallNotice").style.display !== "none") {
+        openPlanModal();
+        return;
+    }
+    navigator.clipboard.writeText(document.getElementById("codeOutput").textContent); 
+    alert("Code copied to clipboard."); 
+}
+
+function openKeyVault() { 
+    document.getElementById("keyGemini").value = localStorage.getItem("btl_key_gemini") || "";
+    document.getElementById("keyOpenAI").value = localStorage.getItem("btl_key_openai") || "";
+    document.getElementById("keyGroq").value = localStorage.getItem("btl_key_groq") || "";
+    document.getElementById("keyVaultModal").style.display = "flex"; 
+}
+
+function closeModal(id) { 
+    document.getElementById(id).style.display = "none"; 
+}
+
+function saveKeyVault() {
+    localStorage.setItem("btl_key_gemini", document.getElementById("keyGemini").value.trim());
+    localStorage.setItem("btl_key_openai", document.getElementById("keyOpenAI").value.trim());
+    localStorage.setItem("btl_key_groq", document.getElementById("keyGroq").value.trim());
+    closeModal("keyVaultModal"); 
+    alert("API keys saved successfully!");
+}
 </script>
 </body>
 </html>

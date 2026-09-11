@@ -1,935 +1,424 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Go Live & Bot Production - BacktestLab Pro</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5.0">
+    <meta name="theme-color" content="#050507">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
+    <title>BYO-AI Bot Builder &amp; Production Export — BacktestLab Pro</title>
+    <meta name="description" content="Bring your own AI API key to build and backtest quantitative trading strategies client-side. Replay multi-year tick data for free and export production-ready MQL5 or Python files.">
+    <meta name="keywords" content="bring your own api trading bot, byo ai trading, mql5 bot generator, python algo backtest, trading strategy builder, free market replay, MetaTrader 5 code export">
+    <link rel="canonical" href="https://backtestlabpro.com/bot_automation.html">
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YY82TZ1ZG7"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-YY82TZ1ZG7');
+    </script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-V7SXCF9923"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-V7SXCF9923');
+    </script>
+
+    <!-- Tailwind CSS & Fonts -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" sizes="192x192" href="https://backtestlabpro.com/favicon.png">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    screens: { 'xs': '380px' },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            dark: '#050507',
+                            card: '#0c0c0e',
+                            accent: '#6366f1',
+                            success: '#10b981',
+                            purple: '#a855f7'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
-        }
-
-        :root {
-            --bg-main: #050507;
-            --bg-card: #0c0c0e;
-            --bg-card-hover: #121217;
-            --text-main: #eaecef;
-            --text-muted: #848e9c;
-            --accent-blue: #3b66f5;
-            --accent-purple: #863bf5;
-            --accent-green: #0ecb81;
-            --accent-red: #f6465d;
-            --border-color: rgba(255, 255, 255, 0.08);
-            --max-width: 1200px;
-        }
-
-        body {
-            background-color: var(--bg-main);
-            color: var(--text-main);
-            line-height: 1.6;
+        :root { color-scheme: dark; }
+        html, body {
+            background-color: #050507;
+            color: #f4f4f5;
             overflow-x: hidden;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        /* --- NAVBAR --- */
-        .navbar {
-            background-color: rgba(5, 5, 7, 0.92);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 32px;
-            height: 76px;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .nav-left-brand {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            text-decoration: none;
-            flex-shrink: 0;
-        }
-
-        .brand-icon-box {
-            width: 38px;
-            height: 38px;
-            background: linear-gradient(135deg, #6366f1, #a855f7);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 14px rgba(99, 102, 241, 0.25);
-        }
-
-        .brand-text {
-            font-size: 20px;
-            font-weight: 700;
-            color: #ffffff;
-            letter-spacing: -0.3px;
-        }
-
-        .brand-text span {
-            color: #818cf8;
-        }
-
-        .nav-menu {
-            display: flex;
-            align-items: center;
-            gap: 24px;
-            list-style: none;
-        }
-
-        .nav-menu a {
-            color: var(--text-muted);
-            text-decoration: none;
-            font-size: 13.5px;
-            font-weight: 500;
-            transition: color 0.15s ease;
-        }
-
-        .nav-menu a:hover, .nav-menu a.active {
-            color: #ffffff;
-            font-weight: 600;
-        }
-
-        .nav-right-actions {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .btn-my-sessions {
-            background-color: #0d0d11;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: #eaecef;
-            padding: 9px 18px;
-            border-radius: 9999px;
-            font-size: 13px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            text-decoration: none;
-            transition: all 0.2s ease;
-        }
-
-        .btn-my-sessions:hover {
-            background-color: #161a22;
-            color: #ffffff;
-        }
-
-        .btn-new-session {
-            background: linear-gradient(90deg, #6366f1, #a855f7);
-            color: #ffffff;
-            padding: 9px 20px;
-            border-radius: 9999px;
-            font-size: 13px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            border: none;
-            text-decoration: none;
-            transition: opacity 0.2s ease, transform 0.15s ease;
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
-            cursor: pointer;
-        }
-
-        .btn-new-session:hover {
-            opacity: 0.95;
-            transform: translateY(-1px);
-        }
-
-        .auth-hidden { opacity: 0 !important; pointer-events: none !important; visibility: hidden !important; }
-        .auth-visible { opacity: 1 !important; pointer-events: auto !important; visibility: visible !important; transition: opacity 0.2s ease; }
-        .hidden { display: none !important; }
-
-        .profile-dropdown-wrapper { position: relative; margin-left: 4px; }
-        .profile-menu-trigger-btn {
-            background: linear-gradient(135deg, #6366f1, #a855f7);
-            border: none;
-            padding: 1px;
-            border-radius: 12px;
-            cursor: pointer;
-            width: 36px;
-            height: 36px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .profile-menu-trigger-inner {
-            background-color: #0b0e11;
             width: 100%;
-            height: 100%;
-            border-radius: 11px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-muted);
+            -webkit-tap-highlight-color: transparent;
         }
-
-        .profile-overlay-dialog-box {
+        .glow-orb {
             position: absolute;
-            right: 0;
-            top: 48px;
-            background-color: #14171c;
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 16px;
-            width: 260px;
-            box-shadow: 0 12px 30px rgba(0,0,0,0.6);
-            z-index: 1100;
+            border-radius: 50%;
+            filter: blur(90px);
+            opacity: 0.12;
+            pointer-events: none;
         }
-
-        .profile-box-header { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
-        .profile-box-avatar {
-            width: 36px;
-            height: 36px;
-            background-color: rgba(255, 255, 255, 0.04);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #6366f1;
+        @media (min-width: 768px) {
+            .glow-orb { filter: blur(140px); opacity: 0.16; }
         }
-
-        .profile-box-name { font-size: 13px; font-weight: 700; color: #fff; overflow: hidden; text-overflow: ellipsis; }
-        .profile-box-email { font-size: 11px; color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; }
-
-        .btn-logout {
-            width: 100%;
-            padding: 9px;
-            background-color: var(--bg-main);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            color: var(--text-muted);
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
+        .glass-card {
+            background: rgba(12, 12, 14, 0.72);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
         }
-
-        .btn-logout:hover { color: var(--accent-red); border-color: rgba(246, 70, 93, 0.3); }
-
-        .mobile-menu-btn {
-            display: none;
-            background: #121217;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            color: var(--text-muted);
-            font-size: 18px;
-            cursor: pointer;
-            padding: 7px 11px;
-        }
-
-        .mobile-menu {
-            display: none;
-            background-color: rgba(11, 14, 17, 0.98);
-            border-bottom: 1px solid var(--border-color);
-            position: absolute;
-            top: 76px;
-            left: 0;
-            width: 100%;
-            padding: 20px 24px;
-            z-index: 999;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .mobile-menu a {
-            color: var(--text-muted);
-            text-decoration: none;
-            font-size: 14.5px;
-            font-weight: 500;
-            padding: 10px 4px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .mobile-menu.open { display: flex !important; }
-
-        /* --- LAYOUT CORE --- */
-        section { padding: 70px 24px; display: flex; justify-content: center; }
-        .container { width: 100%; max-width: var(--max-width); }
-
-        /* --- HERO --- */
-        .hero-section {
-            background: radial-gradient(circle at top, rgba(99, 102, 241, 0.15) 0%, transparent 65%);
-            padding: 90px 24px 60px 24px;
-            text-align: center;
-        }
-
-        .hero-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 6px 14px;
-            border-radius: 9999px;
-            background: rgba(99, 102, 241, 0.1);
-            border: 1px solid rgba(99, 102, 241, 0.25);
-            font-size: 12px;
-            font-family: 'JetBrains Mono', monospace;
-            font-weight: 600;
-            color: #818cf8;
-            margin-bottom: 24px;
-        }
-
-        .hero-content h1 {
-            font-size: 46px;
-            font-weight: 800;
-            line-height: 1.2;
-            margin-bottom: 20px;
-            letter-spacing: -1.2px;
-        }
-
-        .hero-content h1 span {
-            background: linear-gradient(90deg, #6366f1, #a855f7);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .hero-content p {
-            font-size: 16.5px;
-            color: var(--text-muted);
-            max-width: 680px;
-            margin: 0 auto 36px auto;
-        }
-
-        /* --- FUNNEL FLOW PIPELINE --- */
-        .pipeline-track {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            max-width: 900px;
-            margin: 0 auto 20px auto;
-            position: relative;
-        }
-
-        .pipeline-step {
-            background: #0d0d12;
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 14px 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 13px;
-            font-weight: 600;
-            z-index: 2;
-        }
-
-        .pipeline-step.free {
-            border-color: rgba(14, 203, 129, 0.3);
-            color: #eaecef;
-        }
-
-        .pipeline-step.free span {
-            color: var(--accent-green);
-            font-size: 11px;
-            background: rgba(14, 203, 129, 0.1);
-            padding: 2px 6px;
-            border-radius: 4px;
-        }
-
-        .pipeline-step.paid {
-            border-color: rgba(99, 102, 241, 0.4);
-            color: #fff;
-            box-shadow: 0 0 15px rgba(99, 102, 241, 0.15);
-        }
-
-        .pipeline-step.paid span {
-            color: #818cf8;
-            font-size: 11px;
-            background: rgba(99, 102, 241, 0.15);
-            padding: 2px 6px;
-            border-radius: 4px;
-        }
-
-        .pipeline-arrow {
-            color: var(--text-muted);
-            font-size: 14px;
-        }
-
-        /* --- THE DUAL PATHWAYS --- */
-        .dual-pathways-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 28px;
-            margin-top: 30px;
-        }
-
-        .pathway-card {
-            background-color: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
-            padding: 38px 32px;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            transition: all 0.25s ease;
-        }
-
-        .pathway-card:hover {
-            border-color: rgba(99, 102, 241, 0.4);
-            transform: translateY(-3px);
-            box-shadow: 0 16px 36px rgba(0, 0, 0, 0.4);
-        }
-
-        .pathway-card.recommended {
-            border-color: rgba(99, 102, 241, 0.45);
-            background: linear-gradient(180deg, rgba(99, 102, 241, 0.05) 0%, rgba(12, 12, 14, 1) 100%);
-        }
-
-        .tag-pill {
-            align-self: flex-start;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 11px;
-            font-weight: 700;
-            padding: 4px 10px;
-            border-radius: 6px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 16px;
-        }
-
-        .tag-ai { background: rgba(14, 203, 129, 0.1); color: var(--accent-green); border: 1px solid rgba(14, 203, 129, 0.2); }
-        .tag-human { background: rgba(168, 85, 247, 0.1); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.2); }
-
-        .pathway-card h3 {
-            font-size: 24px;
-            font-weight: 700;
-            color: #ffffff;
-            margin-bottom: 10px;
-        }
-
-        .pathway-card .subtitle {
-            color: var(--text-muted);
-            font-size: 14px;
-            min-height: 42px;
-            margin-bottom: 24px;
-        }
-
-        .pricing-callout {
-            border-top: 1px solid var(--border-color);
-            border-bottom: 1px solid var(--border-color);
-            padding: 20px 0;
-            margin-bottom: 24px;
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-        }
-
-        .price-num {
-            font-size: 34px;
-            font-weight: 800;
-            font-family: 'JetBrains Mono', monospace;
-            color: #fff;
-        }
-
-        .price-meta {
-            font-size: 13px;
-            color: var(--text-muted);
-        }
-
-        .perks-list {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-            margin-bottom: 32px;
-        }
-
-        .perks-list li {
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            font-size: 14px;
-            color: #eaecef;
-        }
-
-        .perks-list li i {
-            color: var(--accent-green);
-            margin-top: 4px;
-            font-size: 13px;
-        }
-
-        .card-action-btn {
-            margin-top: auto;
-            width: 100%;
-            padding: 14px 20px;
-            border-radius: 12px;
-            font-size: 14px;
-            font-weight: 700;
-            text-align: center;
-            text-decoration: none;
-            display: inline-flex;
-            justify-content: center;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.2s ease;
-        }
-
-        .btn-ai-card {
-            background: linear-gradient(90deg, #6366f1, #a855f7);
-            color: #fff;
-            border: none;
-            box-shadow: 0 4px 14px rgba(99, 102, 241, 0.3);
-        }
-
-        .btn-ai-card:hover { opacity: 0.92; transform: translateY(-1px); }
-
-        .btn-human-card {
-            background-color: transparent;
-            color: #fff;
-            border: 1px solid var(--border-color);
-        }
-
-        .btn-human-card:hover {
-            border-color: rgba(255, 255, 255, 0.3);
-            background-color: rgba(255, 255, 255, 0.03);
-            transform: translateY(-1px);
-        }
-
-        /* --- SUPPORTED PLATFORMS BAR --- */
-        .compatibility-section {
-            border-top: 1px solid var(--border-color);
-            border-bottom: 1px solid var(--border-color);
-            background-color: rgba(12, 12, 14, 0.5);
-            padding: 44px 24px;
-            text-align: center;
-        }
-
-        .compatibility-title {
-            font-size: 12px;
-            font-family: 'JetBrains Mono', monospace;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--text-muted);
-            margin-bottom: 24px;
-        }
-
-        .platform-badges {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 16px;
-        }
-
-        .platform-badge {
-            background: #0d0d12;
-            border: 1px solid var(--border-color);
-            padding: 10px 18px;
-            border-radius: 10px;
-            font-size: 13.5px;
-            font-weight: 600;
-            color: var(--text-main);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        /* --- FAQ SECTION --- */
-        .faq-layout {
-            max-width: 800px;
-            margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-        }
-
-        .faq-item {
-            background-color: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 24px;
-        }
-
-        .faq-item h3 {
-            font-size: 16px;
-            margin-bottom: 8px;
-            color: #fff;
-            font-weight: 600;
-        }
-
-        .faq-item p {
-            color: var(--text-muted);
-            font-size: 14px;
-            line-height: 1.6;
-        }
-
-        /* --- FOOTER --- */
-        .site-footer {
-            background-color: #08080a;
-            border-top: 1px solid var(--border-color);
-            padding: 64px 24px 36px 24px;
-            margin-top: 60px;
-        }
-
-        .footer-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            gap: 40px;
-        }
-
-        .footer-grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr 1fr;
-            gap: 40px;
-        }
-
-        .footer-brand-meta {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            max-width: 380px;
-        }
-
-        .footer-brand-meta p { color: var(--text-muted); font-size: 13px; line-height: 1.6; }
-
-        .footer-socials { display: flex; align-items: center; gap: 10px; }
-        .social-btn {
-            width: 36px;
-            height: 36px;
-            border-radius: 8px;
-            background: #111116;
-            border: 1px solid var(--border-color);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-muted);
-            text-decoration: none;
-            transition: all 0.2s ease;
-        }
-
-        .social-btn:hover { color: #ffffff; background: #161820; }
-
-        .footer-col h4 {
-            font-size: 11px;
-            font-family: 'JetBrains Mono', monospace;
-            font-weight: 700;
-            color: #ffffff;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 14px;
-        }
-
-        .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
-        .footer-col ul li a { color: var(--text-muted); text-decoration: none; font-size: 13px; }
-        .footer-col ul li a:hover { color: #ffffff; }
-
-        .footer-bottom-bar {
-            border-top: 1px solid var(--border-color);
-            padding-top: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            font-size: 12px;
-            color: #71717a;
-            font-family: 'JetBrains Mono', monospace;
-        }
-
-        @media (max-width: 900px) {
-            .navbar { height: 68px; }
-            .nav-menu, .nav-right-actions { display: none !important; }
-            .mobile-menu-btn { display: flex !important; }
-            .pipeline-track { flex-direction: column; gap: 12px; }
-            .pipeline-arrow { transform: rotate(90deg); }
-            .dual-pathways-grid { grid-template-columns: 1fr; }
-            .footer-grid { grid-template-columns: 1fr; }
-        }
+        .auth-hidden { opacity: 0 !important; pointer-events: none !important; visibility: hidden !important; display: none !important; }
+        .auth-visible { opacity: 1 !important; pointer-events: auto !important; visibility: visible !important; display: flex !important; }
     </style>
 </head>
-<body>
+<body class="font-sans antialiased min-h-screen flex flex-col justify-between selection:bg-indigo-500/30 selection:text-indigo-200">
 
-    <nav class="navbar">
-        <a href="index.html" class="nav-left-brand">
-            <div class="brand-icon-box">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
-                </svg>
-            </div>
-            <span class="brand-text">BacktestLab <span>Pro</span></span>
-        </a>
+    <!-- Ambient Glow Background -->
+    <div class="glow-orb w-64 h-64 sm:w-[450px] sm:h-[450px] bg-brand-accent top-[-40px] left-[-40px]"></div>
+    <div class="glow-orb w-72 h-72 sm:w-[500px] sm:h-[500px] bg-brand-purple top-[25%] right-[-60px]"></div>
+    <div class="glow-orb w-64 h-64 sm:w-[450px] sm:h-[450px] bg-brand-success bottom-[15%] left-[-60px]"></div>
 
-        <ul class="nav-menu">
-            <li><a href="index.html">Home</a></li>
-            <li><a href="algo_store.html">Bot Store</a></li>
-            <li><a href="bot_automation.html" class="active">Go Live</a></li>
-            <li><a href="my-products.html">My Products</a></li>
-            <li><a href="articles.html">Articles</a></li>
-            <li><a href="about.html">About Us</a></li>
-            <li><a href="contact.html">Contact</a></li>
-        </ul>
-
-        <div id="desktop-auth-container" class="nav-right-actions auth-hidden">
-            <div id="logged-out-actions" class="hidden" style="display: flex; align-items: center; gap: 14px;">
-                <button onclick="triggerAuthFlow()" style="background: none; border: none; color: var(--text-muted); font-size: 13px; font-weight: 600; cursor: pointer;">Sign In</button>
-                <button onclick="triggerAuthFlow()" class="btn-new-session" style="padding: 8px 18px;">Get Free Account</button>
-            </div>
+    <!-- Header (Synced Exactly with index.html) -->
+    <header class="sticky top-0 z-50 w-full border-b border-white/5 bg-[#050507]/90 backdrop-blur-xl">
+        <div class="max-w-7xl mx-auto px-3 xs:px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-3">
             
-            <div id="logged-in-actions" class="hidden" style="display: flex; align-items: center; gap: 12px;">
-                <a href="my-sessions.html" class="btn-my-sessions">
-                    <i class="fa-solid fa-folder text-indigo-500" style="color: #818cf8; font-size: 12px;"></i>
-                    My Sessions
-                </a>
-                <a href="session.html" class="btn-new-session">
-                    <span style="font-size: 15px; font-weight: bold; margin-right: 2px;">+</span> New Session
-                </a>
-                
-                <div class="profile-dropdown-wrapper" id="profile-dropdown-wrapper">
-                    <button id="profile-menu-trigger-btn" class="profile-menu-trigger-btn" title="View Account Profile">
-                        <div class="profile-menu-trigger-inner">
-                            <i class="fa-solid fa-user"></i>
-                        </div>
-                    </button>
+            <a href="index.html" class="flex items-center gap-2.5 sm:gap-3 group flex-shrink-0" title="BacktestLab Pro Homepage">
+                <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
+                    <svg class="w-4 h-4 sm:w-5 sm:h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                    </svg>
+                </div>
+                <span class="text-base sm:text-xl font-bold font-sans tracking-tight text-white whitespace-nowrap">BacktestLab <span class="text-indigo-400">Pro</span></span>
+            </a>
 
-                    <div id="profile-overlay-dialog-box" class="profile-overlay-dialog-box hidden">
-                        <div class="profile-box-header">
-                            <div class="profile-box-avatar">
-                                <i class="fa-solid fa-user"></i>
-                            </div>
-                            <div class="profile-box-meta">
-                                <h5 id="profile-box-name" class="profile-box-name">Trader</h5>
-                                <p id="profile-box-email" class="profile-box-email">trader@backtestlabpro.com</p>
+            <!-- Desktop Links -->
+            <nav class="hidden lg:flex items-center gap-6 text-xs xl:text-sm font-medium">
+                <a href="session.html" class="text-zinc-300 hover:text-white transition-colors">Simulator</a>
+                <a href="bot_automation.html" class="text-indigo-400 font-semibold flex items-center gap-1.5">
+                    <i class="fa-solid fa-code text-indigo-400 text-xs"></i> BYO-AI Builder
+                </a>
+                <a href="algo_store.html" class="text-zinc-300 hover:text-white transition-colors flex items-center gap-1.5">
+                    <span class="h-1.5 w-1.5 rounded-full bg-purple-400 animate-pulse"></span>
+                    <span>Community Arena</span>
+                </a>
+                <a href="production-code.html" class="text-zinc-300 hover:text-white transition-colors flex items-center gap-1.5">
+                    <i class="fa-solid fa-download text-emerald-400 text-xs"></i> Production Code
+                </a>
+                <a href="articles.html" class="text-zinc-400 hover:text-white transition-colors">Articles</a>
+                <a href="about.html" class="text-zinc-400 hover:text-white transition-colors">About Us</a>
+            </nav>
+
+            <!-- Right Controls & Auth -->
+            <div class="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+                <a href="session.html" class="text-xs sm:text-sm font-semibold bg-white text-zinc-950 px-3.5 xs:px-4 sm:px-5 py-2 sm:py-2.5 rounded-full hover:bg-zinc-200 transition-all flex items-center gap-1.5 shadow-md">
+                    <span>Open Free Simulator</span> <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                </a>
+
+                <!-- Desktop Dynamic Auth Container -->
+                <div id="desktop-auth-container" class="hidden sm:flex items-center gap-2 auth-hidden">
+                    <div id="logged-out-actions" class="hidden flex items-center">
+                        <button onclick="triggerAuthFlow()" class="text-xs sm:text-sm font-semibold text-zinc-400 hover:text-white transition-colors px-2 py-1.5">Sign In</button>
+                    </div>
+                    <div id="logged-in-actions" class="hidden flex items-center gap-2 relative">
+                        <a href="my-sessions.html" class="text-xs font-semibold text-zinc-300 hover:text-white border border-white/10 px-3 py-1.5 rounded-full bg-[#0d0d11] transition-all flex items-center gap-1.5">
+                            <i class="fa-solid fa-folder text-indigo-400 text-xs"></i> Workspace
+                        </a>
+                        <div class="relative" id="profile-dropdown-wrapper">
+                            <button id="profile-menu-trigger-btn" aria-label="Open Profile Menu" class="flex items-center justify-center h-8 w-8 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 p-[1px]">
+                                <div class="h-full w-full bg-[#050507] rounded-[7px] flex items-center justify-center text-zinc-300">
+                                    <i class="fa-solid fa-user text-xs"></i>
+                                </div>
+                            </button>
+                            <div id="profile-overlay-dialog-box" class="hidden absolute right-0 mt-2 w-56 rounded-xl border border-white/10 bg-[#0c0c0e]/95 backdrop-blur-xl p-3 shadow-2xl z-50">
+                                <div class="mb-2 pb-2 border-b border-white/5">
+                                    <p id="profile-box-name" class="text-xs font-bold text-white truncate">Trader</p>
+                                    <p id="profile-box-email" class="text-[10px] text-zinc-500 font-mono truncate">trader@backtestlabpro.com</p>
+                                </div>
+                                <button id="firebase-logout-btn" class="w-full py-1.5 text-xs text-zinc-400 hover:text-red-400 font-semibold flex items-center justify-center gap-1.5">
+                                    <i class="fa-solid fa-power-off text-xs"></i> Sign Out
+                                </button>
                             </div>
                         </div>
-
-                        <button id="firebase-logout-btn" class="btn-logout">
-                            <i class="fa-solid fa-power-off"></i> Sign Out
-                        </button>
                     </div>
                 </div>
+
+                <button id="mobileMenuToggle" aria-label="Toggle navigation" class="lg:hidden w-8 h-8 xs:w-9 xs:h-9 rounded-xl bg-zinc-900 border border-white/10 flex items-center justify-center text-zinc-300 hover:text-white">
+                    <i id="menuHamburgerIcon" class="fa-solid fa-bars text-xs xs:text-sm"></i>
+                </button>
             </div>
         </div>
 
-        <button id="mobile-menu-btn" class="mobile-menu-btn" aria-label="Toggle Navigation Menu">
-            <i class="fa-solid fa-bars-staggered"></i>
-        </button>
-
-        <div id="mobile-menu" class="mobile-menu">
-            <a href="index.html">Home</a>
-            <a href="algo_store.html">Bot Store</a>
-            <a href="bot_automation.html" class="active">Go Live</a>
-            <a href="my-products.html">My Products</a>
-            <a href="articles.html">Articles</a>
-            <a href="about.html">About Us</a>
-            <a href="contact.html">Contact</a>
-            <div id="mobile-auth-placeholder" class="mobile-auth-placeholder auth-hidden"></div>
+        <!-- Mobile Drawer Menu -->
+        <div id="mobileDrawerMenu" class="hidden lg:hidden border-t border-white/10 bg-[#08080c]/98 backdrop-blur-2xl px-4 py-4 space-y-2.5 shadow-2xl">
+            <a href="session.html" class="block text-xs xs:text-sm font-semibold text-white py-2.5 px-3.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 transition-colors">
+                <i class="fa-solid fa-play text-xs mr-2"></i> Open Free Simulator
+            </a>
+            <a href="bot_automation.html" class="block text-xs xs:text-sm font-semibold text-indigo-300 py-2 px-3 rounded-lg bg-indigo-500/10 border border-indigo-500/20">
+                <i class="fa-solid fa-code text-indigo-400 mr-2"></i> BYO-AI Builder
+            </a>
+            <a href="community-arena.html" class="block text-xs xs:text-sm font-medium text-purple-300 py-2 px-3 rounded-lg bg-purple-500/10 border border-purple-500/20">
+                <i class="fa-solid fa-robot text-purple-400 mr-2"></i> Community Bot Arena
+            </a>
+            <a href="production-code.html" class="block text-xs xs:text-sm font-medium text-emerald-300 py-2 px-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
+                <i class="fa-solid fa-download text-emerald-400 mr-2"></i> Production Code Export
+            </a>
+            <a href="articles.html" class="block text-xs xs:text-sm font-medium text-zinc-300 hover:text-white py-2 px-3 rounded-lg hover:bg-white/5">
+                <i class="fa-solid fa-newspaper text-zinc-400 mr-2"></i> Articles &amp; Guides
+            </a>
+            <a href="about.html" class="block text-xs xs:text-sm font-medium text-zinc-300 hover:text-white py-2 px-3 rounded-lg hover:bg-white/5">
+                <i class="fa-solid fa-circle-info text-zinc-400 mr-2"></i> About Us
+            </a>
+            <div id="mobile-auth-placeholder" class="pt-2 border-t border-white/5 auth-hidden"></div>
         </div>
-    </nav>
+    </header>
 
-    <main>
-        <section class="hero-section">
-            <div class="container hero-content">
-                <div class="hero-badge">
-                    <i class="fa-solid fa-bolt"></i> Execution &amp; Production Phase
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16 space-y-16">
+        
+        <!-- Hero Section -->
+        <section class="text-center max-w-4xl mx-auto space-y-5">
+            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-xs font-mono text-indigo-300">
+                <span class="h-2 w-2 rounded-full bg-indigo-400 animate-pulse"></span>
+                <span>Bring Your Own AI API · Client-Side Execution</span>
+            </div>
+
+            <h1 class="font-display font-extrabold text-3xl xs:text-4xl sm:text-6xl tracking-tight leading-[1.15]">
+                Your AI. Your API Key. <br>
+                <span class="bg-gradient-to-r from-indigo-400 via-purple-400 to-emerald-400 bg-clip-text text-transparent">Your Proprietary Strategy.</span>
+            </h1>
+
+            <p class="text-zinc-400 text-sm sm:text-lg max-w-2xl mx-auto leading-relaxed">
+                We don’t sell marked-up AI subscriptions. Connect your own LLM provider via API key to build, compile, and refine trading logic in plain English directly in your browser.
+            </p>
+
+            <!-- Linear Pipeline Strip -->
+            <div class="pt-4 max-w-2xl mx-auto">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 font-mono text-xs text-left">
+                    <div class="p-3.5 rounded-xl glass-card border border-emerald-500/20">
+                        <span class="text-emerald-400 font-bold block mb-0.5">01 · FREE</span>
+                        <div class="text-zinc-300 font-sans font-semibold">Prompt &amp; Build Logic</div>
+                        <p class="text-[11px] text-zinc-500 mt-1">Convert market ideas into executable rules.</p>
+                    </div>
+                    <div class="p-3.5 rounded-xl glass-card border border-emerald-500/20">
+                        <span class="text-emerald-400 font-bold block mb-0.5">02 · FREE</span>
+                        <div class="text-zinc-300 font-sans font-semibold">Backtest &amp; Replay</div>
+                        <p class="text-[11px] text-zinc-500 mt-1">Test on 20+ years of deep tick data.</p>
+                    </div>
+                    <div class="p-3.5 rounded-xl glass-card border border-indigo-500/30">
+                        <span class="text-indigo-400 font-bold block mb-0.5">03 · CODE EXPORT</span>
+                        <div class="text-zinc-300 font-sans font-semibold">Production Files</div>
+                        <p class="text-[11px] text-zinc-500 mt-1">Deploy .mql5 or Python to live broker.</p>
+                    </div>
                 </div>
-                <h1>Turn Your Backtested Strategy<br>Into a <span>Live Trading Bot</span></h1>
-                <p>You never pay to experiment. Test your edge with unlimited AI sessions and data for free. When you're confident in the numbers, export an executable bot or build side-by-side with an engineer.</p>
+            </div>
 
-                <!-- THE PIPELINE STRIP -->
-                <div class="pipeline-track">
-                    <div class="pipeline-step free">
-                        <i class="fa-solid fa-lightbulb"></i>
-                        <span>FREE</span> Strategy Ideation
+            <div class="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
+                <a href="session.html" class="w-full sm:w-auto px-6 py-3 rounded-xl bg-white text-zinc-950 font-display font-semibold text-xs sm:text-sm hover:bg-zinc-200 transition-all flex items-center justify-center gap-2 shadow-xl">
+                    <i class="fa-solid fa-play text-xs text-indigo-600"></i> Open Simulator &amp; Connect Key
+                </a>
+                <a href="production-code.html" class="w-full sm:w-auto px-6 py-3 rounded-xl bg-zinc-900 border border-white/10 text-white font-display font-semibold text-xs sm:text-sm hover:bg-zinc-800 transition-all flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-download text-xs text-emerald-400"></i> View Production Code Specs
+                </a>
+            </div>
+        </section>
+
+        <!-- Conversational Tuning Demonstration -->
+        <section class="p-6 sm:p-10 rounded-3xl glass-card border border-indigo-500/20">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                <div class="space-y-4">
+                    <span class="text-xs font-mono font-bold text-indigo-400 uppercase tracking-widest">Conversational Loop</span>
+                    <h2 class="text-2xl sm:text-3xl font-display font-bold text-white">How Conversational Bot Building Works</h2>
+                    <p class="text-zinc-400 text-xs sm:text-sm leading-relaxed">
+                        Describe your indicators, session filters, risk-reward ratios, or order block criteria. Your connected AI writes and updates the algorithmic state machine in real time.
+                    </p>
+                    <div class="space-y-2 text-xs font-mono text-zinc-300">
+                        <div class="flex items-center gap-2"><i class="fa-solid fa-shield-halved text-emerald-400"></i> API keys stay client-side; no server logging</div>
+                        <div class="flex items-center gap-2"><i class="fa-solid fa-arrows-rotate text-purple-400"></i> Immediate backtest re-run with one click</div>
+                        <div class="flex items-center gap-2"><i class="fa-solid fa-layer-group text-indigo-400"></i> Run alongside other manual or community bots</div>
                     </div>
-                    <i class="fa-solid fa-arrow-right pipeline-arrow"></i>
-                    <div class="pipeline-step free">
-                        <i class="fa-solid fa-chart-line"></i>
-                        <span>FREE</span> Unlimited Iteration
+                </div>
+
+                <div class="bg-[#08080c] border border-white/10 rounded-2xl p-4 sm:p-5 font-mono text-xs space-y-3">
+                    <div class="border-b border-white/5 pb-2 text-zinc-500 flex justify-between text-[11px]">
+                        <span>BYO-API CLIENT CONSOLE</span>
+                        <span class="text-emerald-400">ACTIVE SESSION</span>
                     </div>
-                    <i class="fa-solid fa-arrow-right pipeline-arrow"></i>
-                    <div class="pipeline-step paid">
-                        <i class="fa-solid fa-cube"></i>
-                        <span>PAID</span> Production Bot File
+
+                    <div class="space-y-1">
+                        <span class="text-zinc-500 uppercase text-[10px]">Prompt Input:</span>
+                        <div class="p-2.5 rounded-lg bg-white/5 text-zinc-200 text-xs">
+                            "Buy when price sweeps Asian session low and closes back inside the range. Set stop 5 pips below sweep, target 2R, only trade London open."
+                        </div>
+                    </div>
+
+                    <div class="p-2.5 rounded-lg bg-indigo-950/20 border border-indigo-500/20 text-indigo-300 text-xs space-y-1">
+                        <div>✔ Strategy Compiled: <code>Asian_Range_Sweep.algo</code></div>
+                        <div>✔ Attached to: <strong>XAUUSD · 5M</strong></div>
+                        <div>✔ Historical Replay: <strong>3 Years Scanned</strong></div>
+                        <div class="text-emerald-400">✔ Expectancy: +0.48R | Win Rate: 61.4% | Max DD: 4.1%</div>
+                    </div>
+
+                    <div class="text-center pt-1">
+                        <a href="session.html" class="text-indigo-400 hover:text-indigo-300 text-xs font-semibold">
+                            Launch Simulator to Test This Workflow →
+                        </a>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- DUAL PATH MONETIZATION SECTION -->
-        <section style="padding-top: 10px;">
-            <div class="container">
-                <div class="dual-pathways-grid">
-                    
-                    <!-- PATH 1: AI BOT PRODUCTION -->
-                    <div class="pathway-card recommended">
-                        <span class="tag-pill tag-ai"><i class="fa-solid fa-robot"></i> Instant AI Production</span>
-                        <h3>Automated Bot Export</h3>
-                        <p class="subtitle">Convert your validated backtest logic into a production-ready bot file in seconds. No calls or dev delays.</p>
-                        
-                        <div class="pricing-callout">
-                            <div>
-                                <span class="price-num">Instant</span>
-                            </div>
-                            <span class="price-meta">File Delivery via Dashboard</span>
+        <!-- Two Pathways to Live Execution -->
+        <section class="space-y-6">
+            <div class="text-center max-w-2xl mx-auto">
+                <span class="text-xs font-mono font-bold text-purple-400 uppercase tracking-widest">From Simulation to Production</span>
+                <h2 class="text-2xl sm:text-4xl font-display font-bold text-white mt-1">Two Ways to Deploy Live</h2>
+                <p class="text-zinc-400 text-xs sm:text-sm mt-1">Backtesting is free. Choose how you want your live code when you're ready.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Option 1: Automated Export -->
+                <div class="p-6 sm:p-8 rounded-3xl glass-card border border-indigo-500/30 flex flex-col justify-between space-y-6">
+                    <div class="space-y-4">
+                        <div class="inline-block px-2.5 py-0.5 rounded text-[11px] font-mono font-bold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+                            AUTOMATED EXPORT
                         </div>
-
-                        <ul class="perks-list">
-                            <li><i class="fa-solid fa-check"></i> 100% automated syntax conversion</li>
-                            <li><i class="fa-solid fa-check"></i> Formatted for MetaTrader 5, MT4, or Pine Script</li>
-                            <li><i class="fa-solid fa-check"></i> Standard error handling &amp; order fills included</li>
-                            <li><i class="fa-solid fa-check"></i> Includes parameter config files (.set)</li>
-                            <li><i class="fa-solid fa-check"></i> Instant access in My Products</li>
+                        <h3 class="text-xl font-display font-bold text-white">Instant Production Code</h3>
+                        <p class="text-xs text-zinc-400 leading-relaxed">
+                            Convert your validated simulation directly into native .mql5 (Expert Advisor) or Python scripts. Clean, audited, and ready to compile immediately.
+                        </p>
+                        <ul class="space-y-2 text-xs font-mono text-zinc-300">
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Compile-ready .mql5 for MetaTrader 5</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Standard Python execution script (.py)</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Preset configuration parameters (.set)</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> VPS deployment and installation guides</li>
                         </ul>
-
-                        <a href="session.html" class="card-action-btn btn-ai-card">
-                            <i class="fa-solid fa-bolt"></i> Run Session &amp; Export Bot
-                        </a>
                     </div>
 
-                    <!-- PATH 2: 7-DAY DEDICATED DEV SERVICE -->
-                    <div class="pathway-card">
-                        <span class="tag-pill tag-human"><i class="fa-solid fa-user-gear"></i> White-Glove Quant Service</span>
-                        <h3>7-Day Dedicated Build</h3>
-                        <p class="subtitle">Collaborate directly with an algorithmic developer who understands market structure, liquidity, and edge refinement.</p>
-                        
-                        <div class="pricing-callout">
-                            <div>
-                                <span class="price-num">Custom</span>
-                            </div>
-                            <span class="price-meta">1-on-1 • Delivered in 7 Working Days</span>
+                    <a href="production-code.html" class="w-full py-3 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-display font-semibold text-xs text-center shadow-lg shadow-indigo-500/20 active:scale-95 transition-all">
+                        View Code Export Details
+                    </a>
+                </div>
+
+                <!-- Option 2: Custom Developer Build -->
+                <div class="p-6 sm:p-8 rounded-3xl glass-card border border-white/5 flex flex-col justify-between space-y-6">
+                    <div class="space-y-4">
+                        <div class="inline-block px-2.5 py-0.5 rounded text-[11px] font-mono font-bold bg-purple-500/10 text-purple-400 border border-purple-500/20">
+                            CUSTOM ARCHITECTURE
                         </div>
-
-                        <ul class="perks-list">
-                            <li><i class="fa-solid fa-check"></i> Direct 1-to-1 conversation with a quant dev</li>
-                            <li><i class="fa-solid fa-check"></i> Custom execution logic (PDH/PDL sweeps, RVOL, SMC)</li>
-                            <li><i class="fa-solid fa-check"></i> Advanced multi-broker APIs, sockets, or webhooks</li>
-                            <li><i class="fa-solid fa-check"></i> Turnaround within 7 working days</li>
-                            <li><i class="fa-solid fa-check"></i> 30 days post-deployment live debugging</li>
+                        <h3 class="text-xl font-display font-bold text-white">Dedicated Quant Build</h3>
+                        <p class="text-xs text-zinc-400 leading-relaxed">
+                            Need proprietary multi-broker webhooks, custom socket connections, or non-standard order routing? Work directly with an algorithmic engineer.
+                        </p>
+                        <ul class="space-y-2 text-xs font-mono text-zinc-300">
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-purple-400"></i> Custom API integration (Binance, Bybit, FIX)</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-purple-400"></i> Multi-timeframe liquidity sweep logic</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-purple-400"></i> Turnaround in 7 working days</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-purple-400"></i> 30-day live deployment debugging</li>
                         </ul>
-
-                        <a href="chat.html" class="card-action-btn btn-human-card">
-                            <i class="fa-solid fa-comments"></i> Start 1-on-1 Consultation
-                        </a>
                     </div>
 
+                    <a href="contact.html" class="w-full py-3 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-white/10 text-zinc-200 font-display font-semibold text-xs text-center transition-all">
+                        Inquire About Custom Engineering
+                    </a>
                 </div>
             </div>
         </section>
 
-        <!-- BROKERS & PLATFORMS -->
-        <div class="compatibility-section">
-            <div class="compatibility-title">Supported Production Targets &amp; Environments</div>
-            <div class="platform-badges">
-                <div class="platform-badge"><i class="fa-solid fa-chart-simple" style="color: #6366f1;"></i> MetaTrader 5 (MQL5)</div>
-                <div class="platform-badge"><i class="fa-solid fa-chart-line" style="color: #06b6d4;"></i> MetaTrader 4 (MQL4)</div>
-                <div class="platform-badge"><i class="fa-solid fa-code" style="color: #f59e0b;"></i> TradingView Pine Script</div>
-                <div class="platform-badge"><i class="fa-brands fa-python" style="color: #3b82f6;"></i> Python Quant Engines</div>
-                <div class="platform-badge"><i class="fa-solid fa-plug" style="color: #10b981;"></i> Direct Broker Webhooks</div>
+        <!-- Supported Production Environments -->
+        <section class="border-t border-b border-white/5 py-8 text-center space-y-4">
+            <div class="text-xs font-mono uppercase tracking-widest text-zinc-500">Supported Target Platforms &amp; Environments</div>
+            <div class="flex flex-wrap justify-center items-center gap-3 font-mono text-xs">
+                <span class="px-3 py-1.5 rounded-lg bg-zinc-900 border border-white/5 text-zinc-300"><i class="fa-solid fa-chart-line text-indigo-400 mr-1.5"></i> MetaTrader 5 (MQL5)</span>
+                <span class="px-3 py-1.5 rounded-lg bg-zinc-900 border border-white/5 text-zinc-300"><i class="fa-brands fa-python text-emerald-400 mr-1.5"></i> Python Engines</span>
+                <span class="px-3 py-1.5 rounded-lg bg-zinc-900 border border-white/5 text-zinc-300"><i class="fa-solid fa-server text-purple-400 mr-1.5"></i> Ubuntu / Windows VPS</span>
+                <span class="px-3 py-1.5 rounded-lg bg-zinc-900 border border-white/5 text-zinc-300"><i class="fa-solid fa-network-wired text-amber-400 mr-1.5"></i> Broker REST / Webhooks</span>
             </div>
-        </div>
+        </section>
 
-        <!-- FAQ SECTION -->
-        <section>
-            <div class="container">
-                <div class="section-header" style="text-align: center; margin-bottom: 36px;">
-                    <h2 style="font-size: 28px; font-weight: 700;">Frequently Asked Questions</h2>
-                </div>
-                <div class="faq-layout">
-                    <div class="faq-item">
-                        <h3>Why backtest before paying for a bot?</h3>
-                        <p>Most automation projects fail because the underlying idea was never mechanically tested across enough data. BacktestLab Pro allows you to refine your rules completely free so you only pay for executable files once your edge is proven.</p>
-                    </div>
-                    <div class="faq-item">
-                        <h3>What do I receive when I export the AI bot?</h3>
-                        <p>You receive the clean, compiled and raw script files configured for your chosen broker platform (such as MetaTrader .ex5/.mq5 or Pine Script source code), ready to attach to your charts.</p>
-                    </div>
-                    <div class="faq-item">
-                        <h3>When should I choose the 7-Day Developer Service?</h3>
-                        <p>If your strategy involves complex non-standard conditions (like multi-timeframe order blocks, proprietary data feeds, or custom risk-hedging algorithms), our human quant developers refine your logic and deliver a bulletproof engine within 7 working days.</p>
-                    </div>
-                </div>
+        <!-- FAQs -->
+        <section class="max-w-3xl mx-auto space-y-4">
+            <div class="text-center mb-6">
+                <span class="text-xs font-mono font-bold text-indigo-400 uppercase tracking-widest">FAQ</span>
+                <h3 class="text-xl sm:text-2xl font-display font-bold text-white mt-1">Bot Automation &amp; BYO-AI Questions</h3>
+            </div>
+
+            <div class="p-5 rounded-2xl glass-card space-y-1.5">
+                <h4 class="font-bold text-white text-sm">Do I have to pay BacktestLab for AI usage?</h4>
+                <p class="text-xs text-zinc-400 leading-relaxed">No. You provide your own API key. You only pay your AI provider directly for the tokens you consume. BacktestLab Pro charges nothing to prompt, compile, or backtest.</p>
+            </div>
+
+            <div class="p-5 rounded-2xl glass-card space-y-1.5">
+                <h4 class="font-bold text-white text-sm">Are my strategy rules kept private?</h4>
+                <p class="text-xs text-zinc-400 leading-relaxed">Yes. All strategy compilation with your BYO-AI key runs client-side in your browser workspace. Your logic is not logged or shared with third parties.</p>
+            </div>
+
+            <div class="p-5 rounded-2xl glass-card space-y-1.5">
+                <h4 class="font-bold text-white text-sm">When do I pay for production code?</h4>
+                <p class="text-xs text-zinc-400 leading-relaxed">Only when you have thoroughly validated your strategy across historical data and want the final .mql5 or .py files for your live MetaTrader terminal or VPS.</p>
             </div>
         </section>
     </main>
 
-    <footer class="site-footer">
-        <div class="footer-container">
-            <div class="footer-grid">
-                <div class="footer-brand-meta">
-                    <a href="index.html" class="nav-left-brand">
-                        <div class="brand-icon-box">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
-                            </svg>
-                        </div>
-                        <span class="brand-text">BacktestLab <span>Pro</span></span>
-                    </a>
-                    <p>Quantitative strategy backtesting and algorithmic bot compilation. Built to test without paywalls and launch verified bots with production code.</p>
-                    <div class="footer-socials">
-                        <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="social-btn"><i class="fa-brands fa-github"></i></a>
-                        <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" class="social-btn"><i class="fa-brands fa-x-twitter"></i></a>
-                        <a href="contact.html" class="social-btn"><i class="fa-solid fa-envelope"></i></a>
-                    </div>
-                </div>
+    <!-- Footer (Synced with index.html) -->
+    <footer class="mt-20 border-t border-white/10 bg-[#060608] pt-12 pb-12 text-zinc-400 text-xs font-sans">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+            <div class="p-4 sm:p-5 rounded-2xl bg-black/60 border border-white/5 font-mono text-[11px] text-zinc-500 leading-relaxed space-y-2">
+                <div class="text-zinc-400 font-bold"><i class="fa-solid fa-triangle-exclamation text-amber-400 mr-1.5"></i> Quantitative Risk Disclaimer</div>
+                <p>BacktestLab Pro provides quantitative strategy backtesting software and historical data simulation for research and educational purposes only. Past simulated performance does not guarantee future financial returns. All live algorithmic trading carries substantial capital risk.</p>
+            </div>
 
-                <div class="footer-col">
-                    <h4>Platform</h4>
-                    <ul>
-                        <li><a href="session.html">New Session</a></li>
-                        <li><a href="algo_store.html">Algo Bot Store</a></li>
-                        <li><a href="bot_automation.html">Go Live Engine</a></li>
-                        <li><a href="my-products.html">My Products</a></li>
-                    </ul>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-xs font-mono">
+                <div class="space-y-2">
+                    <span class="text-white font-bold block">Platform</span>
+                    <a href="session.html" class="block hover:text-white">Simulator</a>
+                    <a href="bot_automation.html" class="block text-indigo-400 font-semibold">BYO-AI Builder</a>
                 </div>
-
-                <div class="footer-col">
-                    <h4>Resources</h4>
-                    <ul>
-                        <li><a href="articles.html">Quant Articles</a></li>
-                        <li><a href="about.html">About Us</a></li>
-                        <li><a href="contact.html">Contact Us</a></li>
-                    </ul>
+                <div class="space-y-2">
+                    <span class="text-white font-bold block">Ecosystem</span>
+                    <a href="community-arena.html" class="block hover:text-white">Community Arena</a>
+                    <a href="production-code.html" class="block hover:text-white">Production Code</a>
                 </div>
-
-                <div class="footer-col">
-                    <h4>Legal</h4>
-                    <ul>
-                        <li><a href="privacy.html">Privacy Policy</a></li>
-                        <li><a href="terms.html">Terms of Service</a></li>
-                        <li><a href="risk.html">Risk Disclaimer</a></li>
-                    </ul>
+                <div class="space-y-2">
+                    <span class="text-white font-bold block">Content</span>
+                    <a href="articles.html" class="block hover:text-white">Articles &amp; Guides</a>
+                    <a href="about.html" class="block hover:text-white">About Us</a>
+                </div>
+                <div class="space-y-2">
+                    <span class="text-white font-bold block">Legal</span>
+                    <a href="privacy.html" class="block hover:text-white">Privacy Policy</a>
+                    <a href="terms.html" class="block hover:text-white">Terms of Service</a>
                 </div>
             </div>
 
-            <div class="footer-bottom-bar">
-                <span>&copy; 2026 BacktestLab Pro. All rights reserved.</span>
-                <span>Engine: v2.0-Production</span>
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4 text-zinc-500 font-mono text-[11px] pt-4 border-t border-white/5">
+                <div>© 2026 BacktestLab Pro. All rights reserved. Platform research is free forever.</div>
+                <div class="flex gap-4">
+                    <a href="#top" class="hover:text-white"><i class="fa-solid fa-arrow-up mr-1"></i> Back to Top</a>
+                </div>
             </div>
         </div>
     </footer>
 
+    <!-- Firebase Auth Integration -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAensfI53w49Fd4A7Lz5_K9N1JOxZsW7Kk",
@@ -942,18 +431,16 @@
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
-        const db = getFirestore(app);
 
         window.firebaseAuthInstance = auth;
         window.firebaseSignOutAction = signOut;
 
-        onAuthStateChanged(auth, async (user) => {
+        onAuthStateChanged(auth, (user) => {
             if (user) {
                 const nameDisplay = document.getElementById('profile-box-name');
                 const emailDisplay = document.getElementById('profile-box-email');
                 if (nameDisplay) nameDisplay.textContent = user.displayName || "Trader Pro";
                 if (emailDisplay) emailDisplay.textContent = user.email || "";
-
                 window.updateAuthViewUI(true);
             } else {
                 window.updateAuthViewUI(false);
@@ -961,19 +448,21 @@
         });
 
         document.getElementById('firebase-logout-btn')?.addEventListener('click', () => {
-            signOut(auth).then(() => {
-                window.location.reload();
-            });
+            signOut(auth).then(() => window.location.reload());
         });
     </script>
 
+    <!-- UI State & Mobile Drawer Scripts -->
     <script>
-        window.addEventListener('DOMContentLoaded', () => {
-            const menuBtn = document.getElementById('mobile-menu-btn');
-            const mobileMenu = document.getElementById('mobile-menu');
-            if (menuBtn && mobileMenu) {
-                menuBtn.addEventListener('click', () => {
-                    mobileMenu.classList.toggle('open');
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggle = document.getElementById('mobileMenuToggle');
+            const drawer = document.getElementById('mobileDrawerMenu');
+            const icon = document.getElementById('menuHamburgerIcon');
+
+            if (toggle && drawer) {
+                toggle.addEventListener('click', () => {
+                    const isHidden = drawer.classList.toggle('hidden');
+                    icon.className = isHidden ? 'fa-solid fa-bars text-xs xs:text-sm' : 'fa-solid fa-xmark text-xs xs:text-sm';
                 });
             }
 
@@ -1002,9 +491,8 @@
                 if (loggedInBar) loggedInBar.classList.remove('hidden');
                 if (mobileAuthBox) {
                     mobileAuthBox.innerHTML = `
-                        <a href="my-sessions.html">My Sessions</a>
-                        <a href="session.html" style="color:#818cf8">+ New Session</a>
-                        <button onclick="window.firebaseSignOutAction(window.firebaseAuthInstance)" class="btn-logout" style="margin-top:8px;">Sign Out</button>
+                        <a href="my-sessions.html" class="block w-full text-center py-2 rounded-lg bg-zinc-900 border border-white/10 text-white text-xs font-semibold mb-2">My Workspace</a>
+                        <button onclick="window.firebaseSignOutAction(window.firebaseAuthInstance)" class="block w-full text-center text-zinc-500 hover:text-red-400 text-xs py-1 transition-colors">Sign Out</button>
                     `;
                 }
             } else {
@@ -1012,7 +500,7 @@
                 if (loggedInBar) loggedInBar.classList.add('hidden');
                 if (mobileAuthBox) {
                     mobileAuthBox.innerHTML = `
-                        <button onclick="triggerAuthFlow()" style="background:none; border:1px solid var(--border-color); color:var(--text-main); padding:10px; border-radius:8px; width:100%;">Sign In</button>
+                        <button onclick="triggerAuthFlow()" class="block w-full text-zinc-300 py-2.5 text-center text-xs font-semibold bg-white/5 rounded-lg border border-white/5">Sign In / Register</button>
                     `;
                 }
             }

@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5.0">
+    <meta name="theme-color" content="#050507">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <title>Production Code &amp; Dedicated Developer — BacktestLab Pro</title>
+    <meta name="description" content="Export uncompiled, native MQL5 (.mql5) and Python (.py) files, or hire a dedicated algorithmic engineer for 7 working days to build custom institutional logic.">
+    <link rel="canonical" href="https://backtestlabpro.com/production-code.html">
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YY82TZ1ZG7"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-YY82TZ1ZG7');
+    </script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-V7SXCF9923"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-V7SXCF9923');
+    </script>
+
+    <!-- Tailwind CSS, Icons & Fonts -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" sizes="192x192" href="favicon.png">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    screens: { 'xs': '380px' },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            dark: '#050507',
+                            card: '#0c0c0e',
+                            accent: '#6366f1',
+                            success: '#10b981',
+                            purple: '#a855f7'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        :root { color-scheme: dark; }
+        html, body {
+            background-color: #050507;
+            color: #f4f4f5;
+            overflow-x: hidden;
+            width: 100%;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .glow-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(90px);
+            opacity: 0.12;
+            pointer-events: none;
+        }
+        @media (min-width: 768px) {
+            .glow-orb { filter: blur(140px); opacity: 0.16; }
+        }
+        .glass-card {
+            background: rgba(12, 12, 14, 0.72);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glass-card:hover {
+            border-color: rgba(16, 185, 129, 0.4);
+            box-shadow: 0 0 30px rgba(16, 185, 129, 0.08);
+        }
+        .auth-hidden { opacity: 0 !important; pointer-events: none !important; visibility: hidden !important; display: none !important; }
+        .auth-visible { opacity: 1 !important; pointer-events: auto !important; visibility: visible !important; display: flex !important; }
+    </style>
+</head>
+<body class="font-sans antialiased min-h-screen flex flex-col justify-between selection:bg-emerald-500/30 selection:text-emerald-200" id="top">
+
+    <div class="glow-orb w-64 h-64 sm:w-[450px] sm:h-[450px] bg-brand-success top-[-40px] left-[-40px]"></div>
+    <div class="glow-orb w-72 h-72 sm:w-[500px] sm:h-[500px] bg-brand-purple top-[25%] right-[-60px]"></div>
+    <div class="glow-orb w-64 h-64 sm:w-[450px] sm:h-[450px] bg-brand-accent bottom-[15%] left-[-60px]"></div>
+
+    <!-- Header Navigation -->
+    <header class="sticky top-0 z-50 w-full border-b border-white/5 bg-[#050507]/90 backdrop-blur-xl">
+        <div class="max-w-7xl mx-auto px-3 xs:px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-3">
+            
+            <a href="index.html" class="flex items-center gap-2.5 sm:gap-3 group flex-shrink-0" title="BacktestLab Pro Homepage">
+                <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
+                    <svg class="w-4 h-4 sm:w-5 sm:h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                    </svg>
+                </div>
+                <span class="text-base sm:text-xl font-bold font-sans tracking-tight text-white whitespace-nowrap">BacktestLab <span class="text-indigo-400">Pro</span></span>
+            </a>
+
+            <nav class="hidden lg:flex items-center gap-6 text-xs xl:text-sm font-medium">
+                <a href="bot_automation.html" class="text-zinc-300 hover:text-white transition-colors flex items-center gap-1.5">
+                    <i class="fa-solid fa-code text-indigo-400 text-xs"></i> BYO-AI Builder
+                </a>
+                <a href="algo_store.html" class="text-zinc-300 hover:text-white transition-colors flex items-center gap-1.5">
+                    <span class="h-1.5 w-1.5 rounded-full bg-purple-400 animate-pulse"></span>
+                    <span>Community Arena</span>
+                </a>
+                <a href="production-code.html" class="text-emerald-400 font-semibold flex items-center gap-1.5">
+                    <i class="fa-solid fa-download text-emerald-400 text-xs"></i> Production Code
+                </a>
+                <a href="articles.html" class="text-zinc-400 hover:text-white transition-colors">Articles</a>
+                <a href="about.html" class="text-zinc-400 hover:text-white transition-colors">About Us</a>
+            </nav>
+
+            <div class="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+                <a href="session.html" class="text-xs sm:text-sm font-semibold bg-white text-zinc-950 px-3.5 xs:px-4 sm:px-5 py-2 sm:py-2.5 rounded-full hover:bg-zinc-200 transition-all flex items-center gap-1.5 shadow-md">
+                    <span>Open Simulator</span> <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                </a>
+
+                <div id="desktop-auth-container" class="hidden sm:flex items-center gap-2 auth-hidden">
+                    <div id="logged-out-actions" class="hidden flex items-center">
+                        <button onclick="triggerAuthFlow()" class="text-xs sm:text-sm font-semibold text-zinc-400 hover:text-white transition-colors px-2 py-1.5">Sign In</button>
+                    </div>
+                    <div id="logged-in-actions" class="hidden flex items-center gap-2 relative">
+                        <a href="my-sessions.html" class="text-xs font-semibold text-zinc-300 hover:text-white border border-white/10 px-3 py-1.5 rounded-full bg-[#0d0d11] transition-all flex items-center gap-1.5">
+                            <i class="fa-solid fa-folder text-indigo-400 text-xs"></i> Workspace
+                        </a>
+                        <div class="relative" id="profile-dropdown-wrapper">
+                            <button id="profile-menu-trigger-btn" aria-label="Open Profile Menu" class="flex items-center justify-center h-8 w-8 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 p-[1px]">
+                                <div class="h-full w-full bg-[#050507] rounded-[7px] flex items-center justify-center text-zinc-300">
+                                    <i class="fa-solid fa-user text-xs"></i>
+                                </div>
+                            </button>
+                            <div id="profile-overlay-dialog-box" class="hidden absolute right-0 mt-2 w-56 rounded-xl border border-white/10 bg-[#0c0c0e]/95 backdrop-blur-xl p-3 shadow-2xl z-50">
+                                <div class="mb-2 pb-2 border-b border-white/5">
+                                    <p id="profile-box-name" class="text-xs font-bold text-white truncate">Trader</p>
+                                    <p id="profile-box-email" class="text-[10px] text-zinc-500 font-mono truncate">sandbox@backtestlabpro.com</p>
+                                </div>
+                                <button id="firebase-logout-btn" class="w-full py-1.5 text-xs text-zinc-400 hover:text-red-400 font-semibold flex items-center justify-center gap-1.5">
+                                    <i class="fa-solid fa-power-off text-xs"></i> Sign Out
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button id="mobileMenuToggle" aria-label="Toggle navigation" class="lg:hidden w-8 h-8 xs:w-9 xs:h-9 rounded-xl bg-zinc-900 border border-white/10 flex items-center justify-center text-zinc-300 hover:text-white">
+                    <i id="menuHamburgerIcon" class="fa-solid fa-bars text-xs xs:text-sm"></i>
+                </button>
+            </div>
+        </div>
+
+        <div id="mobileDrawerMenu" class="hidden lg:hidden border-t border-white/10 bg-[#08080c]/98 backdrop-blur-2xl px-4 py-4 space-y-2.5 shadow-2xl">
+            <a href="session.html" class="block text-xs xs:text-sm font-semibold text-white py-2.5 px-3.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 transition-colors">
+                <i class="fa-solid fa-play text-xs mr-2"></i> Open Free Simulator
+            </a>
+            <a href="bot_automation.html" class="block text-xs xs:text-sm font-medium text-zinc-300 hover:text-white py-2 px-3 rounded-lg hover:bg-white/5">
+                <i class="fa-solid fa-code text-indigo-400 mr-2"></i> BYO-AI Builder
+            </a>
+            <a href="algo_store.html" class="block text-xs xs:text-sm font-medium text-purple-300 py-2 px-3 rounded-lg hover:bg-white/5">
+                <i class="fa-solid fa-robot text-purple-400 mr-2"></i> Community Arena
+            </a>
+            <a href="production-code.html" class="block text-xs xs:text-sm font-semibold text-emerald-300 py-2 px-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
+                <i class="fa-solid fa-download text-emerald-400 mr-2"></i> Production Code
+            </a>
+            <a href="articles.html" class="block text-xs xs:text-sm font-medium text-zinc-300 hover:text-white py-2 px-3 rounded-lg hover:bg-white/5">
+                <i class="fa-solid fa-newspaper text-zinc-400 mr-2"></i> Articles
+            </a>
+            <a href="about.html" class="block text-xs xs:text-sm font-medium text-zinc-300 hover:text-white py-2 px-3 rounded-lg hover:bg-white/5">
+                <i class="fa-solid fa-circle-info text-zinc-400 mr-2"></i> About Us
+            </a>
+            <div id="mobile-auth-placeholder" class="pt-2 border-t border-white/5 auth-hidden"></div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16 space-y-16 flex-grow w-full">
+        
+        <!-- Hero Header -->
+        <section class="text-center max-w-4xl mx-auto space-y-5">
+            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-xs font-mono text-emerald-300">
+                <span class="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span>The Only Paid Layer · Live Execution Delivery</span>
+            </div>
+
+            <h1 class="font-display font-extrabold text-3xl xs:text-4xl sm:text-6xl tracking-tight leading-[1.15]">
+                $0 to Research. <br>
+                <span class="bg-gradient-to-r from-emerald-400 via-teal-300 to-indigo-400 bg-clip-text text-transparent">Pay Only for Verified Production Code.</span>
+            </h1>
+
+            <p class="text-zinc-400 text-sm sm:text-lg max-w-2xl mx-auto leading-relaxed">
+                We do not sell data access, subscriptions, or chart replays. Research is free forever. Pay only when you want compile-ready bot files or need a dedicated algorithmic developer to engineer custom institutional logic.
+            </p>
+
+            <div class="pt-2 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs font-mono text-zinc-400">
+                <span><i class="fa-solid fa-check text-emerald-400 mr-1.5"></i>Zero recurring software subscriptions</span>
+                <span><i class="fa-solid fa-check text-emerald-400 mr-1.5"></i>Unlocked native source code (.mql5 / .py)</span>
+                <span><i class="fa-solid fa-check text-emerald-400 mr-1.5"></i>Deploy on any personal broker terminal</span>
+            </div>
+        </section>
+
+        <!-- The Exact Two Pathways -->
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
+            
+            <!-- Pathway 1: Production Code Export -->
+            <div class="p-6 sm:p-8 rounded-3xl bg-gradient-to-b from-[#0c0c0e] to-zinc-950 border-2 border-emerald-500/40 shadow-2xl flex flex-col justify-between space-y-6">
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <span class="px-2.5 py-1 rounded text-[11px] font-mono font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                            OPTION 01 · INSTANT SOURCE EXPORT
+                        </span>
+                        <span class="text-xs font-mono text-zinc-500">Self-Hosted</span>
+                    </div>
+
+                    <h2 class="text-2xl font-display font-bold text-white">Live Execution Bot Files</h2>
+                    <p class="text-xs text-zinc-400 leading-relaxed">
+                        Export the audited, raw code files for any validated strategy in your workspace or the Community Arena. Run on your own MetaTrader 5 terminal or Python environment without license locks.
+                    </p>
+
+                    <div class="space-y-3 pt-2">
+                        <div class="p-3.5 rounded-xl bg-white/[0.02] border border-white/5 flex items-start gap-3">
+                            <i class="fa-solid fa-file-code text-indigo-400 text-base mt-0.5"></i>
+                            <div>
+                                <strong class="text-white block text-xs font-sans">Native MQL5 (.mql5) Script</strong>
+                                <span class="text-[11px] text-zinc-400 font-mono">Compile-ready Expert Advisor for MetaTrader 5 with automated stop-loss, take-profit, and spread controls.</span>
+                            </div>
+                        </div>
+
+                        <div class="p-3.5 rounded-xl bg-white/[0.02] border border-white/5 flex items-start gap-3">
+                            <i class="fa-brands fa-python text-emerald-400 text-base mt-0.5"></i>
+                            <div>
+                                <strong class="text-white block text-xs font-sans">Modular Python Engine (.py)</strong>
+                                <span class="text-[11px] text-zinc-400 font-mono">Clean execution script using standard MT5 and REST/WebSocket API endpoints.</span>
+                            </div>
+                        </div>
+
+                        <div class="p-3.5 rounded-xl bg-white/[0.02] border border-white/5 flex items-start gap-3">
+                            <i class="fa-solid fa-sliders text-purple-400 text-base mt-0.5"></i>
+                            <div>
+                                <strong class="text-white block text-xs font-sans">Optimized Presets (.set)</strong>
+                                <span class="text-[11px] text-zinc-400 font-mono">Pre-configured parameter values matching the verified historical backtest results.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pt-4 border-t border-white/5 space-y-2">
+                    <a href="algo_store.html" class="w-full py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-display font-bold text-xs text-center shadow-lg shadow-emerald-500/20 active:scale-95 transition-all block">
+                        Browse Verified Community Bots to Export
+                    </a>
+                    <a href="session.html" class="w-full py-2.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-white/5 text-zinc-400 font-display font-semibold text-xs text-center transition-all block">
+                        Test Strategy Free in Simulator First
+                    </a>
+                </div>
+            </div>
+
+            <!-- Pathway 2: Dedicated 7-Day Developer Service -->
+            <div class="p-6 sm:p-8 rounded-3xl glass-card border border-purple-500/30 flex flex-col justify-between space-y-6">
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <span class="px-2.5 py-1 rounded text-[11px] font-mono font-bold bg-purple-500/10 text-purple-400 border border-purple-500/20">
+                            OPTION 02 · 1-ON-1 QUANT SERVICE
+                        </span>
+                        <span class="text-xs font-mono text-zinc-500">7 Working Days</span>
+                    </div>
+
+                    <h2 class="text-2xl font-display font-bold text-white">Hire a Dedicated Algo Developer</h2>
+                    <p class="text-xs text-zinc-400 leading-relaxed">
+                        Need bespoke execution logic that goes beyond standard templates? Work directly with a dedicated quantitative software developer across working hours to build, refine, and stress-test your custom bot.
+                    </p>
+
+                    <div class="space-y-3 pt-2">
+                        <div class="p-3.5 rounded-xl bg-white/[0.02] border border-white/5 flex items-start gap-3">
+                            <i class="fa-solid fa-user-gear text-purple-400 text-base mt-0.5"></i>
+                            <div>
+                                <strong class="text-white block text-xs font-sans">1-on-1 Direct Communication</strong>
+                                <span class="text-[11px] text-zinc-400 font-mono">Dedicated collaboration via chat across daily active working hours for 7 days.</span>
+                            </div>
+                        </div>
+
+                        <div class="p-3.5 rounded-xl bg-white/[0.02] border border-white/5 flex items-start gap-3">
+                            <i class="fa-solid fa-network-wired text-indigo-400 text-base mt-0.5"></i>
+                            <div>
+                                <strong class="text-white block text-xs font-sans">Complex Market Mechanics</strong>
+                                <span class="text-[11px] text-zinc-400 font-mono">Multi-timeframe liquidity sweeps, order blocks, Relative Volume (RVOL) filtering, and dynamic hedging.</span>
+                            </div>
+                        </div>
+
+                        <div class="p-3.5 rounded-xl bg-white/[0.02] border border-white/5 flex items-start gap-3">
+                            <i class="fa-solid fa-plug text-amber-400 text-base mt-0.5"></i>
+                            <div>
+                                <strong class="text-white block text-xs font-sans">Custom APIs &amp; Webhooks</strong>
+                                <span class="text-[11px] text-zinc-400 font-mono">Direct broker API connections, multi-account routing, and external signal integration.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pt-4 border-t border-white/5 space-y-2">
+                    <a href="contact.html" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 hover:opacity-90 text-white font-display font-bold text-xs text-center shadow-lg shadow-purple-500/20 active:scale-95 transition-all block">
+                        Inquire for 7-Day Developer Service
+                    </a>
+                    <div class="text-center text-[11px] font-mono text-zinc-500">
+                        Includes 30 days of post-delivery bug fixes &amp; live debugging
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testing First Reminder -->
+        <section class="p-8 rounded-3xl border border-white/10 bg-[#09090d] text-center space-y-3">
+            <span class="text-xs font-mono font-bold text-emerald-400 uppercase tracking-widest">Our Philosophy</span>
+            <h3 class="text-xl sm:text-2xl font-display font-bold text-white">Never Pay Before Verifying the Numbers</h3>
+            <p class="text-xs sm:text-sm text-zinc-400 max-w-xl mx-auto leading-relaxed">
+                Most automation efforts fail because the underlying rule set lacked a statistical edge. Replay your setup across 20+ years of historical data for free on our chart engine before deciding to purchase production code.
+            </p>
+            <div class="pt-2">
+                <a href="session.html" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white text-zinc-950 font-display font-bold text-xs hover:bg-zinc-200 transition-all shadow-md">
+                    <i class="fa-solid fa-play text-indigo-600 text-[10px]"></i>
+                    <span>Verify Strategy on Free Simulator</span>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-20 border-t border-white/10 bg-[#060608] pt-12 pb-12 text-zinc-400 text-xs font-sans">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+            <div class="p-4 sm:p-5 rounded-2xl bg-black/60 border border-white/5 font-mono text-[11px] text-zinc-500 leading-relaxed space-y-2">
+                <div class="text-zinc-400 font-bold"><i class="fa-solid fa-triangle-exclamation text-amber-400 mr-1.5"></i> Quantitative Risk Disclaimer</div>
+                <p>BacktestLab Pro provides quantitative strategy backtesting software and historical data simulation for research and educational purposes only. Past simulated performance does not guarantee future financial returns. All live algorithmic trading carries substantial capital risk.</p>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-xs font-mono">
+                <div class="space-y-2">
+                    <span class="text-white font-bold block">Platform</span>
+                    <a href="session.html" class="block hover:text-white">Simulator</a>
+                    <a href="bot_automation.html" class="block hover:text-white">BYO-AI Builder</a>
+                </div>
+                <div class="space-y-2">
+                    <span class="text-white font-bold block">Ecosystem</span>
+                    <a href="algo_store.html" class="block hover:text-white">Community Arena</a>
+                    <a href="production-code.html" class="block text-emerald-400 font-semibold">Production Code</a>
+                </div>
+                <div class="space-y-2">
+                    <span class="text-white font-bold block">Content</span>
+                    <a href="articles.html" class="block hover:text-white">Articles &amp; Guides</a>
+                    <a href="about.html" class="block hover:text-white">About Us</a>
+                </div>
+                <div class="space-y-2">
+                    <span class="text-white font-bold block">Legal</span>
+                    <a href="privacy.html" class="block hover:text-white">Privacy Policy</a>
+                    <a href="terms.html" class="block hover:text-white">Terms of Service</a>
+                </div>
+            </div>
+
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4 text-zinc-500 font-mono text-[11px] pt-4 border-t border-white/5">
+                <div>© 2026 BacktestLab Pro. All rights reserved. Strategy research is free forever.</div>
+                <div class="flex gap-4">
+                    <a href="#top" class="hover:text-white"><i class="fa-solid fa-arrow-up mr-1"></i> Back to Top</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Firebase Script -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAensfI53w49Fd4A7Lz5_K9N1JOxZsW7Kk",
+            authDomain: "backtestlabpro.firebaseapp.com",
+            projectId: "backtestlabpro",
+            storageBucket: "backtestlabpro.firebasestorage.app",
+            messagingSenderId: "560146824734",
+            appId: "1:560146824734:web:5287d0ded3a1024e75780f"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        window.firebaseAuthInstance = auth;
+        window.firebaseSignOutAction = signOut;
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                const nameDisplay = document.getElementById('profile-box-name');
+                const emailDisplay = document.getElementById('profile-box-email');
+                if (nameDisplay) nameDisplay.textContent = user.displayName || "Trader Pro";
+                if (emailDisplay) emailDisplay.textContent = user.email || "";
+                window.updateAuthViewUI(true);
+            } else {
+                window.updateAuthViewUI(false);
+            }
+        });
+
+        document.getElementById('firebase-logout-btn')?.addEventListener('click', () => {
+            signOut(auth).then(() => window.location.reload());
+        });
+    </script>
+
+    <!-- UI State & Mobile Drawer -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggle = document.getElementById('mobileMenuToggle');
+            const drawer = document.getElementById('mobileDrawerMenu');
+            const icon = document.getElementById('menuHamburgerIcon');
+
+            if (toggle && drawer) {
+                toggle.addEventListener('click', () => {
+                    const isHidden = drawer.classList.toggle('hidden');
+                    icon.className = isHidden ? 'fa-solid fa-bars text-xs xs:text-sm' : 'fa-solid fa-xmark text-xs xs:text-sm';
+                });
+            }
+
+            const trigger = document.getElementById('profile-menu-trigger-btn');
+            const dialogBox = document.getElementById('profile-overlay-dialog-box');
+            const wrapper = document.getElementById('profile-dropdown-wrapper');
+            if (trigger && dialogBox && wrapper) {
+                trigger.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    dialogBox.classList.toggle('hidden');
+                });
+                document.addEventListener('click', (e) => {
+                    if (!wrapper.contains(e.target)) dialogBox.classList.add('hidden');
+                });
+            }
+        });
+
+        window.updateAuthViewUI = function(isLoggedIn) {
+            const desktopContainer = document.getElementById('desktop-auth-container');
+            const loggedOutBar = document.getElementById('logged-out-actions');
+            const loggedInBar = document.getElementById('logged-in-actions');
+            const mobileAuthBox = document.getElementById('mobile-auth-placeholder');
+
+            if (isLoggedIn) {
+                if (loggedOutBar) loggedOutBar.classList.add('hidden');
+                if (loggedInBar) loggedInBar.classList.remove('hidden');
+                if (mobileAuthBox) {
+                    mobileAuthBox.innerHTML = `
+                        <a href="my-sessions.html" class="block w-full text-center py-2 rounded-lg bg-zinc-900 border border-white/10 text-white text-xs font-semibold mb-2">My Workspace</a>
+                        <button onclick="window.firebaseSignOutAction(window.firebaseAuthInstance)" class="block w-full text-center text-zinc-500 hover:text-red-400 text-xs py-1 transition-colors">Sign Out</button>
+                    `;
+                }
+            } else {
+                if (loggedOutBar) loggedOutBar.classList.remove('hidden');
+                if (loggedInBar) loggedInBar.classList.add('hidden');
+                if (mobileAuthBox) {
+                    mobileAuthBox.innerHTML = `
+                        <button onclick="triggerAuthFlow()" class="block w-full text-zinc-300 py-2.5 text-center text-xs font-semibold bg-white/5 rounded-lg border border-white/5">Sign In / Register</button>
+                    `;
+                }
+            }
+
+            if (desktopContainer) {
+                desktopContainer.classList.remove('auth-hidden');
+                desktopContainer.classList.add('auth-visible');
+            }
+            if (mobileAuthBox) {
+                mobileAuthBox.classList.remove('auth-hidden');
+                mobileAuthBox.classList.add('auth-visible');
+            }
+        };
+
+        function triggerAuthFlow() {
+            window.location.href = "login.html";
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+# BacktestLab Pro
+
+> BacktestLab Pro is a free quantitative trading research, strategy-testing, and historical simulation platform for discretionary traders, algorithmic traders, quantitative researchers, and trading-system developers.
+
+The platform provides an integrated research environment covering the entire quantitative development workflow: Idea -> Build -> Test -> Replay -> Improve -> Validate -> Export. The core research platform, manual backtesting, historical replay, AI-assisted algorithm testing, strategy analysis, and multi-bot comparison are completely free. Monetization occurs exclusively when users opt to purchase and export production-ready source code (MQL5 / Python) for live market deployment.
+
+## Core Features & Capabilities
+
+- **Manual Backtesting & Replay**: Bar-by-bar historical market replay with unlimited sessions across multiple timeframes, pairs, and market conditions without quotas or limits.
+- **BYO-AI Strategy Development**: "Bring Your Own AI" workflow enabling users to connect their own compatible AI provider API key with zero token fees or platform markup. Describe trading rules in natural language to generate, test, and iterate on algorithmic trading logic.
+- **Multiple-Bot Testing**: Run and compare multiple algorithms simultaneously on the same chart, benchmarking entries, exits, win rates, drawdowns, trade counts, expectancy, and portfolio correlations side-by-side.
+- **Comprehensive Strategy Analytics**: In-depth metrics including win rate, profit and loss, maximum drawdown, expectancy, risk-to-reward ratios, trade distribution, equity curves, walk-forward analysis, and multi-period robustness testing.
+- **Extensive Historical Market Data**:
+  - Forex & Gold (XAUUSD): Up to 20+ years of historical data (e.g., EURUSD, GBPUSD, USDJPY, XAUUSD).
+  - Equities & Indices: 15+ years of historical coverage (e.g., SPY, QQQ, AAPL, NVDA, major benchmark indices).
+  - Cryptocurrencies: 10+ years or lifetime asset coverage (e.g., BTC, ETH, major altcoins).
+- **Community Strategy Testing**: Community-driven repository where users can inspect, fork, and empirically test peer algorithms against historical data under the philosophy: "Don't simply trust a strategy claim. Test it yourself."
+
+## Pricing & Monetization Architecture
+
+BacktestLab Pro strictly decouples strategy research from production deployment monetization:
+
+- **Free Research Tier**:
+  - Manual backtesting and historical replay: 100% Free
+  - Unlimited testing sessions and timeframes: 100% Free
+  - BYO-AI algorithm generation and testing: 100% Free (user provides their own AI API key)
+  - Multi-bot comparison and analytics: 100% Free
+  - No subscription fees, no credit card required, no trial expirations, no replay quotas
+- **Paid Production Exports (Pay-per-export)**:
+  - Production-ready MQL5 source code (for MetaTrader 5 Expert Advisors)
+  - Production-ready Python source code (for quantitative and algorithmic execution pipelines)
+  - Ready-to-compile files, configuration, and parameter presets
+  - Complete deployment documentation and Virtual Private Server (VPS) setup instructions
+
+## Detailed Documentation & Workflows
+
+- [Platform Overview](https://backtestlab.pro/docs/overview): Detailed introduction to the quantitative trading research suite and core philosophy.
+- [Manual Backtesting Guide](https://backtestlab.pro/docs/manual-backtesting): Bar-by-bar simulation tools, order execution controls, and session saving mechanisms.
+- [AI Strategy Workflow](https://backtestlab.pro/docs/ai-workflow): Step-by-step documentation on setting up BYO-AI keys, prompting algorithmic rules, and iterating on strategy logic.
+- [Strategy Analytics & Robustness](https://backtestlab.pro/docs/analytics): Guide to interpreting expectancy, drawdown, walk-forward analysis, and statistical significance beyond win rate.
+- [Multi-Bot Comparative Testing](https://backtestlab.pro/docs/multi-bot): Instructions for benchmarking multiple strategies on identical historical datasets.
+- [Production Deployment & Code Export](https://backtestlab.pro/docs/export): Exporting MQL5 and Python code, compiling EAs, configuring execution APIs, and deploying to VPS infrastructure.
+- [Historical Data Coverage Matrix](https://backtestlab.pro/docs/data): Detailed specifications and instrument-specific coverage for Forex, Gold, Equities, Indices, and Crypto.
+
+## Legal & Operational Boundaries
+
+BacktestLab Pro is strictly a quantitative research and software development tool:
+- Not a broker, custodian, or financial intermediary; does not accept deposits or route live trades.
+- Not a registered investment adviser; does not provide financial advice, trading signals, or profit guarantees.
+- Past performance and historical simulation results do not guarantee future live trading results.

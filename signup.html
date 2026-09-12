@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PureBacktest | Create Account</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <style>
+        :root {
+            --bg-pure: #030712;
+            --bg-gradient: radial-gradient(circle at 50% 0%, #0d1226 0%, #030712 100%);
+            --card-bg: #090f1d;
+            --border-line: rgba(255, 255, 255, 0.04);
+            --neon-cyan: #00F0FF;
+            --brand-purple: #7C3AED;
+            --text-white: #FFFFFF;
+            --text-slate: #94A3B8;
+            --text-muted: #475569;
+            --neon-red: #FF3366;
+            --neon-green: #10B981;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: var(--bg-pure);
+            background-image: var(--bg-gradient);
+            color: #F8FAFC;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            padding: 20px;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: linear-gradient(rgba(255,255,255,0.007) 1px, transparent 1px), 
+                              linear-gradient(90deg, rgba(255,255,255,0.007) 1px, transparent 1px);
+            background-size: 40px 40px;
+            background-position: center;
+            mask-image: radial-gradient(circle at 50% 50%, black, transparent 80%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .auth-card-wrapper {
+            width: 100%;
+            max-width: 440px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-line);
+            padding: 36px 30px;
+            border-radius: 24px;
+            box-shadow: 0 40px 80px -20px rgba(0, 0, 0, 0.7), 
+                        inset 0 1px 0px rgba(255, 255, 255, 0.05);
+            position: relative;
+            z-index: 1;
+            animation: cardEntrance 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        @keyframes cardEntrance {
+            0% { opacity: 0; transform: translateY(15px) scale(0.99); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .brand-header-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            margin-bottom: 20px;
+        }
+        
+        .brand-logo-badge {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 20px rgba(124, 58, 237, 0.3);
+            margin-bottom: 12px;
+        }
+
+        .logo-text { 
+            font-size: 24px; 
+            font-weight: 800; 
+            letter-spacing: -0.75px; 
+            color: var(--text-white); 
+        }
+        .logo-text span { color: var(--neon-cyan); }
+
+        .form-subtitle {
+            text-align: center;
+            font-size: 13px;
+            color: var(--text-slate);
+            margin-top: -8px;
+            margin-bottom: 22px;
+            font-weight: 400;
+            opacity: 0.8;
+            line-height: 1.4;
+        }
+
+        label {
+            display: block;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-slate);
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            margin-bottom: 8px;
+        }
+        
+        .input-group-field { position: relative; margin-bottom: 16px; }
+        
+        input {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--text-white);
+            padding: 13px 16px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-family: inherit;
+            transition: all 0.2s ease;
+            outline: none;
+        }
+        input:focus {
+            border-color: rgba(0, 240, 255, 0.4);
+            background: rgba(0, 0, 0, 0.4);
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.03);
+        }
+
+        .password-rules {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: -10px;
+            margin-bottom: 18px;
+            padding-left: 2px;
+            line-height: 1.4;
+        }
+        .password-rules.valid { color: var(--neon-green); }
+        .password-rules.invalid { color: var(--neon-red); }
+
+        .error-message-banner {
+            background: rgba(255, 51, 102, 0.08);
+            border: 1px solid rgba(255, 51, 102, 0.2);
+            color: var(--neon-red);
+            font-size: 13px;
+            font-weight: 500;
+            padding: 12px 14px;
+            border-radius: 10px;
+            margin-bottom: 18px;
+            display: none;
+            line-height: 1.4;
+        }
+
+        .btn-submit-action {
+            width: 100%;
+            background: linear-gradient(90deg, #00C6FF 0%, #0072FF 100%);
+            color: #ffffff;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+            font-family: inherit;
+            transition: all 0.2s ease;
+            box-shadow: 0 8px 25px rgba(0, 114, 255, 0.2);
+            margin-top: 6px;
+            text-transform: uppercase;
+        }
+        @media (hover: hover) {
+            .btn-submit-action:hover {
+                transform: translateY(-1px);
+                box-shadow: 0 12px 30px rgba(0, 114, 255, 0.35);
+                filter: brightness(1.05);
+            }
+        }
+        .btn-submit-action:active { transform: translateY(1px); }
+
+        .toggle-mode-panel {
+            text-align: center;
+            margin-top: 24px;
+            font-size: 13px;
+            color: var(--text-slate);
+        }
+        .toggle-mode-panel a {
+            color: var(--neon-cyan);
+            font-weight: 600;
+            text-decoration: none;
+            margin-left: 4px;
+        }
+        .toggle-mode-panel a:hover { text-decoration: underline; }
+
+        .async-loading-bar {
+            position: absolute; top: 0; left: 0; width: 100%; height: 3px;
+            background: linear-gradient(90deg, var(--neon-cyan), #7C3AED);
+            transform: scaleX(0); transform-origin: left; transition: transform 0.4s ease;
+            display: none; border-radius: 24px 24px 0 0;
+        }
+        .auth-card-wrapper.loading .async-loading-bar {
+            display: block; animation: loopLoad 1.5s infinite linear;
+        }
+        @keyframes loopLoad {
+            0% { transform: translateX(-100%) scaleX(1); }
+            50% { transform: translateX(0%) scaleX(0.5); }
+            100% { transform: translateX(100%) scaleX(1); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="auth-card-wrapper" id="authCard">
+    <div class="async-loading-bar"></div>
+
+    <div class="brand-header-group">
+        <div class="brand-logo-badge">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M3 12H7L10 4L14 20L17 12H21" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </div>
+        <div class="logo-text">BacktestLa<span>bPro</span></div>
+    </div>
+    
+    <div class="form-subtitle">Create your trading engine profile</div>
+
+    <div class="error-message-banner" id="errorBanner"></div>
+
+    <form id="signupForm" onsubmit="handleSignUp(event)">
+        <label for="username">Username</label>
+        <div class="input-group-field">
+            <input type="text" id="username" placeholder="trader_john" minlength="3" required>
+        </div>
+
+        <label for="email">Email Address</label>
+        <div class="input-group-field">
+            <input type="email" id="email" placeholder="name@domain.com" required>
+        </div>
+
+        <label for="password">Password</label>
+        <div class="input-group-field">
+            <input type="password" id="password" placeholder="Create strong password" required>
+        </div>
+        <div class="password-rules" id="passRules">Must be at least 8 characters with letters and numbers.</div>
+
+        <button type="submit" class="btn-submit-action" id="submitBtn">Create Account</button>
+    </form>
+
+    <div class="toggle-mode-panel">
+        <span>Already have an account?</span>
+        <a href="login.html">Sign In</a>
+    </div>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { 
+        getAuth, 
+        createUserWithEmailAndPassword, 
+        updateProfile 
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { 
+        getFirestore, 
+        doc, 
+        setDoc, 
+        serverTimestamp 
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyAensfI53w49Fd4A7Lz5_K9N1JOxZsW7Kk",
+        authDomain: "backtestlabpro.firebaseapp.com",
+        projectId: "backtestlabpro",
+        storageBucket: "backtestlabpro.firebasestorage.app",
+        messagingSenderId: "560146824734",
+        appId: "1:560146824734:web:5287d0ded3a1024e75780f",
+        measurementId: "G-YY82TZ1ZG7"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const passwordInput = document.getElementById("password");
+    const passRules = document.getElementById("passRules");
+
+    // Dynamic password validator: Min 8 chars, at least 1 letter, at least 1 number
+    const strongPassPattern = /^(?=.*[A-Za-z])(?=.*\d).{8,}$/;
+
+    passwordInput.addEventListener("input", () => {
+        if (!passwordInput.value) {
+            passRules.className = "password-rules";
+            passRules.innerText = "Must be at least 8 characters with letters and numbers.";
+        } else if (strongPassPattern.test(passwordInput.value)) {
+            passRules.className = "password-rules valid";
+            passRules.innerText = "✓ Password meets strength requirements.";
+        } else {
+            passRules.className = "password-rules invalid";
+            passRules.innerText = "✗ Needs 8+ chars including letters & numbers.";
+        }
+    });
+
+    window.handleSignUp = async function(e) {
+        e.preventDefault();
+
+        const username = document.getElementById("username").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value;
+        const errorBanner = document.getElementById("errorBanner");
+        const card = document.getElementById("authCard");
+
+        errorBanner.style.display = "none";
+
+        // Validate password rule before sending to Firebase
+        if (!strongPassPattern.test(password)) {
+            errorBanner.style.display = "block";
+            errorBanner.innerText = "Password must be at least 8 characters long and contain both letters and numbers.";
+            return;
+        }
+
+        card.classList.add("loading");
+
+        try {
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            const user = userCredential.user;
+
+            // Update Firebase Auth profile
+            await updateProfile(user, { displayName: username });
+
+            // Store user document in Firestore
+            await setDoc(doc(db, "users", user.uid), {
+                uid: user.uid,
+                username: username,
+                email: email,
+                createdAt: serverTimestamp()
+            });
+
+            localStorage.setItem("user_uid", user.uid);
+            localStorage.setItem("user_email", user.email);
+            localStorage.setItem("user_name", username);
+
+            window.location.href = "index.html";
+        } catch (error) {
+            card.classList.remove("loading");
+            errorBanner.style.display = "block";
+
+            switch (error.code) {
+                case "auth/email-already-in-use":
+                    errorBanner.innerText = "This email is already registered. Please sign in.";
+                    break;
+                case "auth/invalid-email":
+                    errorBanner.innerText = "Invalid email format.";
+                    break;
+                case "auth/weak-password":
+                    errorBanner.innerText = "Password is too weak for Firebase security requirements.";
+                    break;
+                default:
+                    errorBanner.innerText = error.message;
+            }
+        }
+    };
+</script>
+</body>
+</html>

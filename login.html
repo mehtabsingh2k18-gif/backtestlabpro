@@ -3,13 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>BacktestLabPro | Secure Gateway</title>
-    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <title>PureBacktest | Secure Gateway</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <style>
         :root {
             --bg-pure: #030712;
@@ -45,7 +44,6 @@
             padding: 20px;
         }
 
-        /* Subtle background grid pattern */
         body::before {
             content: '';
             position: absolute;
@@ -155,7 +153,6 @@
             transition: all 0.2s ease;
         }
         
-        /* Interactive feedback variants adapted for desktop hover + mobile touch environments */
         @media (hover: hover) {
             .btn-google-oauth:hover {
                 background: rgba(255, 255, 255, 0.05);
@@ -188,7 +185,7 @@
             color: var(--text-white);
             padding: 14px 16px;
             border-radius: 12px;
-            font-size: 16px; /* Prevents auto-zoom scaling lock issues on Apple iOS Safari viewports */
+            font-size: 16px;
             font-family: inherit;
             transition: all 0.2s ease;
             outline: none;
@@ -246,13 +243,14 @@
             font-size: 13px;
             color: var(--text-slate);
         }
-        .toggle-mode-panel span:last-child {
+        .toggle-mode-panel a {
             color: var(--neon-cyan);
             font-weight: 600;
-            cursor: pointer;
+            text-decoration: none;
             margin-left: 4px;
+            transition: color 0.2s ease;
         }
-        .toggle-mode-panel span:last-child:hover {
+        .toggle-mode-panel a:hover {
             text-decoration: underline;
         }
 
@@ -271,11 +269,10 @@
             100% { transform: translateX(100%) scaleX(1); }
         }
 
-        /* Responsive Mobile Layout Adjustments */
         @media (max-width: 480px) {
             body {
                 padding: 16px;
-                align-items: center; /* Center vertically on smaller heights, swap to flex-start if long headers overlap */
+                align-items: center;
             }
             .auth-card-wrapper {
                 padding: 32px 20px;
@@ -283,7 +280,7 @@
                 box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
             }
             input {
-                padding: 12px 14px; /* Slightly tighter fields for mobile viewports */
+                padding: 12px 14px;
             }
         }
     </style>
@@ -302,7 +299,7 @@
         <div class="logo-text">BacktestLa<span>bPro</span></div>
     </div>
     
-    <div class="form-subtitle" id="authSubtitle">Access strategy replay control dashboard</div>
+    <div class="form-subtitle">Access strategy replay control dashboard</div>
 
     <button type="button" class="btn-google-oauth" onclick="handleGoogleSignIn()">
         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -333,8 +330,8 @@
     </form>
 
     <div class="toggle-mode-panel">
-        <span id="toggleTextLabel">Need an account?</span>
-        <span id="toggleLink" onclick="switchAuthMode()">Register</span>
+        <span>Need an account?</span>
+        <a href="signup.html">Sign Up</a>
     </div>
 </div>
 
@@ -343,7 +340,6 @@
     import { 
         getAuth, 
         signInWithEmailAndPassword, 
-        createUserWithEmailAndPassword, 
         onAuthStateChanged,
         GoogleAuthProvider,
         signInWithPopup 
@@ -363,39 +359,16 @@
     const auth = getAuth(app);
     const googleProvider = new GoogleAuthProvider();
 
-    let currentMode = "login";
-
     onAuthStateChanged(auth, (user) => {
         if (user) {
             localStorage.setItem("user_uid", user.uid);
             localStorage.setItem("user_email", user.email);
+            if (user.displayName) {
+                localStorage.setItem("user_name", user.displayName);
+            }
             window.location.href = "index.html";
         }
     });
-
-    window.switchAuthMode = function() {
-        const subtitle = document.getElementById("authSubtitle");
-        const submitBtn = document.getElementById("submitBtn");
-        const toggleTextLabel = document.getElementById("toggleTextLabel");
-        const toggleLink = document.getElementById("toggleLink");
-        const errorBanner = document.getElementById("errorBanner");
-        
-        errorBanner.style.display = "none";
-        
-        if (currentMode === "login") {
-            currentMode = "register";
-            subtitle.innerText = "Provision clean cloud node metrics tracking";
-            submitBtn.innerText = "Register";
-            toggleTextLabel.innerText = "Already have an account?";
-            toggleLink.innerText = "Sign In";
-        } else {
-            currentMode = "login";
-            subtitle.innerText = "Access strategy replay control dashboard";
-            submitBtn.innerText = "Sign In";
-            toggleTextLabel.innerText = "Need an account?";
-            toggleLink.innerText = "Register";
-        }
-    };
 
     window.handleGoogleSignIn = async function() {
         const card = document.getElementById("authCard");
@@ -424,24 +397,16 @@
         card.classList.add("loading");
 
         try {
-            if (currentMode === "login") {
-                await signInWithEmailAndPassword(auth, email, password);
-            } else {
-                await createUserWithEmailAndPassword(auth, email, password);
-            }
+            await signInWithEmailAndPassword(auth, email, password);
         } catch (error) {
             card.classList.remove("loading");
             errorBanner.style.display = "block";
             
             switch (error.code) {
                 case "auth/invalid-credential":
-                    errorBanner.innerText = "Invalid credentials provided. Check inputs.";
-                    break;
-                case "auth/email-already-in-use":
-                    errorBanner.innerText = "This email already exists.";
-                    break;
-                case "auth/weak-password":
-                    errorBanner.innerText = "Password must be at least 6 characters.";
+                case "auth/wrong-password":
+                case "auth/user-not-found":
+                    errorBanner.innerText = "Invalid credentials. Please verify your email and password.";
                     break;
                 case "auth/invalid-email":
                     errorBanner.innerText = "Malformed email address format.";

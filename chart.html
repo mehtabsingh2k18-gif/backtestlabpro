@@ -1,21 +1,22 @@
 <!DOCTYPE html>
 <html>
 <head>
-   <!-- Google Analytics Tracking (GA4) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-V7SXCF9923"></script>
-  <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-V7SXCF9923');
-  </script>
     <meta charset="UTF-8">
     <title>BacktestLabPro - Professional Edition</title>
     <script src="https://unpkg.com/lightweight-charts@4.2.0/dist/lightweight-charts.standalone.production.js"></script>
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
 
     <style>
-        :root { --bg: #0b0e14; --panel: #131722; --text: #d1d4dc; --accent: #2962ff; --up: #089981; --down: #f23645; --border: #2a2e39; }
+        :root { 
+            --bg: #0b0e14; 
+            --panel: #131722; 
+            --text: #d1d4dc; 
+            --accent: #2962ff; 
+            --up: #089981; 
+            --down: #f23645; 
+            --border: #2a2e39; 
+            --warn: #ff9800;
+        }
         body { margin: 0; background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Trebuchet MS", Roboto, Ubuntu, sans-serif; overflow: hidden; display: flex; flex-direction: column; height: 100vh; }
         
         .app-preloader { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #0b0e14; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 999999; transition: opacity 0.4s ease, visibility 0.4s ease; }
@@ -30,110 +31,261 @@
         @keyframes brandPulse {
             0% { transform: scale(0.98); opacity: 0.4; filter: drop-shadow(0 0 0px rgba(41, 98, 255, 0)); }
             50% { transform: scale(1.02); opacity: 1.0; filter: drop-shadow(0 0 15px rgba(41, 98, 255, 0.3)); }
-            100% { transform: scale(0.98); opacity: 0.4; filter: drop-shadow(0 0 0px rgba(41, 98, 255, 0)); }
+            100% { transform: scale(0.98); opacity: 0.4; filter: drop-shadow(0 0 0px rgba(41, 98, 255, 0.25)); }
         }
 
-        /* Attention Glow Animation for Chart Controls */
         @keyframes controlGlowWave {
             0% { box-shadow: 0 0 0px rgba(41, 98, 255, 0); border-color: var(--border); }
             50% { box-shadow: 0 0 14px rgba(41, 98, 255, 0.85); border-color: var(--accent); color: #fff; transform: translateY(-1px); }
             100% { box-shadow: 0 0 0px rgba(41, 98, 255, 0); border-color: transparent; transform: translateY(0); }
         }
 
-        .welcome-glow {
-            animation: controlGlowWave 1.4s ease-in-out 1;
-        }
+        .welcome-glow { animation: controlGlowWave 1.4s ease-in-out 1; }
 
-        /* Modern Engaging Floating Guide Beacon */
         .play-guide-beacon {
-            position: absolute;
-            top: 56px;
-            left: 20px;
-            z-index: 100;
-            display: flex;
-            align-items: center;
-            gap: 9px;
-            background: rgba(19, 23, 34, 0.94);
-            border: 1px solid var(--accent);
-            box-shadow: 0 6px 25px rgba(41, 98, 255, 0.4);
-            backdrop-filter: blur(8px);
-            border-radius: 20px;
-            padding: 7px 16px;
-            color: #ffffff;
-            font-size: 11px;
-            font-weight: 500;
-            letter-spacing: 0.3px;
-            pointer-events: none;
-            animation: beaconFloat 2s ease-in-out infinite, beaconFadeIn 0.4s ease-out forwards;
+            position: absolute; top: 58px; left: 20px; z-index: 100; display: flex; align-items: center; gap: 9px;
+            background: rgba(19, 23, 34, 0.94); border: 1px solid var(--accent); box-shadow: 0 6px 25px rgba(41, 98, 255, 0.4);
+            backdrop-filter: blur(8px); border-radius: 20px; padding: 7px 16px; color: #ffffff; font-size: 11px; font-weight: 500;
+            letter-spacing: 0.3px; pointer-events: none; animation: beaconFloat 2s ease-in-out infinite, beaconFadeIn 0.4s ease-out forwards;
             transition: opacity 0.3s ease, transform 0.3s ease;
         }
 
-        .play-guide-beacon .pulse-dot {
+        .play-guide-beacon .pulse-dot { width: 7px; height: 7px; border-radius: 50%; background: #089981; box-shadow: 0 0 8px #089981; animation: beaconDotPulse 1.2s infinite; }
+        .play-guide-beacon::before { content: ''; position: absolute; top: -6px; left: 36px; width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-bottom: 6px solid var(--accent); }
+
+        @keyframes beaconFloat { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-3px); } }
+        @keyframes beaconDotPulse { 0%, 100% { opacity: 0.4; transform: scale(0.9); } 50% { opacity: 1; transform: scale(1.35); } }
+        @keyframes beaconFadeIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+
+        .beacon-dismissed { opacity: 0 !important; transform: translateY(-8px) scale(0.95) !important; pointer-events: none !important; }
+
+        /* Modern Polished Topbar */
+        .topbar { 
+            height: 52px; 
+            background: #11141c; 
+            display: flex; 
+            align-items: center; 
+            padding: 0 16px; 
+            border-bottom: 1px solid #1e222d; 
+            gap: 10px; 
+            z-index: 40; 
+        }
+
+        .group { 
+            display: inline-flex; 
+            align-items: center;
+            background: rgba(26, 30, 42, 0.65); 
+            border: 1px solid #282d3b; 
+            border-radius: 8px; 
+            padding: 3px; 
+            backdrop-filter: blur(8px);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease; 
+        }
+        .group:hover {
+            border-color: #3b4255;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.35);
+        }
+
+        .group button { 
+            background: transparent; 
+            border: none; 
+            color: #9aa0b0; 
+            padding: 6px 12px; 
+            cursor: pointer; 
+            font-size: 12px; 
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            border-radius: 6px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.18s cubic-bezier(0.2, 0.8, 0.2, 1); 
+        }
+        .group button:hover { 
+            background: rgba(255, 255, 255, 0.06); 
+            color: #ffffff; 
+        }
+        .group button:active {
+            transform: scale(0.97);
+        }
+
+        /* Clean Pair Badge (No Lock Icon) */
+        .static-pair-badge {
+            display: inline-flex;
+            align-items: center;
+            background: linear-gradient(180deg, #181c28 0%, #12151e 100%);
+            border: 1px solid #282d3b;
+            border-radius: 8px;
+            padding: 6px 14px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            color: #ffffff;
+            user-select: none;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+
+        /* Play/Pause Button */
+        #btn-playpause {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 600;
+            font-size: 12px;
+            letter-spacing: 0.4px;
+            padding: 6px 12px;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+        #btn-playpause.is-paused { color: #089981; }
+        #btn-playpause.is-paused:hover { background: rgba(8, 153, 129, 0.15); color: #00e5a3; }
+        #btn-playpause.is-playing { color: #ff9800; background: rgba(255, 152, 0, 0.12); }
+        #btn-playpause.is-playing:hover { background: rgba(255, 152, 0, 0.2); }
+
+        /* Custom Dropdown Control */
+        .custom-dropdown {
+            position: relative;
+            user-select: none;
+        }
+        .dropdown-trigger {
+            background: transparent;
+            border: none;
+            color: #d1d4dc;
+            padding: 6px 12px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border-radius: 6px;
+            transition: all 0.15s ease;
+        }
+        .dropdown-trigger:hover, .custom-dropdown.active .dropdown-trigger {
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+        }
+        .dropdown-chevron {
+            width: 7px;
+            height: 7px;
+            border-right: 2px solid #787b86;
+            border-bottom: 2px solid #787b86;
+            transform: rotate(45deg) translateY(-2px);
+            transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        .custom-dropdown.active .dropdown-chevron {
+            transform: rotate(-135deg) translate(-2px, -2px);
+            border-color: #2962ff;
+        }
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 0;
+            min-width: 120px;
+            background: #171b26;
+            border: 1px solid #2e3444;
+            border-radius: 8px;
+            padding: 5px;
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.65), 0 0 1px rgba(255, 255, 255, 0.1);
+            z-index: 9999;
+            backdrop-filter: blur(12px);
+            animation: dropDownPop 0.15s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        .custom-dropdown.active .dropdown-menu {
+            display: block;
+        }
+        @keyframes dropDownPop {
+            from { opacity: 0; transform: translateY(-6px) scale(0.97); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .dropdown-item {
+            padding: 8px 12px;
+            font-size: 12px;
+            color: #9aa0b0;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.15s ease;
+        }
+        .dropdown-item:hover {
+            background: rgba(41, 98, 255, 0.14);
+            color: #ffffff;
+        }
+        .dropdown-item.selected {
+            background: #2962ff;
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        /* Go Live Button */
+        .fancy-golive-btn {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, rgba(41, 98, 255, 0.15), rgba(8, 153, 129, 0.15));
+            border: 1px solid rgba(41, 98, 255, 0.45);
+            border-radius: 20px;
+            padding: 6px 14px;
+            color: #ffffff;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.8px;
+            cursor: pointer;
+            box-shadow: 0 0 12px rgba(41, 98, 255, 0.2);
+            transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+            user-select: none;
+            overflow: hidden;
+        }
+        .fancy-golive-btn::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+            transition: 0.5s;
+        }
+        .fancy-golive-btn:hover::before { left: 100%; }
+        .fancy-golive-btn:hover {
+            border-color: var(--accent);
+            box-shadow: 0 0 18px rgba(41, 98, 255, 0.5), inset 0 0 8px rgba(41, 98, 255, 0.25);
+            transform: translateY(-1px);
+        }
+        .fancy-golive-btn:active { transform: translateY(0); box-shadow: 0 0 8px rgba(41, 98, 255, 0.3); }
+        .golive-pulse {
             width: 7px;
             height: 7px;
             border-radius: 50%;
             background: #089981;
             box-shadow: 0 0 8px #089981;
-            animation: beaconDotPulse 1.2s infinite;
+            animation: liveRadarPulse 1.4s infinite;
         }
-
-        .play-guide-beacon::before {
-            content: '';
-            position: absolute;
-            top: -6px;
-            left: 36px;
-            width: 0;
-            height: 0;
-            border-left: 6px solid transparent;
-            border-right: 6px solid transparent;
-            border-bottom: 6px solid var(--accent);
+        @keyframes liveRadarPulse {
+            0% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(8, 153, 129, 0.7); }
+            70% { transform: scale(1.15); box-shadow: 0 0 0 6px rgba(8, 153, 129, 0); }
+            100% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(8, 153, 129, 0); }
         }
-
-        @keyframes beaconFloat {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-3px); }
-        }
-
-        @keyframes beaconDotPulse {
-            0%, 100% { opacity: 0.4; transform: scale(0.9); }
-            50% { opacity: 1; transform: scale(1.35); }
-        }
-
-        @keyframes beaconFadeIn {
-            from { opacity: 0; transform: translateY(-6px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .beacon-dismissed {
-            opacity: 0 !important;
-            transform: translateY(-8px) scale(0.95) !important;
-            pointer-events: none !important;
-        }
-
-        .topbar { height: 48px; background: var(--panel); display: flex; align-items: center; padding: 0 12px; border-bottom: 1px solid var(--border); gap: 10px; z-index: 30; }
-        .group { display: flex; background: #1e222d; border-radius: 4px; padding: 2px; transition: border-color 0.3s ease; }
-        button, select { background: transparent; border: none; color: var(--text); padding: 6px 12px; cursor: pointer; font-size: 13px; transition: background 0.15s ease, color 0.15s ease; }
-        button:hover { background: #2a2e39; border-radius: 3px; }
         
         .main-container { display: flex; flex: 1; width: 100vw; overflow: hidden; position: relative; }
-        
         .left-sidebar { width: 50px; background: var(--panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; padding-top: 10px; gap: 8px; overflow-y: visible; overflow-x: visible; z-index: 500; position: relative; }
-        
         .tool-group { position: relative; width: 100%; display: flex; justify-content: center; }
-        
         .tool-icon { color: #787b86; cursor: pointer; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 6px; transition: 0.15s; user-select: none; background: transparent; }
         .tool-icon svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
         .tool-icon:hover { background: #2a2e39; color: #fff; }
         .tool-icon.active { background: var(--accent); color: #fff; }
+        .tool-divider { width: 30px; height: 1px; background: var(--border); margin: 3px 0; }
 
-        .tool-menu { position: absolute; left: 44px; top: 0; background: #1c2030; border: 1px solid #363a45; border-radius: 8px; min-width: 200px; display: none; flex-direction: column; overflow: hidden; box-shadow: 5px 10px 30px rgba(0,0,0,0.55); z-index: 99999; }
+        .tool-menu { position: absolute; left: 44px; top: 0; background: #1c2030; border: 1px solid #363a45; border-radius: 8px; min-width: 215px; display: none; flex-direction: column; overflow: hidden; box-shadow: 5px 10px 30px rgba(0,0,0,0.55); z-index: 99999; }
         .tool-group:hover .tool-menu { display: flex; }
-        
         .tool-item { padding: 9px 12px; font-size: 12px; color: #d1d4dc; cursor: pointer; transition: 0.12s; white-space: nowrap; display: flex; align-items: center; gap: 10px; }
         .tool-item:hover { background: var(--accent); color: white; }
         .tool-item svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; }
 
-        #chart { flex: 1; height: calc(100vh - 50px); position: relative; background: var(--bg); cursor: crosshair; }
+        #chart { flex: 1; height: calc(100vh - 52px); position: relative; background: var(--bg); cursor: crosshair; }
         .right-sidebar { width: 340px; background: var(--panel); border-left: 1px solid var(--border); display: flex; flex-direction: column; z-index: 25; overflow-y: auto; }
         .sidebar-header { padding: 12px; font-size: 11px; font-weight: bold; color: #787b86; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid var(--border); background: #1a1e2a; display: flex; justify-content: space-between; }
         
@@ -141,22 +293,24 @@
         .input-row { display: flex; gap: 10px; margin-bottom: 10px; }
         .input-group { flex: 1; display: flex; flex-direction: column; }
         .input-group label { font-size: 10px; color: #787b86; margin-bottom: 4px; }
-        .input-group input { background: #1e222d; border: 1px solid #363a45; color: white; padding: 6px; border-radius: 3px; font-size: 12px; outline: none; }
-        .input-group input:focus { border-color: var(--accent); }
-        .lot-display { background: rgba(41, 98, 255, 0.1); border: 1px dashed var(--accent); padding: 10px; border-radius: 4px; text-align: center; margin-top: 5px; margin-bottom: 15px; }
+        .input-group input, .input-group select { background: #1e222d; border: 1px solid #363a45; color: white; padding: 6px; border-radius: 3px; font-size: 12px; outline: none; }
+        .input-group input:focus, .input-group select:focus { border-color: var(--accent); }
+        .lot-display { background: rgba(41, 98, 255, 0.1); border: 1px dashed var(--accent); padding: 8px; border-radius: 4px; text-align: center; margin-top: 5px; margin-bottom: 12px; }
         .lot-val { font-size: 18px; font-weight: bold; color: var(--accent); }
 
-        #tradeDrawer { display: none; background: #1e222d; padding: 15px; border-top: 1px solid var(--accent); margin-top: 10px; border-radius: 4px; }
-        .confirm-btn { width: 100%; padding: 10px; background: var(--accent); color: white; border-radius: 4px; font-weight: bold; margin-top: 10px; border: none; cursor: pointer; }
+        #tradeDrawer { display: none; background: #1e222d; padding: 12px; border-top: 2px solid var(--accent); margin-top: 10px; border-radius: 4px; }
+        .confirm-btn { width: 100%; padding: 10px; background: var(--accent); color: white; border-radius: 4px; font-weight: bold; margin-top: 10px; border: none; cursor: pointer; transition: 0.15s; }
+        .confirm-btn:hover { background: #1e53e5; }
+        .confirm-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
         .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); border-bottom: 1px solid var(--border); }
-        .stat-card { background: var(--panel); padding: 12px; display: flex; flex-direction: column; }
+        .stat-card { background: var(--panel); padding: 10px 12px; display: flex; flex-direction: column; }
         .stat-label { font-size: 10px; color: #787b86; margin-bottom: 3px; }
-        .stat-value { font-size: 16px; font-weight: bold; font-family: monospace; }
+        .stat-value { font-size: 15px; font-weight: bold; font-family: monospace; }
 
         #journal { flex: 1; overflow-y: auto; background: var(--bg); }
         .journal-item { padding: 10px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; font-size: 12px; }
-        .tag { padding: 2px 4px; border-radius: 3px; font-size: 10px; font-weight: bold; margin-right: 5px; }
+        .tag { padding: 2px 5px; border-radius: 3px; font-size: 10px; font-weight: bold; margin-right: 5px; }
         .tag-buy { background: var(--up); color: white; }
         .tag-sell { background: var(--down); color: white; }
 
@@ -167,8 +321,8 @@
         .val-label { color: #787b86; margin-right: 2px; }
         
         .execution-btns-sidebar { display: flex; gap: 10px; margin-top: 10px; }
-        .exec-btn { flex: 1; padding: 10px; display: flex; flex-direction: column; align-items: center; border-radius: 4px; cursor: pointer; border: 1px solid transparent; transition: opacity 0.2s, box-shadow 0.3s; }
-        .exec-btn:active { opacity: 0.7; }
+        .exec-btn { flex: 1; padding: 10px; display: flex; flex-direction: column; align-items: center; border-radius: 4px; cursor: pointer; border: 1px solid transparent; transition: opacity 0.2s, box-shadow 0.3s; user-select: none; }
+        .exec-btn.disabled { opacity: 0.3; pointer-events: none; filter: grayscale(1); }
         .sell { background: rgba(242, 54, 69, 0.1); border-color: var(--down); color: var(--down); }
         .buy { background: rgba(8, 153, 129, 0.1); border-color: var(--up); color: var(--up); }
         .btn-price { font-weight: bold; font-size: 14px; }
@@ -185,8 +339,8 @@
         .legend-remove-btn { color: #787b86; cursor: pointer; font-weight: bold; margin-left: 4px; font-size: 11px; display: flex; align-items: center; justify-content: center; width: 14px; height: 14px; border-radius: 2px; }
         .legend-remove-btn:hover { background: rgba(242, 54, 69, 0.2); color: var(--down); }
 
-        .premium-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); z-index: 9999; align-items: center; justify-content: center; }
-        .premium-modal-content { background: #1c2030; border: 1px solid #363a45; border-radius: 6px; width: 380px; padding: 0; box-shadow: 0 16px 40px rgba(0,0,0,0.5); overflow: hidden; animation: modalFadeIn 0.15s ease-out; }
+        .premium-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); z-index: 9999; align-items: center; justify-content: center; }
+        .premium-modal-content { background: #1c2030; border: 1px solid #363a45; border-radius: 8px; width: 400px; padding: 0; box-shadow: 0 16px 45px rgba(0,0,0,0.6); overflow: hidden; animation: modalFadeIn 0.15s ease-out; }
         .premium-modal-header { background: #131722; padding: 14px 18px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
         .premium-modal-title { font-size: 14px; font-weight: 600; color: #ffffff; letter-spacing: 0.3px; }
         .premium-modal-close { color: #787b86; cursor: pointer; font-size: 16px; font-weight: bold; }
@@ -194,9 +348,9 @@
         .premium-modal-body { padding: 18px; display: flex; flex-direction: column; gap: 14px; max-height: 450px; overflow-y: auto; }
         .modal-input-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
         .modal-label { font-size: 13px; color: #b2b5be; }
-        .modal-input-field { width: 120px; background: #2a2e39; border: 1px solid #434651; color: white; padding: 6px 8px; border-radius: 4px; font-size: 13px; text-align: left; outline: none; }
+        .modal-input-field { width: 140px; background: #2a2e39; border: 1px solid #434651; color: white; padding: 6px 8px; border-radius: 4px; font-size: 13px; text-align: left; outline: none; }
         .modal-input-field:focus { border-color: var(--accent); }
-        .modal-color-picker { width: 32px; height: 32px; padding: 0; border: 1px solid #434651; background: transparent; border-radius: 4px; cursor: pointer; outline: none; vertical-align: middle; }
+        .modal-color-picker { width: 34px; height: 34px; padding: 0; border: 1px solid #434651; background: transparent; border-radius: 4px; cursor: pointer; outline: none; vertical-align: middle; }
         .premium-modal-footer { background: #131722; padding: 12px 18px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 8px; }
         .premium-btn { padding: 8px 16px; font-size: 13px; border-radius: 4px; font-weight: 500; border: none; cursor: pointer; }
         .premium-btn-secondary { background: transparent; color: #b2b5be; }
@@ -204,15 +358,13 @@
         .premium-btn-primary { background: var(--accent); color: white; }
         .premium-btn-primary:hover { background: #1e53e5; }
 
-        @keyframes modalFadeIn {
-            from { opacity: 0; transform: scale(0.96); }
-            to { opacity: 1; transform: scale(1); }
-        }
+        .liquidation-icon { width: 56px; height: 56px; background: rgba(242, 54, 69, 0.15); border: 2px solid var(--down); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 14px auto; color: var(--down); font-size: 26px; font-weight: bold; }
 
+        @keyframes modalFadeIn { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: scale(1); } }
+        
         #drawingCanvasOverlay { position: absolute; top: 0; left: 0; z-index: 15; pointer-events: none; }
-
-        .canvas-context-menu { position: absolute; background: #1c2030; border: 1px solid #363a45; border-radius: 6px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); display: none; flex-direction: column; z-index: 100000; overflow: hidden; width: 150px; }
-        .context-menu-item { padding: 8px 12px; font-size: 12px; color: #d1d4dc; cursor: pointer; transition: background 0.15s; }
+        .canvas-context-menu { position: absolute; background: #1c2030; border: 1px solid #363a45; border-radius: 6px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); display: none; flex-direction: column; z-index: 100000; overflow: hidden; width: 170px; }
+        .context-menu-item { padding: 9px 12px; font-size: 12px; color: #d1d4dc; cursor: pointer; transition: background 0.15s; }
         .context-menu-item:hover { background: var(--accent); color: white; }
     </style>
 </head>
@@ -239,52 +391,84 @@
 </div>
 
 <div class="topbar">
-    <div class="group"></div>
+    <!-- Clean Pair Badge without lock icon -->
+    <div class="static-pair-badge">
+        <span id="staticPairText">XAUUSD (Gold)</span>
+    </div>
 
+    <!-- Replay Group -->
     <div class="group control-pulse-target" id="group-replay">
-        <button onclick="play()">PLAY</button>
-        <button onclick="pause()">PAUSE</button>
-        <button onclick="next()">STEP</button>
+        <button id="btn-playpause" class="is-paused" onclick="togglePlayPause()">
+            <span id="playpause-icon">▶</span>
+            <span id="playpause-text">PLAY</span>
+        </button>
+        <button onclick="next()" title="Next Step Forward">STEP ❯</button>
     </div>
     
-    <div class="group control-pulse-target" id="group-tf">
-        <select id="tf" onchange="changeTF()">
-            <option value="m1">1m</option>
-            <option value="m5">5m</option>
-            <option value="m15">15m</option>
-            <option value="m30">30m</option>
-            <option value="h1">1h</option>
-            <option value="h4" selected>4h</option>
-            <option value="d1">1d</option>
-        </select>
+    <!-- Timeframe Dropdown -->
+    <div class="group control-pulse-target">
+        <div class="custom-dropdown" id="dropdown-tf">
+            <button class="dropdown-trigger" onclick="toggleCustomDropdown('dropdown-tf')">
+                <span id="selected-tf-label">4h</span>
+                <span class="dropdown-chevron"></span>
+            </button>
+            <div class="dropdown-menu">
+                <div class="dropdown-item" data-val="m1" onclick="selectTimeframe('m1', '1m')">1m</div>
+                <div class="dropdown-item" data-val="m5" onclick="selectTimeframe('m5', '5m')">5m</div>
+                <div class="dropdown-item" data-val="m15" onclick="selectTimeframe('m15', '15m')">15m</div>
+                <div class="dropdown-item" data-val="m30" onclick="selectTimeframe('m30', '30m')">30m</div>
+                <div class="dropdown-item" data-val="h1" onclick="selectTimeframe('h1', '1h')">1h</div>
+                <div class="dropdown-item selected" data-val="h4" onclick="selectTimeframe('h4', '4h')">4h</div>
+                <div class="dropdown-item" data-val="d1" onclick="selectTimeframe('d1', '1d')">1d</div>
+            </div>
+        </div>
     </div>
     
-    <div class="group control-pulse-target" id="group-speed">
-        <select id="speed" onchange="changeSpeed()">
-            <option value="1000">1x</option>
-            <option value="500" selected>2x</option>
-            <option value="100">10x</option>
-            <option value="30">Max</option>
-        </select>
+    <!-- Speed Dropdown -->
+    <div class="group control-pulse-target">
+        <div class="custom-dropdown" id="dropdown-speed">
+            <button class="dropdown-trigger" onclick="toggleCustomDropdown('dropdown-speed')">
+                <span id="selected-speed-label">2x</span>
+                <span class="dropdown-chevron"></span>
+            </button>
+            <div class="dropdown-menu">
+                <div class="dropdown-item" data-val="1000" onclick="selectSpeed(1000, '1x')">1x</div>
+                <div class="dropdown-item selected" data-val="500" onclick="selectSpeed(500, '2x')">2x</div>
+                <div class="dropdown-item" data-val="100" onclick="selectSpeed(100, '10x')">10x</div>
+                <div class="dropdown-item" data-val="30" onclick="selectSpeed(30, 'Max')">Max</div>
+            </div>
+        </div>
     </div>
 
-    <div class="group control-pulse-target" id="group-indicators">
-        <select id="indicatorSelect" onchange="openAddIndicatorModal()">
-            <option value="" disabled selected>+ Indicators</option>
-            <option value="SMA">SMA (Simple Moving Avg)</option>
-            <option value="EMA">EMA (Exponential Moving Avg)</option>
-            <option value="RSI">RSI (Relative Strength Index)</option>
-            <option value="MACD">MACD (Convergence/Divergence)</option>
-            <option value="BB">BB (Bollinger Bands)</option>
-            <option value="ATR">ATR (Average True Range)</option>
-        </select>
+    <!-- Indicators Menu -->
+    <div class="group control-pulse-target">
+        <div class="custom-dropdown" id="dropdown-ind">
+            <button class="dropdown-trigger" onclick="toggleCustomDropdown('dropdown-ind')">
+                <span>+ Indicators</span>
+                <span class="dropdown-chevron"></span>
+            </button>
+            <div class="dropdown-menu" style="min-width: 215px;">
+                <div class="dropdown-item" onclick="pickIndicator('SMA')">SMA (Simple Moving Avg)</div>
+                <div class="dropdown-item" onclick="pickIndicator('EMA')">EMA (Exponential Avg)</div>
+                <div class="dropdown-item" onclick="pickIndicator('RSI')">RSI (Relative Strength)</div>
+                <div class="dropdown-item" onclick="pickIndicator('MACD')">MACD Indicator</div>
+                <div class="dropdown-item" onclick="pickIndicator('BB')">Bollinger Bands</div>
+                <div class="dropdown-item" onclick="pickIndicator('ATR')">ATR (Average True Range)</div>
+                <div class="dropdown-item" onclick="pickIndicator('Supertrend')">Supertrend</div>
+                <div class="dropdown-item" onclick="pickIndicator('VWAP')">VWAP (Daily Session)</div>
+                <div class="dropdown-item" onclick="pickIndicator('PDH_PDL')">PDH / PDL (Prior Day H/L)</div>
+            </div>
+        </div>
     </div>
 
-    <button id="btn-golive" class="control-pulse-target" onclick="goLive()" style="color: var(--accent); border-radius: 4px;">GO LIVE</button>
+    <button id="btn-golive" class="fancy-golive-btn control-pulse-target" onclick="goLive()" title="Snap to latest realtime bar">
+        <span class="golive-pulse"></span>
+        <span>GO LIVE</span>
+    </button>
+    
     <div id="status">READY</div>
 </div>
 
-<!-- Engaging Micro-Second Tooltip Beacon -->
 <div id="playBeacon" class="play-guide-beacon">
     <span class="pulse-dot"></span>
     <span>Replay is paused. <strong>Hit PLAY</strong> to test your edge.</span>
@@ -304,19 +488,23 @@
             </div>
             <div class="tool-menu">
                 <div class="tool-item" onclick="setTool('trend')"><svg viewBox="0 0 24 24"><path d="M4 20L20 4"/></svg> Trend Line</div>
-                <div class="tool-item" onclick="setTool('ray')"><svg viewBox="0 0 24 24"><path d="M4 20L20 4"/><circle cx="4" cy="20" r="2" fill="currentColor"/></svg> Ray Line</div>
                 <div class="tool-item" onclick="setTool('hline')"><svg viewBox="0 0 24 24"><path d="M3 12h18"/></svg> Horizontal Line</div>
                 <div class="tool-item" onclick="setTool('vline')"><svg viewBox="0 0 24 24"><path d="M12 3v18"/></svg> Vertical Line</div>
                 <div class="tool-item" onclick="setTool('arrow')"><svg viewBox="0 0 24 24"><path d="M4 20L20 4M13 4h7v7"/></svg> Arrow Line</div>
+                <div class="tool-item" onclick="setTool('parallel')"><svg viewBox="0 0 24 24"><path d="M3 7l18 0M3 17l18 0"/></svg> Parallel Channel</div>
             </div>
         </div>
 
         <div class="tool-group">
-            <div class="tool-icon" id="primary-fib-icon" title="Fibonacci">
+            <div class="tool-icon" id="primary-fib-icon" title="Fibonacci Suite">
                 <svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18M8 3v18"/></svg>
             </div>
             <div class="tool-menu">
-                <div class="tool-item" onclick="setTool('fib')"><svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></svg> Fibonacci Retracement</div>
+                <div class="tool-item" onclick="setTool('fib')"><svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></svg> Fib Retracement</div>
+                <div class="tool-item" onclick="setTool('fib_ext')"><svg viewBox="0 0 24 24"><path d="M3 18l6-10 6 6 6-10"/></svg> Fib Extension</div>
+                <div class="tool-item" onclick="setTool('fib_timezone')"><svg viewBox="0 0 24 24"><path d="M4 4v16M8 4v16M14 4v16M22 4v16"/></svg> Fib Time Zones</div>
+                <div class="tool-item" onclick="setTool('fib_circles')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="8"/></svg> Fib Circles / Arcs</div>
+                <div class="tool-item" onclick="setTool('fib_fan')"><svg viewBox="0 0 24 24"><path d="M3 21L21 3M3 21L21 9M3 21L21 15"/></svg> Fib Speed Resistance Fan</div>
             </div>
         </div>
 
@@ -325,14 +513,14 @@
                 <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/></svg>
             </div>
             <div class="tool-menu">
-                <div class="tool-item" onclick="setTool('rect')"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/></svg> Rectangle</div>
-                <div class="tool-item" onclick="setTool('circle')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/></svg> Circle</div>
+                <div class="tool-item" onclick="setTool('rect')"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/></svg> Rectangle Box</div>
+                <div class="tool-item" onclick="setTool('circle')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/></svg> Circle / Ellipse</div>
                 <div class="tool-item" onclick="setTool('triangle')"><svg viewBox="0 0 24 24"><path d="M12 4l9 16H3l9-16z"/></svg> Triangle</div>
             </div>
         </div>
 
         <div class="tool-group">
-            <div class="tool-icon" id="primary-text-icon" title="Text">
+            <div class="tool-icon" id="primary-text-icon" title="Text & Callouts">
                 <svg viewBox="0 0 24 24"><path d="M5 4h14M12 4v16"/></svg>
             </div>
             <div class="tool-menu">
@@ -346,7 +534,7 @@
                 <svg viewBox="0 0 24 24"><path d="M12 19l7-7 3 3-7 7-3-3zM18 13l-1.5-1.5M2 22s5-1 7-3l11-11-4-4L5 15c-2 2-3 7-3 7z"/></svg>
             </div>
             <div class="tool-menu">
-                <div class="tool-item" onclick="setTool('brush')"><svg viewBox="0 0 24 24"><path d="M3 21c3 0 7-1 9-4L21 8l-5-5L7 12c-3 2-4 6-4 9z"/></svg> Standard Brush</div>
+                <div class="tool-item" onclick="setTool('brush')"><svg viewBox="0 0 24 24"><path d="M3 21c3 0 7-1 9-4L21 8l-5-5L7 12c-3 2-4 6-4 9z"/></svg> Freehand Brush</div>
             </div>
         </div>
 
@@ -355,8 +543,8 @@
                 <svg viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8M17 7h4v4"/></svg>
             </div>
             <div class="tool-menu">
-                <div class="tool-item" onclick="setTool('long')"><svg viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8"/><path d="M12 3v18" stroke-dasharray="2 2"/></svg> Long Position</div>
-                <div class="tool-item" onclick="setTool('short')"><svg viewBox="0 0 24 24"><path d="M3 7l6 6 4-4 8 8"/><path d="M12 3v18" stroke-dasharray="2 2"/></svg> Short Position</div>
+                <div class="tool-item" onclick="setTool('long')"><svg viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8"/><path d="M12 3v18" stroke-dasharray="2 2"/></svg> Long Position Tool</div>
+                <div class="tool-item" onclick="setTool('short')"><svg viewBox="0 0 24 24"><path d="M3 7l6 6 4-4 8 8"/><path d="M12 3v18" stroke-dasharray="2 2"/></svg> Short Position Tool</div>
             </div>
         </div>
 
@@ -366,7 +554,21 @@
             </div>
             <div class="tool-menu">
                 <div class="tool-item" onclick="setTool('measure')"><svg viewBox="0 0 24 24"><path d="M2 12h20M6 8v8M10 9v6M14 9v6M18 8v8"/></svg> Measure Ruler</div>
-                <div class="tool-item" onclick="clearDrawings()"><svg viewBox="0 0 24 24"><path d="M3 6h18M8 6V4h8v2M10 11v6M14 11v6M5 6l1 14h12l1-14"/></svg> Wipe All Clear</div>
+                <div class="tool-item" onclick="clearDrawings()"><svg viewBox="0 0 24 24"><path d="M3 6h18M8 6V4h8v2M10 11v6M14 11v6M5 6l1 14h12l1-14"/></svg> Clear All Drawings</div>
+            </div>
+        </div>
+
+        <div class="tool-divider"></div>
+
+        <div class="tool-group">
+            <div class="tool-icon" id="tool-undo" onclick="undoDrawing()" title="Undo (Ctrl+Z)">
+                <svg viewBox="0 0 24 24"><path d="M9 14L4 9l5-5"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg>
+            </div>
+        </div>
+
+        <div class="tool-group">
+            <div class="tool-icon" id="tool-redo" onclick="redoDrawing()" title="Redo (Ctrl+Y)">
+                <svg viewBox="0 0 24 24"><path d="M15 14l5-5-5-5"/><path d="M4 20v-7a4 4 0 0 1 4-4h12"/></svg>
             </div>
         </div>
     </div>
@@ -386,35 +588,39 @@
         </div>
 
         <div id="indicatorsLegend" class="indicators-legend-overlay"></div>
-
         <div id="timeBox" class="time-box">--:--</div>
     </div>
     
     <div class="right-sidebar">
-        <div class="sidebar-header">Risk Calculator</div>
+        <div class="sidebar-header">
+            <span>Risk & Strategy Manager</span>
+            <span id="accountStatusBadge" style="color: var(--up);">ACTIVE</span>
+        </div>
+        
         <div class="risk-box">
             <div class="input-row">
                 <div class="input-group">
                     <label>Balance ($)</label>
-                    <input type="number" id="balance" value="10000" oninput="calcLots()">
+                    <input type="number" id="balance" value="10000" min="1" oninput="onBalanceManuallyChanged()">
                 </div>
                 <div class="input-group">
                     <label>Risk (%)</label>
-                    <input type="number" id="riskPct" value="2" oninput="calcLots()">
+                    <input type="number" id="riskPct" value="2" min="0.1" max="100" step="0.1" oninput="calcLots()">
                 </div>
             </div>
             
             <div class="lot-display">
-                <div style="font-size: 10px; color: #787b86;">RECOMMENDED LOTS</div>
+                <div style="font-size: 10px; color: #787b86;">RECOMMENDED LOT SIZE</div>
                 <div class="lot-val" id="calcLotResult">0.40</div>
+                <div style="font-size: 10px; color: #787b86; margin-top: 3px;" id="riskCashAmount">Risk: $200.00</div>
             </div>
 
             <div class="execution-btns-sidebar">
-                <div class="exec-btn sell control-pulse-target" onclick="prepareTrade('SELL')">
+                <div class="exec-btn sell control-pulse-target" id="execSellBtn" onclick="prepareTrade('SELL')">
                     <span class="btn-price" id="sellP">-</span>
                     <span class="btn-label">SELL</span>
                 </div>
-                <div class="exec-btn buy control-pulse-target" onclick="prepareTrade('BUY')">
+                <div class="exec-btn buy control-pulse-target" id="execBuyBtn" onclick="prepareTrade('BUY')">
                     <span class="btn-price" id="buyP">-</span>
                     <span class="btn-label">BUY</span>
                 </div>
@@ -425,36 +631,59 @@
                 <div class="input-row">
                     <div class="input-group">
                         <label>SL (Pips)</label>
-                        <input type="number" id="slPips" value="50" oninput="calcLots()">
+                        <input type="number" id="slPips" value="50" min="1" oninput="calcLots()">
                     </div>
                     <div class="input-group">
                         <label>TP (Pips)</label>
-                        <input type="number" id="tpPips" value="100">
+                        <input type="number" id="tpPips" value="100" min="1">
                     </div>
                 </div>
                 <div class="input-row">
                     <div class="input-group">
-                        <label>Trade Lots</label>
-                        <input type="number" id="finalLots" step="0.01" value="0.40">
+                        <label>Lots To Trade</label>
+                        <input type="number" id="finalLots" step="0.01" min="0.01" value="0.40">
                     </div>
                     <div class="input-group">
-                        <label>Contract Size</label>
-                        <input type="number" id="contractSize" value="100" oninput="calcLots()">
+                        <label>Pip Size</label>
+                        <input type="number" id="pipSizeDisplay" value="0.1" readonly style="opacity: 0.7;">
                     </div>
                 </div>
-                <button class="confirm-btn" onclick="confirmTrade()">CONFIRM TRADE</button>
-                <button onclick="cancelTrade()" style="width:100%; font-size:10px; margin-top:5px; color:#787b86">CANCEL</button>
+                <button class="confirm-btn" id="btnConfirmTrade" onclick="confirmTrade()">CONFIRM TRADE</button>
+                <button onclick="cancelTrade()" style="width:100%; font-size:11px; margin-top:6px; color:#787b86; cursor:pointer;">CANCEL</button>
             </div>
         </div>
 
         <div class="stats-grid">
-            <div class="stat-card"><span class="stat-label">EQUITY</span><span class="stat-value" id="currentEquity">$10,000</span></div>
-            <div class="stat-card"><span class="stat-label">PROFIT/LOSS</span><span class="stat-value" id="totalPL">$0.00</span></div>
+            <div class="stat-card"><span class="stat-label">EQUITY</span><span class="stat-value" id="currentEquity">$10,000.00</span></div>
+            <div class="stat-card"><span class="stat-label">UNREALIZED P/L</span><span class="stat-value" id="unrealizedPL">$0.00</span></div>
+            <div class="stat-card"><span class="stat-label">TOTAL CLOSED P/L</span><span class="stat-value" id="totalPL">$0.00</span></div>
+            <div class="stat-card"><span class="stat-label">MAX DRAWDOWN</span><span class="stat-value" id="maxDrawdown" style="color:var(--down)">0.00%</span></div>
             <div class="stat-card"><span class="stat-label">TRADES</span><span class="stat-value" id="tradeCount">0</span></div>
-            <div class="stat-card"><span class="stat-label">WIN RATE</span><span class="stat-value" id="winRate">0%</span></div>
+            <div class="stat-card"><span class="stat-label">WIN RATE</span><span class="stat-value" id="winRate">0.0%</span></div>
         </div>
 
         <div id="journal"></div>
+    </div>
+</div>
+
+<div id="liquidationModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(11, 14, 20, 0.88); backdrop-filter:blur(6px); z-index:999999; align-items:center; justify-content:center;">
+    <div style="width:420px; background:#181c27; border:1px solid var(--down); border-radius:8px; padding:26px; box-sizing:border-box; text-align:center; animation:modalFadeIn 0.2s ease-out; box-shadow: 0 16px 50px rgba(242,54,69,0.35);">
+        <div class="liquidation-icon">✕</div>
+        <div style="font-size:20px; font-weight:bold; color:white; margin-bottom:6px;">Account Liquidated</div>
+        <div style="font-size:13px; color:#9599a6; line-height:1.45; margin-bottom:18px;">
+            Account equity has dropped to zero or below minimum maintenance margin. All open positions have been terminated by liquidation safeguards.
+        </div>
+
+        <div style="background:#12151e; border:1px solid #2a2e39; border-radius:6px; padding:12px; margin-bottom:18px; text-align:left;">
+            <div style="font-size:11px; color:#787b86; margin-bottom:6px; font-weight:600; text-transform:uppercase;">New Session Starting Deposit ($)</div>
+            <input id="newSessionDepositInput" type="number" value="10000" min="100" step="500" style="width:100%; background:#1c2030; border:1px solid #363a45; color:white; padding:9px 10px; border-radius:4px; font-size:14px; font-weight:bold; box-sizing:border-box; outline:none;">
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:10px;">
+            <button onclick="startNewSessionHere()" style="width:100%; background:var(--accent); color:white; border:none; padding:12px; border-radius:4px; font-weight:600; font-size:13px; cursor:pointer; transition:background 0.15s;">START NEW SESSION HERE</button>
+            <button onclick="saveBlownSessionAndExit()" style="width:100%; background:#242835; color:#d1d4dc; border:1px solid #363a45; padding:10px; border-radius:4px; font-size:12px; cursor:pointer;">SAVE SESSION & VIEW STATS</button>
+            <button onclick="dismissLiquidationModal()" style="background:transparent; border:none; color:#787b86; font-size:11px; text-decoration:underline; cursor:pointer; padding:4px;">Inspect Blown Chart</button>
+        </div>
     </div>
 </div>
 
@@ -479,9 +708,9 @@
         <div style="font-size:13px; color:#787b86; margin-bottom:24px; line-height:1.4;">Your backtest analytics profile has been synchronized directly with your dashboard.</div>
         
         <div style="display:flex; flex-direction:column; gap:10px;">
-            <a href="index.html" style="background:#2962ff; color:white; text-decoration:none; padding:11px; border-radius:4px; font-weight:600; font-size:13px; text-align:center; display:block; transition: background 0.15s;"> HOME PAGE</a>
-            <a href="my-sessions.html" style="background:#2a2e39; color:white; text-decoration:none; padding:11px; border-radius:4px; font-weight:600; font-size:13px; text-align:center; display:block; transition: background 0.15s;"> MY SESSIONS</a>
-            <button onclick="closeSuccessModal()" style="background:transparent; color:#787b86; border:none; padding:5px; cursor:pointer; font-size:11px; text-decoration:underline; margin-top:6px; font-family:inherit;">Stay on Chart View</button>
+            <a href="index.html" style="background:#2962ff; color:white; text-decoration:none; padding:11px; border-radius:4px; font-weight:600; font-size:13px; text-align:center; display:block;"> HOME PAGE</a>
+            <a href="my-sessions.html" style="background:#2a2e39; color:white; text-decoration:none; padding:11px; border-radius:4px; font-weight:600; font-size:13px; text-align:center; display:block;"> MY SESSIONS</a>
+            <button onclick="closeSuccessModal()" style="background:transparent; color:#787b86; border:none; padding:5px; cursor:pointer; font-size:11px; text-decoration:underline; margin-top:6px;">Stay on Chart View</button>
         </div>
     </div>
 </div>
@@ -512,7 +741,7 @@
         <div class="premium-modal-body" id="toolSettingsBody"></div>
         <div class="premium-modal-footer">
             <button class="premium-btn premium-btn-secondary" onclick="closeToolSettingsModal()">Cancel</button>
-            <button class="premium-btn premium-btn-primary" onclick="applyToolSettings()">Save Parameters</button>
+            <button class="premium-btn premium-btn-primary" onclick="applyToolSettings()">Save & Remember Defaults</button>
         </div>
     </div>
 </div>
@@ -523,6 +752,14 @@
 </div>
 
 <script>
+const INSTRUMENT_SPECS = {
+    "XAUUSD": { name: "XAUUSD (Gold)", pipSize: 0.10, contractSize: 100, precision: 2, pipName: "points" },
+    "EURUSD": { name: "EURUSD", pipSize: 0.0001, contractSize: 100000, precision: 5, pipName: "pips" },
+    "GBPUSD": { name: "GBPUSD", pipSize: 0.0001, contractSize: 100000, precision: 5, pipName: "pips" },
+    "USDJPY": { name: "USDJPY", pipSize: 0.01, contractSize: 100000, precision: 3, pipName: "pips" },
+    "BTCUSD": { name: "BTCUSD", pipSize: 1.00, contractSize: 1, precision: 2, pipName: "USD" }
+};
+
 let symbol = localStorage.getItem("symbol") || "XAUUSD";
 let tf = "h4";
 let speed = parseInt(localStorage.getItem("speed")) || 500;
@@ -536,11 +773,16 @@ let historyData = [];
 window.historyData = historyData;
 let index = 0;
 let timer = null;
+
+let currentBalance = parseFloat(localStorage.getItem("saved_balance")) || 10000;
+let peakEquity = currentBalance;
+let maxDrawdownPct = 0;
 let trades = [];
 let activeTrade = null;
 let entryLine, slLine, tpLine;
 let pendingType = null;
 let sessionEnded = false;
+let isAccountBlown = false;
 
 let isDraggingSL = false;
 let isDraggingTP = false;
@@ -591,6 +833,84 @@ const volumeSeries = chart.addHistogramSeries({
 });
 volumeSeries.priceScale().applyOptions({ scaleMargins: { top: 0.8, bottom: 0 } });
 
+function getSpec() {
+    return INSTRUMENT_SPECS[symbol] || { name: symbol, pipSize: 0.0001, contractSize: 100000, precision: 4 };
+}
+
+function updateSymbolPrecision() {
+    const spec = getSpec();
+    series.applyOptions({
+        priceFormat: {
+            type: 'price',
+            precision: spec.precision,
+            minMove: spec.pipSize
+        }
+    });
+    const pipDisplay = document.getElementById("pipSizeDisplay");
+    if (pipDisplay) pipDisplay.value = spec.pipSize;
+    
+    const staticBadge = document.getElementById("staticPairText");
+    if (staticBadge) staticBadge.innerText = spec.name || symbol;
+}
+
+function setTimeframeLock(isLocked) {
+    const tfDropdown = document.getElementById("dropdown-tf");
+    if (!tfDropdown) return;
+    const trigger = tfDropdown.querySelector('.dropdown-trigger');
+    if (isLocked) {
+        trigger.style.opacity = '0.45';
+        trigger.style.cursor = 'not-allowed';
+        trigger.setAttribute("title", "Timeframe locked while a position is open");
+    } else {
+        trigger.style.opacity = '1';
+        trigger.style.cursor = 'pointer';
+        trigger.removeAttribute("title");
+    }
+}
+
+function updateButtonsState() {
+    const buyBtn = document.getElementById("execBuyBtn");
+    const sellBtn = document.getElementById("execSellBtn");
+    const canTrade = !activeTrade && !isAccountBlown && currentBalance > 0;
+    
+    if (buyBtn && sellBtn) {
+        if (!canTrade) {
+            buyBtn.classList.add("disabled");
+            sellBtn.classList.add("disabled");
+        } else {
+            buyBtn.classList.remove("disabled");
+            sellBtn.classList.remove("disabled");
+        }
+    }
+}
+
+function updatePlayPauseUI() {
+    const btn = document.getElementById("btn-playpause");
+    const icon = document.getElementById("playpause-icon");
+    const text = document.getElementById("playpause-text");
+    if (!btn || !icon || !text) return;
+
+    if (isPlaying) {
+        btn.classList.remove("is-paused");
+        btn.classList.add("is-playing");
+        icon.innerText = "⏸";
+        text.innerText = "PAUSE";
+    } else {
+        btn.classList.remove("is-playing");
+        btn.classList.add("is-paused");
+        icon.innerText = "▶";
+        text.innerText = "PLAY";
+    }
+}
+
+function togglePlayPause() {
+    if (isPlaying) {
+        window.pause();
+    } else {
+        window.play();
+    }
+}
+
 function triggerButtonGlow() {
     const targets = document.querySelectorAll('.control-pulse-target');
     targets.forEach((el, i) => {
@@ -620,38 +940,137 @@ function updateTime(ts) {
 }
 
 function calcLots() {
-    const bal = parseFloat(document.getElementById("balance").value);
-    const riskPct = parseFloat(document.getElementById("riskPct").value);
-    const slPips = parseFloat(document.getElementById("slPips").value);
-    const contract = parseFloat(document.getElementById("contractSize").value);
+    const bal = currentBalance;
+    const riskPct = parseFloat(document.getElementById("riskPct").value) || 0;
+    const slPips = parseFloat(document.getElementById("slPips").value) || 0;
     const resultEl = document.getElementById("calcLotResult");
     const finalLotInput = document.getElementById("finalLots");
+    const riskCashEl = document.getElementById("riskCashAmount");
 
-    if (bal && riskPct && slPips && contract) {
-        const riskAmount = bal * (riskPct / 100);
-        const lot = riskAmount / (slPips * (contract * 0.01));
+    const spec = getSpec();
+    const pipCashValuePerLot = spec.pipSize * spec.contractSize;
+
+    if (bal > 0 && riskPct > 0 && slPips > 0 && pipCashValuePerLot > 0) {
+        const riskCash = (bal * (riskPct / 100));
+        let lot = riskCash / (slPips * pipCashValuePerLot);
+        lot = Math.max(0.01, Math.floor(lot * 100) / 100);
+
         resultEl.innerText = lot.toFixed(2);
         finalLotInput.value = lot.toFixed(2);
+        riskCashEl.innerText = `Risk: $${riskCash.toFixed(2)} (${riskPct}%)`;
+    } else {
+        resultEl.innerText = "0.00";
+        finalLotInput.value = "0.00";
+        riskCashEl.innerText = "Risk: $0.00";
     }
 }
 
-function updateStats() {
-    const totalPL = trades.reduce((a, b) => a + b.pl, 0);
-    const bal = parseFloat(document.getElementById("balance").value);
-    const wins = trades.filter(t => t.pl > 0).length;
-    const winRate = trades.length > 0 ? ((wins / trades.length) * 100).toFixed(1) : 0;
-
-    document.getElementById("tradeCount").innerText = trades.length;
-    document.getElementById("totalPL").innerText = (totalPL >= 0 ? '+$' : '-$') + Math.abs(totalPL).toFixed(2);
-    document.getElementById("totalPL").style.color = totalPL >= 0 ? 'var(--up)' : 'var(--down)';
-    document.getElementById("currentEquity").innerText = '$' + (bal + totalPL).toLocaleString();
-    document.getElementById("winRate").innerText = winRate + '%';
+function onBalanceManuallyChanged() {
+    const val = parseFloat(document.getElementById("balance").value) || 0;
+    currentBalance = val;
+    peakEquity = val;
+    maxDrawdownPct = 0;
+    isAccountBlown = currentBalance <= 0;
+    updateStats(historyData[historyData.length - 1]?.close);
+    calcLots();
 }
 
 function calculatePnL(price) {
-    if (!activeTrade) return 0;
+    if (!activeTrade || !price) return 0;
+    const spec = getSpec();
     const diff = activeTrade.type === 'BUY' ? (price - activeTrade.entry) : (activeTrade.entry - price);
-    return diff * activeTrade.lots * activeTrade.contract;
+    return diff * activeTrade.lots * spec.contractSize;
+}
+
+function updateStats(currentPrice = null) {
+    const closedPL = trades.reduce((sum, t) => sum + t.pl, 0);
+    const unpl = activeTrade && currentPrice ? calculatePnL(currentPrice) : 0;
+    const equity = currentBalance + unpl;
+
+    if (equity > peakEquity) peakEquity = equity;
+    if (peakEquity > 0) {
+        const dd = ((peakEquity - equity) / peakEquity) * 100;
+        if (dd > maxDrawdownPct) maxDrawdownPct = dd;
+    }
+
+    const wins = trades.filter(t => t.pl > 0).length;
+    const winRate = trades.length > 0 ? ((wins / trades.length) * 100).toFixed(1) : "0.0";
+
+    document.getElementById("balance").value = currentBalance.toFixed(2);
+    document.getElementById("tradeCount").innerText = trades.length;
+    document.getElementById("totalPL").innerText = (closedPL >= 0 ? '+$' : '-$') + Math.abs(closedPL).toFixed(2);
+    document.getElementById("totalPL").style.color = closedPL >= 0 ? 'var(--up)' : 'var(--down)';
+    
+    document.getElementById("unrealizedPL").innerText = (unpl >= 0 ? '+$' : '-$') + Math.abs(unpl).toFixed(2);
+    document.getElementById("unrealizedPL").style.color = unpl >= 0 ? 'var(--up)' : 'var(--down)';
+
+    const equityEl = document.getElementById("currentEquity");
+    equityEl.innerText = '$' + equity.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    equityEl.style.color = equity >= currentBalance ? 'var(--up)' : 'var(--down)';
+
+    document.getElementById("maxDrawdown").innerText = maxDrawdownPct.toFixed(2) + '%';
+    document.getElementById("winRate").innerText = winRate + '%';
+
+    const statusBadge = document.getElementById("accountStatusBadge");
+    if (equity <= 0) {
+        isAccountBlown = true;
+        statusBadge.innerText = "LIQUIDATED";
+        statusBadge.style.color = "var(--down)";
+        if (activeTrade) closeTrade(currentPrice, "MARGIN CALL / LIQUIDATION");
+        window.pause();
+        showLiquidationModal();
+    } else {
+        isAccountBlown = false;
+        statusBadge.innerText = activeTrade ? "IN POSITION" : "ACTIVE";
+        statusBadge.style.color = activeTrade ? "var(--accent)" : "var(--up)";
+    }
+
+    updateButtonsState();
+}
+
+function showLiquidationModal() {
+    const modal = document.getElementById("liquidationModal");
+    if (modal) modal.style.display = "flex";
+}
+
+function dismissLiquidationModal() {
+    const modal = document.getElementById("liquidationModal");
+    if (modal) modal.style.display = "none";
+}
+
+function startNewSessionHere() {
+    const depositInput = document.getElementById("newSessionDepositInput");
+    const newCapital = parseFloat(depositInput.value) || 10000;
+
+    currentBalance = Math.max(100, newCapital);
+    peakEquity = currentBalance;
+    maxDrawdownPct = 0;
+    isAccountBlown = false;
+    trades = [];
+
+    if (activeTrade) {
+        if (entryLine) series.removePriceLine(entryLine);
+        if (slLine) series.removePriceLine(slLine);
+        if (tpLine) series.removePriceLine(tpLine);
+        activeTrade = null;
+    }
+
+    setTimeframeLock(false);
+    document.getElementById("journal").innerHTML = "";
+
+    const lastClose = historyData[historyData.length - 1]?.close || null;
+    updateStats(lastClose);
+    calcLots();
+    dismissLiquidationModal();
+
+    const status = document.getElementById("status");
+    if (status) status.innerText = "SESSION RESTARTED";
+    if (window.redrawOverlay) window.requestAnimationFrame(window.redrawOverlay);
+}
+
+function saveBlownSessionAndExit() {
+    dismissLiquidationModal();
+    openSessionModal();
 }
 
 function updateTradeLines(type, entry, sl, tp, lots) {
@@ -668,7 +1087,7 @@ function updateTradeLines(type, entry, sl, tp, lots) {
         color: '#2962ff', 
         lineWidth: 2, 
         axisLabelVisible: true, 
-        title: `${lots} Lots | ${pnlString} USD ✕` 
+        title: `${lots} Lots | ${pnlString} USD [✕ Close]` 
     });
     slLine = series.createPriceLine({ 
         price: sl, 
@@ -676,7 +1095,7 @@ function updateTradeLines(type, entry, sl, tp, lots) {
         lineWidth: 2, 
         lineStyle: LightweightCharts.LineStyle.Dashed, 
         axisLabelVisible: true, 
-        title: 'SL (Drag Me)' 
+        title: 'SL (Drag Target)' 
     });
     tpLine = series.createPriceLine({ 
         price: tp, 
@@ -684,12 +1103,21 @@ function updateTradeLines(type, entry, sl, tp, lots) {
         lineWidth: 2, 
         lineStyle: LightweightCharts.LineStyle.Dashed, 
         axisLabelVisible: true, 
-        title: 'TP (Drag Me)' 
+        title: 'TP (Drag Target)' 
     });
 }
 
 function prepareTrade(type) {
-    if (activeTrade) return;
+    if (activeTrade) {
+        alert("An active trade is already open. Close it before initiating another.");
+        return;
+    }
+    if (currentBalance <= 0 || isAccountBlown) {
+        showLiquidationModal();
+        return;
+    }
+
+    calcLots();
     pendingType = type;
     document.getElementById("drawerTitle").innerText = `NEW ${type} ORDER`;
     document.getElementById("drawerTitle").style.color = type === 'BUY' ? 'var(--up)' : 'var(--down)';
@@ -708,30 +1136,67 @@ function confirmTrade() {
 }
 
 function placeTrade(type) {
-    if (activeTrade) return;
-    const currentPrice = historyData[historyData.length - 1]?.close || 0;
-    const lotSize = parseFloat(document.getElementById("finalLots").value);
-    const slPips = parseFloat(document.getElementById("slPips").value);
-    const tpPips = parseFloat(document.getElementById("tpPips").value);
-    const contract = parseFloat(document.getElementById("contractSize").value);
+    if (activeTrade || currentBalance <= 0 || isAccountBlown) return;
 
-    const pipVal = 0.1;
-    const slDist = slPips * pipVal;
-    const tpDist = tpPips * pipVal;
+    const lastCandle = historyData[historyData.length - 1];
+    const currentPrice = lastCandle?.close || 0;
+    if (!currentPrice) return;
+
+    const lotSize = parseFloat(document.getElementById("finalLots").value) || 0;
+    const slPips = parseFloat(document.getElementById("slPips").value) || 0;
+    const tpPips = parseFloat(document.getElementById("tpPips").value) || 0;
+    const spec = getSpec();
+
+    if (lotSize <= 0) {
+        alert("Lot size must be greater than 0.");
+        return;
+    }
+
+    const slDist = slPips * spec.pipSize;
+    const tpDist = tpPips * spec.pipSize;
 
     const sl = type === 'BUY' ? currentPrice - slDist : currentPrice + slDist;
     const tp = type === 'BUY' ? currentPrice + tpDist : currentPrice - tpDist;
 
-    activeTrade = { type, entry: currentPrice, sl, tp, lots: lotSize, contract };
+    activeTrade = { 
+        type, 
+        entry: currentPrice, 
+        sl, 
+        tp, 
+        lots: lotSize, 
+        entryTime: lastCandle.time,
+        entryIndex: historyData.length - 1,
+        timeframe: tf,
+        contract: spec.contractSize 
+    };
+
+    setTimeframeLock(true);
+    updateButtonsState();
     updateTradeLines(type, currentPrice, sl, tp, lotSize);
+    updateStats(currentPrice);
 }
 
-function closeTrade() {
+function closeTrade(exitPrice = null, reason = "MANUAL") {
     if (!activeTrade) return;
-    const currentPrice = historyData[historyData.length - 1]?.close || 0;
-    const pnl = calculatePnL(currentPrice);
 
-    trades.push({ type: activeTrade.type, price: activeTrade.entry, pl: pnl });
+    const lastCandle = historyData[historyData.length - 1];
+    const price = exitPrice || lastCandle?.close || activeTrade.entry;
+    const pnl = calculatePnL(price);
+
+    currentBalance += pnl;
+
+    trades.push({
+        type: activeTrade.type,
+        symbol: symbol,
+        entry: activeTrade.entry,
+        exit: price,
+        entryTime: activeTrade.entryTime,
+        exitTime: lastCandle?.time || activeTrade.entryTime,
+        timeframe: activeTrade.timeframe,
+        lots: activeTrade.lots,
+        pl: pnl,
+        reason: reason
+    });
 
     const journal = document.getElementById("journal");
     const item = document.createElement("div");
@@ -740,11 +1205,11 @@ function closeTrade() {
         <div style="display:flex; flex-direction:column">
             <span>
                 <span class="tag ${activeTrade.type === 'BUY' ? 'tag-buy' : 'tag-sell'}">${activeTrade.type}</span>
-                ${activeTrade.entry}
+                ${activeTrade.entry.toFixed(getSpec().precision)} → ${price.toFixed(getSpec().precision)}
             </span>
-            <span style="font-size:9px; color:#787b86">Size: ${activeTrade.lots}</span>
+            <span style="font-size:9px; color:#787b86">Size: ${activeTrade.lots} | ${reason}</span>
         </div>
-        <span style="color:${pnl >= 0 ? 'var(--up)' : 'var(--down)'}">${pnl >= 0 ? '+' : ''}${pnl.toFixed(2)}</span>
+        <span style="font-weight:bold; color:${pnl >= 0 ? 'var(--up)' : 'var(--down)'}">${pnl >= 0 ? '+' : ''}${pnl.toFixed(2)}</span>
     `;
     journal.prepend(item);
 
@@ -753,12 +1218,15 @@ function closeTrade() {
     if (tpLine) series.removePriceLine(tpLine);
 
     activeTrade = null;
-    updateStats();
+    setTimeframeLock(false);
+    updateStats(price);
+    calcLots();
+
+    if (window.redrawOverlay) window.requestAnimationFrame(window.redrawOverlay);
 }
 
 chartEl.addEventListener('click', (e) => {
     dismissGuideBeacon();
-
     if (!activeTrade || !entryLine) return;
 
     const rect = chartEl.getBoundingClientRect();
@@ -768,12 +1236,12 @@ chartEl.addEventListener('click', (e) => {
     const entryY = series.priceToCoordinate(activeTrade.entry);
     if (entryY === null) return;
 
-    const isYMatch = Math.abs(clickY - entryY) < 12;
+    const isYMatch = Math.abs(clickY - entryY) < 14;
     const chartWidth = rect.width;
-    const isXMatch = clickX > (chartWidth - 220);
+    const isXMatch = clickX > (chartWidth - 260);
 
     if (isYMatch && isXMatch) {
-        closeTrade();
+        closeTrade(null, "MANUAL (X)");
     }
 });
 
@@ -810,8 +1278,9 @@ chartEl.addEventListener('mousemove', (e) => {
     if (isDraggingSL || isDraggingTP) {
         const newPrice = series.coordinateToPrice(mouseY);
         if (newPrice) {
-            if (isDraggingSL) activeTrade.sl = parseFloat(newPrice.toFixed(2));
-            if (isDraggingTP) activeTrade.tp = parseFloat(newPrice.toFixed(2));
+            const spec = getSpec();
+            if (isDraggingSL) activeTrade.sl = parseFloat(newPrice.toFixed(spec.precision));
+            if (isDraggingTP) activeTrade.tp = parseFloat(newPrice.toFixed(spec.precision));
             updateTradeLines(activeTrade.type, activeTrade.entry, activeTrade.sl, activeTrade.tp, activeTrade.lots);
         }
     } else {
@@ -846,7 +1315,7 @@ function openSessionModal() {
             speed: speed,
             final_time: lastReplayTime,
             trades: trades,
-            balance: document.getElementById("balance").value,
+            balance: currentBalance,
             risk: document.getElementById("riskPct").value,
             total_pl: document.getElementById("totalPL").innerText,
             equity: document.getElementById("currentEquity").innerText,
@@ -865,6 +1334,69 @@ function openSessionModal() {
 function closeSessionModal() { document.getElementById("sessionModal").style.display = "none"; }
 function closeSuccessModal() { document.getElementById("successModal").style.display = "none"; }
 
+/* Dropdown Handlers */
+function toggleCustomDropdown(id) {
+    const target = document.getElementById(id);
+    const wasOpen = target.classList.contains('active');
+    document.querySelectorAll('.custom-dropdown').forEach(d => d.classList.remove('active'));
+    if (!wasOpen) target.classList.add('active');
+}
+
+document.addEventListener('click', (e) => {
+    if (!e.target.closest('.custom-dropdown')) {
+        document.querySelectorAll('.custom-dropdown').forEach(d => d.classList.remove('active'));
+    }
+});
+
+function selectTimeframe(val, label) {
+    if (activeTrade) {
+        alert("Timeframe switching is disabled while an active position is open.");
+        return;
+    }
+    document.getElementById('selected-tf-label').innerText = label;
+    document.querySelectorAll('#dropdown-tf .dropdown-item').forEach(item => {
+        item.classList.toggle('selected', item.getAttribute('data-val') === val);
+    });
+    document.getElementById('dropdown-tf').classList.remove('active');
+    
+    window.pause();
+    tf = val;
+
+    const anchorTs = lastReplayTime 
+        ? lastReplayTime 
+        : Math.floor(new Date(localStorage.getItem("initial") || "2023-01-01T00:00:00.000Z").getTime() / 1000);
+
+    let initialISO;
+    if (TF_CONFIG[tf]) {
+        const lookbackSeconds = TF_CONFIG[tf].initialDays * 86400;
+        initialISO = new Date((anchorTs - lookbackSeconds) * 1000).toISOString();
+    } else {
+        initialISO = localStorage.getItem("initial") || "2023-01-01T00:00:00.000Z";
+    }
+
+    window.load(initialISO);
+}
+
+function selectSpeed(val, label) {
+    document.getElementById('selected-speed-label').innerText = label;
+    document.querySelectorAll('#dropdown-speed .dropdown-item').forEach(item => {
+        item.classList.toggle('selected', parseInt(item.getAttribute('data-val')) === val);
+    });
+    document.getElementById('dropdown-speed').classList.remove('active');
+    
+    speed = val;
+    if (isPlaying) { window.stopTimer(); window.startTimer(); }
+}
+
+function pickIndicator(indType) {
+    document.getElementById('dropdown-ind').classList.remove('active');
+    window.openIndicatorConfigModal(indType);
+}
+
+window.toggleCustomDropdown = toggleCustomDropdown;
+window.selectTimeframe = selectTimeframe;
+window.selectSpeed = selectSpeed;
+window.pickIndicator = pickIndicator;
 window.openSessionModal = openSessionModal;
 window.closeSessionModal = closeSessionModal;
 window.closeSuccessModal = closeSuccessModal;
@@ -872,6 +1404,11 @@ window.calcLots = calcLots;
 window.prepareTrade = prepareTrade;
 window.confirmTrade = confirmTrade;
 window.cancelTrade = cancelTrade;
+window.onBalanceManuallyChanged = onBalanceManuallyChanged;
+window.startNewSessionHere = startNewSessionHere;
+window.saveBlownSessionAndExit = saveBlownSessionAndExit;
+window.dismissLiquidationModal = dismissLiquidationModal;
+window.togglePlayPause = togglePlayPause;
 window.chart = chart;
 window.series = series;
 
@@ -879,10 +1416,11 @@ chart.subscribeCrosshairMove(param => {
     if (!param || !param.time) return;
     const candle = param.seriesData.get(series);
     if (candle) {
-        document.getElementById("vO").innerText = candle.open;
-        document.getElementById("vH").innerText = candle.high;
-        document.getElementById("vL").innerText = candle.low;
-        document.getElementById("vC").innerText = candle.close;
+        const spec = getSpec();
+        document.getElementById("vO").innerText = Number(candle.open).toFixed(spec.precision);
+        document.getElementById("vH").innerText = Number(candle.high).toFixed(spec.precision);
+        document.getElementById("vL").innerText = Number(candle.low).toFixed(spec.precision);
+        document.getElementById("vC").innerText = Number(candle.close).toFixed(spec.precision);
     }
 });
 </script>
@@ -904,15 +1442,21 @@ function renderIndicatorsLegend() {
 
         const dot = document.createElement("span");
         dot.className = "legend-dot";
-        dot.style.background = ind.options.color || ind.options.macdColor || "#2962ff";
+        dot.style.background = ind.options.color || ind.options.macdColor || ind.options.highColor || "#2962ff";
 
         const title = document.createElement("span");
         title.className = "legend-title";
         
-        if(ind.type === "MACD") {
+        if (ind.type === "MACD") {
             title.innerText = `MACD (${ind.options.fastPeriod}, ${ind.options.slowPeriod}, ${ind.options.signalPeriod})`;
-        } else if(ind.type === "BB") {
+        } else if (ind.type === "BB") {
             title.innerText = `BB (${ind.options.period}, ${ind.options.stdDevMultiplier})`;
+        } else if (ind.type === "Supertrend") {
+            title.innerText = `Supertrend (${ind.options.period}, ${ind.options.multiplier})`;
+        } else if (ind.type === "VWAP") {
+            title.innerText = `VWAP (Daily)`;
+        } else if (ind.type === "PDH_PDL") {
+            title.innerText = `PDH / PDL`;
         } else {
             title.innerText = `${ind.type} (${ind.options.period})`;
         }
@@ -935,7 +1479,26 @@ function renderIndicatorsLegend() {
 }
 
 function generateModalInputsHTML(type, existingOptions = null) {
-    if (type === "MACD") {
+    if (type === "Supertrend") {
+        const period = existingOptions ? existingOptions.period : 10;
+        const multiplier = existingOptions ? existingOptions.multiplier : 3.0;
+        return `
+            <div class="modal-input-row"><span class="modal-label">ATR Period</span><input type="number" id="stPeriod" class="modal-input-field" value="${period}"></div>
+            <div class="modal-input-row"><span class="modal-label">Multiplier</span><input type="number" id="stMultiplier" step="0.1" class="modal-input-field" value="${multiplier}"></div>
+        `;
+    } else if (type === "VWAP") {
+        const color = existingOptions ? existingOptions.color : "#ff9800";
+        return `
+            <div class="modal-input-row"><span class="modal-label">VWAP Color</span><input type="color" id="vwapColor" class="modal-color-picker" value="${color}"></div>
+        `;
+    } else if (type === "PDH_PDL") {
+        const highColor = existingOptions ? existingOptions.highColor : "#089981";
+        const lowColor = existingOptions ? existingOptions.lowColor : "#f23645";
+        return `
+            <div class="modal-input-row"><span class="modal-label">PDH Color (High)</span><input type="color" id="pdhColor" class="modal-color-picker" value="${highColor}"></div>
+            <div class="modal-input-row"><span class="modal-label">PDL Color (Low)</span><input type="color" id="pdlColor" class="modal-color-picker" value="${lowColor}"></div>
+        `;
+    } else if (type === "MACD") {
         const fast = existingOptions ? existingOptions.fastPeriod : 12;
         const slow = existingOptions ? existingOptions.slowPeriod : 26;
         const sig = existingOptions ? existingOptions.signalPeriod : 9;
@@ -963,18 +1526,13 @@ function generateModalInputsHTML(type, existingOptions = null) {
     }
 }
 
-window.openAddIndicatorModal = function() {
-    const selector = document.getElementById("indicatorSelect");
-    const selectedType = selector.value;
+window.openIndicatorConfigModal = function(selectedType) {
     if (!selectedType) return;
-
     document.getElementById("modalIndicatorTitle").innerText = `${selectedType} Setup Configuration`;
     document.getElementById("modalTargetMode").value = "ADD";
     document.getElementById("modalTargetType").value = selectedType;
-    
     document.getElementById("modalBodyContent").innerHTML = generateModalInputsHTML(selectedType);
     document.getElementById("indicatorModal").style.display = "flex";
-    selector.value = "";
 };
 
 window.openEditIndicatorModal = function(id) {
@@ -999,7 +1557,21 @@ window.submitIndicatorModal = function() {
     const type = document.getElementById("modalTargetType").value;
     
     let options = {};
-    if (type === "MACD") {
+    if (type === "Supertrend") {
+        options = {
+            period: parseInt(document.getElementById("stPeriod").value) || 10,
+            multiplier: parseFloat(document.getElementById("stMultiplier").value) || 3.0
+        };
+    } else if (type === "VWAP") {
+        options = {
+            color: document.getElementById("vwapColor").value
+        };
+    } else if (type === "PDH_PDL") {
+        options = {
+            highColor: document.getElementById("pdhColor").value,
+            lowColor: document.getElementById("pdlColor").value
+        };
+    } else if (type === "MACD") {
         options = {
             fastPeriod: parseInt(document.getElementById("macdFast").value) || 12,
             slowPeriod: parseInt(document.getElementById("macdSlow").value) || 26,
@@ -1058,15 +1630,26 @@ window.next = function() {
         color: candle.close >= candle.open ? 'rgba(8,153,129,0.2)' : 'rgba(242,54,69,0.2)'
     });
 
-    document.getElementById("sellP").innerText = Number(candle.close).toFixed(2);
-    document.getElementById("buyP").innerText = (parseFloat(candle.close) + 0.10).toFixed(2);
+    const spec = getSpec();
+    const currentPrice = Number(candle.close);
+    document.getElementById("sellP").innerText = currentPrice.toFixed(spec.precision);
+    document.getElementById("buyP").innerText = (currentPrice + (spec.pipSize * 1.0)).toFixed(spec.precision);
 
     if (activeTrade) {
         if (activeTrade.type === 'BUY') {
-            if (candle.low <= activeTrade.sl || candle.high >= activeTrade.tp) closeTrade();
+            if (candle.low <= activeTrade.sl) {
+                closeTrade(activeTrade.sl, "STOP LOSS HIT");
+            } else if (candle.high >= activeTrade.tp) {
+                closeTrade(activeTrade.tp, "TAKE PROFIT HIT");
+            }
         } else {
-            if (candle.high >= activeTrade.sl || candle.low <= activeTrade.tp) closeTrade();
+            if (candle.high >= activeTrade.sl) {
+                closeTrade(activeTrade.sl, "STOP LOSS HIT");
+            } else if (candle.low <= activeTrade.tp) {
+                closeTrade(activeTrade.tp, "TAKE PROFIT HIT");
+            }
         }
+        
         if (activeTrade) {
             updateTradeLines(activeTrade.type, activeTrade.entry, activeTrade.sl, activeTrade.tp, activeTrade.lots);
         }
@@ -1074,9 +1657,14 @@ window.next = function() {
 
     lastReplayTime = candle.time;
     updateTime(lastReplayTime);
+    updateStats(currentPrice);
 
     if (isAutoFollow) chart.timeScale().scrollToRealTime();
     index++;
+    
+    if (window.redrawOverlay) {
+        window.requestAnimationFrame(window.redrawOverlay);
+    }
 };
 
 window.fetchNextChunk = function() {
@@ -1114,7 +1702,8 @@ window.load = function(customInitial = null) {
     const preloader = document.getElementById("appPreloader");
     if (preloader) preloader.classList.remove("fade-out");
 
-    document.getElementById("status").innerText = `FETCHING ${tf.toUpperCase()}...`;
+    updateSymbolPrecision();
+    document.getElementById("status").innerText = `FETCHING ${symbol} ${tf.toUpperCase()}...`;
     
     const initialParam = customInitial || localStorage.getItem("initial") || "2023-01-01T00:00:00.000Z";
     const finalTo = localStorage.getItem("to") || new Date().toISOString();
@@ -1127,7 +1716,6 @@ window.load = function(customInitial = null) {
         let fetchedHistory = res.history || [];
         let fetchedFuture = res.data || [];
 
-        // When starting with no history, populate the viewport with context candles immediately
         if (fetchedHistory.length === 0 && fetchedFuture.length > 0) {
             const seedCount = Math.min(100, Math.floor(fetchedFuture.length * 0.3));
             fetchedHistory = fetchedFuture.slice(0, seedCount);
@@ -1148,12 +1736,14 @@ window.load = function(customInitial = null) {
             time: d.time, value: d.volume || 10, color: d.close >= d.open ? 'rgba(8,153,129,0.2)' : 'rgba(242,54,69,0.2)'
         })));
 
+        const spec = getSpec();
         if (historyData.length > 0) {
             const lastBar = historyData[historyData.length - 1];
             lastReplayTime = lastBar.time;
             updateTime(lastReplayTime);
-            document.getElementById("sellP").innerText = Number(lastBar.close).toFixed(2);
-            document.getElementById("buyP").innerText = (parseFloat(lastBar.close) + 0.10).toFixed(2);
+            document.getElementById("sellP").innerText = Number(lastBar.close).toFixed(spec.precision);
+            document.getElementById("buyP").innerText = (Number(lastBar.close) + (spec.pipSize * 1.0)).toFixed(spec.precision);
+            updateStats(Number(lastBar.close));
         }
 
         document.getElementById("displaySymbol").innerText = `${symbol} · ${tf.toUpperCase()}`;
@@ -1165,12 +1755,13 @@ window.load = function(customInitial = null) {
         }, 50);
 
         if (preloader) preloader.classList.add("fade-out");
-        
         triggerButtonGlow();
+        calcLots();
+        if (window.redrawOverlay) window.requestAnimationFrame(window.redrawOverlay);
     })
     .catch(err => {
         console.error(err);
-        document.getElementById("status").innerText = "CONNECTION ERROR";
+        document.getElementById("status").innerText = "DATA ERROR";
         isFetching = false;
         if (preloader) preloader.classList.add("fade-out");
     });
@@ -1179,56 +1770,29 @@ window.load = function(customInitial = null) {
 window.startTimer = function() {
     if (!timer) timer = setInterval(window.next, speed);
     isPlaying = true;
+    updatePlayPauseUI();
 };
 
 window.stopTimer = function() {
     clearInterval(timer);
     timer = null;
+    isPlaying = false;
+    updatePlayPauseUI();
 };
 
 window.play = function() { 
+    if (isAccountBlown || currentBalance <= 0) {
+        showLiquidationModal();
+        return;
+    }
     dismissGuideBeacon();
     window.startTimer(); 
     document.getElementById("status").innerText = "RUNNING"; 
 };
 
-window.pause = function() { window.stopTimer(); document.getElementById("status").innerText = "PAUSED"; };
-
-window.changeTF = function() {
-    window.pause();
-    tf = document.getElementById("tf").value;
-
-    const anchorTs = lastReplayTime 
-        ? lastReplayTime 
-        : Math.floor(new Date(localStorage.getItem("initial") || "2023-01-01T00:00:00.000Z").getTime() / 1000);
-
-    let initialISO;
-    if (TF_CONFIG[tf]) {
-        const lookbackSeconds = TF_CONFIG[tf].initialDays * 86400;
-        initialISO = new Date((anchorTs - lookbackSeconds) * 1000).toISOString();
-    } else {
-        initialISO = localStorage.getItem("initial") || "2023-01-01T00:00:00.000Z";
-    }
-
-    window.load(initialISO);
-};
-
-window.changeSpeed = function() {
-    speed = parseInt(document.getElementById("speed").value);
-    if (isPlaying) { window.stopTimer(); window.startTimer(); }
-};
-
-window.changeSymbol = function() {
-    symbol = document.getElementById("symbolSelect").value;
-    localStorage.setItem("symbol", symbol);
-    window.pause();
-    lastReplayTime = null;
-    window.historyData = [];
-    historyData = [];
-    data = [];
-    series.setData([]);
-    volumeSeries.setData([]);
-    window.load();
+window.pause = function() { 
+    window.stopTimer(); 
+    document.getElementById("status").innerText = "PAUSED"; 
 };
 
 window.goLive = function() { 
@@ -1268,11 +1832,12 @@ window.saveSession = async function() {
                 speed: speed,
                 final_time: lastReplayTime,
                 trades: trades,
-                balance: document.getElementById("balance").value,
+                balance: currentBalance,
                 risk: document.getElementById("riskPct").value,
                 total_pl: document.getElementById("totalPL").innerText,
                 equity: document.getElementById("currentEquity").innerText,
                 winrate: document.getElementById("winRate").innerText,
+                max_drawdown: maxDrawdownPct.toFixed(2) + '%',
                 session_name: document.getElementById("sessionNameInput").value.trim() || `${symbol} Replay`
             };
             sessionStorage.setItem("pending_session_data", JSON.stringify(pendingSession));
@@ -1289,10 +1854,10 @@ window.saveSession = async function() {
 
         const sessionData = {
             user_id: user.uid, email: user.email, session_name: sessionName, symbol: symbol, timeframe: tf, speed: speed,
-            final_time: lastReplayTime, trades: trades, balance: document.getElementById("balance").value,
+            final_time: lastReplayTime, trades: trades, balance: currentBalance,
             risk: document.getElementById("riskPct").value, total_pl: document.getElementById("totalPL").innerText,
             equity: document.getElementById("currentEquity").innerText, winrate: document.getElementById("winRate").innerText,
-            created_at: new Date().toISOString()
+            max_drawdown: maxDrawdownPct.toFixed(2) + '%', created_at: new Date().toISOString()
         };
 
         await window.addDoc(window.collection(window.db, "users", user.uid, "sessions"), sessionData);
@@ -1304,8 +1869,6 @@ window.saveSession = async function() {
 };
 
 onAuthStateChanged(auth, async (user) => {
-    console.log(user ? "USER LOGGED: " + user.email : "NO USER LOGGED");
-    
     if (user) {
         const cachedRaw = sessionStorage.getItem("pending_session_data");
         if (cachedRaw) {
@@ -1330,7 +1893,6 @@ window.load();
 window.calcLots();
 </script>
 
-<!-- Pro Canvas Overlay Engine with Dynamic Event Pass-Through -->
 <script>
 (() => {
 const canvas = document.getElementById('drawingCanvasOverlay');
@@ -1338,6 +1900,9 @@ const ctx = canvas.getContext('2d');
 
 let tool = 'cursor';
 let drawings = [];
+let undoStack = [];
+let redoStack = [];
+
 let drawing = false;
 let startX = 0, startY = 0;
 let currentShape = null;
@@ -1346,46 +1911,163 @@ let rightClickedShape = null;
 let draggingHandle = null; 
 let dragStartVal = null;
 
-function resizeCanvas() {
-    const rect = chartEl.getBoundingClientRect();
-    const dpr = window.devicePixelRatio || 1;
-    canvas.width = rect.width * dpr;
-    canvas.height = rect.height * dpr;
-    canvas.style.width = rect.width + 'px';
-    canvas.style.height = rect.height + 'px';
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    redraw();
+const STORAGE_PREFIX = "bpro_tool_default_";
+function getSavedToolSetting(t, key, fallback) {
+    const val = localStorage.getItem(`${STORAGE_PREFIX}${t}_${key}`);
+    return val !== null ? val : fallback;
 }
 
+function saveToolSetting(t, key, val) {
+    localStorage.setItem(`${STORAGE_PREFIX}${t}_${key}`, val);
+}
+
+function applyDefaultsToShape(shape) {
+    const t = shape.type;
+    shape.color = getSavedToolSetting(t, 'color', shape.color || '#2962ff');
+    shape.lineWidth = parseInt(getSavedToolSetting(t, 'lineWidth', shape.lineWidth || 2));
+
+    if (['rect','circle','triangle','parallel'].includes(t)) {
+        shape.fill = getSavedToolSetting(t, 'fill', shape.fill || 'rgba(41,98,255,0.15)');
+    }
+    if (t === 'long' || t === 'short') {
+        shape.targetColor = getSavedToolSetting(t, 'targetColor', 'rgba(8, 153, 129, 0.25)');
+        shape.stopColor = getSavedToolSetting(t, 'stopColor', 'rgba(242, 54, 69, 0.25)');
+    }
+    if (t === 'fib') {
+        const savedLevels = getSavedToolSetting(t, 'fibLevels', null);
+        if (savedLevels) shape.fibLevels = JSON.parse(savedLevels);
+    }
+}
+
+function pushHistory() {
+    undoStack.push(JSON.stringify(drawings));
+    if (undoStack.length > 50) undoStack.shift();
+    redoStack = [];
+}
+
+window.undoDrawing = function() {
+    if (undoStack.length === 0) return;
+    redoStack.push(JSON.stringify(drawings));
+    const previous = undoStack.pop();
+    drawings = JSON.parse(previous);
+    selected = null;
+    redraw();
+};
+
+window.redoDrawing = function() {
+    if (redoStack.length === 0) return;
+    undoStack.push(JSON.stringify(drawings));
+    const nextState = redoStack.pop();
+    drawings = JSON.parse(nextState);
+    selected = null;
+    redraw();
+};
+
+window.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') {
+        e.preventDefault();
+        window.undoDrawing();
+    } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'y') {
+        e.preventDefault();
+        window.redoDrawing();
+    }
+});
+
+function getPlotBounds() {
+    const rect = chartEl.getBoundingClientRect();
+    const priceScaleWidth = chart.priceScale('right')?.width() || 65;
+    const timeScaleHeight = chart.timeScale()?.height() || 26;
+    return {
+        width: Math.max(0, rect.width - priceScaleWidth),
+        height: Math.max(0, rect.height - timeScaleHeight)
+    };
+}
+
+function resizeCanvas() {
+    const bounds = getPlotBounds();
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = Math.floor(bounds.width * dpr);
+    canvas.height = Math.floor(bounds.height * dpr);
+    canvas.style.width = bounds.width + 'px';
+    canvas.style.height = bounds.height + 'px';
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.scale(dpr, dpr);
+    redraw();
+}
 window.addEventListener('resize', resizeCanvas);
 
 function pxToVal(x, y) {
-    const idx = chart.timeScale().coordinateToLogical(x);
-    const price = series.coordinateToPrice(y);
-    return { index: idx, price: price };
+    const bounds = getPlotBounds();
+    const clampedX = Math.max(0, Math.min(x, bounds.width));
+    const clampedY = Math.max(0, Math.min(y, bounds.height));
+    
+    const logical = chart.timeScale().coordinateToLogical(clampedX);
+    let time = null;
+    if (window.historyData && window.historyData.length > 0) {
+        const roundIdx = Math.round(logical);
+        if (roundIdx >= 0 && roundIdx < window.historyData.length) {
+            time = window.historyData[roundIdx].time;
+        } else if (roundIdx >= window.historyData.length) {
+            time = window.historyData[window.historyData.length - 1].time;
+        } else {
+            time = window.historyData[0].time;
+        }
+    }
+    const price = series.coordinateToPrice(clampedY);
+    return { logical, time, price };
 }
 
-function valToPx(index, price) {
-    if (index === null || price === null || index === undefined || price === undefined) return { x: null, y: null };
-    const x = chart.timeScale().logicalToCoordinate(index);
+function valToPx(logical, time, price) {
+    if (price === null || price === undefined || isNaN(price)) {
+        return { x: null, y: null };
+    }
+
+    let x = null;
+    if (time !== undefined && time !== null) {
+        x = chart.timeScale().timeToCoordinate(time);
+    }
+    
+    if (x === null && logical !== undefined && logical !== null && !isNaN(logical)) {
+        x = chart.timeScale().logicalToCoordinate(logical);
+    }
+
     const y = series.priceToCoordinate(price);
+    if (x === null || y === null || isNaN(x) || isNaN(y)) {
+        return { x: null, y: null };
+    }
     return { x, y };
 }
 
 function redraw() {
+    const bounds = getPlotBounds();
+    ctx.save();
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const dpr = window.devicePixelRatio || 1;
+    ctx.scale(dpr, dpr);
+
+    ctx.beginPath();
+    ctx.rect(0, 0, bounds.width, bounds.height);
+    ctx.clip();
+
     drawings.forEach(d => drawShape(d, false));
     if (currentShape) drawShape(currentShape, true);
+
+    ctx.restore();
 }
+window.redrawOverlay = redraw;
 
 function drawHandle(x, y) {
     if (x === null || y === null) return;
+    const bounds = getPlotBounds();
+    if (x < 0 || x > bounds.width || y < 0 || y > bounds.height) return;
+
     ctx.save();
     ctx.fillStyle = '#ffffff';
     ctx.strokeStyle = '#2962ff';
     ctx.lineWidth = 2;
     ctx.beginPath();
-    ctx.arc(x, y, 5, 0, Math.PI * 2);
+    ctx.arc(x, y, 4.5, 0, Math.PI * 2);
     ctx.fill();
     ctx.stroke();
     ctx.restore();
@@ -1397,38 +2079,54 @@ function drawShape(shape, preview = false) {
     ctx.strokeStyle = shape.color || '#2962ff';
     ctx.fillStyle = shape.fill || 'rgba(41,98,255,0.15)';
 
-    let p1 = preview ? { x: shape.x1, y: shape.y1 } : valToPx(shape.i1, shape.p1);
-    let p2 = preview ? { x: shape.x2, y: shape.y2 } : (shape.i2 !== undefined ? valToPx(shape.i2, shape.p2) : { x: null, y: null });
-
-    if (!preview && (p1.x === null || p1.y === null)) {
-        ctx.restore();
-        return;
-    }
+    const bounds = getPlotBounds();
+    let p1 = preview ? { x: shape.x1, y: shape.y1 } : valToPx(shape.i1, shape.t1, shape.p1);
+    let p2 = preview ? { x: shape.x2, y: shape.y2 } : ((shape.i2 !== undefined || shape.t2 !== undefined) ? valToPx(shape.i2, shape.t2, shape.p2) : { x: null, y: null });
 
     switch(shape.type) {
         case 'trend':
-            if (p2.x !== null) line(p1.x, p1.y, p2.x, p2.y);
+            if (p1.x !== null && p2.x !== null) line(p1.x, p1.y, p2.x, p2.y);
             break;
-        case 'ray':
-            if (p2.x !== null) drawRay(p1, p2);
+        case 'hline': {
+            const y = preview ? p1.y : series.priceToCoordinate(shape.p1);
+            if (y !== null && y >= 0 && y <= bounds.height) {
+                line(0, y, bounds.width, y);
+            }
             break;
-        case 'hline':
-            line(0, p1.y, canvas.width / (window.devicePixelRatio || 1), p1.y);
+        }
+        case 'vline': {
+            const x = preview ? p1.x : valToPx(shape.i1, shape.t1, shape.p1).x;
+            if (x !== null && x >= 0 && x <= bounds.width) {
+                line(x, 0, x, bounds.height);
+            }
             break;
-        case 'vline':
-            line(p1.x, 0, p1.x, canvas.height / (window.devicePixelRatio || 1));
-            break;
+        }
         case 'rect':
-            if (p2.x !== null) rect(p1.x, p1.y, p2.x, p2.y);
+            if (p1.x !== null && p2.x !== null) rect(p1.x, p1.y, p2.x, p2.y);
             break;
         case 'circle':
-            if (p2.x !== null) circle(p1.x, p1.y, p2.x, p2.y);
+            if (p1.x !== null && p2.x !== null) circle(p1.x, p1.y, p2.x, p2.y);
             break;
         case 'arrow':
-            if (p2.x !== null) arrow(p1.x, p1.y, p2.x, p2.y);
+            if (p1.x !== null && p2.x !== null) arrow(p1.x, p1.y, p2.x, p2.y);
+            break;
+        case 'parallel':
+            if (p1.x !== null && p2.x !== null) drawParallelChannel(p1, p2, shape);
             break;
         case 'fib':
-            if (p2.x !== null) fib(p1.x, p1.y, p2.x, p2.y, shape);
+            if (p1.x !== null && p2.x !== null) fibRetracement(shape, p1, p2);
+            break;
+        case 'fib_ext':
+            if (p1.x !== null && p2.x !== null) fibExtension(shape, p1, p2);
+            break;
+        case 'fib_timezone':
+            if (p1.x !== null && p2.x !== null) fibTimeZones(p1.x, p1.y, p2.x, p2.y);
+            break;
+        case 'fib_circles':
+            if (p1.x !== null && p2.x !== null) fibCircles(p1.x, p1.y, p2.x, p2.y);
+            break;
+        case 'fib_fan':
+            if (p1.x !== null && p2.x !== null) fibFan(p1.x, p1.y, p2.x, p2.y);
             break;
         case 'long':
         case 'short':
@@ -1438,107 +2136,93 @@ function drawShape(shape, preview = false) {
             drawPoints(shape, preview);
             break;
         case 'triangle':
-            if (p2.x !== null) triangle(p1.x, p1.y, p2.x, p2.y);
+            if (p1.x !== null && p2.x !== null) triangle(p1.x, p1.y, p2.x, p2.y);
             break;
         case 'measure':
-            if (p2.x !== null) measure(p1.x, p1.y, p2.x, p2.y);
+            if (p1.x !== null && p2.x !== null) measure(p1.x, p1.y, p2.x, p2.y, shape, preview);
             break;
         case 'text':
-            drawText(shape.text, p1.x, p1.y, shape);
+            if (p1.x !== null && p1.y !== null && p1.x >= 0 && p1.x <= bounds.width) {
+                drawText(shape.text, p1.x, p1.y, shape);
+            }
             break;
         case 'label':
-            label(shape.text, p1.x, p1.y, shape);
+            if (p1.x !== null && p1.y !== null && p1.x >= 0 && p1.x <= bounds.width) {
+                label(shape.text, p1.x, p1.y, shape);
+            }
             break;
     }
 
     if (selected === shape && !preview && shape.type !== 'long' && shape.type !== 'short') {
-        drawHandle(p1.x, p1.y);
-        if (p2.x !== null) drawHandle(p2.x, p2.y);
+        if (shape.type === 'hline') {
+            const y = series.priceToCoordinate(shape.p1);
+            if (y !== null) drawHandle(bounds.width / 2, y);
+        } else if (shape.type === 'vline') {
+            if (p1.x !== null) drawHandle(p1.x, bounds.height / 2);
+        } else {
+            if (p1.x !== null) drawHandle(p1.x, p1.y);
+            if (p2.x !== null) drawHandle(p2.x, p2.y);
+        }
     }
     ctx.restore();
 }
 
 function drawPositionTool(shape, preview) {
-    let entryPx = preview ? { x: shape.x1, y: shape.y1 } : valToPx(shape.i1, shape.p1);
-    let targetPx = preview ? { x: shape.x2, y: shape.y2 } : valToPx(shape.i2, shape.targetPrice);
-    let stopPx = preview ? { x: shape.x2, y: shape.y2 } : valToPx(shape.i2, shape.stopPrice);
+    const isLong = shape.type === 'long';
+    const bounds = getPlotBounds();
 
-    if (!preview && (entryPx.x === null || entryPx.y === null)) return;
+    let entryPx = preview ? { x: shape.x1, y: shape.y1 } : valToPx(shape.i1, shape.t1, shape.p1);
+    let rightPx = preview ? { x: shape.x2, y: shape.y2 } : valToPx(shape.i2, shape.t2, shape.p1);
+    let targetPx = preview ? { x: shape.x2, y: shape.y2 } : valToPx(shape.i2, shape.t2, shape.targetPrice);
+    let stopPx = preview ? { x: shape.x2, y: shape.y2 } : valToPx(shape.i2, shape.t2, shape.stopPrice);
 
-    let width = preview ? Math.abs(shape.x2 - shape.x1) : Math.abs((targetPx.x || entryPx.x + 60) - entryPx.x);
-    width = Math.max(width, 50);
+    if (entryPx.x === null || entryPx.y === null) return;
 
-    let leftX = entryPx.x;
-    let rightX = entryPx.x + width;
+    let width = preview ? Math.abs(shape.x2 - shape.x1) : Math.abs((rightPx.x || entryPx.x + 80) - entryPx.x);
+    width = Math.max(width, 70);
 
-    let isLong = shape.type === 'long';
+    let leftX = Math.min(entryPx.x, preview ? shape.x2 : (rightPx.x || entryPx.x + width));
+    let rightX = Math.min(leftX + width, bounds.width);
     
-    let targetY = preview ? (isLong ? entryPx.y - 40 : entryPx.y + 40) : targetPx.y;
-    let stopY = preview ? (isLong ? entryPx.y + 20 : entryPx.y - 20) : stopPx.y;
+    let targetY = targetPx.y !== null ? targetPx.y : (isLong ? entryPx.y - 45 : entryPx.y + 45);
+    let stopY = stopPx.y !== null ? stopPx.y : (isLong ? entryPx.y + 25 : entryPx.y - 25);
 
-    ctx.fillStyle = shape.targetColor || 'rgba(8, 153, 129, 0.25)';
-    ctx.fillRect(leftX, Math.min(entryPx.y, targetY), width, Math.abs(entryPx.y - targetY));
+    ctx.save();
+    ctx.fillStyle = shape.targetColor || 'rgba(8, 153, 129, 0.22)';
     ctx.strokeStyle = '#089981';
-    ctx.strokeRect(leftX, Math.min(entryPx.y, targetY), width, Math.abs(entryPx.y - targetY));
+    ctx.lineWidth = 1.5;
+    const targetBoxTop = Math.min(entryPx.y, targetY);
+    const targetBoxHeight = Math.abs(entryPx.y - targetY);
+    ctx.fillRect(leftX, targetBoxTop, rightX - leftX, targetBoxHeight);
+    ctx.strokeRect(leftX, targetBoxTop, rightX - leftX, targetBoxHeight);
 
-    ctx.fillStyle = shape.stopColor || 'rgba(242, 54, 69, 0.25)';
-    ctx.fillRect(leftX, Math.min(entryPx.y, stopY), width, Math.abs(entryPx.y - stopY));
+    ctx.fillStyle = shape.stopColor || 'rgba(242, 54, 69, 0.22)';
     ctx.strokeStyle = '#f23645';
-    ctx.strokeRect(leftX, Math.min(entryPx.y, stopY), width, Math.abs(entryPx.y - stopY));
+    ctx.lineWidth = 1.5;
+    const stopBoxTop = Math.min(entryPx.y, stopY);
+    const stopBoxHeight = Math.abs(entryPx.y - stopY);
+    ctx.fillRect(leftX, stopBoxTop, rightX - leftX, stopBoxHeight);
+    ctx.strokeRect(leftX, stopBoxTop, rightX - leftX, stopBoxHeight);
 
+    ctx.beginPath();
     ctx.strokeStyle = '#ffffff';
     ctx.lineWidth = 1.5;
-    ctx.beginPath();
     ctx.moveTo(leftX, entryPx.y);
     ctx.lineTo(rightX, entryPx.y);
     ctx.stroke();
 
-    if (!preview) {
-        let entryP = shape.p1;
-        let targetP = shape.targetPrice;
-        let stopP = shape.stopPrice;
-
-        let rewardPips = Math.abs(targetP - entryP);
-        let riskPips = Math.abs(entryP - stopP);
-        let rrr = riskPips > 0 ? (rewardPips / riskPips).toFixed(2) : "0.00";
-
-        ctx.fillStyle = '#131722';
-        ctx.fillRect(leftX + 4, entryPx.y - 11, 100, 22);
-        ctx.strokeStyle = '#363a45';
-        ctx.strokeRect(leftX + 4, entryPx.y - 11, 100, 22);
-
-        ctx.fillStyle = '#ffffff';
-        ctx.font = '10px sans-serif';
-        ctx.fillText(`R/R Ratio: ${rrr}`, leftX + 8, entryPx.y + 4);
-    }
-
     if (selected === shape && !preview) {
-        drawHandle(entryPx.x + width / 2, entryPx.y);
-        drawHandle(entryPx.x + width / 2, targetY);
-        drawHandle(entryPx.x + width / 2, stopY);
+        drawHandle(leftX + (rightX - leftX) / 2, entryPx.y);
+        drawHandle(leftX + (rightX - leftX) / 2, targetY);
+        drawHandle(leftX + (rightX - leftX) / 2, stopY);
+        drawHandle(rightX, entryPx.y);
     }
+    ctx.restore();
 }
 
-function line(x1, y1, x2, y2) {
-    ctx.beginPath();
-    ctx.moveTo(x1, y1);
-    ctx.lineTo(x2, y2);
-    ctx.stroke();
-}
-
-function rect(x1, y1, x2, y2) {
-    ctx.fillRect(x1, y1, x2 - x1, y2 - y1);
-    ctx.strokeRect(x1, y1, x2 - x1, y2 - y1);
-}
-
-function circle(x1, y1, x2, y2) {
-    const r = Math.hypot(x2 - x1, y2 - y1);
-    ctx.beginPath();
-    ctx.arc(x1, y1, r, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.stroke();
-}
-
+function line(x1, y1, x2, y2) { ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke(); }
+function rect(x1, y1, x2, y2) { ctx.fillRect(x1, y1, x2 - x1, y2 - y1); ctx.strokeRect(x1, y1, x2 - x1, y2 - y1); }
+function circle(x1, y1, x2, y2) { const r = Math.hypot(x2 - x1, y2 - y1); ctx.beginPath(); ctx.arc(x1, y1, r, 0, Math.PI * 2); ctx.fill(); ctx.stroke(); }
 function arrow(x1, y1, x2, y2) {
     line(x1, y1, x2, y2);
     const angle = Math.atan2(y2 - y1, x2 - x1);
@@ -1550,65 +2234,166 @@ function arrow(x1, y1, x2, y2) {
     ctx.fill();
 }
 
-function drawRay(p1, p2) {
-    const angle = Math.atan2(p2.y - p1.y, p2.x - p1.x);
-    line(p1.x, p1.y, p1.x + Math.cos(angle) * 4000, p1.y + Math.sin(angle) * 4000);
+function drawParallelChannel(p1, p2, shape) {
+    const offset = shape.channelOffset || 30;
+    line(p1.x, p1.y, p2.x, p2.y);
+    line(p1.x, p1.y + offset, p2.x, p2.y + offset);
+    ctx.save();
+    ctx.setLineDash([3, 3]);
+    line(p1.x, p1.y + offset / 2, p2.x, p2.y + offset / 2);
+    ctx.restore();
 }
 
 function drawPoints(shape, preview) {
     if (!shape.points || shape.points.length === 0) return;
     ctx.beginPath();
-    shape.points.forEach((pt, i) => {
-        const p = preview ? pt : valToPx(pt.i, pt.p);
-        if (p.x !== null) {
-            if (i === 0) ctx.moveTo(p.x, p.y);
-            else ctx.lineTo(p.x, p.y);
+    let started = false;
+    shape.points.forEach((pt) => {
+        const p = preview ? pt : valToPx(pt.i, pt.t, pt.p);
+        if (p.x !== null && p.y !== null) {
+            if (!started) {
+                ctx.moveTo(p.x, p.y);
+                started = true;
+            } else {
+                ctx.lineTo(p.x, p.y);
+            }
         }
     });
     ctx.stroke();
 }
 
-function triangle(x1, y1, x2, y2) {
-    ctx.beginPath();
-    ctx.moveTo(x1, y2);
-    ctx.lineTo((x1 + x2) / 2, y1);
-    ctx.lineTo(x2, y2);
-    ctx.closePath();
-    ctx.fill();
-    ctx.stroke();
-}
+function triangle(x1, y1, x2, y2) { ctx.beginPath(); ctx.moveTo(x1, y2); ctx.lineTo((x1 + x2) / 2, y1); ctx.lineTo(x2, y2); ctx.closePath(); ctx.fill(); ctx.stroke(); }
 
-function measure(x1, y1, x2, y2) {
+function measure(x1, y1, x2, y2, shape, preview) {
     line(x1, y1, x2, y2);
-    const dist = Math.round(Math.hypot(x2 - x1, y2 - y1));
+    const spec = getSpec();
+    const pA = preview ? series.coordinateToPrice(y1) : shape.p1;
+    const pB = preview ? series.coordinateToPrice(y2) : shape.p2;
+    const pips = (pA && pB) ? Math.abs((pB - pA) / spec.pipSize).toFixed(1) : "0";
+    
+    ctx.save();
+    ctx.fillStyle = 'rgba(19, 23, 34, 0.9)';
+    ctx.fillRect((x1 + x2) / 2, (y1 + y2) / 2 - 20, 95, 20);
+    ctx.strokeStyle = '#2962ff';
+    ctx.strokeRect((x1 + x2) / 2, (y1 + y2) / 2 - 20, 95, 20);
     ctx.fillStyle = '#ffffff';
-    ctx.font = '12px sans-serif';
-    ctx.fillText(dist + ' px', (x1 + x2) / 2 + 5, (y1 + y2) / 2 - 5);
+    ctx.font = '10px monospace';
+    ctx.fillText(`Δ ${pips} ${spec.pipName}`, (x1 + x2) / 2 + 6, (y1 + y2) / 2 - 6);
+    ctx.restore();
 }
 
-function fib(x1, y1, x2, y2, s) {
-    const levels = s.fibLevels || [0, 0.236, 0.382, 0.5, 0.618, 0.786, 1];
-    levels.forEach(l => {
+function fibRetracement(s, p1, p2) {
+    const bounds = getPlotBounds();
+    const x1 = p1.x, x2 = p2.x;
+    const y1 = p1.y, y2 = p2.y;
+
+    const levels = s.fibLevels || [0, 0.236, 0.382, 0.5, 0.618, 0.786, 1.0];
+    const colors = ['#787b86', '#f23645', '#ff9800', '#089981', '#2962ff', '#9c27b0', '#787b86'];
+
+    const minX = Math.min(x1, x2);
+    const maxX = Math.max(x1, x2);
+
+    levels.forEach((l, idx) => {
         const y = y1 + (y2 - y1) * l;
-        line(x1, y, x2, y);
-        ctx.fillStyle = s.textColor || '#787b86';
-        ctx.font = "11px sans-serif";
-        ctx.fillText((l * 100).toFixed(1) + '%', Math.max(x1, x2) + 5, y + 4);
+        if (y < 0 || y > bounds.height) return;
+        ctx.save();
+        ctx.strokeStyle = colors[idx % colors.length];
+        ctx.lineWidth = 1;
+        line(minX, y, maxX, y);
+        ctx.fillStyle = colors[idx % colors.length];
+        ctx.font = "10px monospace";
+        ctx.fillText(`${(l * 100).toFixed(1)}%`, maxX + 6, y + 3);
+        ctx.restore();
     });
 }
 
-function drawText(txt, x, y, s) {
-    ctx.fillStyle = s.color || '#fff';
-    ctx.font = (s.fontSize || 14) + 'px Arial';
-    ctx.fillText(txt, x, y);
+function fibExtension(s, p1, p2) {
+    const bounds = getPlotBounds();
+    const x1 = p1.x, x2 = p2.x;
+    const y1 = p1.y, y2 = p2.y;
+
+    const extLevels = [0, 0.618, 1.0, 1.272, 1.618, 2.0, 2.618];
+    const colors = ['#787b86', '#089981', '#2962ff', '#ff9800', '#f23645', '#9c27b0', '#e91e63'];
+
+    const minX = Math.min(x1, x2);
+    const maxX = Math.max(x1, x2);
+
+    extLevels.forEach((l, idx) => {
+        const y = y2 - (y2 - y1) * l;
+        if (y < 0 || y > bounds.height) return;
+        ctx.save();
+        ctx.strokeStyle = colors[idx % colors.length];
+        ctx.lineWidth = 1;
+        line(minX, y, maxX, y);
+        ctx.fillStyle = colors[idx % colors.length];
+        ctx.font = "10px monospace";
+        ctx.fillText(`Ext ${l.toFixed(3)}`, maxX + 6, y + 3);
+        ctx.restore();
+    });
 }
 
-function label(txt, x, y, s) {
-    ctx.fillStyle = s.color || '#2962ff';
-    ctx.fillRect(x, y, 90, 24);
-    ctx.fillStyle = '#fff';
-    ctx.font = "12px sans-serif";
-    ctx.fillText(txt, x + 8, y + 16);
+function fibTimeZones(x1, y1, x2, y2) {
+    const intervals = [0, 1, 2, 3, 5, 8, 13, 21];
+    const baseDelta = Math.max(Math.abs(x2 - x1), 15);
+    const originX = Math.min(x1, x2);
+    const bounds = getPlotBounds();
+
+    intervals.forEach((num) => {
+        const targetX = originX + (baseDelta * num);
+        if (targetX < 0 || targetX > bounds.width) return;
+        ctx.save();
+        ctx.strokeStyle = 'rgba(41, 98, 255, 0.45)';
+        ctx.setLineDash([4, 4]);
+        line(targetX, 0, targetX, bounds.height);
+        ctx.fillStyle = '#787b86';
+        ctx.font = '10px monospace';
+        ctx.fillText(`T ${num}`, targetX + 4, 30);
+        ctx.restore();
+    });
+}
+
+function fibCircles(x1, y1, x2, y2) {
+    const baseRadius = Math.hypot(x2 - x1, y2 - y1);
+    const multipliers = [0.382, 0.618, 1.0, 1.618];
+    const bounds = getPlotBounds();
+
+    multipliers.forEach(m => {
+        const r = baseRadius * m;
+        ctx.save();
+        ctx.strokeStyle = 'rgba(41, 98, 255, 0.4)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.arc(x1, y1, r, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.restore();
+    });
+}
+
+function fibFan(x1, y1, x2, y2) {
+    line(x1, y1, x2, y2);
+    const fibRatios = [0.382, 0.5, 0.618];
+    const dx = x2 - x1;
+    const dy = y2 - y1;
+    const bounds = getPlotBounds();
+
+    fibRatios.forEach(r => {
+        const targetY = y1 + dy * r;
+        const endX = Math.min(x1 + dx * 2, bounds.width);
+        const endY = y1 + (targetY - y1) * 2;
+        ctx.save();
+        ctx.strokeStyle = 'rgba(8, 153, 129, 0.5)';
+        line(x1, y1, endX, endY);
+        ctx.restore();
+    });
+}
+
+function drawText(txt, x, y, s) { ctx.fillStyle = s.color || '#fff'; ctx.font = (s.fontSize || 13) + 'px -apple-system, sans-serif'; ctx.fillText(txt, x, y); }
+function label(txt, x, y, s) { 
+    ctx.fillStyle = s.color || '#2962ff'; 
+    ctx.fillRect(x, y, 80, 22); 
+    ctx.fillStyle = '#fff'; 
+    ctx.font = "bold 11px sans-serif"; 
+    ctx.fillText(txt, x + 6, y + 15); 
 }
 
 window.setTool = function(t) {
@@ -1618,8 +2403,8 @@ window.setTool = function(t) {
 
     let targetIcon = document.getElementById('tool-' + t);
     if (!targetIcon) {
-        if (['trend','ray','hline','vline','arrow'].includes(t)) targetIcon = document.getElementById('primary-lines-icon');
-        if (['fib'].includes(t)) targetIcon = document.getElementById('primary-fib-icon');
+        if (['trend','hline','vline','arrow','parallel'].includes(t)) targetIcon = document.getElementById('primary-lines-icon');
+        if (['fib','fib_ext','fib_timezone','fib_circles','fib_fan'].includes(t)) targetIcon = document.getElementById('primary-fib-icon');
         if (['rect','circle','triangle'].includes(t)) targetIcon = document.getElementById('primary-shapes-icon');
         if (['text','label'].includes(t)) targetIcon = document.getElementById('primary-text-icon');
         if (['brush'].includes(t)) targetIcon = document.getElementById('primary-brush-icon');
@@ -1640,6 +2425,7 @@ window.setTool = function(t) {
 };
 
 window.clearDrawings = function() {
+    if (drawings.length > 0) pushHistory();
     drawings = [];
     selected = null;
     redraw();
@@ -1647,12 +2433,19 @@ window.clearDrawings = function() {
 
 function convertToLogical(shape) {
     const v1 = pxToVal(shape.x1, shape.y1);
-    shape.i1 = v1.index; 
+    shape.i1 = v1.logical;
+    shape.t1 = v1.time;
     shape.p1 = v1.price;
+
+    if (shape.type === 'hline') return;
+    if (shape.type === 'vline') return;
 
     if (shape.type === 'long' || shape.type === 'short') {
         const isLong = shape.type === 'long';
-        shape.i2 = (v1.index || 0) + 12;
+        const v2 = shape.x2 !== undefined ? pxToVal(shape.x2, shape.y2) : { logical: (v1.logical || 0) + 14, price: v1.price, time: v1.time };
+        shape.i2 = v2.logical;
+        shape.t2 = v2.time;
+
         const priceOffset = v1.price * 0.005;
         shape.targetPrice = isLong ? v1.price + priceOffset : v1.price - priceOffset;
         shape.stopPrice = isLong ? v1.price - (priceOffset * 0.5) : v1.price + (priceOffset * 0.5);
@@ -1661,45 +2454,39 @@ function convertToLogical(shape) {
 
     if (shape.x2 !== undefined) {
         const v2 = pxToVal(shape.x2, shape.y2);
-        shape.i2 = v2.index; shape.p2 = v2.price;
+        shape.i2 = v2.logical;
+        shape.t2 = v2.time;
+        shape.p2 = v2.price;
     }
     if (shape.points) {
         shape.points = shape.points.map(pt => {
             const v = pxToVal(pt.x, pt.y);
-            return { i: v.index, p: v.price };
+            return { i: v.logical, t: v.time, p: v.price };
         });
     }
 }
 
 function findShapeNear(x, y) {
+    const bounds = getPlotBounds();
+    if (x > bounds.width || y > bounds.height) return null;
+
     for (let i = drawings.length - 1; i >= 0; i--) {
         const s = drawings[i];
-        
-        if (s.type === 'long' || s.type === 'short') {
-            let entryPx = valToPx(s.i1, s.p1);
-            let targetPx = valToPx(s.i2, s.targetPrice);
-            let stopPx = valToPx(s.i2, s.stopPrice);
 
-            if (entryPx.x !== null && entryPx.y !== null) {
-                let width = Math.max(Math.abs((targetPx.x || entryPx.x + 60) - entryPx.x), 50);
-                let midX = entryPx.x + width / 2;
-
-                if (Math.hypot(midX - x, entryPx.y - y) < 12) return { shape: s, handle: 'p1' };
-                if (targetPx.y !== null && Math.hypot(midX - x, targetPx.y - y) < 12) return { shape: s, handle: 'target' };
-                if (stopPx.y !== null && Math.hypot(midX - x, stopPx.y - y) < 12) return { shape: s, handle: 'stop' };
-
-                let minY = Math.min(entryPx.y, targetPx.y || entryPx.y, stopPx.y || entryPx.y);
-                let maxY = Math.max(entryPx.y, targetPx.y || entryPx.y, stopPx.y || entryPx.y);
-
-                if (x >= entryPx.x && x <= entryPx.x + width && y >= minY && y <= maxY) {
-                    return { shape: s, handle: 'body' };
-                }
-            }
+        if (s.type === 'hline') {
+            const yCoord = series.priceToCoordinate(s.p1);
+            if (yCoord !== null && Math.abs(yCoord - y) < 10) return { shape: s, handle: 'p1' };
             continue;
         }
 
-        const p1 = valToPx(s.i1, s.p1);
-        const p2 = s.i2 !== undefined ? valToPx(s.i2, s.p2) : { x: null, y: null };
+        if (s.type === 'vline') {
+            const xCoord = valToPx(s.i1, s.t1, s.p1).x;
+            if (xCoord !== null && Math.abs(xCoord - x) < 10) return { shape: s, handle: 'p1' };
+            continue;
+        }
+
+        const p1 = valToPx(s.i1, s.t1, s.p1);
+        const p2 = (s.i2 !== undefined || s.t2 !== undefined) ? valToPx(s.i2, s.t2, s.p2) : { x: null, y: null };
 
         if (p1.x !== null && Math.hypot(p1.x - x, p1.y - y) < 16) return { shape: s, handle: 'p1' };
         if (p2.x !== null && Math.hypot(p2.x - x, p2.y - y) < 16) return { shape: s, handle: 'p2' };
@@ -1715,8 +2502,6 @@ function findShapeNear(x, y) {
                 dist = Math.hypot(x - (p1.x + t * (p2.x - p1.x)), y - (p1.y + t * (p2.y - p1.y)));
             }
             if (dist < 16) return { shape: s, handle: 'body' };
-        } else if (p1.x !== null) {
-            if (Math.hypot(p1.x - x, p1.y - y) < 20) return { shape: s, handle: 'body' };
         }
     }
     return null;
@@ -1754,8 +2539,8 @@ canvas.addEventListener('contextmenu', e => {
         redraw();
         
         const menu = document.getElementById('canvasContextMenu');
-        menu.style.left = e.clientX + 'px';
-        menu.style.top = e.clientY + 'px';
+        menu.style.left = Math.min(e.clientX, window.innerWidth - 180) + 'px';
+        menu.style.top = Math.min(e.clientY, window.innerHeight - 100) + 'px';
         menu.style.display = 'flex';
     } else {
         hideContextMenu();
@@ -1767,6 +2552,7 @@ document.addEventListener('click', () => hideContextMenu());
 
 window.deleteSelectedDrawing = function() {
     if (rightClickedShape) {
+        pushHistory();
         drawings = drawings.filter(item => item !== rightClickedShape);
         if (selected === rightClickedShape) selected = null;
         rightClickedShape = null;
@@ -1783,17 +2569,12 @@ window.openSelectedToolSettings = function() {
     document.getElementById('toolSettingsTitle').innerText = `${s.type.toUpperCase()} Properties`;
     
     let html = `
-        <div class="modal-input-row"><span class="modal-label">Border/Line Color</span><input type="color" id="propColor" class="modal-color-picker" value="${s.color || '#2962ff'}"></div>
+        <div class="modal-input-row"><span class="modal-label">Stroke / Line Color</span><input type="color" id="propColor" class="modal-color-picker" value="${s.color || '#2962ff'}"></div>
         <div class="modal-input-row"><span class="modal-label">Thickness (px)</span><input type="number" id="propLineWidth" class="modal-input-field" value="${s.lineWidth || 2}" min="1" max="10"></div>
     `;
 
-    if (['rect','circle','triangle'].includes(s.type)) {
-        html += `<div class="modal-input-row"><span class="modal-label">Fill Color</span><input type="color" id="propFill" class="modal-color-picker" value="${s.fill ? s.fill.substring(0,7) : '#2962ff'}"></div>`;
-    }
-
-    if (s.type === 'fib') {
-        const levelsStr = (s.fibLevels || [0, 0.236, 0.382, 0.5, 0.618, 0.786, 1]).join(', ');
-        html += `<div class="modal-input-row"><span class="modal-label">Fib Levels</span><input type="text" id="propFibLevels" class="modal-input-field" value="${levelsStr}"></div>`;
+    if (['rect','circle','triangle','parallel'].includes(s.type)) {
+        html += `<div class="modal-input-row"><span class="modal-label">Fill Shading</span><input type="color" id="propFill" class="modal-color-picker" value="${s.fill ? s.fill.substring(0,7) : '#2962ff'}"></div>`;
     }
 
     body.innerHTML = html;
@@ -1804,15 +2585,20 @@ window.closeToolSettingsModal = function() { document.getElementById('toolSettin
 
 window.applyToolSettings = function() {
     if (!rightClickedShape) return;
+    pushHistory();
     const s = rightClickedShape;
+    const t = s.type;
+
     s.color = document.getElementById('propColor').value;
     s.lineWidth = parseInt(document.getElementById('propLineWidth').value) || 2;
-    const fillEl = document.getElementById('propFill');
-    if (fillEl) s.fill = fillEl.value + '33';
+    
+    saveToolSetting(t, 'color', s.color);
+    saveToolSetting(t, 'lineWidth', s.lineWidth);
 
-    const fibEl = document.getElementById('propFibLevels');
-    if (fibEl) {
-        s.fibLevels = fibEl.value.split(',').map(v => parseFloat(v.trim())).filter(v => !isNaN(v));
+    const fillEl = document.getElementById('propFill');
+    if (fillEl) {
+        s.fill = fillEl.value + '33';
+        saveToolSetting(t, 'fill', s.fill);
     }
 
     window.closeToolSettingsModal();
@@ -1833,14 +2619,9 @@ canvas.addEventListener('mousedown', e => {
             draggingHandle = hit.handle;
             const currentVal = pxToVal(startX, startY);
             dragStartVal = {
-                index: currentVal.index,
                 price: currentVal.price,
-                i1: hit.shape.i1,
                 p1: hit.shape.p1,
-                i2: hit.shape.i2,
-                p2: hit.shape.p2,
-                targetPrice: hit.shape.targetPrice,
-                stopPrice: hit.shape.stopPrice
+                p2: hit.shape.p2
             };
             canvas.style.pointerEvents = 'auto';
             chart.applyOptions({ handleScroll: false, handleScale: false });
@@ -1856,25 +2637,27 @@ canvas.addEventListener('mousedown', e => {
 
     drawing = true;
 
-    if (['brush'].includes(tool)) {
+    if (tool === 'brush') {
         currentShape = { type: tool, points: [{ x: startX, y: startY }], lineWidth: 2 };
+        applyDefaultsToShape(currentShape);
         return;
     }
 
-    if (tool === 'text' || tool === 'label') {
-        const txt = prompt(`Enter ${tool.toUpperCase()} Content:`);
-        if (txt) {
-            let s = { type: tool, x1: startX, y1: startY, text: txt };
-            convertToLogical(s);
-            drawings.push(s);
-            redraw();
-        }
+    if (tool === 'hline') {
+        pushHistory();
+        const bounds = getPlotBounds();
+        const currentVal = pxToVal(startX, startY);
+        let s = { type: 'hline', p1: currentVal.price, x1: 0, y1: startY, x2: bounds.width, y2: startY };
+        applyDefaultsToShape(s);
+        drawings.push(s);
         drawing = false;
         setTool('cursor');
+        redraw();
         return;
     }
 
     currentShape = { type: tool, x1: startX, y1: startY, x2: startX, y2: startY };
+    applyDefaultsToShape(currentShape);
 });
 
 canvas.addEventListener('mousemove', e => {
@@ -1885,25 +2668,17 @@ canvas.addEventListener('mousemove', e => {
     if (tool === 'cursor' && selected && draggingHandle) {
         const val = pxToVal(x, y);
         if (draggingHandle === 'p1') {
-            selected.i1 = val.index;
+            selected.i1 = val.logical;
+            selected.t1 = val.time;
             selected.p1 = val.price;
         } else if (draggingHandle === 'p2') {
-            selected.i2 = val.index;
+            selected.i2 = val.logical;
+            selected.t2 = val.time;
             selected.p2 = val.price;
-        } else if (draggingHandle === 'target') {
-            selected.targetPrice = val.price;
-        } else if (draggingHandle === 'stop') {
-            selected.stopPrice = val.price;
         } else if (draggingHandle === 'body' && dragStartVal) {
-            const dIdx = val.index - dragStartVal.index;
             const dPrice = val.price - dragStartVal.price;
-
-            if (dragStartVal.i1 !== undefined) selected.i1 = dragStartVal.i1 + dIdx;
             if (dragStartVal.p1 !== undefined) selected.p1 = dragStartVal.p1 + dPrice;
-            if (dragStartVal.i2 !== undefined) selected.i2 = dragStartVal.i2 + dIdx;
             if (dragStartVal.p2 !== undefined) selected.p2 = dragStartVal.p2 + dPrice;
-            if (dragStartVal.targetPrice !== undefined) selected.targetPrice = dragStartVal.targetPrice + dPrice;
-            if (dragStartVal.stopPrice !== undefined) selected.stopPrice = dragStartVal.stopPrice + dPrice;
         }
         redraw();
         return;
@@ -1914,7 +2689,8 @@ canvas.addEventListener('mousemove', e => {
     if (currentShape.points) {
         currentShape.points.push({ x, y });
     } else {
-        currentShape.x2 = x; currentShape.y2 = y;
+        currentShape.x2 = x; 
+        currentShape.y2 = y;
     }
     redraw();
 });
@@ -1933,6 +2709,7 @@ canvas.addEventListener('mouseup', () => {
     drawing = false;
 
     if (currentShape) {
+        pushHistory();
         convertToLogical(currentShape);
         drawings.push(currentShape);
         currentShape = null;
@@ -1942,67 +2719,27 @@ canvas.addEventListener('mouseup', () => {
     setTool('cursor');
 });
 
-function loadEarlierHistory() {
-    const config = TF_CONFIG[tf];
-    if (!config || isPreloadingHistory || !window.historyData || window.historyData.length === 0) return;
-
-    isPreloadingHistory = true;
-
-    const earliestCandle = window.historyData[0];
-    const earliestTime = earliestCandle.time;
-
-    const stepSeconds = config.stepDays * 86400;
-    const targetStartTime = earliestTime - stepSeconds;
-
-    const fromISO = new Date(targetStartTime * 1000).toISOString();
-    const toISO = new Date(earliestTime * 1000).toISOString();
-
-    const url = `https://mehtab13-backtestlab-pro.hf.space/data?symbol=${symbol}&tf=${tf}&initial=${fromISO}&current=${toISO}&to=${toISO}`;
-
-    fetch(url)
-    .then(r => r.json())
-    .then(res => {
-        const olderCandles = res.history || [];
-        if (olderCandles.length > 0) {
-            const filtered = olderCandles.filter(c => c.time < earliestCandle.time);
-
-            if (filtered.length > 0) {
-                const currentRange = chart.timeScale().getVisibleLogicalRange();
-                const barsAdded = filtered.length;
-
-                window.historyData = [...filtered, ...window.historyData];
-                historyData = window.historyData;
-
-                series.setData(window.historyData);
-
-                if (currentRange) {
-                    chart.timeScale().setVisibleLogicalRange({
-                        from: currentRange.from + barsAdded,
-                        to: currentRange.to + barsAdded
-                    });
-                }
-            }
-        }
-        isPreloadingHistory = false;
-    })
-    .catch(err => {
-        console.error("Backward preload failed:", err);
-        isPreloadingHistory = false;
-    });
-}
-
-chart.timeScale().subscribeVisibleLogicalRangeChange((logicalRange) => {
-    redraw();
-
-    if (!logicalRange) return;
-
-    if (logicalRange.from < 150 && window.historyData && window.historyData.length > 0 && TF_CONFIG[tf] && !isPreloadingHistory) {
-        loadEarlierHistory();
-    }
+chart.timeScale().subscribeVisibleLogicalRangeChange(() => {
+    requestAnimationFrame(redraw);
+});
+chart.timeScale().subscribeVisibleTimeRangeChange(() => {
+    requestAnimationFrame(redraw);
+});
+chart.subscribeCrosshairMove(() => {
+    requestAnimationFrame(redraw);
 });
 
-chart.timeScale().subscribeVisibleTimeRangeChange(redraw);
-chart.subscribeCrosshairMove(redraw);
+const originalSeriesUpdate = series.update.bind(series);
+series.update = function(bar) {
+    originalSeriesUpdate(bar);
+    requestAnimationFrame(redraw);
+};
+
+const originalSeriesSetData = series.setData.bind(series);
+series.setData = function(data) {
+    originalSeriesSetData(data);
+    requestAnimationFrame(redraw);
+};
 
 resizeCanvas();
 })();

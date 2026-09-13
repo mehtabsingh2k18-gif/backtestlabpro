@@ -336,7 +336,7 @@
 
     <div class="toggle-mode-panel">
         <span>Already have an account?</span>
-        <a href="login.html">Sign In</a>
+        <a id="signinLink" href="login.html">Sign In</a>
     </div>
 </div>
 
@@ -372,10 +372,19 @@
     const db = getFirestore(app);
     const googleProvider = new GoogleAuthProvider();
 
+    // Preserve redirect query parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    const redirectUrl = urlParams.get('redirect') || 'index.html';
+
+    // Update signin link with the parameter
+    const signinLink = document.getElementById("signinLink");
+    if (signinLink) {
+        signinLink.href = `login.html?redirect=${encodeURIComponent(redirectUrl)}`;
+    }
+
     const passwordInput = document.getElementById("password");
     const passRules = document.getElementById("passRules");
 
-    // Min 8 characters, at least 1 letter, at least 1 number
     const strongPassPattern = /^(?=.*[A-Za-z])(?=.*\d).{8,}$/;
 
     passwordInput.addEventListener("input", () => {
@@ -401,7 +410,6 @@
             const result = await signInWithPopup(auth, googleProvider);
             const user = result.user;
 
-            // Check if document already exists, otherwise provision a new user document
             const userDocRef = doc(db, "users", user.uid);
             const userSnapshot = await getDoc(userDocRef);
 
@@ -421,7 +429,7 @@
             localStorage.setItem("user_email", user.email);
             localStorage.setItem("user_name", displayName);
 
-            window.location.href = "index.html";
+            window.location.href = redirectUrl;
         } catch (error) {
             card.classList.remove("loading");
             errorBanner.style.display = "block";
@@ -466,7 +474,7 @@
             localStorage.setItem("user_email", user.email);
             localStorage.setItem("user_name", username);
 
-            window.location.href = "index.html";
+            window.location.href = redirectUrl;
         } catch (error) {
             card.classList.remove("loading");
             errorBanner.style.display = "block";

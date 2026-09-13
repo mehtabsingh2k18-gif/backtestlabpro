@@ -331,7 +331,7 @@
 
     <div class="toggle-mode-panel">
         <span>Need an account?</span>
-        <a href="signup.html">Sign Up</a>
+        <a id="signupLink" href="signup.html">Sign Up</a>
     </div>
 </div>
 
@@ -359,6 +359,16 @@
     const auth = getAuth(app);
     const googleProvider = new GoogleAuthProvider();
 
+    // Preserve redirect query parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    const redirectUrl = urlParams.get('redirect') || 'index.html';
+
+    // Update signup link with the parameter
+    const signupLink = document.getElementById("signupLink");
+    if (signupLink) {
+        signupLink.href = `signup.html?redirect=${encodeURIComponent(redirectUrl)}`;
+    }
+
     onAuthStateChanged(auth, (user) => {
         if (user) {
             localStorage.setItem("user_uid", user.uid);
@@ -366,7 +376,7 @@
             if (user.displayName) {
                 localStorage.setItem("user_name", user.displayName);
             }
-            window.location.href = "index.html";
+            window.location.href = redirectUrl;
         }
     });
 
@@ -378,6 +388,7 @@
 
         try {
             await signInWithPopup(auth, googleProvider);
+            window.location.href = redirectUrl;
         } catch (error) {
             card.classList.remove("loading");
             errorBanner.style.display = "block";
@@ -398,6 +409,7 @@
 
         try {
             await signInWithEmailAndPassword(auth, email, password);
+            window.location.href = redirectUrl;
         } catch (error) {
             card.classList.remove("loading");
             errorBanner.style.display = "block";

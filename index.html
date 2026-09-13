@@ -7,12 +7,10 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
     
-    <!-- Targeted SEO Title & Meta Description -->
     <title>Free Trading Bar Replay Simulator (No Sign Up) | BacktestLab Pro</title>
     <meta name="description" content="100% free multi-timeframe bar replay and backtesting simulator for Forex, Gold (XAUUSD), and Crypto. Backtest BPR, sweeps, and AI trading bots with no session limits or credit card.">
     <link rel="canonical" href="https://backtestlabpro.com/">
 
-    <!-- Open Graph & Social Cards -->
     <meta property="og:locale" content="en_US">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Free Trading Bar Replay Simulator (No Sign Up) | BacktestLab Pro">
@@ -22,58 +20,6 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Free Trading Bar Replay Simulator | BacktestLab Pro">
     <meta name="twitter:description" content="Test your trading edge on multi-year Gold, Forex, and Crypto data with zero subscription limits.">
-
-    <!-- Schema.org JSON-LD for Rich Search Snippets -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@graph": [
-        {
-          "@type": "SoftwareApplication",
-          "name": "BacktestLab Pro",
-          "applicationCategory": "FinanceApplication",
-          "operatingSystem": "Web, MetaTrader 5, Python",
-          "url": "https://backtestlabpro.com/",
-          "description": "Free trading bar replay and quantitative backtesting terminal for manual traders and algorithmic developers.",
-          "offers": {
-            "@type": "Offer",
-            "price": "0",
-            "priceCurrency": "USD",
-            "description": "Historical candle replay, manual backtesting, and strategy analysis are 100% free with no sign-up or credit card required."
-          }
-        },
-        {
-          "@type": "FAQPage",
-          "mainEntity": [
-            {
-              "@type": "Question",
-              "name": "Is BacktestLab Pro really free with no sign-up required?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Yes. You can immediately launch the chart simulator, replay historical tick data, and backtest setups completely free without entering a credit card or mandatory account sign-up."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "Does BacktestLab Pro support BPR (Balanced Price Range) and liquidity sweep backtesting?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Yes. The platform provides tick and bar replay engines specifically designed to test ICT concepts like Balanced Price Ranges (BPR), Previous Day High/Low sweeps, and session breakouts across XAUUSD and major forex pairs."
-              },
-              {
-                "@type": "Question",
-                "name": "When does BacktestLab Pro charge money?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "Only when you choose to export production-ready, compiled source code (.mql5 and .py) along with optimized configuration presets for live terminal or VPS execution."
-                }
-              }
-            }
-          ]
-        }
-      ]
-    }
-    </script>
 
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-YY82TZ1ZG7"></script>
@@ -154,9 +100,92 @@
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         #mini-chart-container { touch-action: pan-y pinch-zoom; }
+
+        /* Sync Toast */
+        #syncToast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 9999;
+            background: #111522;
+            border: 1px solid #10b981;
+            box-shadow: 0 16px 40px rgba(0,0,0,0.7);
+            border-radius: 12px;
+            padding: 16px 20px;
+            display: none;
+            align-items: center;
+            gap: 14px;
+            animation: toastSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes toastSlideUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Image-Style Navbar Components */
+        .btn-workspace {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #161821;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #d1d4dc;
+            padding: 7px 16px;
+            border-radius: 9999px;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+        .btn-workspace:hover {
+            background: #202433;
+            color: #ffffff;
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+        .btn-avatar-badge {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            background: #12151e;
+            border: 1px solid rgba(168, 85, 247, 0.5);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 12px rgba(168, 85, 247, 0.2);
+            color: #ffffff;
+            cursor: pointer;
+            position: relative;
+        }
+        .btn-avatar-badge:hover {
+            border-color: rgba(168, 85, 247, 0.9);
+            box-shadow: 0 0 16px rgba(168, 85, 247, 0.35);
+        }
+        .user-dropdown-menu {
+            display: none;
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            background: #11141c;
+            border: 1px solid #282d3b;
+            border-radius: 12px;
+            padding: 8px;
+            min-width: 190px;
+            box-shadow: 0 16px 40px rgba(0,0,0,0.6);
+            z-index: 100;
+        }
     </style>
 </head>
 <body class="font-sans antialiased min-h-screen flex flex-col justify-between selection:bg-indigo-500/30 selection:text-indigo-200" id="top" itemscope itemtype="https://schema.org/WebPage">
+
+    <!-- Toast Notification for Saved Sessions -->
+    <div id="syncToast">
+        <div class="w-8 h-8 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-400 font-bold">✓</div>
+        <div>
+            <div class="text-xs font-bold text-white tracking-wide" id="syncToastTitle">Session Saved Automatically</div>
+            <div class="text-[11px] text-zinc-400" id="syncToastSubtitle">Your backtest replay data is now preserved in your account.</div>
+        </div>
+        <button onclick="document.getElementById('syncToast').style.display='none'" class="text-zinc-500 hover:text-white text-xs ml-2">✕</button>
+    </div>
 
     <div class="glow-orb w-64 h-64 sm:w-[450px] sm:h-[450px] bg-brand-accent top-[-40px] left-[-40px]"></div>
     <div class="glow-orb w-72 h-72 sm:w-[500px] sm:h-[500px] bg-brand-purple top-[25%] right-[-60px]"></div>
@@ -176,7 +205,7 @@
             </a>
 
             <nav class="hidden lg:flex items-center gap-6 text-xs xl:text-sm font-medium" aria-label="Main Navigation">
-                <a href="session.html" class="text-zinc-300 hover:text-white transition-colors flex items-center gap-1.5">
+                <a href="chart.html" class="text-zinc-300 hover:text-white transition-colors flex items-center gap-1.5">
                     <i class="fa-solid fa-chart-line text-indigo-400 text-xs"></i> Free Replay
                 </a>
                 <a href="bot_automation.html" class="text-zinc-300 hover:text-white transition-colors flex items-center gap-1.5">
@@ -193,20 +222,60 @@
                 <a href="about.html" class="text-zinc-400 hover:text-white transition-colors">About Us</a>
             </nav>
 
+            <!-- Dynamic Header Control Buttons -->
             <div class="flex items-center gap-2 sm:gap-3 flex-shrink-0">
-                <a href="session.html" class="text-xs sm:text-sm font-semibold bg-white text-zinc-950 px-3.5 xs:px-4 sm:px-5 py-2 sm:py-2.5 rounded-full hover:bg-zinc-200 transition-all flex items-center gap-1.5 shadow-md">
-                    <span>Open Free Replay</span> <i class="fa-solid fa-arrow-right text-[10px]"></i>
-                </a>
 
-                <button id="mobileMenuToggle" aria-label="Toggle navigation" class="lg:hidden w-8 h-8 xs:w-9 xs:h-9 rounded-xl bg-zinc-900 border border-white/10 flex items-center justify-center text-zinc-300 hover:text-white">
+                <!-- Guest State -->
+                <div id="navGuestControls" class="flex items-center gap-2 sm:gap-3">
+                    <a href="login.html" class="text-xs sm:text-sm font-medium text-zinc-300 hover:text-white px-3 py-2 rounded-lg hover:bg-white/5 transition-colors">
+                        Sign In
+                    </a>
+                    <a href="chart.html" class="text-xs sm:text-sm font-semibold bg-white text-zinc-950 px-3.5 xs:px-4 sm:px-5 py-2 sm:py-2.5 rounded-full hover:bg-zinc-200 transition-all flex items-center gap-1.5 shadow-md">
+                        <span>Open Simulator →</span>
+                    </a>
+                </div>
+
+                <!-- Logged In State (Matching user screenshot) -->
+                <div id="navUserControls" class="hidden items-center gap-2.5">
+                    <a href="chart.html" class="text-xs sm:text-sm font-semibold bg-white text-zinc-950 px-4 py-2 sm:py-2.5 rounded-full hover:bg-zinc-200 transition-all flex items-center gap-1.5 shadow-md">
+                        <span>Open Simulator →</span>
+                    </a>
+
+                    <a href="my-sessions.html" class="btn-workspace">
+                        <i class="fa-solid fa-folder text-indigo-400"></i>
+                        <span>Workspace</span>
+                    </a>
+
+                    <!-- Profile Dropdown -->
+                    <div class="relative">
+                        <button onclick="toggleUserDropdown()" id="userAvatarBtn" class="btn-avatar-badge" title="User Profile">
+                            <i class="fa-solid fa-user text-xs"></i>
+                        </button>
+                        <div id="userDropdown" class="user-dropdown-menu">
+                            <div class="px-3 py-2 border-b border-white/5 text-[11px] font-mono text-zinc-400 truncate" id="userEmailDisplay">trader@domain.com</div>
+                            <a href="my-sessions.html" class="flex items-center gap-2 px-3 py-2 text-xs text-zinc-300 hover:text-white hover:bg-white/5 rounded-lg mt-1 transition-colors">
+                                <i class="fa-solid fa-folder text-indigo-400 text-[11px]"></i> My Sessions
+                            </a>
+                            <button onclick="handleUserSignOut()" class="w-full text-left flex items-center gap-2 px-3 py-2 text-xs text-red-400 hover:bg-red-500/10 rounded-lg transition-colors mt-0.5">
+                                <i class="fa-solid fa-arrow-right-from-bracket text-[11px]"></i> Sign Out
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <button id="mobileMenuToggle" aria-label="Toggle navigation" class="lg:hidden w-8 h-8 xs:w-9 xs:h-9 rounded-xl bg-zinc-900 border border-white/10 flex items-center justify-center text-zinc-300 hover:text-white ml-1">
                     <i id="menuHamburgerIcon" class="fa-solid fa-bars text-xs xs:text-sm"></i>
                 </button>
             </div>
         </div>
 
+        <!-- Mobile Drawer -->
         <div id="mobileDrawerMenu" class="hidden lg:hidden border-t border-white/10 bg-[#08080c]/98 backdrop-blur-2xl px-4 py-4 space-y-2.5 shadow-2xl">
-            <a href="session.html" class="block text-xs xs:text-sm font-semibold text-white py-2.5 px-3.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 transition-colors">
-                <i class="fa-solid fa-play text-xs mr-2"></i> Launch Free Bar Replay
+            <a href="chart.html" class="block text-xs xs:text-sm font-semibold text-white py-2.5 px-3.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 transition-colors">
+                <i class="fa-solid fa-play text-xs mr-2"></i> Launch Bar Replay Simulator
+            </a>
+            <a href="my-sessions.html" id="mobileWorkspaceLink" class="hidden text-xs xs:text-sm font-medium text-indigo-300 py-2 px-3 rounded-lg bg-indigo-500/10 border border-indigo-500/20">
+                <i class="fa-solid fa-folder mr-2"></i> Workspace (My Sessions)
             </a>
             <a href="bot_automation.html" class="block text-xs xs:text-sm font-medium text-zinc-300 hover:text-white py-2 px-3 rounded-lg hover:bg-white/5">
                 <i class="fa-solid fa-code text-indigo-400 mr-2"></i> BYO-AI Builder
@@ -228,7 +297,7 @@
 
     <main class="relative z-10 px-3 xs:px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-16 xs:space-y-20 sm:space-y-28 flex-grow w-full pt-6 sm:pt-10" role="main">
 
-        <!-- 01 — HERO (Keywords: Free Trading Bar Replay, No Sign Up, BPR Backtesting) -->
+        <!-- 01 — HERO -->
         <section class="text-center max-w-4xl mx-auto scroll-animate opacity-0 translate-y-6 transition-all duration-700 ease-out pt-4 sm:pt-8" aria-labelledby="hero-title">
             <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 font-mono text-[11px] mb-4">
                 <span class="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
@@ -252,10 +321,16 @@
                 </div>
             </div>
 
-            <div class="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 max-w-md mx-auto mb-8 w-full">
-                <a href="session.html" class="w-full sm:w-auto px-7 py-3.5 sm:py-4 rounded-xl bg-white text-zinc-950 font-display font-semibold hover:bg-zinc-200 transition-all flex items-center justify-center gap-2 text-xs sm:text-sm shadow-xl active:scale-95">
+            <!-- Hero Action Buttons with dynamic logged-in session support -->
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 max-w-lg mx-auto mb-8 w-full">
+                <a href="chart.html" class="w-full sm:w-auto px-7 py-3.5 sm:py-4 rounded-xl bg-white text-zinc-950 font-display font-semibold hover:bg-zinc-200 transition-all flex items-center justify-center gap-2 text-xs sm:text-sm shadow-xl active:scale-95">
                     Launch Free Replay
                 </a>
+
+                <a href="my-sessions.html" id="heroWorkspaceBtn" class="hidden w-full sm:w-auto px-7 py-3.5 sm:py-4 rounded-xl bg-indigo-600/20 border border-indigo-500/40 text-indigo-300 font-display font-semibold hover:bg-indigo-600/30 transition-all items-center justify-center gap-2 text-xs sm:text-sm active:scale-95">
+                    <i class="fa-solid fa-folder text-indigo-400"></i> My Saved Sessions
+                </a>
+
                 <a href="bot_automation.html" class="w-full sm:w-auto px-7 py-3.5 sm:py-4 rounded-xl bg-zinc-900 border border-white/10 text-white font-display font-semibold hover:bg-zinc-800 transition-all flex items-center justify-center gap-2 text-xs sm:text-sm active:scale-95">
                     Build an AI Algo
                 </a>
@@ -384,7 +459,7 @@
                             <i class="fa-solid fa-pause" id="mini-play-icon"></i> <span id="mini-play-text">Pause</span>
                         </button>
 
-                        <a href="session.html" class="px-4 py-2 rounded-xl bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 hover:bg-emerald-500/30 text-xs font-mono font-semibold transition-all flex items-center gap-1">
+                        <a href="chart.html" class="px-4 py-2 rounded-xl bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 hover:bg-emerald-500/30 text-xs font-mono font-semibold transition-all flex items-center gap-1">
                             📊 Full Terminal <i class="fa-solid fa-arrow-up-right-from-square text-[10px] ml-1"></i>
                         </a>
                     </div>
@@ -447,7 +522,7 @@
             </div>
         </section>
 
-        <!-- 05 — BRING YOUR OWN AI (BYO-AI) -->
+        <!-- 05 — BRING YOUR OWN AI -->
         <section class="scroll-animate opacity-0 translate-y-6 transition-all duration-700 ease-out">
             <div class="p-5 xs:p-6 sm:p-10 rounded-3xl glass-card border border-indigo-500/20">
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10 items-center">
@@ -552,7 +627,7 @@
             </div>
         </section>
 
-        <!-- 08 — COMMUNITY BOT ARENA & STRATEGY REPOSITORY (Includes BPR, Asian Sweep, PDH/PDL) -->
+        <!-- 08 — COMMUNITY BOT ARENA & STRATEGY REPOSITORY -->
         <section class="scroll-animate opacity-0 translate-y-6 transition-all duration-700 ease-out">
             <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-6 sm:mb-8 gap-3">
                 <div>
@@ -566,7 +641,6 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5">
-                <!-- Card 1: Asian Sweep -->
                 <div class="p-5 rounded-2xl glass-card flex flex-col justify-between">
                     <div>
                         <div class="flex items-center justify-between mb-2">
@@ -580,11 +654,10 @@
                     </div>
                     <div class="pt-3 border-t border-white/5 flex items-center justify-between text-xs font-mono">
                         <span class="text-zinc-500">Max DD: 4.1%</span>
-                        <a href="session.html" class="text-indigo-400 font-bold hover:text-indigo-300">Replay Strategy Free →</a>
+                        <a href="chart.html" class="text-indigo-400 font-bold hover:text-indigo-300">Replay Strategy Free →</a>
                     </div>
                 </div>
 
-                <!-- Card 2: BPR Backtest & Replay (Targeting Google Query) -->
                 <div class="p-5 rounded-2xl glass-card flex flex-col justify-between border border-purple-500/20">
                     <div>
                         <div class="flex items-center justify-between mb-2">
@@ -598,11 +671,10 @@
                     </div>
                     <div class="pt-3 border-t border-white/5 flex items-center justify-between text-xs font-mono">
                         <span class="text-zinc-500">Win Rate: 62%</span>
-                        <a href="session.html" class="text-purple-400 font-bold hover:text-purple-300">Replay Setup Free →</a>
+                        <a href="chart.html" class="text-purple-400 font-bold hover:text-purple-300">Replay Setup Free →</a>
                     </div>
                 </div>
 
-                <!-- Card 3: PDH / PDL Break & Retest -->
                 <div class="p-5 rounded-2xl glass-card flex flex-col justify-between">
                     <div>
                         <div class="flex items-center justify-between mb-2">
@@ -616,13 +688,13 @@
                     </div>
                     <div class="pt-3 border-t border-white/5 flex items-center justify-between text-xs font-mono">
                         <span class="text-zinc-500">Max DD: 3.2%</span>
-                        <a href="session.html" class="text-indigo-400 font-bold hover:text-indigo-300">Replay Strategy Free →</a>
+                        <a href="chart.html" class="text-indigo-400 font-bold hover:text-indigo-300">Replay Strategy Free →</a>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- 09 — THE PRODUCTION CODE EXPORT -->
+        <!-- 09 — PRODUCTION CODE EXPORT -->
         <section class="scroll-animate opacity-0 translate-y-6 transition-all duration-700 ease-out">
             <div class="p-5 xs:p-6 sm:p-10 rounded-3xl bg-gradient-to-b from-[#0e0e14] to-[#060608] border-2 border-indigo-500/30">
                 <div class="text-center max-w-2xl mx-auto mb-8 sm:mb-10">
@@ -671,7 +743,7 @@
             </div>
         </section>
 
-        <!-- 10 — FAQ (Optimized for Search Engine Snippets) -->
+        <!-- 10 — FAQ -->
         <section class="scroll-animate opacity-0 translate-y-6 transition-all duration-700 ease-out max-w-3xl mx-auto" aria-labelledby="faq-title">
             <div class="text-center mb-6 sm:mb-8">
                 <span class="text-xs font-mono font-bold text-indigo-400 uppercase tracking-wider">FAQ</span>
@@ -715,7 +787,7 @@
             <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-xs font-mono">
                 <div class="space-y-2">
                     <span class="text-white font-bold block">Platform</span>
-                    <a href="session.html" class="block hover:text-white">Free Bar Replay</a>
+                    <a href="chart.html" class="block hover:text-white">Free Bar Replay</a>
                     <a href="bot_automation.html" class="block hover:text-white">BYO-AI Builder</a>
                 </div>
                 <div class="space-y-2">
@@ -743,6 +815,111 @@
             </div>
         </div>
     </footer>
+
+    <!-- Firebase Auth & Auto-Sync Engine -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAensfI53w49Fd4A7Lz5_K9N1JOxZsW7Kk",
+            authDomain: "backtestlabpro.firebaseapp.com",
+            projectId: "backtestlabpro",
+            storageBucket: "backtestlabpro.firebasestorage.app",
+            messagingSenderId: "560146824734",
+            appId: "1:560146824734:web:5287d0ded3a1024e75780f",
+            measurementId: "G-YY82TZ1ZG7"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        // Manage Dynamic Nav UI based on Auth State
+        onAuthStateChanged(auth, async (user) => {
+            const guestControls = document.getElementById("navGuestControls");
+            const userControls = document.getElementById("navUserControls");
+            const heroWorkspace = document.getElementById("heroWorkspaceBtn");
+            const mobileWorkspace = document.getElementById("mobileWorkspaceLink");
+            const emailDisplay = document.getElementById("userEmailDisplay");
+
+            if (user) {
+                if (guestControls) guestControls.classList.add("hidden");
+                if (userControls) {
+                    userControls.classList.remove("hidden");
+                    userControls.classList.add("flex");
+                }
+                if (heroWorkspace) {
+                    heroWorkspace.classList.remove("hidden");
+                    heroWorkspace.classList.add("flex");
+                }
+                if (mobileWorkspace) mobileWorkspace.classList.remove("hidden");
+                if (emailDisplay) emailDisplay.innerText = user.email;
+
+                // Sync unsaved session stashed in localStorage
+                const pendingRaw = localStorage.getItem("pending_session_data");
+                if (pendingRaw) {
+                    try {
+                        const sessionData = JSON.parse(pendingRaw);
+                        sessionData.user_id = user.uid;
+                        sessionData.email = user.email;
+                        sessionData.created_at = sessionData.created_at || new Date().toISOString();
+
+                        await addDoc(collection(db, "users", user.uid, "sessions"), sessionData);
+                        localStorage.removeItem("pending_session_data");
+
+                        const toast = document.getElementById("syncToast");
+                        const sub = document.getElementById("syncToastSubtitle");
+                        if (toast && sub) {
+                            sub.innerText = `Session "${sessionData.session_name || 'Replay'}" synchronized to your dashboard!`;
+                            toast.style.display = "flex";
+                            setTimeout(() => { toast.style.display = "none"; }, 6000);
+                        }
+                    } catch (e) {
+                        console.error("Auto-sync error on index:", e);
+                    }
+                }
+            } else {
+                if (guestControls) guestControls.classList.remove("hidden");
+                if (userControls) {
+                    userControls.classList.add("hidden");
+                    userControls.classList.remove("flex");
+                }
+                if (heroWorkspace) {
+                    heroWorkspace.classList.add("hidden");
+                    heroWorkspace.classList.remove("flex");
+                }
+                if (mobileWorkspace) mobileWorkspace.classList.add("hidden");
+            }
+        });
+
+        window.toggleUserDropdown = function() {
+            const menu = document.getElementById("userDropdown");
+            if (menu) {
+                menu.style.display = menu.style.display === "block" ? "none" : "block";
+            }
+        };
+
+        window.handleUserSignOut = async function() {
+            try {
+                await signOut(auth);
+                localStorage.removeItem("user_uid");
+                localStorage.removeItem("user_email");
+                window.location.reload();
+            } catch(e) {
+                console.error("Sign out error:", e);
+            }
+        };
+
+        document.addEventListener('click', (e) => {
+            const avatar = document.getElementById("userAvatarBtn");
+            const dropdown = document.getElementById("userDropdown");
+            if (avatar && dropdown && !avatar.contains(e.target) && !dropdown.contains(e.target)) {
+                dropdown.style.display = "none";
+            }
+        });
+    </script>
 
     <!-- Chart & Auto-Replay Engine -->
     <script>

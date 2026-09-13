@@ -59,7 +59,6 @@
 
         .beacon-dismissed { opacity: 0 !important; transform: translateY(-8px) scale(0.95) !important; pointer-events: none !important; }
 
-        /* Modern Polished Topbar */
         .topbar { 
             height: 52px; 
             background: #11141c; 
@@ -110,7 +109,6 @@
             transform: scale(0.97);
         }
 
-        /* Clean Pair Badge (No Lock Icon) */
         .static-pair-badge {
             display: inline-flex;
             align-items: center;
@@ -126,7 +124,6 @@
             box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
         }
 
-        /* Play/Pause Button */
         #btn-playpause {
             display: inline-flex;
             align-items: center;
@@ -143,7 +140,6 @@
         #btn-playpause.is-playing { color: #ff9800; background: rgba(255, 152, 0, 0.12); }
         #btn-playpause.is-playing:hover { background: rgba(255, 152, 0, 0.2); }
 
-        /* Custom Dropdown Control */
         .custom-dropdown {
             position: relative;
             user-select: none;
@@ -221,7 +217,6 @@
             font-weight: 600;
         }
 
-        /* Go Live Button */
         .fancy-golive-btn {
             position: relative;
             display: inline-flex;
@@ -391,7 +386,6 @@
 </div>
 
 <div class="topbar">
-    <!-- Clean Pair Badge without lock icon -->
     <div class="static-pair-badge">
         <span id="staticPairText">XAUUSD (Gold)</span>
     </div>
@@ -689,11 +683,11 @@
 
 <div id="sessionModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:99999; align-items:center; justify-content:center;">
     <div style="width:400px; background:#131722; border:1px solid #2a2e39; border-radius:8px; padding:20px; box-sizing:border-box;">
-        <div style="font-size:18px; font-weight:bold; margin-bottom:15px; color:white;">Save Backtest Session</div>
-        <div style="font-size:12px; color:#787b86; margin-bottom:15px;">Replay reached final session date.</div>
+        <div style="font-size:18px; font-weight:bold; margin-bottom:10px; color:white;">Save Backtest Session</div>
+        <div style="font-size:12px; color:#787b86; margin-bottom:15px;">Give your replay session a name to store it in your dashboard analytics.</div>
         <input id="sessionNameInput" type="text" placeholder="Enter Session Name" style="width:100%; background:#1e222d; border:1px solid #363a45; color:white; padding:10px; border-radius:4px; box-sizing:border-box; margin-bottom:15px;">
         <div style="display:flex; gap:10px;">
-            <button onclick="saveSession()" style="flex:1; background:#2962ff; color:white; border:none; padding:10px; border-radius:4px; cursor:pointer;">SAVE SESSION</button>
+            <button onclick="saveSession()" style="flex:1; background:#2962ff; color:white; border:none; padding:10px; border-radius:4px; cursor:pointer; font-weight:600;">SAVE SESSION</button>
             <button onclick="closeSessionModal()" style="flex:1; background:#2a2e39; color:white; border:none; padding:10px; border-radius:4px; cursor:pointer;">CANCEL</button>
         </div>
     </div>
@@ -1303,38 +1297,22 @@ window.addEventListener('mouseup', () => {
     }
 });
 
+// Always prompt the modal first so the user gets to name their session
 function openSessionModal() {
     if (sessionEnded) return;
     sessionEnded = true;
     window.pause();
 
-    if (!window.auth || !window.auth.currentUser) {
-        const pendingSession = {
-            symbol: symbol,
-            timeframe: tf,
-            speed: speed,
-            final_time: lastReplayTime,
-            trades: trades,
-            balance: currentBalance,
-            risk: document.getElementById("riskPct").value,
-            total_pl: document.getElementById("totalPL").innerText,
-            equity: document.getElementById("currentEquity").innerText,
-            winrate: document.getElementById("winRate").innerText
-        };
-        sessionStorage.setItem("pending_session_data", JSON.stringify(pendingSession));
-        
-        alert("Replay ended! Please sign up or log in to save and analyze your session history.");
-        window.location.href = "login.html?redirect=chart.html";
-        return;
+    const nameInput = document.getElementById("sessionNameInput");
+    if (nameInput) {
+        nameInput.value = `${symbol} Replay - ${new Date().toLocaleDateString()}`;
     }
-
     document.getElementById("sessionModal").style.display = "flex";
 }
 
 function closeSessionModal() { document.getElementById("sessionModal").style.display = "none"; }
 function closeSuccessModal() { document.getElementById("successModal").style.display = "none"; }
 
-/* Dropdown Handlers */
 function toggleCustomDropdown(id) {
     const target = document.getElementById(id);
     const wasOpen = target.classList.contains('active');
@@ -1822,11 +1800,19 @@ window.addDoc = addDoc;
 
 window.saveSession = async function() {
     try {
-        if (!window.auth || !window.db) return;
-        const user = window.auth.currentUser;
+        const sessionNameInput = document.getElementById("sessionNameInput");
+        const sessionName = sessionNameInput ? sessionNameInput.value.trim() : "";
+        if (!sessionName) {
+            sessionNameInput.style.borderColor = "var(--down)";
+            return;
+        }
+
+        const user = window.auth ? window.auth.currentUser : null;
         
+        // Unauthenticated guest: stash with user-chosen name and route to login
         if (!user) {
             const pendingSession = {
+                session_name: sessionName,
                 symbol: symbol,
                 timeframe: tf,
                 speed: speed,
@@ -1838,49 +1824,55 @@ window.saveSession = async function() {
                 equity: document.getElementById("currentEquity").innerText,
                 winrate: document.getElementById("winRate").innerText,
                 max_drawdown: maxDrawdownPct.toFixed(2) + '%',
-                session_name: document.getElementById("sessionNameInput").value.trim() || `${symbol} Replay`
+                created_at: new Date().toISOString()
             };
-            sessionStorage.setItem("pending_session_data", JSON.stringify(pendingSession));
-            alert("Please create an account or log in to save this session to your account.");
+            
+            localStorage.setItem("pending_session_data", JSON.stringify(pendingSession));
+            window.closeSessionModal();
+            alert("Please login or signup to sync and preserve your session.");
             window.location.href = "login.html?redirect=chart.html";
             return;
         }
 
-        const sessionName = document.getElementById("sessionNameInput").value.trim();
-        if (!sessionName) {
-            document.getElementById("sessionNameInput").style.borderColor = "var(--down)";
-            return;
-        }
-
+        // Authenticated user: save directly to Firestore
         const sessionData = {
-            user_id: user.uid, email: user.email, session_name: sessionName, symbol: symbol, timeframe: tf, speed: speed,
-            final_time: lastReplayTime, trades: trades, balance: currentBalance,
-            risk: document.getElementById("riskPct").value, total_pl: document.getElementById("totalPL").innerText,
-            equity: document.getElementById("currentEquity").innerText, winrate: document.getElementById("winRate").innerText,
-            max_drawdown: maxDrawdownPct.toFixed(2) + '%', created_at: new Date().toISOString()
+            user_id: user.uid,
+            email: user.email,
+            session_name: sessionName,
+            symbol: symbol,
+            timeframe: tf,
+            speed: speed,
+            final_time: lastReplayTime,
+            trades: trades,
+            balance: currentBalance,
+            risk: document.getElementById("riskPct").value,
+            total_pl: document.getElementById("totalPL").innerText,
+            equity: document.getElementById("currentEquity").innerText,
+            winrate: document.getElementById("winRate").innerText,
+            max_drawdown: maxDrawdownPct.toFixed(2) + '%',
+            created_at: new Date().toISOString()
         };
 
         await window.addDoc(window.collection(window.db, "users", user.uid, "sessions"), sessionData);
         window.closeSessionModal();
         document.getElementById("successModal").style.display = "flex";
     } catch (err) {
-        console.error("Cloud Write Exception Failure Layer:", err);
+        console.error("Cloud Write Exception:", err);
     }
 };
 
 onAuthStateChanged(auth, async (user) => {
     if (user) {
-        const cachedRaw = sessionStorage.getItem("pending_session_data");
+        const cachedRaw = localStorage.getItem("pending_session_data");
         if (cachedRaw) {
             try {
                 const cached = JSON.parse(cachedRaw);
                 cached.user_id = user.uid;
                 cached.email = user.email;
-                cached.session_name = cached.session_name || `${cached.symbol || 'Gold'} Backtest`;
                 cached.created_at = new Date().toISOString();
 
                 await window.addDoc(window.collection(window.db, "users", user.uid, "sessions"), cached);
-                sessionStorage.removeItem("pending_session_data");
+                localStorage.removeItem("pending_session_data");
                 document.getElementById("successModal").style.display = "flex";
             } catch(e) {
                 console.error("Auto-sync pending session error:", e);
@@ -1889,8 +1881,11 @@ onAuthStateChanged(auth, async (user) => {
     }
 });
 
-window.load();
-window.calcLots();
+const pendingSession = localStorage.getItem("pending_session_data");
+if (!pendingSession) {
+    window.load();
+    window.calcLots();
+}
 </script>
 
 <script>

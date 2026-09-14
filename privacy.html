@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5.0">
+    <meta name="theme-color" content="#050507">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    
+    <title>Privacy Policy - BacktestLab Pro</title>
+    <meta name="description" content="Read the privacy policy of BacktestLab Pro to understand how we secure your account data, handle authentication securely via Firebase, and protect your personal information.">
+    <link rel="canonical" href="https://backtestlabpro.com/privacy.html">
+
+    <!-- Tailwind CSS & FontAwesome -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" sizes="192x192" href="favicon.png">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    screens: { 'xs': '380px' },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            dark: '#050507',
+                            card: '#0c0c0e',
+                            accent: '#6366f1',
+                            success: '#10b981',
+                            purple: '#a855f7'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        :root { color-scheme: dark; }
+        html, body {
+            background-color: #050507;
+            color: #f4f4f5;
+            overflow-x: hidden;
+            width: 100%;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .glow-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(90px);
+            opacity: 0.12;
+            pointer-events: none;
+        }
+        @media (min-width: 768px) {
+            .glow-orb { filter: blur(140px); opacity: 0.16; }
+        }
+        .glass-card {
+            background: rgba(12, 12, 14, 0.72);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Sync Toast */
+        #syncToast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 9999;
+            background: #111522;
+            border: 1px solid #10b981;
+            box-shadow: 0 16px 40px rgba(0,0,0,0.7);
+            border-radius: 12px;
+            padding: 16px 20px;
+            display: none;
+            align-items: center;
+            gap: 14px;
+            animation: toastSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes toastSlideUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Image-Style Navbar Components */
+        .btn-workspace {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #161821;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #d1d4dc;
+            padding: 7px 16px;
+            border-radius: 9999px;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+        .btn-workspace:hover {
+            background: #202433;
+            color: #ffffff;
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+        .btn-avatar-badge {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            background: #12151e;
+            border: 1px solid rgba(168, 85, 247, 0.5);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 12px rgba(168, 85, 247, 0.2);
+            color: #ffffff;
+            cursor: pointer;
+            position: relative;
+        }
+        .btn-avatar-badge:hover {
+            border-color: rgba(168, 85, 247, 0.9);
+            box-shadow: 0 0 16px rgba(168, 85, 247, 0.35);
+        }
+        .user-dropdown-menu {
+            display: none;
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            background: #11141c;
+            border: 1px solid #282d3b;
+            border-radius: 12px;
+            padding: 8px;
+            min-width: 190px;
+            box-shadow: 0 16px 40px rgba(0,0,0,0.6);
+            z-index: 100;
+        }
+    </style>
+</head>
+<body class="font-sans antialiased min-h-screen flex flex-col justify-between selection:bg-indigo-500/30 selection:text-indigo-200" id="top">
+
+    <!-- Toast Notification for Saved Sessions -->
+    <div id="syncToast">
+        <div class="w-8 h-8 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-400 font-bold">✓</div>
+        <div>
+            <div class="text-xs font-bold text-white tracking-wide" id="syncToastTitle">Session Saved Automatically</div>
+            <div class="text-[11px] text-zinc-400" id="syncToastSubtitle">Your backtest replay data is now preserved in your account.</div>
+        </div>
+        <button onclick="document.getElementById('syncToast').style.display='none'" class="text-zinc-500 hover:text-white text-xs ml-2">✕</button>
+    </div>
+
+    <div class="glow-orb w-64 h-64 sm:w-[450px] sm:h-[450px] bg-brand-accent top-[-40px] left-[-40px]"></div>
+    <div class="glow-orb w-72 h-72 sm:w-[500px] sm:h-[500px] bg-brand-purple top-[25%] right-[-60px]"></div>
+
+    <!-- Navigation Header (Exact Home Navbar Match) -->
+    <header class="sticky top-0 z-50 w-full border-b border-white/5 bg-[#050507]/90 backdrop-blur-xl" role="banner">
+        <div class="max-w-7xl mx-auto px-3 xs:px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-3">
+            
+            <a href="index.html" class="flex items-center gap-2.5 sm:gap-3 group flex-shrink-0" aria-label="BacktestLab Pro Homepage">
+                <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
+                    <svg class="w-4 h-4 sm:w-5 sm:h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                    </svg>
+                </div>
+                <span class="text-base sm:text-xl font-bold font-sans tracking-tight text-white whitespace-nowrap">BacktestLab <span class="text-indigo-400">Pro</span></span>
+            </a>
+
+            <nav class="hidden lg:flex items-center gap-6 text-xs xl:text-sm font-medium" aria-label="Main Navigation">
+                <a href="session.html" class="text-zinc-300 hover:text-white transition-colors flex items-center gap-1.5">
+                    <i class="fa-solid fa-chart-line text-indigo-400 text-xs"></i> Free Replay
+                </a>
+                <a href="bot_automation.html" class="text-zinc-300 hover:text-white transition-colors flex items-center gap-1.5">
+                    <i class="fa-solid fa-code text-indigo-400 text-xs"></i> BYO-AI Builder
+                </a>
+                <a href="algo_store.html" class="text-zinc-300 hover:text-white transition-colors flex items-center gap-1.5">
+                    <span class="h-1.5 w-1.5 rounded-full bg-purple-400 animate-pulse"></span>
+                    <span>Community Arena</span>
+                </a>
+                <a href="production-code.html" class="text-zinc-300 hover:text-white transition-colors flex items-center gap-1.5">
+                    <i class="fa-solid fa-download text-emerald-400 text-xs"></i> Production Code
+                </a>
+                <a href="articles.html" class="text-zinc-400 hover:text-white transition-colors">Articles</a>
+                <a href="about.html" class="text-zinc-400 hover:text-white transition-colors">About Us</a>
+            </nav>
+
+            <div class="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+                <!-- Guest State -->
+                <div id="navGuestControls" class="flex items-center gap-2 sm:gap-3">
+                    <a href="login.html" class="text-xs sm:text-sm font-medium text-zinc-300 hover:text-white px-3 py-2 rounded-lg hover:bg-white/5 transition-colors">
+                        Sign In
+                    </a>
+                    <a href="session.html" class="text-xs sm:text-sm font-semibold bg-white text-zinc-950 px-3.5 xs:px-4 sm:px-5 py-2 sm:py-2.5 rounded-full hover:bg-zinc-200 transition-all flex items-center gap-1.5 shadow-md">
+                        <span>Open Simulator →</span>
+                    </a>
+                </div>
+
+                <!-- Logged In State -->
+                <div id="navUserControls" class="hidden items-center gap-2.5">
+                    <a href="session.html" class="text-xs sm:text-sm font-semibold bg-white text-zinc-950 px-4 py-2 sm:py-2.5 rounded-full hover:bg-zinc-200 transition-all flex items-center gap-1.5 shadow-md">
+                        <span>Open Simulator →</span>
+                    </a>
+
+                    <a href="my-sessions.html" class="btn-workspace">
+                        <i class="fa-solid fa-folder text-indigo-400"></i>
+                        <span>Workspace</span>
+                    </a>
+
+                    <div class="relative">
+                        <button onclick="toggleUserDropdown()" id="userAvatarBtn" class="btn-avatar-badge" title="User Profile">
+                            <i class="fa-solid fa-user text-xs"></i>
+                        </button>
+                        <div id="userDropdown" class="user-dropdown-menu">
+                            <div class="px-3 py-2 border-b border-white/5 text-[11px] font-mono text-zinc-400 truncate" id="userEmailDisplay">trader@domain.com</div>
+                            <a href="my-sessions.html" class="flex items-center gap-2 px-3 py-2 text-xs text-zinc-300 hover:text-white hover:bg-white/5 rounded-lg mt-1 transition-colors">
+                                <i class="fa-solid fa-folder text-indigo-400 text-[11px]"></i> My Sessions
+                            </a>
+                            <button onclick="handleUserSignOut()" class="w-full text-left flex items-center gap-2 px-3 py-2 text-xs text-red-400 hover:bg-red-500/10 rounded-lg transition-colors mt-0.5">
+                                <i class="fa-solid fa-arrow-right-from-bracket text-[11px]"></i> Sign Out
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <button id="mobileMenuToggle" aria-label="Toggle navigation" class="lg:hidden w-8 h-8 xs:w-9 xs:h-9 rounded-xl bg-zinc-900 border border-white/10 flex items-center justify-center text-zinc-300 hover:text-white ml-1">
+                    <i id="menuHamburgerIcon" class="fa-solid fa-bars text-xs xs:text-sm"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Drawer -->
+        <div id="mobileDrawerMenu" class="hidden lg:hidden border-t border-white/10 bg-[#08080c]/98 backdrop-blur-2xl px-4 py-4 space-y-2.5 shadow-2xl">
+            <a href="session.html" class="block text-xs xs:text-sm font-semibold text-white py-2.5 px-3.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 transition-colors">
+                <i class="fa-solid fa-play text-xs mr-2"></i> Launch Bar Replay Simulator
+            </a>
+            <a href="my-sessions.html" id="mobileWorkspaceLink" class="hidden text-xs xs:text-sm font-medium text-indigo-300 py-2 px-3 rounded-lg bg-indigo-500/10 border border-indigo-500/20">
+                <i class="fa-solid fa-folder mr-2"></i> Workspace (My Sessions)
+            </a>
+            <a href="bot_automation.html" class="block text-xs xs:text-sm font-medium text-zinc-300 hover:text-white py-2 px-3 rounded-lg hover:bg-white/5">
+                <i class="fa-solid fa-code text-indigo-400 mr-2"></i> BYO-AI Builder
+            </a>
+            <a href="algo_store.html" class="block text-xs xs:text-sm font-medium text-purple-300 py-2 px-3 rounded-lg bg-purple-500/10 border border-purple-500/20">
+                <i class="fa-solid fa-robot text-purple-400 mr-2"></i> Community Arena
+            </a>
+            <a href="production-code.html" class="block text-xs xs:text-sm font-medium text-emerald-300 py-2 px-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
+                <i class="fa-solid fa-download text-emerald-400 mr-2"></i> Production Code
+            </a>
+            <a href="articles.html" class="block text-xs xs:text-sm font-medium text-zinc-300 hover:text-white py-2 px-3 rounded-lg hover:bg-white/5">
+                <i class="fa-solid fa-newspaper text-zinc-400 mr-2"></i> Quant Articles &amp; Guides
+            </a>
+            <a href="about.html" class="block text-xs xs:text-sm font-medium text-zinc-300 hover:text-white py-2 px-3 rounded-lg hover:bg-white/5">
+                <i class="fa-solid fa-circle-info text-zinc-400 mr-2"></i> About Us
+            </a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="relative z-10 px-3 xs:px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto flex-grow w-full py-12 sm:py-16" role="main">
+        <div class="glass-card p-6 sm:p-10 rounded-3xl border border-white/10 space-y-8">
+            <div>
+                <span class="text-xs font-mono font-bold text-indigo-400 uppercase tracking-wider">Legal Compliance</span>
+                <h1 class="text-3xl sm:text-4xl font-display font-extrabold text-white mt-1 mb-2">Privacy Policy</h1>
+                <p class="text-xs font-mono text-zinc-400">Last updated: September 14, 2026</p>
+            </div>
+
+            <div class="space-y-6 text-sm text-zinc-300 leading-relaxed">
+                <p>
+                    Welcome to <strong class="text-white">BacktestLab Pro</strong> (backtestlabpro.com). We respect your privacy and are fully committed to safeguarding any personal data you share with us. This Privacy Policy outlines how we collect, use, and protect your information when you visit our platform or utilize our algorithmic trading tools.
+                </p>
+
+                <div class="space-y-3">
+                    <h2 class="text-lg font-bold font-display text-white">1. Information We Collect</h2>
+                    <ul class="list-disc pl-5 space-y-2 text-xs text-zinc-300">
+                        <li><strong class="text-zinc-200">Account Credentials:</strong> When you register or log in, we securely handle your email address and authentication session via Firebase Authentication.</li>
+                        <li><strong class="text-zinc-200">Billing &amp; Transactions:</strong> Payments for production code exports and digital assets are processed securely through PayPal. We do not store sensitive credit card or financial credentials on our servers.</li>
+                        <li><strong class="text-zinc-200">Platform Usage Data:</strong> We track browser interactions and session states needed to power our unlimited historical data replays and multi-bot testing infrastructure.</li>
+                    </ul>
+                </div>
+
+                <div class="space-y-3">
+                    <h2 class="text-lg font-bold font-display text-white">2. How We Use Your Data</h2>
+                    <p class="text-xs text-zinc-300">
+                        Collected data is used strictly for operational purposes: managing your user account workspace, automating digital file delivery for MetaTrader 5 Expert Advisors, and providing platform security alerts or technical support.
+                    </p>
+                </div>
+
+                <div class="space-y-3">
+                    <h2 class="text-lg font-bold font-display text-white">3. Data Security &amp; Firebase Architecture</h2>
+                    <p class="text-xs text-zinc-300">
+                        We utilize robust Firebase security rules, encrypted connections, and secure cloud server architecture to protect your personal account profile against unauthorized access or disclosure.
+                    </p>
+                </div>
+
+                <div class="space-y-3">
+                    <h2 class="text-lg font-bold font-display text-white">4. Contact Us</h2>
+                    <p class="text-xs text-zinc-300">
+                        If you have any questions regarding this Privacy Policy, please reach out to us through our official platform channels on <a href="index.html" class="text-indigo-400 hover:underline">BacktestLab Pro</a>.
+                    </p>
+                </div>
+            </div>
+
+            <div class="pt-6 border-t border-white/5">
+                <a href="index.html" class="inline-flex items-center gap-2 text-xs font-mono font-semibold text-indigo-400 hover:text-indigo-300">
+                    <i class="fa-solid fa-arrow-left"></i> Back to Home
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer (Exact Home Footer Match) -->
+    <footer class="mt-20 border-t border-white/10 bg-[#060608] pt-12 pb-12 text-zinc-400 text-xs font-sans" role="contentinfo">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+            <div class="p-4 sm:p-5 rounded-2xl bg-black/60 border border-white/5 font-mono text-[11px] text-zinc-500 leading-relaxed space-y-2">
+                <div class="text-zinc-400 font-bold"><i class="fa-solid fa-triangle-exclamation text-amber-400 mr-1.5"></i> Quantitative Risk Disclaimer</div>
+                <p>BacktestLab Pro provides quantitative strategy backtesting software and historical data simulation for research and educational purposes only. Past simulated performance does not guarantee future financial returns. All live algorithmic trading carries substantial capital risk.</p>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-xs font-mono">
+                <div class="space-y-2">
+                    <span class="text-white font-bold block">Platform</span>
+                    <a href="session.html" class="block hover:text-white">Free Bar Replay</a>
+                    <a href="bot_automation.html" class="block hover:text-white">BYO-AI Builder</a>
+                </div>
+                <div class="space-y-2">
+                    <span class="text-white font-bold block">Ecosystem</span>
+                    <a href="algo_store.html" class="block hover:text-white">Community Bot Arena</a>
+                    <a href="production-code.html" class="block hover:text-white">Production Code</a>
+                </div>
+                <div class="space-y-2">
+                    <span class="text-white font-bold block">Content</span>
+                    <a href="articles.html" class="block hover:text-white">Quant Articles &amp; Guides</a>
+                    <a href="about.html" class="block hover:text-white">About Us</a>
+                </div>
+                <div class="space-y-2">
+                    <span class="text-white font-bold block">Legal</span>
+                    <a href="privacy.html" class="block hover:text-white text-indigo-400">Privacy Policy</a>
+                    <a href="terms.html" class="block hover:text-white">Terms of Service</a>
+                </div>
+            </div>
+
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4 text-zinc-500 font-mono text-[11px] pt-4 border-t border-white/5">
+                <div>© 2026 BacktestLab Pro. All rights reserved. Strategy research and bar replay are 100% free with unlimited sessions.</div>
+                <div class="flex gap-4">
+                    <a href="#top" class="hover:text-white"><i class="fa-solid fa-arrow-up mr-1"></i> Back to Top</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Firebase Auth Script -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAensfI53w49Fd4A7Lz5_K9N1JOxZsW7Kk",
+            authDomain: "backtestlabpro.firebaseapp.com",
+            projectId: "backtestlabpro",
+            storageBucket: "backtestlabpro.firebasestorage.app",
+            messagingSenderId: "560146824734",
+            appId: "1:560146824734:web:5287d0ded3a1024e75780f",
+            measurementId: "G-YY82TZ1ZG7"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        onAuthStateChanged(auth, (user) => {
+            const guestControls = document.getElementById("navGuestControls");
+            const userControls = document.getElementById("navUserControls");
+            const mobileWorkspace = document.getElementById("mobileWorkspaceLink");
+            const emailDisplay = document.getElementById("userEmailDisplay");
+
+            if (user) {
+                if (guestControls) guestControls.classList.add("hidden");
+                if (userControls) {
+                    userControls.classList.remove("hidden");
+                    userControls.classList.add("flex");
+                }
+                if (mobileWorkspace) mobileWorkspace.classList.remove("hidden");
+                if (emailDisplay) emailDisplay.innerText = user.email;
+            } else {
+                if (guestControls) guestControls.classList.remove("hidden");
+                if (userControls) {
+                    userControls.classList.add("hidden");
+                    userControls.classList.remove("flex");
+                }
+                if (mobileWorkspace) mobileWorkspace.classList.add("hidden");
+            }
+        });
+
+        window.toggleUserDropdown = function() {
+            const menu = document.getElementById("userDropdown");
+            if (menu) menu.style.display = menu.style.display === "block" ? "none" : "block";
+        };
+
+        window.handleUserSignOut = async function() {
+            try {
+                await signOut(auth);
+                localStorage.removeItem("user_uid");
+                localStorage.removeItem("user_email");
+                window.location.href = "index.html";
+            } catch(e) {
+                console.error("Sign out error:", e);
+            }
+        };
+
+        document.addEventListener('click', (e) => {
+            const avatar = document.getElementById("userAvatarBtn");
+            const dropdown = document.getElementById("userDropdown");
+            if (avatar && dropdown && !avatar.contains(e.target) && !dropdown.contains(e.target)) {
+                dropdown.style.display = "none";
+            }
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggle = document.getElementById('mobileMenuToggle');
+            const drawer = document.getElementById('mobileDrawerMenu');
+            const icon = document.getElementById('menuHamburgerIcon');
+
+            if (toggle && drawer) {
+                toggle.addEventListener('click', () => {
+                    const isHidden = drawer.classList.toggle('hidden');
+                    icon.className = isHidden ? 'fa-solid fa-bars text-xs xs:text-sm' : 'fa-solid fa-xmark text-xs xs:text-sm';
+                });
+            }
+        });
+    </script>
+</body>
+</html>

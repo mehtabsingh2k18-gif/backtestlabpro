@@ -35,7 +35,7 @@ body{
 
 .container{
     width:100%;
-    max-width:1240px;
+    max-width:1320px;
     background:#11151f;
     border:1px solid #232836;
     border-radius:20px;
@@ -109,7 +109,7 @@ body{
 
 .main{
     display:grid;
-    grid-template-columns:1.35fr 0.95fr;
+    grid-template-columns:1.45fr 0.95fr;
 }
 
 .leftPanel{
@@ -124,58 +124,80 @@ body{
 
 .sectionTitle{
     color:#ffffff;
-    font-size:18px;
+    font-size:17px;
     font-weight:700;
-    margin-bottom:18px;
+    margin-bottom:16px;
     display:flex;
     align-items:center;
     justify-content:space-between;
 }
 
-/* Engine Target Switcher */
+/* ========================================================
+   ENGINE SELECTOR CARDS (FREE, CLEAN, PROFESSIONAL)
+   ======================================================== */
 .engine-select-container {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-bottom: 20px;
+    gap: 12px;
+    margin-bottom: 22px;
 }
 
 .engine-card {
-    background: #181e2b;
-    border: 1px solid #262d3d;
-    border-radius: 12px;
-    padding: 12px 14px;
+    background: linear-gradient(145deg, #181f2d 0%, #121722 100%);
+    border: 1px solid #252e42;
+    border-radius: 14px;
+    padding: 16px;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    justify-content: space-between;
+    gap: 10px;
     user-select: none;
+    position: relative;
+    overflow: hidden;
 }
 
 .engine-card:hover {
-    border-color: #3b4761;
-    background: #1e2638;
+    border-color: #3b4b6b;
+    transform: translateY(-2px);
+    background: linear-gradient(145deg, #1c2436, #151b27);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
 }
 
 .engine-card.active {
     border-color: #2962ff;
-    background: rgba(41, 98, 255, 0.1);
-    box-shadow: 0 0 15px rgba(41, 98, 255, 0.25);
+    background: linear-gradient(145deg, rgba(41, 98, 255, 0.15), #131a2b);
+    box-shadow: 0 0 25px rgba(41, 98, 255, 0.22);
 }
 
-.engine-card-header {
+.engine-card-top {
     display: flex;
     align-items: center;
-    gap: 8px;
-    font-size: 13px;
-    font-weight: 700;
-    color: #fff;
+    justify-content: space-between;
 }
 
-.engine-card-header svg {
-    width: 16px;
-    height: 16px;
+.engine-icon-badge {
+    width: 34px;
+    height: 34px;
+    border-radius: 9px;
+    background: rgba(41, 98, 255, 0.12);
+    border: 1px solid rgba(41, 98, 255, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #2962ff;
+}
+
+.engine-card.active .engine-icon-badge {
+    background: #2962ff;
+    color: #fff;
+    box-shadow: 0 0 12px rgba(41, 98, 255, 0.5);
+}
+
+.engine-icon-badge svg {
+    width: 17px;
+    height: 17px;
     fill: none;
     stroke: currentColor;
     stroke-width: 2;
@@ -183,12 +205,34 @@ body{
     stroke-linejoin: round;
 }
 
-.engine-card-desc {
-    font-size: 10px;
-    color: #7e8b9b;
-    line-height: 1.35;
+.engine-free-tag {
+    font-size: 9px;
+    font-weight: 800;
+    text-transform: uppercase;
+    background: rgba(16, 185, 129, 0.12);
+    color: #10b981;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    padding: 2px 7px;
+    border-radius: 6px;
+    letter-spacing: 0.5px;
 }
 
+.engine-card-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 0.3px;
+}
+
+.engine-card-desc {
+    font-size: 10px;
+    color: #8a96a8;
+    line-height: 1.4;
+}
+
+/* ========================================================
+   STRATEGYTUNE-INSPIRED PROFESSIONAL TABLE UI FOR PAIRS
+   ======================================================== */
 .searchBox{
     width:100%;
     background:#1a202c;
@@ -196,7 +240,7 @@ body{
     color:white;
     padding:14px 16px;
     border-radius:12px;
-    margin-bottom:18px;
+    margin-bottom:16px;
     font-size:14px;
     transition:all 0.2s ease;
 }
@@ -210,7 +254,7 @@ body{
 .categories{
     display:flex;
     gap:8px;
-    margin-bottom:20px;
+    margin-bottom:16px;
     overflow-x:auto;
     padding-bottom:4px;
 }
@@ -242,73 +286,113 @@ body{
     box-shadow:0 4px 15px rgba(41,98,255,0.3);
 }
 
-.pairGrid{
-    display:grid;
-    grid-template-columns:repeat(3, 1fr);
-    gap:10px;
-    max-height:440px;
-    overflow-y:auto;
-    padding-right:5px;
+/* Table Container Wrapper */
+.tableContainer {
+    background: #141923;
+    border: 1px solid #222a3d;
+    border-radius: 12px;
+    overflow: hidden;
+    max-height: 480px;
+    display: flex;
+    flex-direction: column;
 }
 
-.pairGrid::-webkit-scrollbar {
+.tableHeaderRow {
+    display: grid;
+    grid-template-columns: 1.4fr 2fr 1.1fr;
+    padding: 12px 18px;
+    background: #0d111a;
+    border-bottom: 1px solid #222a3d;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: #6b778d;
+}
+
+.tableBody {
+    overflow-y: auto;
+    max-height: 420px;
+}
+
+.tableBody::-webkit-scrollbar {
     width: 5px;
 }
 
-.pairGrid::-webkit-scrollbar-thumb {
+.tableBody::-webkit-scrollbar-thumb {
     background: #2a3142;
     border-radius: 4px;
 }
 
-.pairCard{
-    background:#181e2b;
-    border:1px solid #262d3d;
-    border-radius:12px;
-    padding:12px 14px;
-    cursor:pointer;
-    transition:all 0.2s ease;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
+.pairTableRow {
+    display: grid;
+    grid-template-columns: 1.4fr 2fr 1.1fr;
+    align-items: center;
+    padding: 14px 18px;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: #141923;
 }
 
-.pairCard:hover{
-    border-color:#3b4761;
-    transform:translateY(-2px);
-    background:#1e2638;
+.pairTableRow:hover {
+    background: #1a2232;
 }
 
-.pairCard.selected{
-    border-color:#2962ff;
-    background:rgba(41,98,255,0.08);
-    box-shadow:0 0 20px rgba(41,98,255,0.25);
+.pairTableRow.selected {
+    background: rgba(41, 98, 255, 0.12);
+    border-left: 3px solid #2962ff;
+    border-bottom-color: rgba(41, 98, 255, 0.2);
 }
 
-.pairName{
-    color:white;
-    font-weight:700;
-    font-size:14px;
+.symbolCell {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
 }
 
-.pairMeta{
-    display:flex;
-    flex-direction:column;
-    align-items:flex-end;
-    gap:4px;
+.symbolNameCode {
+    font-size: 14px;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: 0.3px;
 }
 
-.pairBadge{
-    font-size:9px;
-    padding:2px 6px;
-    border-radius:5px;
-    text-transform:uppercase;
-    font-weight:700;
+.symbolTypeBadge {
+    font-size: 9px;
+    text-transform: uppercase;
+    font-weight: 700;
+    width: max-content;
+    padding: 2px 6px;
+    border-radius: 4px;
 }
 
-.pairSpaceTag{
-    font-size:8px;
-    color:#7e8b9b;
-    font-weight:600;
+.nameDescCell {
+    font-size: 12px;
+    color: #8e9bb0;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-right: 10px;
+}
+
+.providerCell {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 6px;
+}
+
+.providerPill {
+    background: #1d2536;
+    border: 1px solid #2b354c;
+    color: #a5b4fc;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 6px;
+    letter-spacing: 0.3px;
 }
 
 .type-forex { background: rgba(16, 185, 129, 0.12); color: #10b981; }
@@ -512,8 +596,7 @@ input:focus, select:focus{
     .rightPanel {
         padding: 20px 15px;
     }
-    .pairGrid {
-        grid-template-columns: repeat(2, 1fr);
+    .tableContainer {
         max-height: 350px;
     }
     .topBar {
@@ -549,7 +632,7 @@ input:focus, select:focus{
             <input
                 id="pairSearch"
                 class="searchBox"
-                placeholder="Search symbol (e.g., XAUUSD, EURUSD, BTCUSD)..."
+                placeholder="Search symbols, names, or asset types..."
             >
 
             <div class="categories">
@@ -560,9 +643,17 @@ input:focus, select:focus{
                 <button class="cat" data-cat="metals">Metals</button>
             </div>
 
-            <div id="pairGrid" class="pairGrid">
-                <div style="grid-column: span 3; text-align:center; padding: 40px 10px; color:#7e8b9b;">
-                    Discovering symbols across all storage roots...
+            <!-- StrategyTune-Inspired Professional Table View -->
+            <div class="tableContainer">
+                <div class="tableHeaderRow">
+                    <div>Symbol</div>
+                    <div>Name</div>
+                    <div style="text-align: right;">Data Provider</div>
+                </div>
+                <div id="pairTableBody" class="tableBody">
+                    <div style="text-align:center; padding: 40px 10px; color:#7e8b9b;">
+                        Discovering symbols across all storage roots...
+                    </div>
                 </div>
             </div>
 
@@ -574,22 +665,33 @@ input:focus, select:focus{
                 Replay Environment
             </div>
 
-            <!-- Workspace Mode Switcher -->
+            <!-- Workspace Mode Switcher (Free & Professional Cards - NO LOCK) -->
             <label>Workspace Target Mode</label>
             <div class="engine-select-container">
                 <div class="engine-card active" id="engineManual" onclick="selectEngineMode('manual')">
-                    <div class="engine-card-header">
-                        <svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
-                        <span>Manual Replay</span>
+                    <div class="engine-card-top">
+                        <div class="engine-icon-badge">
+                            <svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+                        </div>
+                        <span class="engine-free-tag">Free</span>
                     </div>
-                    <div class="engine-card-desc">Discretionary chart replay with execution buttons and technical drawing tools.</div>
+                    <div>
+                        <div class="engine-card-title">Manual Replay</div>
+                        <div class="engine-card-desc">Discretionary chart replay with execution buttons and technical drawing tools.</div>
+                    </div>
                 </div>
+
                 <div class="engine-card" id="engineAlgo" onclick="selectEngineMode('algo')">
-                    <div class="engine-card-header">
-                        <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                        <span>AI Algo Sandbox</span>
+                    <div class="engine-card-top">
+                        <div class="engine-icon-badge">
+                            <svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                        </div>
+                        <span class="engine-free-tag">Free</span>
                     </div>
-                    <div class="engine-card-desc">Automated backtester with AI Copilot, dynamic tester inputs, and MQL5 export.</div>
+                    <div>
+                        <div class="engine-card-title">AI Algo Sandbox</div>
+                        <div class="engine-card-desc">Automated backtester with AI Copilot, dynamic tester inputs, and MQL5 export.</div>
+                    </div>
                 </div>
             </div>
 
@@ -671,11 +773,6 @@ input:focus, select:focus{
                 </div>
 
                 <div class="summaryRow">
-                    <span>Data Source Root</span>
-                    <span id="pvSpace" class="summaryVal">--</span>
-                </div>
-
-                <div class="summaryRow">
                     <span>Full Data Available</span>
                     <span id="pvArchive" class="summaryVal">Loading...</span>
                 </div>
@@ -716,39 +813,39 @@ const DATA_SPACES = [
     "mehtab13/fx-2"
 ];
 
-// Fallback seed list used immediately while scanning runs
+// Fallback seed list with full professional descriptions
 const initialFallback = [
-    {symbol:"AUDJPY", type:"forex", space:"mehtab13/fx-2"},
-    {symbol:"BNBUSDT", type:"crypto", space:"mehtab13/backtestlab-data"},
-    {symbol:"BTCUSD", type:"crypto", space:"mehtab13/backtestlab-data"},
-    {symbol:"CHFJPY", type:"forex", space:"mehtab13/fx-2"},
-    {symbol:"DOGEUSDT", type:"crypto", space:"mehtab13/backtestlab-data"},
-    {symbol:"EURCAD", type:"forex", space:"mehtab13/fx-3"},
-    {symbol:"EURCHF", type:"forex", space:"mehtab13/fx-3"},
-    {symbol:"EURGBP", type:"forex", space:"mehtab13/fx-3"},
-    {symbol:"EURJPY", type:"forex", space:"mehtab13/fx-3"},
-    {symbol:"EURUSD", type:"forex", space:"mehtab13/fx-3"},
-    {symbol:"GBPJPY", type:"forex", space:"mehtab13/fx-4"},
-    {symbol:"GBPUSD", type:"forex", space:"mehtab13/fx-4"},
-    {symbol:"NASDAQ", type:"indices", space:"mehtab13/backtestlab-data-2"},
-    {symbol:"SOLUSDT", type:"crypto", space:"mehtab13/backtestlab-data"},
-    {symbol:"TRXUSDT", type:"crypto", space:"mehtab13/backtestlab-data"},
-    {symbol:"US30", type:"indices", space:"mehtab13/backtestlab-data-2"},
-    {symbol:"US500", type:"indices", space:"mehtab13/backtestlab-data-2"},
-    {symbol:"USDCAD", type:"forex", space:"mehtab13/fx-2"},
-    {symbol:"USDJPY", type:"forex", space:"mehtab13/fx-2"},
-    {symbol:"XAGUSD", type:"metals", space:"mehtab13/fx-4"},
-    {symbol:"XAUUSD", type:"metals", space:"mehtab13/fx-4"},
-    {symbol:"XRPUSDT", type:"crypto", space:"mehtab13/backtestlab-data"}
+    {symbol:"AUDJPY", name:"Australian Dollar / Japanese Yen", type:"forex", space:"mehtab13/fx-2"},
+    {symbol:"BNBUSDT", name:"Binance Coin / Tether", type:"crypto", space:"mehtab13/backtestlab-data"},
+    {symbol:"BTCUSD", name:"Bitcoin / US Dollar", type:"crypto", space:"mehtab13/backtestlab-data"},
+    {symbol:"CHFJPY", name:"Swiss Franc / Japanese Yen", type:"forex", space:"mehtab13/fx-2"},
+    {symbol:"DOGEUSDT", name:"Dogecoin / Tether", type:"crypto", space:"mehtab13/backtestlab-data"},
+    {symbol:"EURCAD", name:"Euro / Canadian Dollar", type:"forex", space:"mehtab13/fx-3"},
+    {symbol:"EURCHF", name:"Euro / Swiss Franc", type:"forex", space:"mehtab13/fx-3"},
+    {symbol:"EURGBP", name:"Euro / British Pound", type:"forex", space:"mehtab13/fx-3"},
+    {symbol:"EURJPY", name:"Euro / Japanese Yen", type:"forex", space:"mehtab13/fx-3"},
+    {symbol:"EURUSD", name:"Euro / US Dollar", type:"forex", space:"mehtab13/fx-3"},
+    {symbol:"GBPJPY", name:"British Pound / Japanese Yen", type:"forex", space:"mehtab13/fx-4"},
+    {symbol:"GBPUSD", name:"British Pound / US Dollar", type:"forex", space:"mehtab13/fx-4"},
+    {symbol:"NASDAQ", name:"US Tech 100 Index", type:"indices", space:"mehtab13/backtestlab-data-2"},
+    {symbol:"SOLUSDT", name:"Solana / Tether", type:"crypto", space:"mehtab13/backtestlab-data"},
+    {symbol:"TRXUSDT", name:"TRON / Tether", type:"crypto", space:"mehtab13/backtestlab-data"},
+    {symbol:"US30", name:"Wall Street 30 Index", type:"indices", space:"mehtab13/backtestlab-data-2"},
+    {symbol:"US500", name:"S&P 500 Index", type:"indices", space:"mehtab13/backtestlab-data-2"},
+    {symbol:"USDCAD", name:"US Dollar / Canadian Dollar", type:"forex", space:"mehtab13/fx-2"},
+    {symbol:"USDJPY", name:"US Dollar / Japanese Yen", type:"forex", space:"mehtab13/fx-2"},
+    {symbol:"XAGUSD", name:"Silver / US Dollar", type:"metals", space:"mehtab13/fx-4"},
+    {symbol:"XAUUSD", name:"Gold / US Dollar", type:"metals", space:"mehtab13/fx-4"},
+    {symbol:"XRPUSDT", name:"Ripple / Tether", type:"crypto", space:"mehtab13/backtestlab-data"}
 ];
 
 let symbols = [...initialFallback];
 let selectedPair = "XAUUSD";
 let activeDataLimits = { min: "2003-05-01", max: "2026-08-28", space: DATA_SPACES[0] };
-let selectedEngine = "manual"; // 'manual' -> chart.html, 'algo' -> chart_auto_run.html
+let selectedEngine = "manual"; 
 const symbolCache = {};
 
-const grid = document.getElementById("pairGrid");
+const tableBody = document.getElementById("pairTableBody");
 const search = document.getElementById("pairSearch");
 const fromInput = document.getElementById("from");
 const startInput = document.getElementById("start");
@@ -794,6 +891,14 @@ function categorizeSymbol(sym) {
     return "forex";
 }
 
+function getAssetFullName(sym) {
+    const match = initialFallback.find(item => item.symbol === sym.toUpperCase());
+    if (match) return match.name;
+    const s = sym.toUpperCase();
+    if (s.includes("USD") && s.length === 6) return `${s.substring(0,3)} / ${s.substring(3,6)}`;
+    return `${s} Market Feed`;
+}
+
 async function discoverAllPairsAcrossRoots() {
     scanStatus.innerText = "Indexing multi-space roots...";
     const pairMap = new Map();
@@ -813,6 +918,7 @@ async function discoverAllPairsAcrossRoots() {
                 if (!ignored.includes(item.path.toLowerCase()) && !pairMap.has(cleanName)) {
                     pairMap.set(cleanName, {
                         symbol: cleanName,
+                        name: getAssetFullName(cleanName),
                         type: categorizeSymbol(cleanName),
                         space: space
                     });
@@ -961,10 +1067,9 @@ async function loadDynamicSymbolSettings(symbol) {
     const totalYears = yEnd - yStart;
 
     noticeRange.innerText = `${activeDataLimits.min} → ${activeDataLimits.max}`;
-    noticeSummary.innerText = `Full ${totalYears}+ years data verified (${yStart} to ${yEnd}) inside space [${activeDataLimits.space.split('/').pop()}]. Practical 1-Year default applied for optimal performance.`;
+    noticeSummary.innerText = `Full ${totalYears}+ years data verified (${yStart} to ${yEnd}). Practical 1-Year default applied for optimal performance.`;
 
     document.getElementById("pvArchive").innerText = `${yStart} – ${yEnd} (${totalYears} Yrs)`;
-    document.getElementById("pvSpace").innerText = activeDataLimits.space.split('/').pop();
 
     fromInput.min = activeDataLimits.min;
     fromInput.max = activeDataLimits.max;
@@ -1039,37 +1144,38 @@ function validateDates() {
 }
 
 function renderPairs(category="all", term=""){
-    grid.innerHTML="";
+    tableBody.innerHTML="";
 
     const filtered = symbols.filter(x=>{
         const cat = category==="all" || x.type===category;
-        const txt = x.symbol.toLowerCase().includes(term.toLowerCase());
+        const txt = x.symbol.toLowerCase().includes(term.toLowerCase()) || (x.name && x.name.toLowerCase().includes(term.toLowerCase()));
         return cat && txt;
     });
 
     if (filtered.length === 0) {
-        grid.innerHTML = `<div style="grid-column: span 3; text-align:center; padding: 30px; color:#5a6678;">No matching pairs found.</div>`;
+        tableBody.innerHTML = `<div style="text-align:center; padding: 40px; color:#5a6678;">No matching symbols found.</div>`;
         return;
     }
 
     filtered.forEach(pair=>{
-        const card = document.createElement("div");
-        card.className="pairCard";
+        const row = document.createElement("div");
+        row.className = "pairTableRow";
 
-        if(pair.symbol===selectedPair) card.classList.add("selected");
+        if(pair.symbol === selectedPair) row.classList.add("selected");
 
-        const spaceShort = pair.space ? pair.space.split('/').pop() : 'data';
-
-        card.innerHTML=`
-            <div>
-                <div class="pairName">${pair.symbol}</div>
-                <div class="pairSpaceTag">${spaceShort}</div>
+        row.innerHTML = `
+            <div class="symbolCell">
+                <span class="symbolNameCode">${pair.symbol}</span>
+                <span class="symbolTypeBadge type-${pair.type}">${pair.type}</span>
             </div>
-            <div class="pairBadge type-${pair.type}">${pair.type}</div>
+            <div class="nameDescCell" title="${pair.name || ''}">${pair.name || 'High Precision Feed'}</div>
+            <div class="providerCell">
+                <span class="providerPill">BacktestLab Pro</span>
+            </div>
         `;
 
-        card.onclick=()=>{
-            selectedPair=pair.symbol;
+        row.onclick = () => {
+            selectedPair = pair.symbol;
             renderPairs(
                 document.querySelector(".cat.active").dataset.cat,
                 search.value
@@ -1077,7 +1183,7 @@ function renderPairs(category="all", term=""){
             loadDynamicSymbolSettings(selectedPair);
         };
 
-        grid.appendChild(card);
+        tableBody.appendChild(row);
     });
 }
 

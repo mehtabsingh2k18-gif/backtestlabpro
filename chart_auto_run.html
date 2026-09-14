@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-   <!-- Google Analytics Tracking (GA4) -->
+    <!-- Google Analytics Tracking (GA4) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-V7SXCF9923"></script>
   <script>
       window.dataLayer = window.dataLayer || [];
@@ -177,6 +177,34 @@
         .msg-card {
             margin-top: 8px; background: #0a0d13; border: 1px solid var(--border);
             border-radius: 4px; padding: 8px 10px; font-size: 11px; font-family: monospace;
+        }
+
+        /* Gemini-style Loading Indicator */
+        .msg-loading {
+            align-self: flex-start;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            padding: 10px 14px;
+            border-radius: 6px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .loading-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--text-muted);
+            border-radius: 50%;
+            animation: geminiBounce 1.4s infinite ease-in-out both;
+        }
+        .loading-dot:nth-child(1) { animation-delay: -0.32s; }
+        .loading-dot:nth-child(2) { animation-delay: -0.16s; }
+        .loading-dot:nth-child(3) { animation-delay: 0s; }
+
+        @keyframes geminiBounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1.0); }
         }
 
         .guide-box {
@@ -842,7 +870,6 @@ onAuthStateChanged(auth, async (user) => {
         console.log("CLOUD AUTHENTICATED: " + user.email);
         
         try {
-            // Check active plan document in users/{userId}/plan/active
             const planDocRef = doc(db, "users", user.uid, "plan", "active");
             const planSnap = await getDoc(planDocRef);
 
@@ -856,7 +883,6 @@ onAuthStateChanged(auth, async (user) => {
                     const quota = planData.global_bot_download_quota !== undefined ? planData.global_bot_download_quota : 5;
                     window.globalDownloadQuota = quota;
 
-                    // Display verified status on UI & Terminal
                     syncTierUI();
                     document.getElementById("statusIndicator").innerText = `PRO PLAN ($89) · [${quota}/5 DL LEFT] · READY`;
                     
@@ -957,6 +983,17 @@ function getSessionParam(key, fallback) {
     if (localStorage.getItem(key)) return localStorage.getItem(key);
     return fallback;
 }
+
+/* =========================================================================
+   UNSAVED SCRIPT RELOAD & EXIT GUARD
+   ========================================================================= */
+window.addEventListener("beforeunload", (e) => {
+    if (activeBot && activeBot.isSaved === false) {
+        e.preventDefault();
+        e.returnValue = "You have an unsaved bot active! If you leave or reload now, everything will be lost.";
+        return e.returnValue;
+    }
+});
 
 /* =========================================================================
    2. SLIDING DRAWER CONTROLLER
@@ -1317,11 +1354,24 @@ function stepForward() {
 
 function checkAllPositionsSLTP(candle) {
     if (account.positions.length === 0) return;
-
     const remainingPositions = [];
 
     for (let i = 0; i < account.positions.length; i++) {
         const p = account.positions[i];
+        
+        // --- Monotonic Trailing Stop Updates ---
+        if (p.trailingStep && p.type === 'BUY') {
+            const potentialNewSL = candle.close - p.trailingStep;
+            if (potentialNewSL > p.sl && potentialNewSL < candle.close) {
+                p.sl = potentialNewSL; // Moves upward only
+            }
+        } else if (p.trailingStep && p.type === 'SELL') {
+            const potentialNewSL = candle.close + p.trailingStep;
+            if ((!p.sl || potentialNewSL < p.sl) && potentialNewSL > candle.close) {
+                p.sl = potentialNewSL; // Moves downward only
+            }
+        }
+
         let closed = false;
         let exitPrice = 0;
 
@@ -1380,9 +1430,43 @@ function updateMetricReadouts() {
 }
 
 /* =========================================================================
-   6. SANDBOX TOOLKIT
+   6. SANDBOX TOOLKIT & UPGRADED EXECUTION ENGINE
    ========================================================================= */
 const terminalApi = {
+    isReady: (period, historyLength) => historyLength >= period,
+
+    crossAbove: (seriesA, seriesB) => {
+        if (!currentCandles || currentCandles.length < 2) return false;
+        const prevA = seriesA[seriesA.length - 2];
+        const prevB = seriesB[seriesB.length - 2];
+        const currA = seriesA[seriesA.length - 1];
+        const currB = seriesB[seriesB.length - 1];
+        return prevA <= prevB && currA > currB;
+    },
+
+    crossBelow: (seriesA, seriesB) => {
+        if (!currentCandles || currentCandles.length < 2) return false;
+        const prevA = seriesA[seriesA.length - 2];
+        const prevB = seriesB[seriesB.length - 2];
+        const currA = seriesA[seriesA.length - 1];
+        const currB = seriesB[seriesB.length - 1];
+        return prevA >= prevB && currA < currB;
+    },
+
+    evaluateCondition: (node, context) => {
+        if (!node) return false;
+        if (node.type === 'AND') {
+            return node.conditions.every(c => terminalApi.evaluateCondition(c, context));
+        }
+        if (node.type === 'OR') {
+            return node.conditions.some(c => terminalApi.evaluateCondition(c, context));
+        }
+        if (node.type === 'EXPR') {
+            return typeof node.eval === 'function' ? node.eval(context) : Boolean(node.eval);
+        }
+        return false;
+    },
+
     ema: (period = 14) => {
         if (!currentCandles || currentCandles.length < period) return null;
         const k = 2 / (period + 1);
@@ -1400,7 +1484,7 @@ const terminalApi = {
     },
 
     rsi: (period = 14) => {
-        if (!currentCandles || currentCandles.length < period + 1) return 50;
+        if (!currentCandles || currentCandles.length < period + 1) return null;
         let gains = 0, losses = 0;
         for (let i = currentCandles.length - period; i < currentCandles.length; i++) {
             const diff = currentCandles[i].close - currentCandles[i - 1].close;
@@ -1536,7 +1620,7 @@ const terminalApi = {
 };
 
 /* =========================================================================
-   7. DRAG-AND-DROP & MOUNT LOGIC
+   7. DRAG-AND-DROP & MOUNT LOGIC (WITH UNSAVED SCRIPT PROTECTIONS)
    ========================================================================= */
 function setupDragAndDrop() {
     const viewport = document.getElementById("viewportArea");
@@ -1548,7 +1632,14 @@ function setupDragAndDrop() {
         e.preventDefault();
         overlay.classList.remove("hover");
         const botDataRaw = e.dataTransfer.getData("application/json");
-        if (botDataRaw) mountStrategy(JSON.parse(botDataRaw));
+        if (botDataRaw) {
+            if (activeBot && activeBot.isSaved === false) {
+                if (!confirm("⚠️ WARNING: Your current active bot is UNSAVED! Dragging and dropping a new bot will discard it and you will lose everything. Do you want to save first or continue?")) {
+                    return;
+                }
+            }
+            mountStrategy(JSON.parse(botDataRaw));
+        }
     });
 }
 
@@ -1558,6 +1649,12 @@ function handleBotDragStart(e, bot) {
 }
 
 function mountStrategy(bot) {
+    if (activeBot && activeBot.isSaved === false && activeBot.id !== bot.id) {
+        if (!confirm("⚠️ WARNING: Your current active bot is UNSAVED! Loading a new bot will discard your progress and you will lose everything. Do you wish to proceed?")) {
+            return;
+        }
+    }
+
     stopPlayback();
     activeBot = bot;
     
@@ -1567,6 +1664,10 @@ function mountStrategy(bot) {
             slPips: { label: "Stop Loss (Pips)", value: 25, step: 1 },
             tpPips: { label: "Take Profit (Pips)", value: 50, step: 1 }
         };
+    }
+    
+    if (activeBot.isSaved === undefined) {
+        activeBot.isSaved = true; // Pre-existing library bots are saved by default
     }
 
     document.getElementById("activeBotHud").style.display = "flex";
@@ -1581,6 +1682,11 @@ function mountStrategy(bot) {
 }
 
 function detachActiveBot() {
+    if (activeBot && activeBot.isSaved === false) {
+        if (!confirm("⚠️ WARNING: Your current script is UNSAVED! If you detach, you will lose everything. Please save your script first using the Save button in the HUD. Do you still want to detach and discard?")) {
+            return;
+        }
+    }
     stopPlayback();
     activeBot = null;
     document.getElementById("activeBotHud").style.display = "none";
@@ -1622,8 +1728,6 @@ function openSaveBotModal() {
     }
 
     document.getElementById("saveBotNameInput").value = activeBot.name;
-    
-    // If Pro, default to Private save; if Free, default to Global
     selectSavePrivacyOption(window.isPro ? "private" : "global");
     
     const priceBadge = document.getElementById("privatePriceBadge");
@@ -1683,7 +1787,6 @@ async function executeSelectedSaveAction() {
     }
     activeBot.name = nameInput;
 
-    // Check if free user is attempting to save private
     if (selectedSavePrivacy === "private" && !window.isPro) {
         closeModal("saveBotModal");
         openPlanModal();
@@ -1698,7 +1801,6 @@ async function executeSelectedSaveAction() {
     try {
         let globalDocId = null;
 
-        // 1. If public/free: write to permanent global_bots repository in backend
         if (!isPrivate) {
             const globalRef = await window.addDoc(window.collection(window.db, "global_bots"), {
                 name: activeBot.name,
@@ -1713,7 +1815,6 @@ async function executeSelectedSaveAction() {
             globalDocId = globalRef.id;
         }
 
-        // 2. Personal collection write (User End Cloud Synchronization)
         await window.addDoc(window.collection(window.db, "users", user.uid, "saved_bots"), {
             name: activeBot.name,
             inputs: activeBot.inputs || {},
@@ -1724,9 +1825,10 @@ async function executeSelectedSaveAction() {
             created_at: window.serverTimestamp()
         });
 
+        activeBot.isSaved = true; // Mark as successfully saved!
         saveBotToLibrary(activeBot);
         closeModal("saveBotModal");
-        appendMsg(`Strategy <b>${activeBot.name}</b> saved to your profile (${isPrivate ? '100% Private Vault' : 'Public Global Hub'}).`, "ai");
+        appendMsg(`Strategy <b>${activeBot.name}</b> saved successfully (${isPrivate ? '100% Private Vault' : 'Public Global Hub'}).`, "ai");
         loadBotLibrary();
     } catch (err) {
         console.error("Save error:", err);
@@ -1770,6 +1872,7 @@ function renderInputsCard() {
 function updateInputValue(key, val) {
     if (!activeBot || !activeBot.inputs[key]) return;
     activeBot.inputs[key].value = parseFloat(val);
+    activeBot.isSaved = false; // Marking modified inputs as unsaved until re-saved
     saveBotToLibrary(activeBot);
 }
 
@@ -1795,7 +1898,12 @@ BUILT-IN API TOOLS AVAILABLE IN JS SANDBOX:
 - api.buy(slPips, tpPips, lots)
 - api.sell(slPips, tpPips, lots)
 - api.hasPosition()
+- api.openPositionCount()
 - api.closeAllPositions()
+- api.crossAbove(seriesA, seriesB)
+- api.crossBelow(seriesA, seriesB)
+- api.isReady(period, historyLength)
+- api.evaluateCondition(node, context)
 - 'candle': The current bar object { open, high, low, close, time, volume }
 - 'history': Array of all previous bars up to current candle
 - 'inputs': Object containing user customizable numbers (e.g. inputs.slPips, inputs.tpPips, inputs.lotSize)
@@ -1860,6 +1968,19 @@ async function sendChatPrompt() {
     if (activeBot) {
         contextAddition = `\n[ACTIVE BOT: "${activeBot.name}". CURRENT INPUTS: ${JSON.stringify(activeBot.inputs || {})}. CURRENT JS: ${activeBot.js_code}]`;
     }
+
+    // --- APPEND GEMINI-STYLE LOADING BUBBLE ---
+    const stream = document.getElementById("chatStream");
+    const loaderEl = document.createElement("div");
+    loaderEl.className = "msg-loading";
+    loaderEl.id = "chatLoaderBubble";
+    loaderEl.innerHTML = `
+        <div class="loading-dot"></div>
+        <div class="loading-dot"></div>
+        <div class="loading-dot"></div>
+    `;
+    stream.appendChild(loaderEl);
+    stream.scrollTop = stream.scrollHeight;
 
     try {
         let payload = null;
@@ -1928,6 +2049,10 @@ async function sendChatPrompt() {
             payload = JSON.parse(data.choices[0].message.content);
         }
 
+        // --- REMOVE LOADING BUBBLE ---
+        const activeLoader = document.getElementById("chatLoaderBubble");
+        if (activeLoader) activeLoader.remove();
+
         chatConversationHistory.push({ role: "assistant", text: payload.reply });
 
         if (payload.bot && payload.bot.js_code) {
@@ -1941,17 +2066,17 @@ async function sendChatPrompt() {
                     tpPips: { label: "Take Profit (Pips)", value: 50, step: 1 }
                 },
                 js_code: payload.bot.js_code, 
-                mql5_code: payload.bot.mql5_code 
+                mql5_code: payload.bot.mql5_code,
+                isSaved: false 
             };
             
-            saveBotToLibrary(newBot);
             mountStrategy(newBot);
 
             appendMsg(`
                 ${payload.reply}
                 <div class="msg-card">
-                    <b>${newBot.name}</b><br>
-                    <span style="color: var(--up);">Compiled & Mounted. Adjust parameters in the Inputs tab anytime.</span>
+                    <b>${newBot.name}</b> (Unsaved)<br>
+                    <span style="color: var(--gold);">Compiled & Mounted on Chart. Click <b>Save</b> in the HUD to store it to your library!</span>
                 </div>
             `, "ai");
         } else { 
@@ -1959,6 +2084,10 @@ async function sendChatPrompt() {
         }
 
     } catch (err) { 
+        // --- REMOVE LOADING BUBBLE ON ERROR ---
+        const activeLoader = document.getElementById("chatLoaderBubble");
+        if (activeLoader) activeLoader.remove();
+
         appendMsg(`Error: ${err.message}`, "ai"); 
     } finally { 
         btn.disabled = false; 
@@ -2059,6 +2188,7 @@ async function loadBotLibrary() {
     const defaultBot = {
         id: "bot-demo-1", 
         name: "Previous Day High-Low Breakout",
+        isSaved: true,
         inputs: {
             lotSize: { label: "Lot Size", value: 0.2, step: 0.01 },
             slPips: { label: "Stop Loss (Pips)", value: 30, step: 1 },
@@ -2079,7 +2209,6 @@ if (global.lastTradeDayId !== currentDayId) {
     }
 }
 
-// Check breakout of previous day's high or low
 if (global.pdh && global.pdl && !global.tradedToday && !api.hasPosition()) {
     if (candle.high >= global.pdh) {
         api.buy(inputs.slPips, inputs.tpPips, inputs.lotSize);
@@ -2145,6 +2274,7 @@ void OnTick() {
 
 function saveBotToLibrary(bot) { 
     let list = JSON.parse(localStorage.getItem("btl_bot_library") || "[]"); 
+    bot.isSaved = true;
     const idx = list.findIndex(b => b.id === bot.id);
     if (idx >= 0) {
         list[idx] = bot;
@@ -2177,7 +2307,6 @@ async function removeBot(id, isGlobalItem = false) {
     loadBotLibrary();
 }
 
-// Download Global Hub Bot with Quota Verification
 async function downloadGlobalBotFile(bot) {
     if (!window.isPro) {
         openPlanModal();
@@ -2201,7 +2330,6 @@ async function downloadGlobalBotFile(bot) {
         return;
     }
 
-    // Decrement download quota in Firestore
     try {
         const planDocRef = window.doc(window.db, "users", user.uid, "plan", "active");
         await window.updateDoc(planDocRef, {
@@ -2215,7 +2343,6 @@ async function downloadGlobalBotFile(bot) {
         console.warn("Quota decrement warning:", e);
     }
 
-    // Trigger direct .mq5 file generation
     const blob = new Blob([bot.mql5_code], { type: "text/plain;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");

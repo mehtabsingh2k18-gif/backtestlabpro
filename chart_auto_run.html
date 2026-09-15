@@ -588,8 +588,9 @@
             <div style="font-size: 9px; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Order Journal</div>
             <div class="journal-container" id="journalContainer"></div>
             <div style="margin-top: auto; display: flex; flex-direction: column; gap: 6px; padding-top: 6px;">
+                <button class="btn-accent" style="width: 100%; justify-content: center; font-weight: 700;" onclick="openExportSessionModal()">💾 Export Session Report (CSV / .tml)</button>
                 <button class="btn-outline" style="width: 100%; justify-content: center;" onclick="openCodeInspector('js')">Inspect JS Sandbox</button>
-                <button class="btn-accent" style="width: 100%; justify-content: center; font-weight: 700;" onclick="openCodeInspector('mql5')">Export MetaTrader 5 EA (.mq5)</button>
+                <button class="btn-outline" style="width: 100%; justify-content: center;" onclick="openCodeInspector('mql5')">Export MetaTrader 5 EA (.mq5)</button>
             </div>
         </div>
 
@@ -613,6 +614,41 @@
 
             <div style="font-size: 10px; color: var(--text-muted);" id="botSubNavDesc">Personal local/account strategies. Drag to chart or tap Load Replay.</div>
             <div id="botCardsContainer" style="display: flex; flex-direction: column; gap: 8px;"></div>
+        </div>
+    </div>
+</div>
+
+<!-- SESSION REPORT EXPORT & DOWNLOAD MODAL -->
+<div class="modal-overlay" id="exportSessionModal">
+    <div class="modal-window" style="width: 460px;">
+        <div class="modal-bar">
+            <span>Export Session & Backtest Report</span>
+            <button onclick="closeModal('exportSessionModal')">
+                <svg class="icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div style="font-size: 11px; color: var(--text-muted); line-height: 1.4;">
+                Save your current backtest session, performance metrics, and trade journal. Works whether your session is paused or completed.
+            </div>
+
+            <div class="vault-input-group">
+                <label style="font-size: 11px; font-weight: 700;">File Name</label>
+                <input type="text" id="exportFileNameInput" class="chat-textarea" style="height: 34px;" placeholder="e.g. my_session.csv">
+            </div>
+
+            <div class="vault-input-group">
+                <label style="font-size: 11px; font-weight: 700;">Export Format</label>
+                <select id="exportFormatSelect" style="width: 100%; background: var(--bg-base); border: 1px solid var(--border); color: #fff; padding: 6px 8px; border-radius: 4px; font-size: 11px;">
+                    <option value="csv">CSV Spreadsheet (.csv) - Includes trade log & metrics</option>
+                    <option value="tml">Session Template (.tml / .json) - Complete state archive</option>
+                </select>
+            </div>
+
+            <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 6px;">
+                <button class="btn-outline" onclick="closeModal('exportSessionModal')">Cancel</button>
+                <button class="btn-accent" onclick="executeSessionExport()">Download Report File</button>
+            </div>
         </div>
     </div>
 </div>
@@ -1699,6 +1735,97 @@ function detachActiveBot() {
 }
 
 /* =========================================================================
+   8. SESSION & REPORT EXPORT (CSV / .TML)
+   ========================================================================= */
+function openExportSessionModal() {
+    const modal = document.getElementById("exportSessionModal");
+    const nameInput = document.getElementById("exportFileNameInput");
+    
+    const botNameClean = activeBot ? activeBot.name.replace(/[^a-zA-Z0-9]/g, "_") : "Manual_Session";
+    const dateStr = new Date().toISOString().split("T")[0];
+    nameInput.value = `BacktestLab_${botNameClean}_${symbol}_${tf}_${dateStr}.csv`;
+    
+    modal.style.display = "flex";
+}
+
+function executeSessionExport() {
+    const format = document.getElementById("exportFormatSelect").value;
+    const fileName = document.getElementById("exportFileNameInput").value.trim() || `backtest_report.${format}`;
+    
+    const closed = account.closedTrades;
+    const wins = closed.filter(t => t.pnl > 0).length;
+    const totalProfit = closed.reduce((acc, t) => acc + t.pnl, 0);
+    const winRate = closed.length ? ((wins / closed.length) * 100).toFixed(1) : "0.0";
+    const finalBalance = (10000 + totalProfit).toFixed(2);
+
+    let fileContent = "";
+    let mimeType = "text/plain;charset=utf-8";
+
+    if (format === "csv") {
+        mimeType = "text/csv;charset=utf-8";
+        let csvLines = [];
+        csvLines.push("=== BACKTESTLAB PRO - SYSTEMATIC SESSION REPORT ===");
+        csvLines.push(`Generated On,${new Date().toISOString()}`);
+        csvLines.push(`Strategy Name,"${activeBot ? activeBot.name : 'None'}"`);
+        csvLines.push(`Symbol,${symbol}`);
+        csvLines.push(`Timeframe,${tf.toUpperCase()}`);
+        csvLines.push(`Initial Balance,$10000.00`);
+        csvLines.push(`Final Balance,$${finalBalance}`);
+        csvLines.push(`Net Profit,$${totalProfit.toFixed(2)}`);
+        csvLines.push(`Win Rate,${winRate}%`);
+        csvLines.push(`Total Closed Trades,${closed.length}`);
+        csvLines.push(`Open Positions,${account.positions.length}`);
+        csvLines.push("");
+        csvLines.push("Trade ID,Type,Exit Price (USD),PnL ($),Execution Timestamp");
+        
+        closed.forEach(t => {
+            const dateReadable = new Date(t.time * 1000).toISOString();
+            csvLines.push(`${t.id},${t.type},${t.exitPrice.toFixed(2)},${t.pnl.toFixed(2)},${dateReadable}`);
+        });
+
+        fileContent = csvLines.join("\n");
+    } else {
+        mimeType = "application/json;charset=utf-8";
+        const sessionData = {
+            app: "BacktestLab Pro",
+            version: "2.5",
+            export_timestamp: new Date().toISOString(),
+            symbol: symbol,
+            timeframe: tf,
+            strategy: activeBot ? {
+                name: activeBot.name,
+                inputs: activeBot.inputs,
+                js_code: activeBot.js_code,
+                mql5_code: activeBot.mql5_code
+            } : null,
+            metrics: {
+                initial_balance: 10000.00,
+                final_balance: parseFloat(finalBalance),
+                net_profit: totalProfit,
+                win_rate: parseFloat(winRate),
+                total_closed_trades: closed.length
+            },
+            trade_journal: closed,
+            open_positions: account.positions
+        };
+        fileContent = JSON.stringify(sessionData, null, 2);
+    }
+
+    const blob = new Blob([fileContent], { type: mimeType });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = fileName;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    closeModal("exportSessionModal");
+    appendMsg(`Session report <b>${fileName}</b> successfully downloaded.`, "ai");
+}
+
+/* =========================================================================
    PLAN MODAL & MONETIZATION ROUTING
    ========================================================================= */
 function handlePlanPillClick() {
@@ -1883,7 +2010,7 @@ function applyInputsAndRestart() {
 }
 
 /* =========================================================================
-   8. AI COPILOT ARCHITECT (ACTIVE GEMINI 3.6 FLASH ENDPOINT)
+   9. AI COPILOT ARCHITECT (ACTIVE GEMINI 3.6 FLASH ENDPOINT)
    ========================================================================= */
 const ARCHITECT_PROMPT = `You are the AI Strategy Architect for BacktestLab Pro.
 The user wants to configure an algorithmic trading bot.
@@ -2118,7 +2245,7 @@ function clearChatHistory() {
 }
 
 /* =========================================================================
-   9. BOT REPOSITORY, DUAL SUB-NAV & CLOUD DOWNLOAD SYNC
+   10. BOT REPOSITORY, DUAL SUB-NAV & CLOUD DOWNLOAD SYNC
    ========================================================================= */
 function selectDockTab(tab) {
     document.getElementById("tabBtnAnalytics").classList.toggle("active", tab === 'analytics');
@@ -2409,7 +2536,7 @@ function renderBotCards() {
 }
 
 /* =========================================================================
-   10. MODAL UTILITIES (WITH PRO ENTITLEMENT SECURITY)
+   11. MODAL UTILITIES (WITH PRO ENTITLEMENT SECURITY)
    ========================================================================= */
 function openCodeInspector(type) {
     if (!activeBot) return alert("Select or synthesize a strategy first.");

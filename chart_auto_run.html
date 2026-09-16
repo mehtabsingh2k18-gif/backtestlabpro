@@ -1685,6 +1685,14 @@ function handleBotDragStart(e, bot) {
 }
 
 function mountStrategy(bot) {
+    // --- REQUIRE LOGIN CHECK ---
+    const user = window.currentUser || (window.auth ? window.auth.currentUser : null);
+    if (!user) {
+        alert("Please log in first to attach bots to the chart!");
+        window.location.href = "login.html?redirect=chart_auto_run.html";
+        return;
+    }
+
     if (activeBot && activeBot.isSaved === false && activeBot.id !== bot.id) {
         if (!confirm("⚠️ WARNING: Your current active bot is UNSAVED! Loading a new bot will discard your progress and you will lose everything. Do you wish to proceed?")) {
             return;

@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5.0">
+    <meta name="theme-color" content="#050507">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    
+    <title>The Ultimate Guide to Free MetaTrader 5 Backtesting &amp; Bar Replay | BacktestLab Pro</title>
+    <meta name="description" content="Master algorithmic trading and MQL5 development with BacktestLab Pro's free browser-based bar replay simulator. Test Gold XAUUSD strategies, avoid subscription paywalls, and export production-ready code.">
+    <link rel="canonical" href="https://backtestlabpro.com/articles/free-mt5-bar-replay-simulator.html">
+
+    <meta property="og:locale" content="en_US">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="The Ultimate Guide to Free MetaTrader 5 Backtesting &amp; Bar Replay | BacktestLab Pro">
+    <meta property="og:description" content="Ditch expensive subscription fees. Run zero-lag historical candle replays, test institutional price action strategies, and export compile-ready MQL5 code for free.">
+    <meta property="og:url" content="https://backtestlabpro.com/articles/free-mt5-bar-replay-simulator.html">
+    <meta property="og:site_name" content="BacktestLab Pro">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="The Ultimate Guide to Free MetaTrader 5 Backtesting &amp; Bar Replay">
+    <meta name="twitter:description" content="Unlimited backtesting sessions, deep historical tick archives, and realistic trade execution for Forex and Crypto with zero subscription limits.">
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YY82TZ1ZG7"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-YY82TZ1ZG7');
+    </script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-V7SXCF9923"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-V7SXCF9923');
+    </script>
+
+    <!-- Tailwind CSS & FontAwesome -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" sizes="192x192" href="../favicon.png">
+
+    <!-- Rich Snippets Schema for TechArticle -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "TechArticle",
+      "headline": "The Ultimate Guide to Free MetaTrader 5 Backtesting & Bar Replay",
+      "description": "An exhaustive technical blueprint for algorithmic traders and MQL5 developers detailing how to perform zero-lag historical bar replays, test Gold XAUUSD strategies, and export production code without desktop software subscriptions.",
+      "author": {
+        "@type": "Organization",
+        "name": "BacktestLab Pro"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "BacktestLab Pro",
+        "url": "https://backtestlabpro.com"
+      },
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://backtestlabpro.com/articles/free-mt5-bar-replay-simulator.html"
+      }
+    }
+    </script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    screens: { 'xs': '380px' },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            dark: '#050507',
+                            card: '#0c0c0e',
+                            accent: '#6366f1',
+                            success: '#10b981',
+                            purple: '#a855f7'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        :root { color-scheme: dark; }
+        html, body {
+            background-color: #050507;
+            color: #f4f4f5;
+            overflow-x: hidden;
+            width: 100%;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .glow-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(90px);
+            opacity: 0.12;
+            pointer-events: none;
+        }
+        @media (min-width: 768px) {
+            .glow-orb { filter: blur(140px); opacity: 0.16; }
+        }
+        .glass-card {
+            background: rgba(12, 12, 14, 0.72);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .article-content h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 1.75rem;
+            color: #ffffff;
+            margin-top: 3rem;
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .article-content h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            font-size: 1.35rem;
+            color: #f4f4f5;
+            margin-top: 2rem;
+            margin-bottom: 0.75rem;
+        }
+        .article-content p {
+            margin-bottom: 1.35rem;
+            color: #d1d4dc;
+            line-height: 1.85;
+            font-size: 1.025rem;
+        }
+        .article-content ul, .article-content ol {
+            margin-bottom: 1.5rem;
+            padding-left: 1.5rem;
+            color: #d1d4dc;
+        }
+        .article-content li {
+            margin-bottom: 0.65rem;
+            line-height: 1.7;
+        }
+        .article-content pre {
+            background-color: #080a0f;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            overflow-x: auto;
+            margin: 2rem 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: #818cf8;
+            box-shadow: inset 0 2px 6px rgba(0,0,0,0.5);
+        }
+
+        /* Image-Style Navbar Components */
+        .btn-workspace {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #161821;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #d1d4dc;
+            padding: 7px 16px;
+            border-radius: 9999px;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+        .btn-workspace:hover {
+            background: #202433;
+            color: #ffffff;
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+        .btn-avatar-badge {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            background: #12151e;
+            border: 1px solid rgba(168, 85, 247, 0.5);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 12px rgba(168, 85, 247, 0.2);
+            color: #ffffff;
+            cursor: pointer;
+            position: relative;
+        }
+        .btn-avatar-badge:hover {
+            border-color: rgba(168, 85, 247, 0.9);
+            box-shadow: 0 0 16px rgba(168, 85, 247, 0.35);
+        }
+        .user-dropdown-menu {
+            display: none;
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            background: #11141c;
+            border: 1px solid #282d3b;
+            border-radius: 12px;
+            padding: 8px;
+            min-width: 190px;
+            box-shadow: 0 16px 40px rgba(0,0,0,0.6);
+            z-index: 100;
+        }
+    </style>
+</head>
+<body class="font-sans antialiased min-h-screen flex flex-col justify-between selection:bg-indigo-500/30 selection:text-indigo-200" id="top">
+
+    <div class="glow-orb w-64 h-64 sm:w-[450px] sm:h-[450px] bg-brand-accent top-[-40px] left-[-40px]"></div>
+    <div class="glow-orb w-72 h-72 sm:w-[500px] sm:h-[500px] bg-brand-purple top-[25%] right-[-60px]"></div>
+    <div class="glow-orb w-64 h-64 sm:w-[450px] sm:h-[450px] bg-brand-success bottom-[15%] left-[-60px]"></div>
+
+    <!-- Navigation Header (Exact Copy from Homepage)[cite: 1] -->
+    <header class="sticky top-0 z-50 w-full border-b border-white/5 bg-[#050507]/90 backdrop-blur-xl" role="banner">
+        <div class="max-w-7xl mx-auto px-3 xs:px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-3">
+            
+            <a href="../index.html" class="flex items-center gap-2.5 sm:gap-3 group flex-shrink-0" aria-label="BacktestLab Pro Homepage">
+                <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
+                    <svg class="w-4 h-4 sm:w-5 sm:h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                    </svg>
+                </div>
+                <span class="text-base sm:text-xl font-bold font-sans tracking-tight text-white whitespace-nowrap">BacktestLab <span class="text-indigo-400">Pro</span></span>
+            </a>
+
+            <nav class="hidden lg:flex items-center gap-6 text-xs xl:text-sm font-medium" aria-label="Main Navigation">
+                <a href="../session.html" class="text-zinc-300 hover:text-white transition-colors flex items-center gap-1.5">
+                    <i class="fa-solid fa-chart-line text-indigo-400 text-xs"></i> Free Replay
+                </a>
+                <a href="../bot_automation.html" class="text-zinc-300 hover:text-white transition-colors flex items-center gap-1.5">
+                    <i class="fa-solid fa-code text-indigo-400 text-xs"></i> BYO-AI Builder
+                </a>
+                <a href="../algo_store.html" class="text-zinc-300 hover:text-white transition-colors flex items-center gap-1.5">
+                    <span class="h-1.5 w-1.5 rounded-full bg-purple-400 animate-pulse"></span>
+                    <span>Community Arena</span>
+                </a>
+                <a href="../production-code.html" class="text-zinc-300 hover:text-white transition-colors flex items-center gap-1.5">
+                    <i class="fa-solid fa-download text-emerald-400 text-xs"></i> Production Code
+                </a>
+                <a href="../articles.html" class="text-white font-semibold transition-colors">Articles</a>
+                <a href="../about.html" class="text-zinc-400 hover:text-white transition-colors">About Us</a>
+            </nav>
+
+            <!-- Dynamic Header Control Buttons -->
+            <div class="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+                <div id="navGuestControls" class="flex items-center gap-2 sm:gap-3">
+                    <a href="../login.html" class="text-xs sm:text-sm font-medium text-zinc-300 hover:text-white px-3 py-2 rounded-lg hover:bg-white/5 transition-colors">
+                        Sign In
+                    </a>
+                    <a href="../session.html" class="text-xs sm:text-sm font-semibold bg-white text-zinc-950 px-3.5 xs:px-4 sm:px-5 py-2 sm:py-2.5 rounded-full hover:bg-zinc-200 transition-all flex items-center gap-1.5 shadow-md">
+                        <span>Open Simulator →</span>
+                    </a>
+                </div>
+
+                <div id="navUserControls" class="hidden items-center gap-2.5">
+                    <a href="../session.html" class="text-xs sm:text-sm font-semibold bg-white text-zinc-950 px-4 py-2 sm:py-2.5 rounded-full hover:bg-zinc-200 transition-all flex items-center gap-1.5 shadow-md">
+                        <span>Open Simulator →</span>
+                    </a>
+                    <a href="../my-sessions.html" class="btn-workspace">
+                        <i class="fa-solid fa-folder text-indigo-400"></i>
+                        <span>Workspace</span>
+                    </a>
+                    <div class="relative">
+                        <button onclick="toggleUserDropdown()" id="userAvatarBtn" class="btn-avatar-badge" title="User Profile">
+                            <i class="fa-solid fa-user text-xs"></i>
+                        </button>
+                        <div id="userDropdown" class="user-dropdown-menu">
+                            <div class="px-3 py-2 border-b border-white/5 text-[11px] font-mono text-zinc-400 truncate" id="userEmailDisplay">trader@domain.com</div>
+                            <a href="../my-sessions.html" class="flex items-center gap-2 px-3 py-2 text-xs text-zinc-300 hover:text-white hover:bg-white/5 rounded-lg mt-1 transition-colors">
+                                <i class="fa-solid fa-folder text-indigo-400 text-[11px]"></i> My Sessions
+                            </a>
+                            <button onclick="handleUserSignOut()" class="w-full text-left flex items-center gap-2 px-3 py-2 text-xs text-red-400 hover:bg-red-500/10 rounded-lg transition-colors mt-0.5">
+                                <i class="fa-solid fa-arrow-right-from-bracket text-[11px]"></i> Sign Out
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <button id="mobileMenuToggle" aria-label="Toggle navigation" class="lg:hidden w-8 h-8 xs:w-9 xs:h-9 rounded-xl bg-zinc-900 border border-white/10 flex items-center justify-center text-zinc-300 hover:text-white ml-1">
+                    <i id="menuHamburgerIcon" class="fa-solid fa-bars text-xs xs:text-sm"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Drawer -->
+        <div id="mobileDrawerMenu" class="hidden lg:hidden border-t border-white/10 bg-[#08080c]/98 backdrop-blur-2xl px-4 py-4 space-y-2.5 shadow-2xl">
+            <a href="../session.html" class="block text-xs xs:text-sm font-semibold text-white py-2.5 px-3.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 transition-colors">
+                <i class="fa-solid fa-play text-xs mr-2"></i> Launch Bar Replay Simulator
+            </a>
+            <a href="../my-sessions.html" id="mobileWorkspaceLink" class="hidden text-xs xs:text-sm font-medium text-indigo-300 py-2 px-3 rounded-lg bg-indigo-500/10 border border-indigo-500/20">
+                <i class="fa-solid fa-folder mr-2"></i> Workspace (My Sessions)
+            </a>
+            <a href="../bot_automation.html" class="block text-xs xs:text-sm font-medium text-zinc-300 hover:text-white py-2 px-3 rounded-lg hover:bg-white/5">
+                <i class="fa-solid fa-code text-indigo-400 mr-2"></i> BYO-AI Builder
+            </a>
+            <a href="../algo_store.html" class="block text-xs xs:text-sm font-medium text-purple-300 py-2 px-3 rounded-lg bg-purple-500/10 border border-purple-500/20">
+                <i class="fa-solid fa-robot text-purple-400 mr-2"></i> Community Arena
+            </a>
+            <a href="../production-code.html" class="block text-xs xs:text-sm font-medium text-emerald-300 py-2 px-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
+                <i class="fa-solid fa-download text-emerald-400 mr-2"></i> Production Code
+            </a>
+            <a href="../articles.html" class="block text-xs xs:text-sm font-medium text-white py-2 px-3 rounded-lg bg-white/5">
+                <i class="fa-solid fa-newspaper text-indigo-400 mr-2"></i> Quant Articles &amp; Guides
+            </a>
+            <a href="../about.html" class="block text-xs xs:text-sm font-medium text-zinc-300 hover:text-white py-2 px-3 rounded-lg hover:bg-white/5">
+                <i class="fa-solid fa-circle-info text-zinc-400 mr-2"></i> About Us
+            </a>
+        </div>
+    </header>
+
+    <!-- Main Expanded Article Body -->
+    <main class="relative z-10 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto py-12 sm:py-20 flex-grow w-full" role="main">
+        
+        <!-- Breadcrumbs -->
+        <div class="mb-6 flex items-center gap-2 text-xs font-mono text-zinc-400">
+            <a href="../index.html" class="hover:text-white">Home</a>
+            <span>/</span>
+            <a href="../articles.html" class="hover:text-white">Articles</a>
+            <span>/</span>
+            <span class="text-indigo-400">Exhaustive MT5 Backtesting Guide</span>
+        </div>
+
+        <article class="article-content">
+            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 font-mono text-xs mb-6">
+                <span class="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span>Exhaustive Quantitative Research Guide • Updated for 2026</span>
+            </div>
+
+            <h1 class="font-display font-extrabold text-3xl xs:text-4xl sm:text-6xl tracking-tight text-white leading-[1.15] mb-6">
+                The Ultimate Guide to Free MetaTrader 5 Backtesting &amp; Bar Replay
+            </h1>
+
+            <p class="text-xl text-zinc-300 font-normal leading-relaxed mb-8 border-l-4 border-indigo-500 pl-4 py-1">
+                A comprehensive engineering and quantitative blueprint detailing how systematic traders, quants, and MQL5 developers can perform historical bar replays, eliminate curve-fitting, test high-volatility Gold (XAUUSD) strategies, and export production-ready code without costly platform subscription paywalls[cite: 1].
+            </p>
+
+            <h2>1. The Structural Flaw of Commercial Retail Backtesting</h2>
+            <p>
+                For decades, retail algorithmic traders have been forced into a corner by legacy desktop backtesting software. To properly stress-test a trading strategy or execute manual candle-by-candle bar replays, developers were traditionally expected to commit to heavy monthly subscription models. These closed platforms often lock multi-timeframe tick archives behind costly paywalls, restrict daily session access, and provide opaque optimization routines.
+            </p>
+            <p>
+                For systematic traders designing high-frequency intraday strategies—such as Previous Day High and Previous Day Low (PDH/PDL) breakouts, Asian range liquidity sweeps, Balanced Price Range (BPR) fills, or 5-minute Gold (XAUUSD) scalping algorithms—relying on standard summary logs without visual candle verification is a recipe for account failure. Without stepping through price action candle-by-candle, traders fall victim to hidden slippage anomalies, lookahead bias, and fatal curve-fitting.
+            </p>
+            <p>
+                This structural bottleneck led to the creation of <a href="../index.html" class="text-indigo-400 font-semibold hover:underline">BacktestLab Pro</a>: a 100% free trading backtesting platform engineered to give developers unlimited multi-timeframe testing sessions, institutional-grade historical chart feeds, and zero session caps[cite: 1].
+            </p>
+
+            <h2>2. Why Browser-Based Bar Replay Outperforms Desktop Terminals</h2>
+            <p>
+                Transitioning your preliminary testing and research workflow to a web-native quantitative environment yields substantial structural advantages:
+            </p>
+            <ul>
+                <li><strong>Unlimited Testing Sessions:</strong> Unlike commercial platforms that lock you out after a handful of daily trials, BacktestLab Pro supports unlimited backtesting sessions and candle replays[cite: 1].</li>
+                <li><strong>Zero Installation Friction:</strong> Access your historical feeds instantly from any operating system—Windows, macOS, or Linux—without configuring complex MetaTrader DLL wrappers or virtual machine bridges.</li>
+                <li><strong>Multi-Year Tick Feeds:</strong> Leverage archival liquidity feeds spanning up to 20+ years for Forex currency pairs, global indices, and high-volatility XAUUSD spot prices[cite: 1].</li>
+                <li><strong>Realistic Execution Modeling:</strong> Simulate exact stop-loss (SL) and take-profit (TP) triggers with realistic spread widening and slippage behavior during high-impact news events.</li>
+            </ul>
+
+            <h2>3. Step-by-Step Blueprint: Backtesting Gold (XAUUSD) Breakouts</h2>
+            <p>
+                Trading Gold on the 5-minute or 15-minute timeframe demands surgical precision. High volatility during the London and New York session opens can quickly trigger wide stop-losses if risk rules are not rigorously validated. Follow this systematic workflow in our <a href="../session.html" class="text-indigo-400 font-semibold hover:underline">Free Replay Terminal</a>[cite: 1] to construct a robust breakout bot:
+            </p>
+            <ol>
+                <li><strong>Map Structural Boundaries:</strong> Load historical data and isolate the previous day’s high (PDH) and low (PDL) price extremes.</li>
+                <li><strong>Run Candle Replay:</strong> Step forward candle-by-candle into the active session. Observe how price reacts when sweeping liquidity past these boundaries.</li>
+                <li><strong>Incorporate Volume Confirmation:</strong> Filter out false breakouts by requiring a Relative Volume (RVOL) expansion threshold greater than 1.5 on the breakout candle.</li>
+                <li><strong>Measure Performance Metrics:</strong> Track win rate, profit factor, maximum drawdown, and equity curve growth directly inside the simulation panel.</li>
+            </ol>
+
+            <pre><code>// Production-Grade MQL5 Breakout Logic with Relative Volume Filter
+input double InpRiskPercent   = 1.0;
+input int    InpStopLossPts   = 300;
+input int    InpTakeProfitPts = 600;
+input double InpMinRVOL       = 1.5;
+
+bool ValidatePDHBreakout(double currentClose, double pdhLevel, double currentRvol) {
+    if (currentClose > pdhLevel && currentRvol >= InpMinRVOL) {
+        return true; // Institutional volume expansion confirmed
+    }
+    return false;
+}</code></pre>
+
+            <h2>4. BYO-AI: Formulating Strategies Without Coding From Scratch</h2>
+            <p>
+                Translating raw market ideas into functional MQL5 syntax can be tedious. To streamline this process, BacktestLab Pro features the <a href="../bot_automation.html" class="text-indigo-400 font-semibold hover:underline">BYO-AI Builder</a>[cite: 1]. By connecting your own client-side API keys (such as Google Gemini or OpenAI), you can chat directly with an AI assistant to structure algorithmic rules, calculate mathematical indicators, and prepare your strategy for historical auditing.
+            </p>
+            <p>
+                Crucially, this architecture operates entirely client-side in your browser. Your proprietary trading concepts, entry formulas, and parameter sets are never stored or resold on central servers[cite: 1].
+            </p>
+
+            <h2>5. Benchmarking Strategies in the Community Arena</h2>
+            <p>
+                Before deploying capital or writing custom code, you can inspect pre-tested community models inside the <a href="../algo_store.html" class="text-purple-400 font-semibold hover:underline">Community Bot Arena</a>[cite: 1]. Explore audited strategies such as:
+            </p>
+            <ul>
+                <li><strong>Asian Range Liquidity Sweep:</strong> Captures impulsive reversals following stop hunts outside Asian session highs and lows.</li>
+                <li><strong>Balanced Price Range (BPR) Fills:</strong> Systematic backtesting for institutional fair value gap mitigations across Forex majors[cite: 1].</li>
+                <li><strong>PDH / PDL Replay Models:</strong> Previous day level retests filtered by session volume and spread modeling[cite: 1].</li>
+            </ul>
+
+            <h2>6. When to Graduate to Production Code Export</h2>
+            <p>
+                Your historical research, session replay trials, and indicator parameter optimizations remain 100% free forever with zero limitations[cite: 1]. When your strategy successfully passes historical stress tests and you are ready to execute live on MetaTrader 5 or automated Python execution pipelines, you can acquire complete compile-ready source files through our <a href="../production-code.html" class="text-emerald-400 font-semibold hover:underline">Production Code Bundle</a>[cite: 1]. Every export includes pre-configured parameter sets (`.set` files) and comprehensive VPS deployment documentation[cite: 1].
+            </p>
+
+            <div class="p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-indigo-950/50 via-zinc-900 to-black border border-indigo-500/30 my-10 text-center shadow-2xl">
+                <h3 class="text-2xl font-bold text-white mb-3 font-display">Ready to Launch Your First Replay Session?</h3>
+                <p class="text-zinc-300 text-sm max-w-xl mx-auto mb-6">No credit card required. Jump straight into our lightning-fast bar replay terminal and start backtesting your trading strategies instantly[cite: 1].</p>
+                <a href="../session.html" class="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl bg-white text-zinc-950 font-bold text-sm hover:bg-zinc-200 transition-all shadow-xl active:scale-95">
+                    Launch Free Replay Simulator →
+                </a>
+            </div>
+
+            <h2>Frequently Asked Questions</h2>
+            
+            <h3>Is BacktestLab Pro a 100% free trading backtesting website?</h3>
+            <p>Yes. Backtesting, historical chart data, bar replay, and session testing are 100% free forever with no credit card or hidden subscription paywalls[cite: 1].</p>
+
+            <h3>Are there really unlimited backtesting sessions?</h3>
+            <p>Yes! Unlike other platforms that cut you off after a few daily trials, BacktestLab Pro features unlimited backtesting sessions and unlimited candle replays[cite: 1].</p>
+
+            <h3>What historical chart data and execution features are included?</h3>
+            <p>You get multi-year tick feeds for Forex, Gold (XAUUSD), and Crypto across 1m, 5m, 15m, and higher timeframes, combined with realistic execution simulation for SL/TP and spreads[cite: 1].</p>
+
+            <h3>Can I backtest BPR and ICT setups?</h3>
+            <p>Yes. Our simulator supports tick and bar replay designed specifically to test Balanced Price Ranges, Fair Value Gaps (FVG), Asian session sweeps, and PDH/PDL break-and-retest patterns[cite: 1].</p>
+
+            <h3>How does the BYO-AI strategy builder work?</h3>
+            <p>You bring your own AI API key (Google Gemini, OpenAI, etc.). The prompt logic operates directly in your browser. We never store or resell your proprietary logic[cite: 1].</p>
+        </article>
+
+    </main>
+
+    <!-- Footer (Exact Copy from Homepage)[cite: 1] -->
+    <footer class="mt-20 border-t border-white/10 bg-[#060608] pt-12 pb-12 text-zinc-400 text-xs font-sans" role="contentinfo">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+            <div class="p-4 sm:p-5 rounded-2xl bg-black/60 border border-white/5 font-mono text-[11px] text-zinc-500 leading-relaxed space-y-2">
+                <div class="text-zinc-400 font-bold"><i class="fa-solid fa-triangle-exclamation text-amber-400 mr-1.5"></i> Quantitative Risk Disclaimer</div>
+                <p>BacktestLab Pro provides quantitative strategy backtesting software and historical data simulation for research and educational purposes only. Past simulated performance does not guarantee future financial returns. All live algorithmic trading carries substantial capital risk.</p>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-xs font-mono">
+                <div class="space-y-2">
+                    <span class="text-white font-bold block">Platform</span>
+                    <a href="../session.html" class="block hover:text-white">Free Bar Replay</a>
+                    <a href="../bot_automation.html" class="block hover:text-white">BYO-AI Builder</a>
+                </div>
+                <div class="space-y-2">
+                    <span class="text-white font-bold block">Ecosystem</span>
+                    <a href="../algo_store.html" class="block hover:text-white">Community Bot Arena</a>
+                    <a href="../production-code.html" class="block hover:text-white">Production Code</a>
+                </div>
+                <div class="space-y-2">
+                    <span class="text-white font-bold block">Content</span>
+                    <a href="../articles.html" class="block hover:text-white">Quant Articles &amp; Guides</a>
+                    <a href="../about.html" class="block hover:text-white">About Us</a>
+                </div>
+                <div class="space-y-2">
+                    <span class="text-white font-bold block">Legal</span>
+                    <a href="../privacy.html" class="block hover:text-white">Privacy Policy</a>
+                    <a href="../terms.html" class="block hover:text-white">Terms of Service</a>
+                </div>
+            </div>
+
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4 text-zinc-500 font-mono text-[11px] pt-4 border-t border-white/5">
+                <div>© 2026 BacktestLab Pro. All rights reserved. Strategy research and bar replay are 100% free with unlimited sessions[cite: 1].</div>
+                <div class="flex gap-4">
+                    <a href="#top" class="hover:text-white"><i class="fa-solid fa-arrow-up mr-1"></i> Back to Top</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Firebase Auth & Navbar Script -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAensfI53w49Fd4A7Lz5_K9N1JOxZsW7Kk",
+            authDomain: "backtestlabpro.firebaseapp.com",
+            projectId: "backtestlabpro",
+            storageBucket: "backtestlabpro.firebasestorage.app",
+            messagingSenderId: "560146824734",
+            appId: "1:560146824734:web:5287d0ded3a1024e75780f",
+            measurementId: "G-YY82TZ1ZG7"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        onAuthStateChanged(auth, (user) => {
+            const guestControls = document.getElementById("navGuestControls");
+            const userControls = document.getElementById("navUserControls");
+            const mobileWorkspace = document.getElementById("mobileWorkspaceLink");
+            const emailDisplay = document.getElementById("userEmailDisplay");
+
+            if (user) {
+                if (guestControls) guestControls.classList.add("hidden");
+                if (userControls) {
+                    userControls.classList.remove("hidden");
+                    userControls.classList.add("flex");
+                }
+                if (mobileWorkspace) mobileWorkspace.classList.remove("hidden");
+                if (emailDisplay) emailDisplay.innerText = user.email;
+            } else {
+                if (guestControls) guestControls.classList.remove("hidden");
+                if (userControls) {
+                    userControls.classList.add("hidden");
+                    userControls.classList.remove("flex");
+                }
+                if (mobileWorkspace) mobileWorkspace.classList.add("hidden");
+            }
+        });
+
+        window.toggleUserDropdown = function() {
+            const menu = document.getElementById("userDropdown");
+            if (menu) {
+                menu.style.display = menu.style.display === "block" ? "none" : "block";
+            }
+        };
+
+        window.handleUserSignOut = async function() {
+            try {
+                await signOut(auth);
+                window.location.reload();
+            } catch(e) {
+                console.error("Sign out error:", e);
+            }
+        };
+
+        document.addEventListener('click', (e) => {
+            const avatar = document.getElementById("userAvatarBtn");
+            const dropdown = document.getElementById("userDropdown");
+            if (avatar && dropdown && !avatar.contains(e.target) && !dropdown.contains(e.target)) {
+                dropdown.style.display = "none";
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggle = document.getElementById('mobileMenuToggle');
+            const drawer = document.getElementById('mobileDrawerMenu');
+            const icon = document.getElementById('menuHamburgerIcon');
+
+            if (toggle && drawer) {
+                toggle.addEventListener('click', () => {
+                    const isHidden = drawer.classList.toggle('hidden');
+                    icon.className = isHidden ? 'fa-solid fa-bars text-xs xs:text-sm' : 'fa-solid fa-xmark text-xs xs:text-sm';
+                });
+            }
+        });
+    </script>
+</body>
+</html>

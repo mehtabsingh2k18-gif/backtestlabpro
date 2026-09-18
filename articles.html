@@ -109,7 +109,7 @@
     <div class="glow-orb w-[300px] h-[300px] md:w-[600px] md:h-[600px] bg-brand-accent top-[-100px] left-[-100px]"></div>
     <div class="glow-orb w-[350px] h-[350px] md:w-[700px] md:h-[700px] bg-brand-purple top-[20%] right-[-150px]"></div>
 
-    <!-- NAVBAR (Updated Unified Layout) -->
+    <!-- NAVBAR -->
     <header class="sticky top-0 z-50 w-full border-b border-white/5 bg-[#050507]/90 backdrop-blur-xl">
         <div class="max-w-7xl mx-auto px-3 xs:px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-3">
             
@@ -239,7 +239,7 @@
                             <span>Market Analysis</span><span class="text-xs bg-white/5 px-2.5 py-0.5 rounded-full text-zinc-500 font-mono">12</span>
                         </li>
                         <li class="flex justify-between items-center cursor-pointer hover:text-indigo-400 transition-colors">
-                            <span>Backtesting Guides</span><span class="text-xs bg-white/5 px-2.5 py-0.5 rounded-full text-zinc-500 font-mono">11</span>
+                            <span>Backtesting Guides</span><span class="text-xs bg-white/5 px-2.5 py-0.5 rounded-full text-zinc-500 font-mono">13</span>
                         </li>
                         <li class="flex justify-between items-center cursor-pointer hover:text-indigo-400 transition-colors">
                             <span>Risk Management</span><span class="text-xs bg-white/5 px-2.5 py-0.5 rounded-full text-zinc-500 font-mono">7</span>
@@ -349,6 +349,19 @@
 
         const articlesDatabase = [
             {
+                id: "art_mt5_guide_2026",
+                isFeatured: true,
+                title: "The Ultimate Guide to Free MetaTrader 5 Backtesting & Bar Replay",
+                excerpt: "Master algorithmic trading and MQL5 development with BacktestLab Pro's free browser-based bar replay simulator. Test Gold XAUUSD strategies, avoid subscription paywalls, and export production-ready code.",
+                category: "Backtesting Guides",
+                tagColor: "text-indigo-400 bg-indigo-500/10 border-indigo-500/20",
+                author: "BacktestLab Research Team",
+                date: "Today",
+                readTime: "14 min read",
+                icon: "fa-solid fa-chart-line text-indigo-400",
+                url: "articles/free-mt5-bar-replay-simulator.html"
+            },
+            {
                 id: "art_backtest_prop_firm",
                 isFeatured: false,
                 title: "How to Backtest a Prop Firm Strategy: Passing Daily Drawdown Rules & Evaluations",
@@ -425,19 +438,6 @@
                 readTime: "16 min read",
                 icon: "fa-solid fa-code-compare text-cyan-400",
                 url: "articles/pine-script-v6-to-python-bot-conversion.html"
-            },
-            {
-                id: "art_featured_2026",
-                isFeatured: true,
-                title: "Best Backtesting Software for Traders in 2026: A Complete Comparison",
-                excerpt: "An in-depth review comparing TradingView, MetaTrader, and Forex Tester workflows against modern cloud architectures to optimize your testing pipeline.",
-                category: "Product Review",
-                tagColor: "text-indigo-400 bg-indigo-500/10 border-indigo-500/20",
-                author: "BacktestLab Research",
-                date: "June 2026",
-                readTime: "8 min read",
-                icon: "fa-solid fa-chart-line text-indigo-400",
-                url: "articles/Best Backtesting Software for Traders in 2026.html"
             },
             {
                 id: "art_walk_forward_guide",

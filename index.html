@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 <head>
-    <meta name="trustpilot-one-time-domain-verification-id" content="e678179e-c74d-4b63-b2d9-5f4ef9ceaa34"/>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5.0">
     <meta name="theme-color" content="#050507">
@@ -132,7 +131,7 @@
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         #mini-chart-container { touch-action: pan-y pinch-zoom; }
 
-        /* Sync Toast */
+        /* Sync Toast & Modal Animations */
         #syncToast {
             position: fixed;
             bottom: 24px;
@@ -216,6 +215,36 @@
             <div class="text-[11px] text-zinc-400" id="syncToastSubtitle">Your backtest replay data is now preserved in your account.</div>
         </div>
         <button onclick="document.getElementById('syncToast').style.display='none'" class="text-zinc-500 hover:text-white text-xs ml-2">✕</button>
+    </div>
+
+    <!-- User Feedback & Review Modal -->
+    <div id="googleReviewModal" style="display:none;" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-[99999] items-center justify-center p-4">
+        <div class="glass-card bg-[#0d0f18] border border-white/10 rounded-2xl p-6 max-w-sm w-full text-center shadow-2xl relative animate-[toastSlideUp_0.3s_ease-out]">
+            <button onclick="closeReviewModal()" class="absolute top-4 right-4 text-zinc-500 hover:text-white text-xs">
+                <i class="fa-solid fa-xmark text-sm"></i>
+            </button>
+
+            <div class="w-12 h-12 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center mx-auto mb-3">
+                <i class="fa-solid fa-star text-lg text-amber-400"></i>
+            </div>
+
+            <h3 class="text-base font-bold font-display text-white mb-1">Enjoying BacktestLab Pro?</h3>
+            <p class="text-xs text-zinc-400 mb-5 leading-relaxed">
+                You've got saved replay sessions in your workspace! How would you rate your experience so far?
+            </p>
+
+            <div class="flex justify-center items-center gap-2 mb-4">
+                <button onclick="handleRatingClick(1)" class="text-2xl hover:scale-125 transition-transform" title="1 Star">⭐</button>
+                <button onclick="handleRatingClick(2)" class="text-2xl hover:scale-125 transition-transform" title="2 Stars">⭐</button>
+                <button onclick="handleRatingClick(3)" class="text-2xl hover:scale-125 transition-transform" title="3 Stars">⭐</button>
+                <button onclick="handleRatingClick(4)" class="text-2xl hover:scale-125 transition-transform" title="4 Stars">⭐</button>
+                <button onclick="handleRatingClick(5)" class="text-2xl hover:scale-125 transition-transform" title="5 Stars">⭐</button>
+            </div>
+
+            <button onclick="closeReviewModal()" class="text-[11px] font-mono text-zinc-500 hover:text-zinc-300 transition-colors">
+                Remind me later
+            </button>
+        </div>
     </div>
 
     <div class="glow-orb w-64 h-64 sm:w-[450px] sm:h-[450px] bg-brand-accent top-[-40px] left-[-40px]"></div>
@@ -375,7 +404,7 @@
             </div>
         </section>
 
-        <!-- 02 — WHY USERS CHOOSE US (Addressing Pain Points Directly) -->
+        <!-- 02 — WHY USERS CHOOSE US -->
         <section class="scroll-animate opacity-0 translate-y-6 transition-all duration-700 ease-out" aria-labelledby="free-features-title">
             <div class="text-center max-w-2xl mx-auto mb-8 sm:mb-12">
                 <span class="text-xs font-mono font-bold text-emerald-400 tracking-wider uppercase">Zero Paywalls &amp; Limits</span>
@@ -550,7 +579,7 @@
             </div>
         </section>
 
-        <!-- 05 — BRING YOUR OWN AI (Keyword Optimized Links) -->
+        <!-- 05 — BRING YOUR OWN AI -->
         <section class="scroll-animate opacity-0 translate-y-6 transition-all duration-700 ease-out">
             <div class="p-5 xs:p-6 sm:p-10 rounded-3xl glass-card border border-indigo-500/20">
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10 items-center">
@@ -844,10 +873,10 @@
         </div>
     </footer>
 
-    <!-- Firebase Auth & Auto-Sync Engine -->
+    <!-- Firebase Auth, Auto-Sync & Review Logic -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
         const firebaseConfig = {
@@ -864,7 +893,24 @@
         const db = getFirestore(app);
         const auth = getAuth(app);
 
-        // Manage Dynamic Nav UI based on Auth State
+        // Your verified Trustpilot public submission URL
+        const GOOGLE_REVIEW_URL = "https://www.trustpilot.com/evaluate/backtestlabpro.com";
+
+        // Check if user came from chart save modal with ?trigger_review=true
+        const urlParams = new URLSearchParams(window.location.search);
+        const shouldDirectlyTriggerReview = urlParams.get("trigger_review") === "true";
+
+        if (shouldDirectlyTriggerReview) {
+            // Clean the URL in address bar without reloading
+            const cleanUrl = window.location.pathname + window.location.hash;
+            window.history.replaceState({}, document.title, cleanUrl);
+
+            // Trigger popup immediately on page load
+            setTimeout(() => {
+                showReviewModal("direct_redirect", "saved_trigger");
+            }, 700);
+        }
+
         onAuthStateChanged(auth, async (user) => {
             const guestControls = document.getElementById("navGuestControls");
             const userControls = document.getElementById("navUserControls");
@@ -908,6 +954,12 @@
                         console.error("Auto-sync error on index:", e);
                     }
                 }
+
+                // If not already triggered by ?trigger_review=true, evaluate normal session rules
+                if (!shouldDirectlyTriggerReview) {
+                    await checkSessionReviewTrigger(user.uid);
+                }
+
             } else {
                 if (guestControls) guestControls.classList.remove("hidden");
                 if (userControls) {
@@ -921,6 +973,63 @@
                 if (mobileWorkspace) mobileWorkspace.classList.add("hidden");
             }
         });
+
+        async function checkSessionReviewTrigger(uid) {
+            if (localStorage.getItem("has_reviewed_google") === "true") return;
+
+            try {
+                const sessionsSnap = await getDocs(collection(db, "users", uid, "sessions"));
+                const sessionCount = sessionsSnap.size;
+
+                // Rule Enforced:
+                // 1 saved session: show 1st time
+                // 2 saved sessions: show 2nd time
+                // 3 or more sessions: never show
+                if (sessionCount === 1) {
+                    const shownFor1 = localStorage.getItem(`review_shown_1_${uid}`);
+                    if (!shownFor1) {
+                        setTimeout(() => showReviewModal(uid, 1), 2000);
+                    }
+                } else if (sessionCount === 2) {
+                    const shownFor2 = localStorage.getItem(`review_shown_2_${uid}`);
+                    if (!shownFor2) {
+                        setTimeout(() => showReviewModal(uid, 2), 2000);
+                    }
+                }
+            } catch (err) {
+                console.error("Error evaluating session review trigger:", err);
+            }
+        }
+
+        function showReviewModal(uid, tier) {
+            const modal = document.getElementById("googleReviewModal");
+            if (modal) {
+                modal.style.display = "flex";
+                if (uid !== "direct_redirect") {
+                    localStorage.setItem(`review_shown_${tier}_${uid}`, "true");
+                }
+            }
+        }
+
+        window.closeReviewModal = function() {
+            const modal = document.getElementById("googleReviewModal");
+            if (modal) modal.style.display = "none";
+        };
+
+        window.handleRatingClick = function(stars) {
+            closeReviewModal();
+            localStorage.setItem("has_reviewed_google", "true");
+
+            const width = 600, height = 700;
+            const left = window.screenX + (window.outerWidth - width) / 2;
+            const top = window.screenY + (window.outerHeight - height) / 2;
+
+            window.open(
+                GOOGLE_REVIEW_URL,
+                "GoogleReviewPopup",
+                `width=${width},height=${height},left=${left},top=${top},scrollbars=yes,status=no,toolbar=no`
+            );
+        };
 
         window.toggleUserDropdown = function() {
             const menu = document.getElementById("userDropdown");

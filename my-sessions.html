@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Google Analytics Tracking (GA4) -->
+   <!-- Google Analytics Tracking (GA4) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-V7SXCF9923"></script>
   <script>
       window.dataLayer = window.dataLayer || [];
@@ -16,7 +16,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <style>
         :root {
             --bg-pure: #030712;
@@ -200,11 +201,121 @@
         }
         .cta-btn-primary:hover { border-color: var(--neon-cyan); background: rgba(6, 182, 212, 0.1); transform: translateY(-1px); }
 
+        /* Review Modal Styles */
+        .review-modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(3, 7, 18, 0.85);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 99999;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+        }
+        .review-modal-card {
+            background: #0d111c;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 28px;
+            max-width: 380px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.8);
+            position: relative;
+            animation: modalSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes modalSlideUp {
+            from { opacity: 0; transform: translateY(20px) scale(0.96); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .review-close-btn {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: none;
+            border: none;
+            color: var(--text-slate);
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .review-close-btn:hover { color: #fff; }
+        .review-star-btn {
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            transition: transform 0.15s ease;
+        }
+        .review-star-btn:hover {
+            transform: scale(1.25);
+        }
+
         @media (min-width: 1024px) {
             header { padding: 0 40px; }
             .workspace-container { padding: 104px 40px 40px 40px; }
         }
     </style>
+</head>
+<body>
+
+    <!-- Institutional Review Modal -->
+    <div id="workspaceReviewModal" class="review-modal-overlay">
+        <div class="review-modal-card">
+            <button onclick="closeWorkspaceReviewModal()" class="review-close-btn" aria-label="Close">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div style="width: 48px; height: 48px; border-radius: 14px; background: rgba(6, 182, 212, 0.1); border: 1px solid rgba(6, 182, 212, 0.25); color: #f59e0b; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px auto; font-size: 20px;">
+                <i class="fa-solid fa-star"></i>
+            </div>
+
+            <h3 style="font-size: 17px; font-weight: 700; color: #fff; margin-bottom: 6px;">Enjoying BacktestLab Pro?</h3>
+            <p style="font-size: 12px; color: var(--text-slate); line-height: 1.5; margin-bottom: 20px;">
+                Your session was successfully recorded in your ledger! How would you rate the bar replay speed and data precision?
+            </p>
+
+            <div style="display: flex; justify-content: center; gap: 8px; margin-bottom: 20px;">
+                <button onclick="handleRatingClick(1)" class="review-star-btn" title="1 Star">⭐</button>
+                <button onclick="handleRatingClick(2)" class="review-star-btn" title="2 Stars">⭐</button>
+                <button onclick="handleRatingClick(3)" class="review-star-btn" title="3 Stars">⭐</button>
+                <button onclick="handleRatingClick(4)" class="review-star-btn" title="4 Stars">⭐</button>
+                <button onclick="handleRatingClick(5)" class="review-star-btn" title="5 Stars">⭐</button>
+            </div>
+
+            <button onclick="closeWorkspaceReviewModal()" style="background: none; border: none; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-muted); cursor: pointer;">
+                Remind me later
+            </button>
+        </div>
+    </div>
+
+    <header>
+        <div class="brand-container">
+            <a href="index.html" class="brand-logo">BACKTESTLABPRO<span></span></a>
+            <div class="platform-badge font-mono">QUANT CORE v4.2</div>
+        </div>
+        <div class="action-control-group">
+            <a href="index.html" class="nav-back-btn">
+                <svg class="icon-svg" viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                <span class="font-mono">RETURN HOME</span>
+            </a>
+        </div>
+    </header>
+
+    <main class="workspace-container">
+        <div class="page-heading-panel">
+            <h1>Your Backtesting Ledger</h1>
+            <p>Select any historical replay run below to parse structural win metrics, track historical equity growth curves, or log systemic engine execution patterns.</p>
+        </div>
+
+        <div id="loadingIndicator">
+            <svg class="icon-svg" style="animation: pulse-glow 1s infinite alternate;" viewBox="0 0 24 24"><line x1="12" y1="2" x2="12" y2="6"></line><line x1="12" y1="18" x2="12" y2="22"></line><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line><line x1="2" y1="12" x2="6" y2="12"></line><line x1="18" y1="12" x2="22" y2="12"></line><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></svg>
+            <span>QUERYING FIRESTORE SESSION STREAMS...</span>
+        </div>
+
+        <div id="sessionsGrid" class="sessions-matrix-grid"></div>
+    </main>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -223,6 +334,45 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
+
+        // Your verified Trustpilot public review link
+        const TRUSTPILOT_REVIEW_URL = "https://www.trustpilot.com/evaluate/backtestlabpro.com";
+
+        // Check if redirected from chart save modal with ?trigger_review=true
+        const urlParams = new URLSearchParams(window.location.search);
+        const shouldDirectlyTrigger = urlParams.get("trigger_review") === "true";
+
+        if (shouldDirectlyTrigger) {
+            // Clean up the URL in the address bar without page refresh
+            const cleanUrl = window.location.pathname + window.location.hash;
+            window.history.replaceState({}, document.title, cleanUrl);
+
+            // Pop up review modal after short visual delay
+            setTimeout(() => {
+                const modal = document.getElementById("workspaceReviewModal");
+                if (modal) modal.style.display = "flex";
+            }, 700);
+        }
+
+        window.closeWorkspaceReviewModal = function() {
+            const modal = document.getElementById("workspaceReviewModal");
+            if (modal) modal.style.display = "none";
+        };
+
+        window.handleRatingClick = function(stars) {
+            closeWorkspaceReviewModal();
+            localStorage.setItem("has_reviewed_google", "true");
+
+            const width = 600, height = 700;
+            const left = window.screenX + (window.outerWidth - width) / 2;
+            const top = window.screenY + (window.outerHeight - height) / 2;
+
+            window.open(
+                TRUSTPILOT_REVIEW_URL,
+                "TrustpilotReviewPopup",
+                `width=${width},height=${height},left=${left},top=${top},scrollbars=yes,status=no,toolbar=no`
+            );
+        };
 
         const gridContainer = document.getElementById("sessionsGrid");
         const loadingIndicator = document.getElementById("loadingIndicator");
@@ -309,35 +459,5 @@
             }
         });
     </script>
-</head>
-<body>
-
-    <header>
-        <div class="brand-container">
-            <a href="index.html" class="brand-logo">BACKTESTLABPRO<span></span></a>
-            <div class="platform-badge font-mono">QUANT CORE v4.2</div>
-        </div>
-        <div class="action-control-group">
-            <a href="index.html" class="nav-back-btn">
-                <svg class="icon-svg" viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
-                <span class="font-mono">RETURN HOME</span>
-            </a>
-        </div>
-    </header>
-
-    <main class="workspace-container">
-        <div class="page-heading-panel">
-            <h1>Your Backtesting Ledger</h1>
-            <p>Select any historical replay run below to parse structural win metrics, track historical equity growth curves, or log systemic engine execution patterns.</p>
-        </div>
-
-        <div id="loadingIndicator">
-            <svg class="icon-svg" style="animation: pulse-glow 1s infinite alternate;" viewBox="0 0 24 24"><line x1="12" y1="2" x2="12" y2="6"></line><line x1="12" y1="18" x2="12" y2="22"></line><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line><line x1="2" y1="12" x2="6" y2="12"></line><line x1="18" y1="12" x2="22" y2="12"></line><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></svg>
-            <span>QUERYING FIRESTORE SESSION STREAMS...</span>
-        </div>
-
-        <div id="sessionsGrid" class="sessions-matrix-grid"></div>
-    </main>
-
 </body>
 </html>

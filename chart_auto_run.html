@@ -2,17 +2,23 @@
 <html lang="en">
 <head>
     <!-- Google Analytics Tracking (GA4) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-V7SXCF9923"></script>
-  <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-V7SXCF9923');
-  </script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-V7SXCF9923"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-V7SXCF9923');
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>BacktestLab Pro — Universal AI Engine</title>
+    
+    <!-- Charting & Modular Quantitative Engines -->
     <script src="https://unpkg.com/lightweight-charts@4.2.0/dist/lightweight-charts.standalone.production.js"></script>
+    <script src="indicators.js"></script>
+    <script src="engine.js"></script>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
     <style>
         :root {
             --bg-base: #080a0f;
@@ -179,24 +185,14 @@
             border-radius: 4px; padding: 8px 10px; font-size: 11px; font-family: monospace;
         }
 
-        /* Gemini-style Loading Indicator */
         .msg-loading {
-            align-self: flex-start;
-            background: var(--bg-elevated);
-            border: 1px solid var(--border);
-            color: var(--text-muted);
-            padding: 10px 14px;
-            border-radius: 6px;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
+            align-self: flex-start; background: var(--bg-elevated); border: 1px solid var(--border);
+            color: var(--text-muted); padding: 10px 14px; border-radius: 6px; display: inline-flex;
+            align-items: center; gap: 5px;
         }
         .loading-dot {
-            width: 6px;
-            height: 6px;
-            background: var(--text-muted);
-            border-radius: 50%;
-            animation: geminiBounce 1.4s infinite ease-in-out both;
+            width: 6px; height: 6px; background: var(--text-muted);
+            border-radius: 50%; animation: geminiBounce 1.4s infinite ease-in-out both;
         }
         .loading-dot:nth-child(1) { animation-delay: -0.32s; }
         .loading-dot:nth-child(2) { animation-delay: -0.16s; }
@@ -220,6 +216,22 @@
             padding: 10px 12px; background: #0b0e14; border-top: 1px solid var(--border);
             display: flex; flex-direction: column; gap: 8px;
         }
+        
+        .starter-chips {
+            display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px;
+            scrollbar-width: none; white-space: nowrap; -webkit-overflow-scrolling: touch;
+        }
+        .starter-chips::-webkit-scrollbar { display: none; }
+        .chip-btn {
+            background: var(--bg-elevated); border: 1px solid var(--border);
+            color: var(--text-muted); font-size: 10px; font-weight: 600;
+            padding: 4px 8px; border-radius: 12px; cursor: pointer;
+            flex-shrink: 0; transition: 0.15s ease;
+        }
+        .chip-btn:hover {
+            border-color: var(--accent); color: #fff; background: rgba(41, 98, 255, 0.14);
+        }
+
         .chat-textarea {
             width: 100%; height: 60px; background: var(--bg-base);
             border: 1px solid var(--border); border-radius: 4px; padding: 8px 10px;
@@ -229,6 +241,16 @@
 
         .chart-viewport { flex: 1; position: relative; background: var(--bg-base); min-width: 0; }
         #chartContainer { width: 100%; height: 100%; }
+
+        /* INTERACTIVE HOVER TOOLTIP */
+        #chartTooltip {
+            position: absolute; display: none; padding: 8px 12px;
+            background: rgba(11, 14, 20, 0.94); border: 1px solid var(--border-hover);
+            border-radius: 6px; font-size: 11px; font-family: monospace;
+            color: var(--text); pointer-events: none; z-index: 100;
+            backdrop-filter: blur(8px); box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+            line-height: 1.5; min-width: 150px;
+        }
 
         .drag-drop-target {
             position: absolute; inset: 0; border: 2px dashed var(--accent);
@@ -242,16 +264,19 @@
             color: #fff; display: flex; align-items: center; gap: 8px;
         }
 
+        /* SMART HUD */
         .chart-hud {
             position: absolute; top: 12px; left: 40px; background: rgba(14, 18, 27, 0.94);
             border: 1px solid var(--border); border-radius: 6px; padding: 6px 12px;
-            display: flex; align-items: center; gap: 10px; z-index: 10;
+            display: flex; align-items: center; gap: 8px; z-index: 10;
             backdrop-filter: blur(8px); max-width: calc(100% - 60px);
         }
         .hud-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--up); box-shadow: 0 0 6px var(--up); flex-shrink: 0; }
         .hud-btn { font-size: 10px; font-weight: 600; padding: 4px 8px; border-radius: 3px; cursor: pointer; transition: 0.15s; }
         .hud-btn-save { background: var(--up-bg); color: var(--up); border: 1px solid rgba(8, 153, 129, 0.4); }
         .hud-btn-save:hover { background: var(--up); color: #fff; }
+        .hud-btn-blueprint { background: rgba(41, 98, 255, 0.15); color: #82aaff; border: 1px solid rgba(41, 98, 255, 0.35); }
+        .hud-btn-blueprint:hover { background: var(--accent); color: #fff; }
         .hud-btn-edit { background: rgba(245, 158, 11, 0.15); color: var(--gold); border: 1px solid rgba(245, 158, 11, 0.4); }
         .hud-btn-edit:hover { background: var(--gold); color: #000; }
 
@@ -284,7 +309,7 @@
         .input-row input { width: 80px; background: #080a0f; border: 1px solid var(--border); color: #fff; padding: 4px 6px; border-radius: 3px; font-family: monospace; font-size: 11px; text-align: right; outline: none; }
         .input-row input:focus { border-color: var(--accent); }
 
-        .journal-container { flex: 1; overflow-y: auto; background: #07090e; border: 1px solid var(--border); border-radius: 4px; min-height: 120px; max-height: 200px; font-size: 11px; font-family: monospace; }
+        .journal-container { flex: 1; overflow-y: auto; background: #07090e; border: 1px solid var(--border); border-radius: 4px; min-height: 120px; max-height: 190px; font-size: 11px; font-family: monospace; }
         .journal-entry { padding: 5px 8px; border-bottom: 1px solid #141824; display: flex; justify-content: space-between; }
 
         .bot-nav-toggle {
@@ -324,6 +349,19 @@
         .modal-body { padding: 14px; display: flex; flex-direction: column; gap: 12px; overflow-y: auto; }
         .code-display { background: #06080d; border: 1px solid var(--border); border-radius: 4px; padding: 10px; font-family: monospace; font-size: 11px; color: #7ee787; height: 260px; overflow-y: auto; white-space: pre; }
         
+        .blueprint-grid { display: flex; flex-direction: column; gap: 8px; }
+        .blueprint-row {
+            background: var(--bg-base); border: 1px solid var(--border);
+            border-radius: 5px; padding: 10px 12px; display: flex; gap: 10px; align-items: flex-start;
+        }
+        .blueprint-tag {
+            font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;
+            padding: 3px 6px; border-radius: 3px; width: 85px; flex-shrink: 0; text-align: center;
+        }
+        .blueprint-content {
+            font-size: 11px; color: #d6d9e0; line-height: 1.45; font-family: monospace;
+        }
+
         .pro-pricing-banner {
             background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(41, 98, 255, 0.15));
             border: 1px solid rgba(245, 158, 11, 0.4); border-radius: 6px; padding: 16px; text-align: center;
@@ -385,7 +423,7 @@
             .chat-backdrop.active { display: block; }
             .workspace { flex-direction: column; }
             .dock-pane {
-                width: 100%; height: 230px; border-left: none;
+                width: 100%; height: 260px; border-left: none;
                 border-top: 1px solid var(--border); flex-shrink: 0;
             }
             .chart-viewport { flex: 1; min-height: 250px; }
@@ -398,7 +436,7 @@
             .session-tag { display: none; }
             .metric-grid { grid-template-columns: 1fr 1fr; gap: 6px; }
             .metric-val { font-size: 13px; }
-            .dock-pane { height: 210px; }
+            .dock-pane { height: 240px; }
         }
     </style>
 </head>
@@ -440,23 +478,22 @@
         <span id="badgeSymbol">XAUUSD</span> · <span id="badgeDates">Loading...</span>
     </div>
 
-    <!-- Active Plan State Display -->
     <div class="tier-pill tier-free" id="tierSwitchBtn" onclick="handlePlanPillClick()" title="View Subscription Details">
         <svg class="icon" id="tierIconLock" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
         <span id="tierLabel">🔒 GET REAL CODE / EXECUTE IN MARKET</span>
     </div>
 
     <button class="btn-outline" onclick="openKeyVault()" title="Configure Client API Keys">
-        <svg class="icon" viewBox="0 0 24 24"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+        <svg class="icon" viewBox="0 0 24 24"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1 2 0l.43-.25a2 2 0 0 1 1-1.73V4a2 2 0 0 0 2-2z"/><circle cx="12" cy="12" r="3"/></svg>
         <span>Keys</span>
     </button>
 
     <div class="btn-group">
-        <button id="btnRun" onclick="togglePlayback()" disabled title="Start/Pause Replay">
+        <button id="btnRun" onclick="togglePlayback()" disabled title="Start/Pause Replay (Spacebar)">
             <svg class="icon" id="playIcon" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
             <span id="playTxt">Play</span>
         </button>
-        <button id="btnStep" onclick="stepForward()" disabled title="Step 1 Bar">
+        <button id="btnStep" onclick="stepForward()" disabled title="Step 1 Micro-Tick">
             <svg class="icon" viewBox="0 0 24 24"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg>
         </button>
         <button id="btnReset" onclick="resetToBeginning()" disabled title="Reset Backtest">
@@ -512,21 +549,36 @@
                     <svg class="icon" style="stroke: var(--accent);" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
                     <span>Connect Your AI API Key</span>
                 </div>
-                <div>To synthesize or adjust strategies with AI, connect your provider key in the <a href="javascript:void(0)" class="guide-link" onclick="openKeyVault()">Keys Vault</a>. Gemini and Groq offer direct free-tier developer keys.</div>
+                <div>To synthesize strategies, enter your provider key in the <a href="javascript:void(0)" class="guide-link" onclick="openKeyVault()">Keys Vault</a>. Gemini and Groq offer direct developer keys.</div>
             </div>
 
             <div class="msg msg-ai">
-                Specify algorithmic conditions, technical indicators, and risk parameters. The compiler will structure execution logic and register editable parameters in the <b>Inputs</b> panel.
+                Tell me your trading setup, indicators, and risk targets. I will construct the execution rules and mount the strategy directly onto your chart.
             </div>
         </div>
 
         <div class="chat-input-area">
+            <div class="starter-chips" title="Quick Starter Strategies">
+                <button type="button" class="chip-btn" onclick="injectStarterPrompt('Bollinger Bands(20, 2) breakout: Buy when prev candle closes above upper BB and RSI(14) > 55. Sell when prev candle closes below lower BB and RSI(14) < 45. SL 1x ATR(14), TP 1.5x ATR(14), Risk 1%.')">
+                    ⚡ BB + RSI + ATR Dynamic
+                </button>
+                <button type="button" class="chip-btn" onclick="injectStarterPrompt('Multi-timeframe trend: Buy when price is above H1 200 EMA and M5 Supertrend is bullish. SL 25 pips, TP 50 pips, trailing stop 15 pips.')">
+                    📈 H1 Trend + Supertrend
+                </button>
+                <button type="button" class="chip-btn" onclick="injectStarterPrompt('VWAP Mean Reversion: Buy when Close < VWAP and RSI(14) < 30. Move SL to Break-Even at 1:1 RR.')">
+                    🎯 VWAP + RSI Break-Even
+                </button>
+                <button type="button" class="chip-btn" onclick="injectStarterPrompt('Consecutive Momentum: Buy after 3 consecutive bull candles with RVOL > 1.5. SL 1.5x ATR, TP 3x ATR.')">
+                    🔥 3-Bar Momentum + RVOL
+                </button>
+            </div>
+
             <select id="chatProvider" style="width: 100%; background: #080a0f; border: 1px solid var(--border); font-size: 11px; padding: 5px 8px; color: var(--text); border-radius: 4px;">
-                <option value="gemini">Google Gemini 3.6 Flash (Recommended)</option>
+                <option value="gemini">Google Gemini Auto (High-Throughput)</option>
                 <option value="groq">Groq Llama-3.3 70B (Fast & Free)</option>
                 <option value="openai">OpenAI GPT-4o-mini</option>
             </select>
-            <textarea id="chatInput" class="chat-textarea" placeholder="Enter execution criteria, indicator filters, or risk constraints..." onkeydown="handleChatKeyDown(event)"></textarea>
+            <textarea id="chatInput" class="chat-textarea" placeholder="Describe entry rules, indicators, and SL/TP..." onkeydown="handleChatKeyDown(event)"></textarea>
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <a href="javascript:void(0)" class="guide-link" onclick="openKeyVault()" style="font-size: 10px;">Get Free API Keys ↗</a>
                 <button id="btnSendChat" class="btn-accent" onclick="sendChatPrompt()">
@@ -543,20 +595,25 @@
 
     <div class="chart-viewport" id="viewportArea">
         <div id="chartContainer"></div>
+        <div id="chartTooltip"></div>
+
         <div class="drag-drop-target" id="dragDropTarget">
             <div class="drag-drop-label">
-                <svg class="icon" style="width: 16px; height: 16px; stroke: var(--accent);" viewBox="0 0 24 24"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
+                <svg class="icon" style="width: 16px; height: 16px; stroke: var(--accent);" viewBox="0 0 24 24"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
                 <span>DROP STRATEGY TO LOAD REPLAY</span>
             </div>
         </div>
         
+        <!-- SMART HUD -->
         <div class="chart-hud" id="activeBotHud" style="display: none;">
             <div class="hud-dot"></div>
-            <div style="overflow: hidden;">
+            <div style="overflow: hidden; max-width: 240px;">
                 <div style="font-size: 11px; font-weight: 700; color: #fff; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;" id="hudBotName">No Bot</div>
-                <div style="font-size: 9px; color: var(--text-muted); font-family: monospace;">Inputs Live</div>
+                <div style="font-size: 9px; color: var(--text-muted); font-family: monospace;" id="hudBotCategory">Simulated Micro-Ticks Active</div>
             </div>
-            <button class="hud-btn hud-btn-save" onclick="openSaveBotModal()" title="Save strategy options">Save</button>
+
+            <button class="hud-btn hud-btn-save" id="btnHudSaveBot" onclick="openSaveBotModal()" title="Save changes to your library" style="display: none;">Save</button>
+            <button class="hud-btn hud-btn-blueprint" onclick="openBlueprintModal()" title="View Strategy Rules">Strategy</button>
             <button class="hud-btn hud-btn-edit" onclick="handleEditCurrentBot()" title="Chat revise">Edit</button>
             <button onclick="detachActiveBot()" style="font-size: 10px; color: var(--down); padding: 2px 5px;" title="Unload bot">Detach</button>
         </div>
@@ -583,17 +640,21 @@
                 <div class="metric-box"><div class="metric-label">Balance</div><div class="metric-val" id="valBalance">$10,000.00</div></div>
                 <div class="metric-box"><div class="metric-label">Net Profit</div><div class="metric-val" id="valProfit" style="color: var(--up);">+$0.00</div></div>
                 <div class="metric-box"><div class="metric-label">Win Rate</div><div class="metric-val" id="valWinRate">0.0%</div></div>
-                <div class="metric-box"><div class="metric-label">Open / Closed</div><div class="metric-val" id="valTotalTrades">0 / 0</div></div>
+                <div class="metric-box"><div class="metric-label">Profit Factor</div><div class="metric-val" id="valProfitFactor">0.00</div></div>
             </div>
-            <div style="font-size: 9px; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Order Journal</div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
+                <span style="font-size: 9px; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Order Execution Journal</span>
+                <span style="font-size: 9px; color: var(--gold); font-family: monospace;">Spread + Comm + Slip Applied</span>
+            </div>
             <div class="journal-container" id="journalContainer"></div>
             <div style="margin-top: auto; display: flex; flex-direction: column; gap: 6px; padding-top: 6px;">
                 <button class="btn-accent" style="width: 100%; justify-content: center; font-weight: 700;" onclick="openExportSessionModal()">💾 Export Session Report (CSV / .tml)</button>
-                <button class="btn-outline" id="btnInspectJs" style="width: 100%; justify-content: center;" onclick="handleCodeClick('js')">
-                    <span id="btnInspectJsLabel">🔒 Inspect JS Sandbox</span>
+                <button class="btn-outline" id="btnInspectJs" style="width: 100%; justify-content: center;" onclick="handleCodeClick('json')">
+                    <span id="btnInspectJsLabel">Inspect JSON Rules</span>
                 </button>
-                <button class="btn-outline" id="btnExportMql" style="width: 100%; justify-content: center;" onclick="handleCodeClick('mql5')">
-                    <span id="btnExportMqlLabel">🔒 Export MetaTrader 5 EA (.mq5)</span>
+                <!-- Single Unified Multi-Language Code Downloader -->
+                <button class="btn-gold" id="btnUnifiedDownload" style="width: 100%; justify-content: center; font-weight: 700;" onclick="handleDownloadRealCodeModal()">
+                    <span>⚡ Download Real Market Code</span>
                 </button>
             </div>
         </div>
@@ -622,6 +683,53 @@
     </div>
 </div>
 
+<!-- SYSTEMATIC STRATEGY BLUEPRINT MODAL -->
+<div class="modal-overlay" id="blueprintModal">
+    <div class="modal-window" style="width: 520px;">
+        <div class="modal-bar">
+            <span>Strategy Architecture Blueprint</span>
+            <button onclick="closeModal('blueprintModal')">
+                <svg class="icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 8px;">
+                <div>
+                    <div style="font-size: 14px; font-weight: 800; color: #fff;" id="bpTitle">Strategy Name</div>
+                    <div style="font-size: 10px; color: var(--text-muted); margin-top: 2px;" id="bpAuthor">Author: Quantitative Engine</div>
+                </div>
+                <span class="badge" id="bpArchetype" style="background: rgba(41, 98, 255, 0.2); color: #82aaff; font-size: 9px;">Archetype</span>
+            </div>
+
+            <div class="blueprint-grid">
+                <div class="blueprint-row">
+                    <span class="blueprint-tag" style="background: rgba(245, 158, 11, 0.15); color: var(--gold);">1. MARKET SETUP</span>
+                    <div class="blueprint-content" id="bpSetup">Analyzing market triggers and price structures.</div>
+                </div>
+
+                <div class="blueprint-row">
+                    <span class="blueprint-tag" style="background: rgba(8, 153, 129, 0.15); color: var(--up);">2. LONG ENTRY</span>
+                    <div class="blueprint-content" id="bpLong">Long order execution criteria.</div>
+                </div>
+
+                <div class="blueprint-row">
+                    <span class="blueprint-tag" style="background: rgba(242, 54, 69, 0.15); color: var(--down);">3. SHORT ENTRY</span>
+                    <div class="blueprint-content" id="bpShort">Short order execution criteria.</div>
+                </div>
+
+                <div class="blueprint-row">
+                    <span class="blueprint-tag" style="background: rgba(41, 98, 255, 0.15); color: #82aaff;">4. RISK GUARD</span>
+                    <div class="blueprint-content" id="bpRisk">Stop Loss and Take Profit risk constraints.</div>
+                </div>
+            </div>
+
+            <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 4px;">
+                <button class="btn-outline" onclick="closeModal('blueprintModal')">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- SESSION REPORT EXPORT & DOWNLOAD MODAL -->
 <div class="modal-overlay" id="exportSessionModal">
     <div class="modal-window" style="width: 460px;">
@@ -633,7 +741,7 @@
         </div>
         <div class="modal-body">
             <div style="font-size: 11px; color: var(--text-muted); line-height: 1.4;">
-                Save your current backtest session, performance metrics, and trade journal. Works whether your session is paused or completed.
+                Save your current backtest session, performance metrics, and trade journal.
             </div>
 
             <div class="vault-input-group">
@@ -657,7 +765,117 @@
     </div>
 </div>
 
-<!-- HIGH-CONVERTING $89 ALL-IN-ONE REAL MARKET PLAN MODAL -->
+<!-- SESSION COMPLETED / FINAL DATE REACHED MODAL -->
+<div class="modal-overlay" id="sessionEndedModal">
+    <div class="modal-window" style="width: 480px;">
+        <div class="modal-bar">
+            <span>Replay Session Completed</span>
+            <button onclick="closeModal('sessionEndedModal')">
+                <svg class="icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div style="text-align: center; padding: 8px 0;">
+                <div style="font-size: 32px; margin-bottom: 6px;">🏁</div>
+                <div style="font-size: 15px; font-weight: 800; color: #fff;">Selected Session Date Reached</div>
+                <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;" id="sessionCompletedSubtitle">
+                    The replay engine has processed all bars up to your chosen end date.
+                </div>
+            </div>
+
+            <div class="metric-grid" style="margin: 4px 0;">
+                <div class="metric-box">
+                    <div class="metric-label">Final Balance</div>
+                    <div class="metric-val" id="sessionEndBal">$10,000.00</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-label">Net Profit / Loss</div>
+                    <div class="metric-val" id="sessionEndPnl" style="color: var(--up);">+$0.00</div>
+                </div>
+            </div>
+
+            <div style="font-size: 11px; color: var(--text-muted); line-height: 1.4; text-align: center;">
+                Would you like to export your session report and trades, or configure a new backtest window?
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 6px;">
+                <button class="btn-accent" style="padding: 10px; justify-content: center; font-weight: 700;" onclick="handleSessionEndExport()">
+                    💾 Export / Save Session Report (CSV / .tml)
+                </button>
+                <button class="btn-gold" style="padding: 10px; justify-content: center; font-weight: 700;" onclick="handleStartNewSession()">
+                    🔄 Configure & Start New Session
+                </button>
+                <button class="btn-outline" style="padding: 8px; justify-content: center;" onclick="closeModal('sessionEndedModal')">
+                    Stay on Chart
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- UNIFIED REAL MARKET CODE DOWNLOAD MODAL -->
+<div class="modal-overlay" id="downloadPackageModal">
+    <div class="modal-window" style="width: 480px;">
+        <div class="modal-bar">
+            <span>Download Production Strategy Package</span>
+            <button onclick="closeModal('downloadPackageModal')">
+                <svg class="icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div style="font-size: 11px; color: var(--text-muted); line-height: 1.4;">
+                Select your target trading environment to download clean, production-ready source code.
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 8px; margin: 4px 0;">
+                <!-- MT5 Option -->
+                <div class="save-option-card selected" id="optCardMq5" onclick="selectExportLanguage('mql5')">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-size: 12px; font-weight: 700; color: #fff;">MetaTrader 5 Expert Advisor (.mq5)</span>
+                        <span class="save-badge" style="background: var(--up-bg); color: var(--up);">Live Broker Ready</span>
+                    </div>
+                    <div style="font-size: 10px; color: var(--text-muted); margin-top: 2px;">
+                        Native compiled C++ trading bot for MT5 terminals and VPS execution.
+                    </div>
+                </div>
+
+                <!-- Pine Script Option -->
+                <div class="save-option-card" id="optCardPine" onclick="selectExportLanguage('pine')">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-size: 12px; font-weight: 700; color: #fff;">TradingView Pine Script v5 (.pine)</span>
+                        <span class="save-badge" style="background: rgba(41, 98, 255, 0.15); color: #82aaff;">Web & Alerts</span>
+                    </div>
+                    <div style="font-size: 10px; color: var(--text-muted); margin-top: 2px;">
+                        Direct indicator and strategy overlay for TradingView charts.
+                    </div>
+                </div>
+
+                <!-- Python Option -->
+                <div class="save-option-card" id="optCardPy" onclick="selectExportLanguage('python')">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-size: 12px; font-weight: 700; color: #fff;">Python Algorithmic Script (.py)</span>
+                        <span class="save-badge" style="background: var(--gold-bg); color: var(--gold);">MT5 / CCXT API</span>
+                    </div>
+                    <div style="font-size: 10px; color: var(--text-muted); margin-top: 2px;">
+                        Automated script for headless execution via MetaTrader5 or broker sockets.
+                    </div>
+                </div>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px;">
+                <button class="btn-outline" onclick="previewCurrentLanguageCode()">Inspect Source</button>
+                <div style="display: flex; gap: 8px;">
+                    <button class="btn-outline" onclick="closeModal('downloadPackageModal')">Cancel</button>
+                    <button class="btn-gold" id="btnTriggerExportFile" onclick="executeChosenExportDownload()">
+                        Download File
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- REAL MARKET PLAN MODAL -->
 <div class="modal-overlay" id="planModal">
     <div class="modal-window" style="width: 540px;">
         <div class="modal-bar">
@@ -671,7 +889,7 @@
                 <div style="font-size: 10px; font-weight: 800; color: var(--gold); letter-spacing: 1px; text-transform: uppercase;">Real Market License</div>
                 <div style="font-size: 26px; font-weight: 800; color: #fff; margin: 4px 0;">$89 <span style="font-size: 13px; font-weight: 500; color: var(--text-muted);">/ Lifetime Access</span></div>
                 <div style="font-size: 12px; color: var(--text); line-height: 1.4;">
-                    Download real executable strategy files and trade live on any MetaTrader 5 broker.
+                    Download real executable strategy files and trade live on any MetaTrader 5, TradingView, or Python broker.
                 </div>
             </div>
 
@@ -681,8 +899,8 @@
                         <svg class="icon" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                     </div>
                     <div>
-                        <div style="font-size: 11px; font-weight: 700; color: #fff;">Raw Downloadable .mq5 Files</div>
-                        <div style="font-size: 10px; color: var(--text-muted); margin-top: 2px;">Export complete, production-ready MetaTrader 5 Expert Advisor source code.</div>
+                        <div style="font-size: 11px; font-weight: 700; color: #fff;">Multi-Language Source Exports</div>
+                        <div style="font-size: 10px; color: var(--text-muted); margin-top: 2px;">Export complete, production-ready .mq5 (MT5), .pine (TradingView), and .py files.</div>
                     </div>
                 </div>
 
@@ -730,11 +948,11 @@
     </div>
 </div>
 
-<!-- STRATEGY SAVE & PRIVACY SELECTION MODAL -->
+<!-- STRATEGY SAVE & CATEGORY SELECTION MODAL -->
 <div class="modal-overlay" id="saveBotModal">
-    <div class="modal-window" style="width: 460px;">
+    <div class="modal-window" style="width: 480px;">
         <div class="modal-bar">
-            <span>Save Strategy & Privacy Settings</span>
+            <span>Save Strategy & Archetype Setup</span>
             <button onclick="closeModal('saveBotModal')">
                 <svg class="icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
             </button>
@@ -742,7 +960,19 @@
         <div class="modal-body">
             <div class="vault-input-group">
                 <label style="font-size: 11px; font-weight: 700;">Strategy Title</label>
-                <input type="text" id="saveBotNameInput" class="chat-textarea" style="height: 34px;" placeholder="e.g. Gold Liquidity Scalper v1">
+                <input type="text" id="saveBotNameInput" class="chat-textarea" style="height: 34px;" placeholder="e.g. Gold Asian Liquidity Scalper v1">
+            </div>
+
+            <div class="vault-input-group">
+                <label style="font-size: 11px; font-weight: 700;">Market Archetype / Category</label>
+                <select id="saveBotCategorySelect" style="width: 100%; background: var(--bg-base); border: 1px solid var(--border); color: #fff; padding: 6px 8px; border-radius: 4px; font-size: 11px;">
+                    <option value="Breakout / Liquidity Sweep">Breakout / Liquidity Sweep</option>
+                    <option value="Trend Following & Momentum">Trend Following & Momentum</option>
+                    <option value="Mean Reversion & Scalp">Mean Reversion & Scalp</option>
+                    <option value="SMC / Order Flow">SMC / Order Flow</option>
+                    <option value="Multi-Timeframe / Swing">Multi-Timeframe / Swing</option>
+                </select>
+                <span style="font-size: 10px; color: var(--text-muted);">Auto-detected by AI compiler. You can adjust before publishing.</span>
             </div>
 
             <div style="display: flex; flex-direction: column; gap: 8px;">
@@ -752,7 +982,7 @@
                         <span class="save-badge" style="background: var(--accent-glow); color: var(--accent);">100% FREE</span>
                     </div>
                     <div style="font-size: 11px; color: var(--text-muted); line-height: 1.4;">
-                        Saved to your dashboard and published to the Global Hub. Note: Free users cannot export or download raw production code files.
+                        Saved to your account and published to the Community Arena under this category tag.
                     </div>
                 </div>
 
@@ -765,7 +995,7 @@
                         <span class="save-badge" id="privatePriceBadge" style="background: var(--gold-bg); color: var(--gold); border: 1px solid rgba(245, 158, 11, 0.4);">$89 PRO PASS</span>
                     </div>
                     <div style="font-size: 11px; color: var(--text-muted); line-height: 1.4;">
-                        Confidential private vault + unrestricted raw .mq5 code file downloads for live brokers.
+                        Confidential private vault + unrestricted raw code file downloads for live brokers.
                     </div>
                 </div>
             </div>
@@ -778,27 +1008,27 @@
     </div>
 </div>
 
-<!-- CODE MODAL -->
+<!-- CODE MODAL (CODE INSPECTOR) -->
 <div class="modal-overlay" id="codeModal">
     <div class="modal-window">
         <div class="modal-bar">
-            <span>Strategy Code Inspector</span>
+            <span id="codeModalTitle">Strategy Code / Rules Inspector</span>
             <button onclick="closeModal('codeModal')">
                 <svg class="icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
             </button>
         </div>
         <div class="modal-body">
-            <div id="freePaywallNotice" class="paywall-box" style="display: none;">
-                <div style="font-size: 13px; font-weight: 700; color: #fff; margin-bottom: 6px;">Real Market MQL5 Export Locked</div>
-                <div style="font-size: 11px; color: var(--text-muted); line-height: 1.5; margin-bottom: 12px;">
-                    This strategy is in free sandbox mode. Downloadable production .mq5 files are locked on free tier. Upgrade to unlock full files and execution guides.
+            <div id="freePaywallNotice" class="paywall-box" style="display: none; padding: 12px; background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 6px; text-align: center;">
+                <div style="font-size: 13px; font-weight: 700; color: #fff; margin-bottom: 4px;">Real Market Multi-Code Export Locked</div>
+                <div style="font-size: 11px; color: var(--text-muted); line-height: 1.4; margin-bottom: 10px;">
+                    This strategy is in free sandbox mode. Upgrade to unlock downloadable .mq5, .pine, and .py files.
                 </div>
-                <button class="btn-gold" onclick="openPlanModal()" style="padding: 7px 18px; margin: 0 auto;">Unlock Real Code & MQL5 Exporter ($89)</button>
+                <button class="btn-gold" onclick="openPlanModal()" style="padding: 7px 18px; margin: 0 auto;">Unlock Real Code & Exporters ($89)</button>
             </div>
             <pre class="code-display" id="codeOutput"></pre>
             <div style="display: flex; justify-content: flex-end; gap: 8px;">
                 <button class="btn-outline" onclick="copyCodeOutput()">Copy Code</button>
-                <button class="btn-accent" id="btnDownloadMql" onclick="downloadMqlSource()" style="display: none;">Download .mq5</button>
+                <button class="btn-accent" id="btnDownloadCode" onclick="executeChosenExportDownload()" style="display: none;">Download File</button>
             </div>
         </div>
     </div>
@@ -819,13 +1049,13 @@
                     <svg class="icon" style="stroke: var(--up);" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
                     <span>100% Private & Direct Local Storage</span>
                 </div>
-                <div>Your keys are saved directly into your browser's private localStorage. They are never stored on our server, ensuring zero third-party exposure.</div>
+                <div>Your keys are saved directly into your browser's private localStorage and never to any remote server.</div>
             </div>
 
             <!-- Google Gemini -->
             <div class="vault-input-group">
                 <div class="vault-label-row">
-                    <span>Google Gemini API Key (Recommended)</span>
+                    <span>Google Gemini API Key</span>
                     <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener noreferrer" class="vault-link">
                         <span>Get Free Key (Google AI Studio)</span>
                         <svg class="icon" style="width: 10px; height: 10px;" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
@@ -858,7 +1088,7 @@
                     </a>
                 </div>
                 <input type="password" id="keyOpenAI" class="chat-textarea" style="height: 34px; margin-top: 2px;" placeholder="sk-...">
-                <span style="font-size: 10px; color: var(--text-muted);">Requires an active account balance or trial credits with OpenAI.</span>
+                <span style="font-size: 10px; color: var(--text-muted);">Requires an active account balance with OpenAI.</span>
             </div>
 
             <div style="display: flex; justify-content: flex-end; margin-top: 4px;">
@@ -902,13 +1132,9 @@ window.limit = limit;
 window.arrayUnion = arrayUnion;
 window.increment = increment;
 
-// Live Cloud User & Entitlement Observer
 onAuthStateChanged(auth, async (user) => {
     window.currentUser = user;
-    
     if (user) {
-        console.log("CLOUD AUTHENTICATED: " + user.email);
-        
         try {
             const planDocRef = doc(db, "users", user.uid, "plan", "active");
             const planSnap = await getDoc(planDocRef);
@@ -919,24 +1145,12 @@ onAuthStateChanged(auth, async (user) => {
                     window.userPlan = planData;
                     window.isPro = true;
                     localStorage.setItem("btl_is_pro", "true");
-                    
                     const quota = planData.global_bot_download_quota !== undefined ? planData.global_bot_download_quota : 5;
                     window.globalDownloadQuota = quota;
-
                     syncTierUI();
                     document.getElementById("statusIndicator").innerText = `PRO PLAN ($89) · [${quota}/5 DL LEFT] · READY`;
-                    
-                    appendMsg(`
-                        <div class="msg-card">
-                            <span style="color: var(--up); font-weight: 700;">✓ Cloud License Verified: Pro Tier ($89 Lifetime)</span><br>
-                            • Personal .mq5 Exports: <b>Unrestricted</b><br>
-                            • Private Cloud Storage: <b>Active</b><br>
-                            • Global Bot Downloads: <b>${quota} of 5 Available</b>
-                        </div>
-                    `, "ai");
                 }
             } else {
-                console.log("No active paid plan found in Firestore, running sandbox.");
                 window.userPlan = null;
                 window.isPro = false;
                 localStorage.setItem("btl_is_pro", "false");
@@ -946,11 +1160,8 @@ onAuthStateChanged(auth, async (user) => {
             console.error("Entitlements check exception:", e);
         }
 
-        if (window.loadBotLibrary) {
-            window.loadBotLibrary();
-        }
+        if (window.loadBotLibrary) window.loadBotLibrary();
     } else {
-        console.log("GUEST / SANDBOX MODE");
         window.userPlan = null;
         window.isPro = false;
         localStorage.setItem("btl_is_pro", "false");
@@ -960,33 +1171,34 @@ onAuthStateChanged(auth, async (user) => {
 </script>
 
 <script>
-/* =========================================================================
-   GLOBAL BROWSER COMPATIBILITY BRIDGE (NODE -> BROWSER FIX)
-   ========================================================================= */
-if (typeof window.global === "undefined") {
-    window.global = window;
-}
-if (typeof window.globalThis === "undefined") {
-    window.globalThis = window;
-}
+if (typeof window.global === "undefined") window.global = window;
+if (typeof window.globalThis === "undefined") window.globalThis = window;
 
 /* =========================================================================
-   1. GLOBAL STATE & SESSION SYNC
+   1. GLOBAL STATE & MICRO-TICK ENGINE CONFIG
    ========================================================================= */
 let isPro = localStorage.getItem("btl_is_pro") === "true";
 let activeBot = null;
+let compiledBotExecutable = null;
 let symbol = localStorage.getItem("symbol") || getSessionParam("symbol", "XAUUSD");
 let tf = localStorage.getItem("tf") || getSessionParam("tf", "m5");
 let isFetching = false;
 let lastReplayTime = null;
+let sessionFinalTimestamp = null;
+let sessionEndModalShown = false;
 
 let currentCandles = [];       
 let futureCandlesQueue = [];   
+let microTickQueue = [];       
+let activeWorkingCandle = null;
+
 let replayTimer = null;
 let replaySpeedMs = 120;
 let isSimulating = false;
 
 let activeTradeMarkers = [];
+let chartPriceLines = []; 
+let activePositionPriceLines = []; 
 let nextPositionTicket = 1;
 
 let account = { 
@@ -995,9 +1207,12 @@ let account = {
     positions: [],
     closedTrades: [] 
 };
+window.account = account;
 
 let chatConversationHistory = [];
 let currentCandleObj = null; 
+let currentInspectedCodeType = 'mql5';
+let selectedExportLang = 'mql5';
 
 let chartInstance = null;
 let candleSeries = null;
@@ -1024,14 +1239,19 @@ function getSessionParam(key, fallback) {
     return fallback;
 }
 
-/* =========================================================================
-   UNSAVED SCRIPT RELOAD & EXIT GUARD
-   ========================================================================= */
 window.addEventListener("beforeunload", (e) => {
     if (activeBot && activeBot.isSaved === false) {
         e.preventDefault();
         e.returnValue = "You have an unsaved bot active! If you leave or reload now, everything will be lost.";
         return e.returnValue;
+    }
+});
+
+// Spacebar plays/pauses backtesting
+window.addEventListener("keydown", (e) => {
+    if (e.code === "Space" && e.target.tagName !== "INPUT" && e.target.tagName !== "TEXTAREA") {
+        e.preventDefault();
+        togglePlayback();
     }
 });
 
@@ -1043,9 +1263,7 @@ function toggleCopilotPane() {
     const backdrop = document.getElementById("chatBackdrop");
     const isMin = pane.classList.toggle("minimized");
     
-    if (window.innerWidth <= 900) {
-        backdrop.classList.toggle("active", !isMin);
-    }
+    if (window.innerWidth <= 900) backdrop.classList.toggle("active", !isMin);
     setTimeout(() => {
         if (chartInstance) {
             const container = document.getElementById("chartContainer");
@@ -1067,9 +1285,7 @@ function minimizeCopilotPane() {
 
 function openCopilotPane() {
     document.getElementById("copilotPane").classList.remove("minimized");
-    if (window.innerWidth <= 900) {
-        document.getElementById("chatBackdrop").classList.add("active");
-    }
+    if (window.innerWidth <= 900) document.getElementById("chatBackdrop").classList.add("active");
     setTimeout(() => {
         if (chartInstance) {
             const container = document.getElementById("chartContainer");
@@ -1079,12 +1295,10 @@ function openCopilotPane() {
 }
 
 /* =========================================================================
-   3. CHART INITIALIZATION & BOOTSTRAP
+   3. CHART INITIALIZATION & INTERACTIVE HOVER TOOLTIP
    ========================================================================= */
 document.addEventListener("DOMContentLoaded", () => {
-    if (window.innerWidth <= 900) {
-        document.getElementById("copilotPane").classList.add("minimized");
-    }
+    if (window.innerWidth <= 900) document.getElementById("copilotPane").classList.add("minimized");
 
     const savedSpeed = parseInt(getSessionParam("speed", "120"));
     replaySpeedMs = isNaN(savedSpeed) ? 120 : savedSpeed;
@@ -1099,6 +1313,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function initChart() {
     const container = document.getElementById("chartContainer");
+    const tooltip = document.getElementById("chartTooltip");
+
     chartInstance = LightweightCharts.createChart(container, {
         layout: { background: { color: '#080a0f' }, textColor: '#747b8c' },
         grid: { vertLines: { color: '#121620' }, horzLines: { color: '#121620' } },
@@ -1114,14 +1330,76 @@ function initChart() {
         rightPriceScale: { borderColor: '#1f2533', autoScale: true },
         crosshair: { mode: LightweightCharts.CrosshairMode.Normal }
     });
+    
     candleSeries = chartInstance.addCandlestickSeries({
         upColor: '#089981', downColor: '#f23645', borderUpColor: '#089981', borderDownColor: '#f23645',
         wickUpColor: '#089981', wickDownColor: '#f23645', priceFormat: { type: 'price', precision: 2, minMove: 0.01 }
     });
+    window.candleSeries = candleSeries;
+    
+    // Dedicated volume scale to completely eliminate red badge leaks on main price scale
     volumeSeries = chartInstance.addHistogramSeries({
-        color: '#2962ff', priceFormat: { type: 'volume' }, priceScaleId: ''
+        priceFormat: { type: 'volume' },
+        priceScaleId: 'volume_scale'
     });
-    volumeSeries.priceScale().applyOptions({ scaleMargins: { top: 0.85, bottom: 0 } });
+
+    chartInstance.priceScale('volume_scale').applyOptions({
+        scaleMargins: {
+            top: 0.82,
+            bottom: 0.00
+        },
+        visible: false,
+        borderVisible: false
+    });
+
+    chartInstance.subscribeCrosshairMove((param) => {
+        if (!param.time || !param.point || param.point.x < 0 || param.point.y < 0) {
+            tooltip.style.display = "none";
+            return;
+        }
+
+        const tradesAtTime = account.closedTrades.filter(t => t.time === param.time);
+        const openAtTime = account.positions.filter(p => p.time === param.time);
+
+        if (tradesAtTime.length === 0 && openAtTime.length === 0) {
+            tooltip.style.display = "none";
+            return;
+        }
+
+        let html = '';
+        openAtTime.forEach(p => {
+            html += `
+                <div style="font-weight:700; color:${p.type === 'BUY' ? 'var(--up)' : 'var(--down)'};">
+                    ${p.type === 'BUY' ? '▲' : '▼'} ${p.type} #${p.id} @ ${p.entry.toFixed(2)}
+                </div>
+                <div style="font-size:10px; color:var(--text-muted); margin-bottom: 4px;">
+                    SL: ${p.sl ? p.sl.toFixed(2) : 'None'} | TP: ${p.tp ? p.tp.toFixed(2) : 'None'}
+                </div>
+            `;
+        });
+
+        tradesAtTime.forEach(t => {
+            const isProfit = t.pnl >= 0;
+            html += `
+                <div style="font-weight:700; color:${isProfit ? 'var(--up)' : 'var(--down)'};">
+                    ${isProfit ? '● EXIT WIN' : '● EXIT LOSS'} #${t.id} (${t.type})
+                </div>
+                <div style="font-size:10px; color:#fff;">
+                    Net: <b style="color:${isProfit ? 'var(--up)' : 'var(--down)'};">${isProfit ? '+' : ''}$${t.pnl.toFixed(2)}</b>
+                </div>
+                <div style="font-size:10px; color:var(--text-muted);">
+                    Exit: ${t.exitPrice.toFixed(2)}
+                </div>
+            `;
+        });
+
+        tooltip.innerHTML = html;
+        tooltip.style.display = "block";
+        const xPos = Math.min(param.point.x + 18, container.clientWidth - 190);
+        const yPos = Math.max(param.point.y - 35, 15);
+        tooltip.style.left = `${xPos}px`;
+        tooltip.style.top = `${yPos}px`;
+    });
 
     new ResizeObserver(() => {
         if (container.clientWidth > 0 && container.clientHeight > 0) {
@@ -1131,7 +1409,7 @@ function initChart() {
 }
 
 /* =========================================================================
-   4. DATA PIPELINE WITH PRELOADED CONTEXT CANDLES
+   4. DATA PIPELINE
    ========================================================================= */
 function parseCandleTime(t) {
     if (typeof t === "number") return t > 10000000000 ? Math.floor(t / 1000) : t;
@@ -1140,14 +1418,23 @@ function parseCandleTime(t) {
 
 function normalizeCandles(arr) {
     if (!Array.isArray(arr)) return [];
-    const parsed = arr.map(c => ({
-        time: parseCandleTime(c.time || c.datetime || c.date),
-        open: parseFloat(c.open),
-        high: parseFloat(c.high),
-        low: parseFloat(c.low),
-        close: parseFloat(c.close),
-        volume: parseFloat(c.volume || c.tick_volume || 25)
-    })).filter(c => !isNaN(c.time) && !isNaN(c.close));
+    const parsed = arr.map(c => {
+        const rawVol = parseFloat(c.tick_volume ?? c.volume ?? 0);
+        const highPrice = parseFloat(c.high);
+        const lowPrice = parseFloat(c.low);
+        // Realistic synthetic tick proxy if feed provides no volume
+        const barSpreadUnits = Math.max(1, Math.round(Math.abs(highPrice - lowPrice) * 10000));
+        const resolvedVolume = (rawVol > 0) ? rawVol : barSpreadUnits;
+
+        return {
+            time: parseCandleTime(c.time || c.datetime || c.date),
+            open: parseFloat(c.open),
+            high: highPrice,
+            low: lowPrice,
+            close: parseFloat(c.close),
+            volume: resolvedVolume
+        };
+    }).filter(c => !isNaN(c.time) && !isNaN(c.close));
 
     parsed.sort((a, b) => a.time - b.time);
     const unique = [];
@@ -1164,8 +1451,8 @@ function normalizeCandles(arr) {
 function loadSessionDataset(customInitial = null) {
     if (isFetching) return;
     isFetching = true;
-
     stopPlayback();
+    sessionEndModalShown = false;
 
     const preloader = document.getElementById("appPreloader");
     if (preloader) preloader.classList.remove("fade-out");
@@ -1179,6 +1466,8 @@ function loadSessionDataset(customInitial = null) {
     const initialParam = customInitial || localStorage.getItem("initial") || "2023-01-01T00:00:00.000Z";
     const finalTo = localStorage.getItem("to") || new Date().toISOString();
     let currentISO = lastReplayTime ? new Date(lastReplayTime * 1000).toISOString() : initialParam;
+
+    sessionFinalTimestamp = Math.floor(new Date(finalTo).getTime() / 1000);
 
     const startDateShort = initialParam.split("T")[0];
     const endDateShort = finalTo.split("T")[0];
@@ -1201,12 +1490,8 @@ function loadSessionDataset(customInitial = null) {
 
             let cleanHistory = normalizeCandles(fetchedHistory);
             let cleanFuture = normalizeCandles(fetchedFuture);
-
             const allBars = [...cleanHistory, ...cleanFuture];
-
-            if (allBars.length === 0) {
-                throw new Error("Zero valid bars received");
-            }
+            if (allBars.length === 0) throw new Error("Zero valid bars received");
 
             const minPreloadBars = Math.min(140, Math.floor(allBars.length * 0.5));
 
@@ -1221,7 +1506,7 @@ function loadSessionDataset(customInitial = null) {
             candleSeries.setData(currentCandles);
             volumeSeries.setData(currentCandles.map(d => ({
                 time: d.time,
-                value: d.volume || 25,
+                value: d.volume > 0 ? d.volume : 1,
                 color: d.close >= d.open ? 'rgba(8,153,129,0.35)' : 'rgba(242,54,69,0.35)'
             })));
 
@@ -1231,10 +1516,13 @@ function loadSessionDataset(customInitial = null) {
                 currentCandleObj = lastBar;
             }
 
+            microTickQueue = [];
+            activeWorkingCandle = null;
+
             if (window.isPro) {
                 document.getElementById("statusIndicator").innerText = `PRO PLAN ($89) · READY`;
             } else {
-                document.getElementById("statusIndicator").innerText = isSimulating ? "REPLAY RUNNING" : "READY (PLAY TO START)";
+                document.getElementById("statusIndicator").innerText = isSimulating ? "REPLAY RUNNING" : "READY (CLICK PLAY OR SPACE)";
             }
             isFetching = false;
 
@@ -1262,7 +1550,6 @@ function fetchNextChunk() {
 
     const currentISO = new Date(lastReplayTime * 1000).toISOString();
     const finalTo = localStorage.getItem("to") || new Date().toISOString();
-
     const url = `https://mehtab13-backtestlab-pro.hf.space/data?symbol=${encodeURIComponent(symbol)}&tf=${encodeURIComponent(tf)}&initial=${encodeURIComponent(currentISO)}&current=${encodeURIComponent(currentISO)}&to=${encodeURIComponent(finalTo)}`;
 
     fetch(url)
@@ -1274,8 +1561,7 @@ function fetchNextChunk() {
                 futureCandlesQueue = fetched;
                 document.getElementById("statusIndicator").innerText = isSimulating ? "REPLAY RUNNING" : "PAUSED";
             } else {
-                stopPlayback();
-                document.getElementById("statusIndicator").innerText = "REPLAY COMPLETED";
+                triggerSessionCompletion();
             }
         })
         .catch(err => {
@@ -1305,8 +1591,26 @@ function changeTimeframe() {
 }
 
 /* =========================================================================
-   5. REPLAY CONTROLS & STEPPING
+   5. 4-TICK DECOMPOSITION & STEPPING ENGINE
    ========================================================================= */
+function generateTicksFromCandle(candle) {
+    const isBull = candle.close >= candle.open;
+    const ticks = [];
+    
+    ticks.push({ price: candle.open, isBarClose: false, fullBar: candle, tickIndex: 1 });
+
+    if (isBull) {
+        ticks.push({ price: candle.low, isBarClose: false, fullBar: candle, tickIndex: 2 });
+        ticks.push({ price: candle.high, isBarClose: false, fullBar: candle, tickIndex: 3 });
+    } else {
+        ticks.push({ price: candle.high, isBarClose: false, fullBar: candle, tickIndex: 2 });
+        ticks.push({ price: candle.low, isBarClose: false, fullBar: candle, tickIndex: 3 });
+    }
+
+    ticks.push({ price: candle.close, isBarClose: true, fullBar: candle, tickIndex: 4 });
+    return ticks;
+}
+
 function togglePlayback() { isSimulating ? stopPlayback() : startPlayback(); }
 
 function startPlayback() {
@@ -1333,109 +1637,227 @@ function changeReplaySpeed() {
     if (isSimulating) { stopPlayback(); startPlayback(); }
 }
 
+function clearVisualPriceLines() {
+    if (candleSeries && chartPriceLines.length > 0) {
+        chartPriceLines.forEach(l => {
+            try { candleSeries.removePriceLine(l); } catch(e){}
+        });
+        chartPriceLines = [];
+    }
+    clearPositionPriceLines();
+}
+
+function clearPositionPriceLines() {
+    if (candleSeries && activePositionPriceLines.length > 0) {
+        activePositionPriceLines.forEach(l => {
+            try { candleSeries.removePriceLine(l); } catch(e){}
+        });
+        activePositionPriceLines = [];
+    }
+}
+
 function resetToBeginning() {
     stopPlayback();
     resetAccountState();
+    clearVisualPriceLines();
+    if (window.TradingEngine && window.TradingEngine.resetState) {
+        window.TradingEngine.resetState();
+    }
     lastReplayTime = null;
+    microTickQueue = [];
+    activeWorkingCandle = null;
     loadSessionDataset();
 }
 
 function resetAccountState() {
     account = { balance: 10000.00, equity: 10000.00, positions: [], closedTrades: [] };
+    window.account = account;
     activeTradeMarkers = [];
     nextPositionTicket = 1;
-    candleSeries.setMarkers([]);
-    document.getElementById("journalContainer").innerHTML = "";
+    clearPositionPriceLines();
+    if (candleSeries) candleSeries.setMarkers([]);
+    const j = document.getElementById("journalContainer");
+    if (j) j.innerHTML = "";
     updateMetricReadouts();
+}
+
+function triggerSessionCompletion() {
+    stopPlayback();
+    document.getElementById("statusIndicator").innerText = "SESSION COMPLETED";
+    
+    if (sessionEndModalShown) return;
+    sessionEndModalShown = true;
+
+    const closed = account.closedTrades;
+    const profit = closed.reduce((acc, t) => acc + t.pnl, 0);
+    const finalBalance = (10000 + profit).toFixed(2);
+
+    document.getElementById("sessionEndBal").innerText = `$${Number(finalBalance).toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
+    const elPnl = document.getElementById("sessionEndPnl");
+    elPnl.innerText = (profit >= 0 ? "+$" : "-$") + Math.abs(profit).toFixed(2);
+    elPnl.style.color = profit >= 0 ? "var(--up)" : "var(--down)";
+
+    const finalToStr = localStorage.getItem("to") ? localStorage.getItem("to").split("T")[0] : "selected target date";
+    document.getElementById("sessionCompletedSubtitle").innerText = `Replay completed at ${finalToStr}. Save your session or launch a new backtest.`;
+
+    document.getElementById("sessionEndedModal").style.display = "flex";
+}
+
+function handleSessionEndExport() {
+    closeModal("sessionEndedModal");
+    openExportSessionModal();
+}
+
+function handleStartNewSession() {
+    closeModal("sessionEndedModal");
+    if (window.location.pathname.includes("chart_auto_run")) {
+        window.location.href = "index.html";
+    } else {
+        resetToBeginning();
+    }
 }
 
 function stepForward() {
-    if (futureCandlesQueue.length === 0) {
-        if (!isFetching && lastReplayTime) {
-            fetchNextChunk();
-        } else if (!isFetching) {
-            stopPlayback();
-            document.getElementById("statusIndicator").innerText = "REPLAY COMPLETED";
-        }
+    if (sessionFinalTimestamp && lastReplayTime && lastReplayTime >= sessionFinalTimestamp) {
+        triggerSessionCompletion();
         return;
     }
 
-    const nextCandle = futureCandlesQueue.shift();
-    currentCandleObj = nextCandle;
-    lastReplayTime = nextCandle.time;
+    if (microTickQueue.length === 0) {
+        if (futureCandlesQueue.length === 0) {
+            if (!isFetching && lastReplayTime) {
+                fetchNextChunk();
+            } else if (!isFetching) {
+                triggerSessionCompletion();
+            }
+            return;
+        }
 
-    candleSeries.update(nextCandle);
+        const nextBar = futureCandlesQueue.shift();
+        microTickQueue = generateTicksFromCandle(nextBar);
+        activeWorkingCandle = {
+            time: nextBar.time,
+            open: nextBar.open,
+            high: nextBar.open,
+            low: nextBar.open,
+            close: nextBar.open,
+            volume: nextBar.volume > 0 ? nextBar.volume : 1,
+            isNewBar: true,
+            isBarClose: false,
+            tickIndex: 1
+        };
+    }
+
+    const currentTick = microTickQueue.shift();
+    const tickPrice = currentTick.price;
+    const parentBar = currentTick.fullBar;
+
+    lastReplayTime = parentBar.time;
+
+    activeWorkingCandle.close = tickPrice;
+    if (tickPrice > activeWorkingCandle.high) activeWorkingCandle.high = tickPrice;
+    if (tickPrice < activeWorkingCandle.low) activeWorkingCandle.low = tickPrice;
+
+    activeWorkingCandle.isNewBar = (currentTick.tickIndex === 1);
+    activeWorkingCandle.isBarClose = currentTick.isBarClose;
+    activeWorkingCandle.tickIndex = currentTick.tickIndex;
+
+    currentCandleObj = { ...activeWorkingCandle };
+
+    candleSeries.update(activeWorkingCandle);
     volumeSeries.update({
-        time: nextCandle.time,
-        value: nextCandle.volume || 25, 
-        color: nextCandle.close >= nextCandle.open ? 'rgba(8,153,129,0.35)' : 'rgba(242,54,69,0.35)'
+        time: activeWorkingCandle.time,
+        value: activeWorkingCandle.volume,
+        color: activeWorkingCandle.close >= activeWorkingCandle.open ? 'rgba(8,153,129,0.35)' : 'rgba(242,54,69,0.35)'
     });
 
-    checkAllPositionsSLTP(nextCandle);
+    checkAllPositionsSLTP(tickPrice, activeWorkingCandle.time);
 
-    if (activeBot && activeBot.js_code) {
-        try {
-            const executeBotLogic = new Function("candle", "history", "api", "inputs", "global", activeBot.js_code);
-            const rawInputs = {};
-            if (activeBot.inputs) {
-                for (const [k, v] of Object.entries(activeBot.inputs)) rawInputs[k] = v.value;
+    // Dynamic Execution on Bar Close
+    if (activeBot && activeWorkingCandle.isBarClose) {
+        const prevCandle = currentCandles.length > 0 ? currentCandles[currentCandles.length - 1] : activeWorkingCandle;
+        
+        if (activeBot.strategy_json && window.TradingEngine) {
+            window.TradingEngine.runTick(activeBot.strategy_json, activeWorkingCandle, prevCandle, currentCandles, terminalApi, activeBot);
+        } else if (compiledBotExecutable) {
+            try {
+                const rawInputs = {};
+                if (activeBot.inputs) {
+                    for (const [k, v] of Object.entries(activeBot.inputs)) rawInputs[k] = v.value;
+                }
+                compiledBotExecutable(activeWorkingCandle, prevCandle, currentCandles, terminalApi, rawInputs, window);
+            } catch (e) {
+                console.error("Execution Exception:", e);
+                document.getElementById("statusIndicator").innerText = "SCRIPT RUNTIME ERROR";
             }
-            executeBotLogic(nextCandle, currentCandles, terminalApi, rawInputs, window);
-        } catch (e) {
-            console.error("Execution Exception:", e);
-            stopPlayback();
-            document.getElementById("statusIndicator").innerText = "EXECUTION ERROR";
         }
     }
 
-    currentCandles.push(nextCandle);
+    if (currentTick.isBarClose) {
+        currentCandles.push({ ...activeWorkingCandle });
+        activeWorkingCandle = null;
+    }
+
     updateMetricReadouts();
 }
 
-function checkAllPositionsSLTP(candle) {
+function checkAllPositionsSLTP(currentPrice, currentTime) {
     if (account.positions.length === 0) return;
     const remainingPositions = [];
+    const spreadCost = 0.08; 
+    const slippagePenalty = 0.02; // Realistic tick slippage
+    const commissionPerLot = 7.00; // $7.00 Round-Turn per 1.00 Lot[cite: 1]
 
     for (let i = 0; i < account.positions.length; i++) {
         const p = account.positions[i];
-        
-        // --- Monotonic Trailing Stop Updates ---
-        if (p.trailingStep && p.type === 'BUY') {
-            const potentialNewSL = candle.close - p.trailingStep;
-            if (potentialNewSL > p.sl && potentialNewSL < candle.close) {
-                p.sl = potentialNewSL; // Moves upward only
-            }
-        } else if (p.trailingStep && p.type === 'SELL') {
-            const potentialNewSL = candle.close + p.trailingStep;
-            if ((!p.sl || potentialNewSL < p.sl) && potentialNewSL > candle.close) {
-                p.sl = potentialNewSL; // Moves downward only
-            }
-        }
-
         let closed = false;
         let exitPrice = 0;
+        let exitReason = "";
 
         if (p.type === 'BUY') {
-            if (p.sl && candle.low <= p.sl) { exitPrice = p.sl; closed = true; }
-            else if (p.tp && candle.high >= p.tp) { exitPrice = p.tp; closed = true; }
+            if (p.sl && currentPrice <= p.sl) { 
+                exitPrice = p.sl - spreadCost - slippagePenalty; 
+                closed = true; 
+                exitReason = "SL Hit";
+            } else if (p.tp && currentPrice >= p.tp) { 
+                exitPrice = p.tp - spreadCost - slippagePenalty; 
+                closed = true; 
+                exitReason = "TP Hit";
+            }
         } else {
-            if (p.sl && candle.high >= p.sl) { exitPrice = p.sl; closed = true; }
-            else if (p.tp && candle.low <= p.tp) { exitPrice = p.tp; closed = true; }
+            if (p.sl && currentPrice >= p.sl) { 
+                exitPrice = p.sl + spreadCost + slippagePenalty; 
+                closed = true; 
+                exitReason = "SL Hit";
+            } else if (p.tp && currentPrice <= p.tp) { 
+                exitPrice = p.tp + spreadCost + slippagePenalty; 
+                closed = true; 
+                exitReason = "TP Hit";
+            }
         }
 
         if (closed) {
-            const pnl = (p.type === 'BUY' ? (exitPrice - p.entry) : (p.entry - exitPrice)) * p.lots * 100;
-            account.balance += pnl;
-            account.closedTrades.push({ id: p.id, type: p.type, pnl, exitPrice, time: candle.time });
+            const grossPnl = (p.type === 'BUY' ? (exitPrice - p.entry) : (p.entry - exitPrice)) * p.lots * 100;
+            const totalCommission = commissionPerLot * p.lots;
+            const netPnl = grossPnl - totalCommission;
+
+            account.balance += netPnl;
+            account.closedTrades.push({ id: p.id, type: p.type, pnl: netPnl, exitPrice, time: currentTime });
+
+            if (p.lines && candleSeries) {
+                p.lines.forEach(l => {
+                    try { candleSeries.removePriceLine(l); } catch(e){}
+                });
+            }
 
             activeTradeMarkers.push({
-                time: candle.time,
+                time: currentTime,
                 position: p.type === 'BUY' ? 'aboveBar' : 'belowBar',
-                color: pnl >= 0 ? '#089981' : '#f23645',
-                shape: pnl >= 0 ? 'circle' : 'square',
-                text: `${p.type} Exit (${pnl >= 0 ? '+' : ''}${pnl.toFixed(0)})`
+                color: netPnl >= 0 ? '#089981' : '#f23645',
+                shape: 'circle',
+                text: (netPnl >= 0 ? '+' : '-') + '$' + Math.abs(Math.round(netPnl))
             });
-            appendTradeLog(p.type, pnl, exitPrice, `Exit #${p.id}`);
+            appendTradeLog(p.type, netPnl, exitPrice, `Exit #${p.id} (${exitReason} - Net)`, true);
         } else {
             remainingPositions.push(p);
         }
@@ -1445,14 +1867,23 @@ function checkAllPositionsSLTP(candle) {
     candleSeries.setMarkers(activeTradeMarkers);
 }
 
-function appendTradeLog(type, pnl, exit, label = "") {
+function appendTradeLog(type, pnl, price, label = "", isExit = true) {
     const journal = document.getElementById("journalContainer");
+    if (!journal) return;
     const div = document.createElement("div");
     div.className = "journal-entry";
-    div.innerHTML = `
-        <span><b style="color: ${type === 'BUY' ? 'var(--up)' : 'var(--down)'}">${type}</b> ${label} @ ${exit.toFixed(2)}</span>
-        <span style="color: ${pnl >= 0 ? 'var(--up)' : 'var(--down)'}">${pnl >= 0 ? '+' : ''}$${pnl.toFixed(2)}</span>
-    `;
+
+    if (!isExit) {
+        div.innerHTML = `
+            <span><b style="color: var(--accent);">[OPEN ${type}]</b> ${label} @ ${price.toFixed(2)}</span>
+            <span style="color: var(--text-muted); font-size: 10px;">ACTIVE</span>
+        `;
+    } else {
+        div.innerHTML = `
+            <span><b style="color: ${type === 'BUY' ? 'var(--up)' : 'var(--down)'}">[EXIT ${type}]</b> ${label} @ ${price.toFixed(2)}</span>
+            <span style="color: ${pnl >= 0 ? 'var(--up)' : 'var(--down)'}; font-weight: 700;">${pnl >= 0 ? '+' : ''}$${pnl.toFixed(2)}</span>
+        `;
+    }
     journal.prepend(div);
 }
 
@@ -1461,120 +1892,92 @@ function updateMetricReadouts() {
     const wins = closed.filter(t => t.pnl > 0).length;
     const profit = closed.reduce((acc, t) => acc + t.pnl, 0);
     const wr = closed.length ? ((wins / closed.length) * 100).toFixed(1) : "0.0";
+    
+    const grossWins = closed.filter(t => t.pnl > 0).reduce((acc, t) => acc + t.pnl, 0);
+    const grossLoss = Math.abs(closed.filter(t => t.pnl < 0).reduce((acc, t) => acc + t.pnl, 0));
+    const pf = grossLoss > 0 ? (grossWins / grossLoss).toFixed(2) : (grossWins > 0 ? "MAX" : "0.00");
 
-    document.getElementById("valBalance").innerText = "$" + (10000 + profit).toLocaleString(undefined, { minimumFractionDigits: 2 });
-    document.getElementById("valProfit").innerText = (profit >= 0 ? "+$" : "-$") + Math.abs(profit).toFixed(2);
-    document.getElementById("valProfit").style.color = profit >= 0 ? "var(--up)" : "var(--down)";
-    document.getElementById("valTotalTrades").innerText = `${account.positions.length} / ${closed.length}`;
-    document.getElementById("valWinRate").innerText = wr + "%";
+    const elBal = document.getElementById("valBalance");
+    const elProf = document.getElementById("valProfit");
+    const elWr = document.getElementById("valWinRate");
+    const elPf = document.getElementById("valProfitFactor");
+
+    if (elBal) elBal.innerText = "$" + (10000 + profit).toLocaleString(undefined, { minimumFractionDigits: 2 });
+    if (elProf) {
+        elProf.innerText = (profit >= 0 ? "+$" : "-$") + Math.abs(profit).toFixed(2);
+        elProf.style.color = profit >= 0 ? "var(--up)" : "var(--down)";
+    }
+    if (elWr) elWr.innerText = wr + "%";
+    if (elPf) elPf.innerText = pf;
 }
 
 /* =========================================================================
-   6. SANDBOX TOOLKIT & UPGRADED EXECUTION ENGINE
+   6. TERMINAL EXECUTION API
    ========================================================================= */
 const terminalApi = {
-    isReady: (period, historyLength) => historyLength >= period,
+    isReady: (period = 14) => currentCandles.length >= period,
 
-    crossAbove: (seriesA, seriesB) => {
-        if (!currentCandles || currentCandles.length < 2) return false;
-        const prevA = seriesA[seriesA.length - 2];
-        const prevB = seriesB[seriesB.length - 2];
-        const currA = seriesA[seriesA.length - 1];
-        const currB = seriesB[seriesB.length - 1];
-        return prevA <= prevB && currA > currB;
-    },
-
-    crossBelow: (seriesA, seriesB) => {
-        if (!currentCandles || currentCandles.length < 2) return false;
-        const prevA = seriesA[seriesA.length - 2];
-        const prevB = seriesB[seriesB.length - 2];
-        const currA = seriesA[seriesA.length - 1];
-        const currB = seriesB[seriesB.length - 1];
-        return prevA >= prevB && currA < currB;
-    },
-
-    evaluateCondition: (node, context) => {
-        if (!node) return false;
-        if (node.type === 'AND') {
-            return node.conditions.every(c => terminalApi.evaluateCondition(c, context));
+    pdhPdl: () => {
+        if (!currentCandles || currentCandles.length < 5) return null;
+        const curDay = new Date(currentCandleObj.time * 1000).getUTCDate();
+        let prevDay = null;
+        let highs = [], lows = [];
+        for (let i = currentCandles.length - 1; i >= 0; i--) {
+            const c = currentCandles[i];
+            const d = new Date(c.time * 1000).getUTCDate();
+            if (d !== curDay) {
+                if (prevDay === null) prevDay = d;
+                if (d === prevDay) {
+                    highs.push(c.high);
+                    lows.push(c.low);
+                } else {
+                    break;
+                }
+            }
         }
-        if (node.type === 'OR') {
-            return node.conditions.some(c => terminalApi.evaluateCondition(c, context));
-        }
-        if (node.type === 'EXPR') {
-            return typeof node.eval === 'function' ? node.eval(context) : Boolean(node.eval);
-        }
-        return false;
+        if (highs.length === 0) return null;
+        return { pdh: Math.max(...highs), pdl: Math.min(...lows) };
     },
 
-    ema: (period = 14) => {
-        if (!currentCandles || currentCandles.length < period) return null;
-        const k = 2 / (period + 1);
-        let val = currentCandles.slice(0, period).reduce((s, c) => s + c.close, 0) / period;
-        for (let i = period; i < currentCandles.length; i++) {
-            val = currentCandles[i].close * k + val * (1 - k);
-        }
-        return val;
-    },
-
-    sma: (period = 14) => {
-        if (!currentCandles || currentCandles.length < period) return null;
-        const slice = currentCandles.slice(-period);
-        return slice.reduce((s, c) => s + c.close, 0) / period;
-    },
-
-    rsi: (period = 14) => {
-        if (!currentCandles || currentCandles.length < period + 1) return null;
-        let gains = 0, losses = 0;
-        for (let i = currentCandles.length - period; i < currentCandles.length; i++) {
-            const diff = currentCandles[i].close - currentCandles[i - 1].close;
-            if (diff >= 0) gains += diff;
-            else losses -= diff;
-        }
-        if (losses === 0) return 100;
-        const rs = (gains / period) / (losses / period);
-        return 100 - (100 / (1 + rs));
-    },
-
-    rvol: (period = 20) => {
-        if (!currentCandles || currentCandles.length < period) return 1.0;
-        const slice = currentCandles.slice(-period);
-        const avg = slice.reduce((s, c) => s + (c.volume || 25), 0) / period;
-        const curVol = currentCandleObj ? (currentCandleObj.volume || 25) : 25;
-        return avg > 0 ? (curVol / avg) : 1.0;
-    },
-
-    highest: (bars = 20) => {
-        if (!currentCandles || currentCandles.length < bars) return currentCandleObj ? currentCandleObj.high : 0;
-        return Math.max(...currentCandles.slice(-bars).map(c => c.high));
-    },
-
-    lowest: (bars = 20) => {
-        if (!currentCandles || currentCandles.length < bars) return currentCandleObj ? currentCandleObj.low : 0;
-        return Math.min(...currentCandles.slice(-bars).map(c => c.low));
-    },
-
-    buy: (slDist, tpDist, lots) => {
+    buy: (slDist, tpDist, lots, reason = "Signal") => {
         if (!currentCandleObj) return;
         const inputs = activeBot && activeBot.inputs ? activeBot.inputs : {};
         const lotVal = lots !== undefined ? lots : (inputs.lotSize ? inputs.lotSize.value : 0.1);
-        const slVal = slDist !== undefined ? slDist : (inputs.slPips ? inputs.slPips.value : 25);
         
-        let tpVal = tpDist;
-        if (tpVal === undefined) {
-            if (inputs.riskReward && inputs.riskReward.value) {
-                tpVal = slVal * inputs.riskReward.value;
-            } else if (inputs.tpPips) {
-                tpVal = inputs.tpPips.value;
-            } else {
-                tpVal = slVal * 2;
+        let slVal = slDist !== undefined ? slDist : (inputs.slPips ? inputs.slPips.value : 30);
+        let tpVal = tpDist !== undefined ? tpDist : (inputs.tpPips ? inputs.tpPips.value : 80);
+
+        const spreadBuffer = 0.08;
+        const entry = currentCandleObj.close + spreadBuffer;
+        
+        const slOffset = parseFloat(slVal) * 0.1;
+        const tpOffset = parseFloat(tpVal) * 0.1;
+
+        const sl = slVal ? entry - slOffset : null;
+        const tp = tpVal ? entry + tpOffset : null;
+        
+        const posLines = [];
+        if (candleSeries && typeof candleSeries.createPriceLine === "function") {
+            if (sl) {
+                const slLine = candleSeries.createPriceLine({
+                    price: sl, color: '#f23645', lineWidth: 1,
+                    lineStyle: LightweightCharts.LineStyle.Dotted,
+                    axisLabelVisible: true, title: `SL #${nextPositionTicket}`
+                });
+                posLines.push(slLine);
+                activePositionPriceLines.push(slLine);
+            }
+            if (tp) {
+                const tpLine = candleSeries.createPriceLine({
+                    price: tp, color: '#089981', lineWidth: 1,
+                    lineStyle: LightweightCharts.LineStyle.Dotted,
+                    axisLabelVisible: true, title: `TP #${nextPositionTicket}`
+                });
+                posLines.push(tpLine);
+                activePositionPriceLines.push(tpLine);
             }
         }
 
-        const entry = currentCandleObj.close;
-        const sl = slVal ? (entry - (parseFloat(slVal) * 0.1)) : null; 
-        const tp = tpVal ? (entry + (parseFloat(tpVal) * 0.1)) : null;
-        
         const pos = {
             id: nextPositionTicket++,
             type: 'BUY',
@@ -1582,7 +1985,8 @@ const terminalApi = {
             sl: sl,
             tp: tp,
             lots: parseFloat(lotVal) || 0.1,
-            time: currentCandleObj.time
+            time: currentCandleObj.time,
+            lines: posLines
         };
         account.positions.push(pos);
         
@@ -1591,33 +1995,52 @@ const terminalApi = {
             position: 'belowBar', 
             color: '#089981', 
             shape: 'arrowUp', 
-            text: `BUY #${pos.id}` 
+            text: ''
         });
         candleSeries.setMarkers(activeTradeMarkers);
+        appendTradeLog("BUY", 0, entry, `#${pos.id} [${reason}]`, false);
         updateMetricReadouts();
     },
     
-    sell: (slDist, tpDist, lots) => {
+    sell: (slDist, tpDist, lots, reason = "Signal") => {
         if (!currentCandleObj) return;
         const inputs = activeBot && activeBot.inputs ? activeBot.inputs : {};
         const lotVal = lots !== undefined ? lots : (inputs.lotSize ? inputs.lotSize.value : 0.1);
-        const slVal = slDist !== undefined ? slDist : (inputs.slPips ? inputs.slPips.value : 25);
         
-        let tpVal = tpDist;
-        if (tpVal === undefined) {
-            if (inputs.riskReward && inputs.riskReward.value) {
-                tpVal = slVal * inputs.riskReward.value;
-            } else if (inputs.tpPips) {
-                tpVal = inputs.tpPips.value;
-            } else {
-                tpVal = slVal * 2;
+        let slVal = slDist !== undefined ? slDist : (inputs.slPips ? inputs.slPips.value : 30);
+        let tpVal = tpDist !== undefined ? tpDist : (inputs.tpPips ? inputs.tpPips.value : 80);
+
+        const spreadBuffer = 0.08;
+        const entry = currentCandleObj.close - spreadBuffer;
+        
+        const slOffset = parseFloat(slVal) * 0.1;
+        const tpOffset = parseFloat(tpVal) * 0.1;
+
+        const sl = slVal ? entry + slOffset : null;
+        const tp = tpVal ? entry - tpOffset : null;
+        
+        const posLines = [];
+        if (candleSeries && typeof candleSeries.createPriceLine === "function") {
+            if (sl) {
+                const slLine = candleSeries.createPriceLine({
+                    price: sl, color: '#f23645', lineWidth: 1,
+                    lineStyle: LightweightCharts.LineStyle.Dotted,
+                    axisLabelVisible: true, title: `SL #${nextPositionTicket}`
+                });
+                posLines.push(slLine);
+                activePositionPriceLines.push(slLine);
+            }
+            if (tp) {
+                const tpLine = candleSeries.createPriceLine({
+                    price: tp, color: '#089981', lineWidth: 1,
+                    lineStyle: LightweightCharts.LineStyle.Dotted,
+                    axisLabelVisible: true, title: `TP #${nextPositionTicket}`
+                });
+                posLines.push(tpLine);
+                activePositionPriceLines.push(tpLine);
             }
         }
 
-        const entry = currentCandleObj.close;
-        const sl = slVal ? (entry + (parseFloat(slVal) * 0.1)) : null;
-        const tp = tpVal ? (entry - (parseFloat(tpVal) * 0.1)) : null;
-        
         const pos = {
             id: nextPositionTicket++,
             type: 'SELL',
@@ -1625,7 +2048,8 @@ const terminalApi = {
             sl: sl,
             tp: tp,
             lots: parseFloat(lotVal) || 0.1,
-            time: currentCandleObj.time
+            time: currentCandleObj.time,
+            lines: posLines
         };
         account.positions.push(pos);
 
@@ -1634,33 +2058,19 @@ const terminalApi = {
             position: 'aboveBar', 
             color: '#f23645', 
             shape: 'arrowDown', 
-            text: `SELL #${pos.id}` 
+            text: ''
         });
         candleSeries.setMarkers(activeTradeMarkers);
+        appendTradeLog("SELL", 0, entry, `#${pos.id} [${reason}]`, false);
         updateMetricReadouts();
     },
 
     hasPosition: () => account.positions.length > 0,
-    openPositionCount: () => account.positions.length,
-    
-    closeAllPositions: () => {
-        if (!currentCandleObj || account.positions.length === 0) return;
-        const exitPrice = currentCandleObj.close;
-        
-        while (account.positions.length > 0) {
-            const p = account.positions.pop();
-            const pnl = (p.type === 'BUY' ? (exitPrice - p.entry) : (p.entry - exitPrice)) * p.lots * 100;
-            account.balance += pnl;
-            account.closedTrades.push({ id: p.id, type: p.type, pnl, exitPrice, time: currentCandleObj.time });
-            appendTradeLog(p.type, pnl, exitPrice, `Close #${p.id}`);
-        }
-        account.equity = account.balance;
-        updateMetricReadouts();
-    }
+    openPositionCount: () => account.positions.length
 };
 
 /* =========================================================================
-   7. DRAG-AND-DROP & MOUNT LOGIC (WITH UNSAVED SCRIPT PROTECTIONS)
+   7. DRAG-AND-DROP & MOUNT LOGIC
    ========================================================================= */
 function setupDragAndDrop() {
     const viewport = document.getElementById("viewportArea");
@@ -1674,22 +2084,39 @@ function setupDragAndDrop() {
         const botDataRaw = e.dataTransfer.getData("application/json");
         if (botDataRaw) {
             if (activeBot && activeBot.isSaved === false) {
-                if (!confirm("⚠️ WARNING: Your current active bot is UNSAVED! Dragging and dropping a new bot will discard it and you will lose everything. Do you want to save first or continue?")) {
-                    return;
-                }
+                if (!confirm("⚠️ WARNING: Your current active bot is UNSAVED! Continue?")) return;
             }
-            mountStrategy(JSON.parse(botDataRaw));
+            const parsed = JSON.parse(botDataRaw);
+            mountStrategy(parsed, parsed.is_community_hub === true);
         }
     });
 }
 
-function handleBotDragStart(e, bot) {
-    e.dataTransfer.setData("application/json", JSON.stringify(bot));
+function handleBotDragStart(e, bot, isFromGlobal = false) {
+    const clone = { ...bot, is_community_hub: isFromGlobal };
+    e.dataTransfer.setData("application/json", JSON.stringify(clone));
     e.dataTransfer.effectAllowed = "copy";
 }
 
-function mountStrategy(bot) {
-    // --- REQUIRE LOGIN CHECK ---
+function sanitizeAndCompileJs(codeStr) {
+    if (!codeStr) return null;
+    let clean = codeStr.trim();
+    if (clean.startsWith("function") || clean.startsWith("(")) {
+        const firstBrace = clean.indexOf("{");
+        const lastBrace = clean.lastIndexOf("}");
+        if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
+            clean = clean.substring(firstBrace + 1, lastBrace).trim();
+        }
+    }
+    try {
+        return new Function("candle", "prevCandle", "history", "api", "inputs", "global", clean);
+    } catch (e) {
+        console.error("Compilation error in sanitizeAndCompileJs:", e);
+        return null;
+    }
+}
+
+function mountStrategy(bot, isFromGlobal = false) {
     const user = window.currentUser || (window.auth ? window.auth.currentUser : null);
     if (!user) {
         alert("Please log in first to attach bots to the chart!");
@@ -1698,45 +2125,80 @@ function mountStrategy(bot) {
     }
 
     if (activeBot && activeBot.isSaved === false && activeBot.id !== bot.id) {
-        if (!confirm("⚠️ WARNING: Your current active bot is UNSAVED! Loading a new bot will discard your progress and you will lose everything. Do you wish to proceed?")) {
-            return;
-        }
+        if (!confirm("⚠️ WARNING: Your current active bot is UNSAVED! Proceed?")) return;
     }
 
     stopPlayback();
-    activeBot = bot;
+    clearVisualPriceLines();
+    if (window.TradingEngine && window.TradingEngine.resetState) {
+        window.TradingEngine.resetState();
+    }
+
+    // Clone bot object so library cache is never mutated
+    activeBot = JSON.parse(JSON.stringify(bot));
+    
+    // Explicitly flag if this is a community strategy
+    activeBot.is_global_community = isFromGlobal || (bot.author_id && bot.author_id !== user.uid);
+
+    // If quota is exhausted or user is not Pro, do not expose raw source in activeBot
+    const quota = window.globalDownloadQuota !== undefined ? window.globalDownloadQuota : (window.isPro ? 5 : 0);
+    if (activeBot.is_global_community && (!window.isPro || quota <= 0)) {
+        activeBot.mql5_code = "";
+        activeBot.pine_code = "";
+        activeBot.python_code = "";
+    }
+    
+    if (activeBot.strategy_json) {
+        compiledBotExecutable = null;
+    } else if (activeBot.js_code) {
+        compiledBotExecutable = sanitizeAndCompileJs(activeBot.js_code);
+    }
     
     if (!activeBot.inputs) {
         activeBot.inputs = {
-            lotSize: { label: "Lot Size", value: 0.1, step: 0.01 },
-            slPips: { label: "Stop Loss (Pips)", value: 25, step: 1 },
-            tpPips: { label: "Take Profit (Pips)", value: 50, step: 1 }
+            lotSize: { label: "Lot Size", value: activeBot.strategy_json?.lotSize || 0.1, step: 0.01 },
+            slPips: { label: "Stop Loss (Pips)", value: activeBot.strategy_json?.slPips || 30, step: 1 },
+            tpPips: { label: "Take Profit (Pips)", value: activeBot.strategy_json?.tpPips || 80, step: 1 }
         };
     }
     
-    if (activeBot.isSaved === undefined) {
-        activeBot.isSaved = true; // Pre-existing library bots are saved by default
-    }
+    if (activeBot.isSaved === undefined) activeBot.isSaved = true;
 
     document.getElementById("activeBotHud").style.display = "flex";
-    document.getElementById("hudBotName").innerText = bot.name;
+    document.getElementById("hudBotName").innerText = activeBot.name;
+    document.getElementById("hudBotCategory").innerText = activeBot.category ? `Archetype: ${activeBot.category}` : "Simulated Micro-Ticks Active";
+    
+    updateHudSaveBtnState();
+
     document.getElementById("btnRun").disabled = false;
     document.getElementById("btnStep").disabled = false;
     document.getElementById("btnReset").disabled = false;
     
     renderInputsCard();
     renderBotCards();
-    resetToBeginning();
+    resetAccountState();
+    
+    document.getElementById("statusIndicator").innerText = "STRATEGY MOUNTED · CLICK PLAY (OR SPACE) TO RUN";
+}
+
+function updateHudSaveBtnState() {
+    const saveBtn = document.getElementById("btnHudSaveBot");
+    if (!saveBtn) return;
+    saveBtn.style.display = (activeBot && activeBot.isSaved === false) ? "inline-flex" : "none";
 }
 
 function detachActiveBot() {
     if (activeBot && activeBot.isSaved === false) {
-        if (!confirm("⚠️ WARNING: Your current script is UNSAVED! If you detach, you will lose everything. Please save your script first using the Save button in the HUD. Do you still want to detach and discard?")) {
-            return;
-        }
+        if (!confirm("⚠️ WARNING: Your current script is UNSAVED! Discard anyway?")) return;
     }
     stopPlayback();
+    clearVisualPriceLines();
+    if (window.TradingEngine && window.TradingEngine.resetState) {
+        window.TradingEngine.resetState();
+    }
+
     activeBot = null;
+    compiledBotExecutable = null;
     document.getElementById("activeBotHud").style.display = "none";
     document.getElementById("btnRun").disabled = true;
     document.getElementById("btnStep").disabled = true;
@@ -1747,23 +2209,41 @@ function detachActiveBot() {
 }
 
 /* =========================================================================
-   8. SESSION & REPORT EXPORT (CSV / .TML)
+   8. STRATEGY BLUEPRINT & REPORT EXPORT
    ========================================================================= */
+function openBlueprintModal() {
+    if (!activeBot) return;
+    document.getElementById("bpTitle").innerText = activeBot.name;
+    document.getElementById("bpAuthor").innerText = `Author: ${activeBot.author_name || 'Quant Creator'}`;
+    document.getElementById("bpArchetype").innerText = activeBot.category || "Algorithmic Model";
+
+    const s = activeBot.strategy_blueprint;
+    if (s && s.setup) {
+        document.getElementById("bpSetup").innerText = s.setup;
+        document.getElementById("bpLong").innerText = s.long_trigger;
+        document.getElementById("bpShort").innerText = s.short_trigger;
+        document.getElementById("bpRisk").innerText = s.risk_guard;
+    } else {
+        document.getElementById("bpSetup").innerText = "Monitors candle bars for entry conditions.";
+        document.getElementById("bpLong").innerText = `Executes long entry when buy criteria confirm.`;
+        document.getElementById("bpShort").innerText = `Executes short entry when sell criteria confirm.`;
+        document.getElementById("bpRisk").innerText = `Dynamic ATR Stop Loss / Take Profit Configured.`;
+    }
+    document.getElementById("blueprintModal").style.display = "flex";
+}
+
 function openExportSessionModal() {
     const modal = document.getElementById("exportSessionModal");
     const nameInput = document.getElementById("exportFileNameInput");
-    
     const botNameClean = activeBot ? activeBot.name.replace(/[^a-zA-Z0-9]/g, "_") : "Manual_Session";
     const dateStr = new Date().toISOString().split("T")[0];
     nameInput.value = `BacktestLab_${botNameClean}_${symbol}_${tf}_${dateStr}.csv`;
-    
     modal.style.display = "flex";
 }
 
 function executeSessionExport() {
     const format = document.getElementById("exportFormatSelect").value;
     const fileName = document.getElementById("exportFileNameInput").value.trim() || `backtest_report.${format}`;
-    
     const closed = account.closedTrades;
     const wins = closed.filter(t => t.pnl > 0).length;
     const totalProfit = closed.reduce((acc, t) => acc + t.pnl, 0);
@@ -1779,6 +2259,7 @@ function executeSessionExport() {
         csvLines.push("=== BACKTESTLAB PRO - SYSTEMATIC SESSION REPORT ===");
         csvLines.push(`Generated On,${new Date().toISOString()}`);
         csvLines.push(`Strategy Name,"${activeBot ? activeBot.name : 'None'}"`);
+        csvLines.push(`Category,"${activeBot ? (activeBot.category || 'General') : 'Discretionary'}"`);
         csvLines.push(`Symbol,${symbol}`);
         csvLines.push(`Timeframe,${tf.toUpperCase()}`);
         csvLines.push(`Initial Balance,$10000.00`);
@@ -1788,7 +2269,7 @@ function executeSessionExport() {
         csvLines.push(`Total Closed Trades,${closed.length}`);
         csvLines.push(`Open Positions,${account.positions.length}`);
         csvLines.push("");
-        csvLines.push("Trade ID,Type,Exit Price (USD),PnL ($),Execution Timestamp");
+        csvLines.push("Trade ID,Type,Exit Price (USD),Net PnL ($),Execution Timestamp");
         
         closed.forEach(t => {
             const dateReadable = new Date(t.time * 1000).toISOString();
@@ -1806,9 +2287,13 @@ function executeSessionExport() {
             timeframe: tf,
             strategy: activeBot ? {
                 name: activeBot.name,
+                category: activeBot.category || "General",
                 inputs: activeBot.inputs,
+                strategy_json: activeBot.strategy_json,
                 js_code: activeBot.js_code,
-                mql5_code: activeBot.mql5_code
+                mql5_code: activeBot.mql5_code,
+                pine_code: activeBot.pine_code,
+                python_code: activeBot.python_code
             } : null,
             metrics: {
                 initial_balance: 10000.00,
@@ -1834,7 +2319,7 @@ function executeSessionExport() {
     URL.revokeObjectURL(url);
     
     closeModal("exportSessionModal");
-    appendMsg(`Session report <b>${fileName}</b> successfully downloaded.`, "ai");
+    appendMsg(`Session report <b>${fileName}</b> downloaded.`, "ai");
 }
 
 /* =========================================================================
@@ -1843,7 +2328,7 @@ function executeSessionExport() {
 function handlePlanPillClick() {
     if (window.isPro) {
         const quota = window.globalDownloadQuota !== undefined ? window.globalDownloadQuota : 5;
-        alert(`★ ACTIVE LICENSE: Pro Real Market Pass\n• Personal .mq5 Downloads: Unrestricted\n• Private Cloud Storage: Enabled\n• Global Community Downloads: ${quota} of 5 Remaining`);
+        alert(`★ ACTIVE LICENSE: Pro Real Market Pass\n• Personal Multi-Language Exports (.mq5, .pine, .py): Unrestricted\n• Private Cloud Storage: Enabled\n• Global Community Downloads: ${quota} of 5 Remaining`);
     } else {
         openPlanModal();
     }
@@ -1867,6 +2352,9 @@ function openSaveBotModal() {
     }
 
     document.getElementById("saveBotNameInput").value = activeBot.name;
+    const catSelect = document.getElementById("saveBotCategorySelect");
+    if (catSelect && activeBot.category) catSelect.value = activeBot.category;
+
     selectSavePrivacyOption(window.isPro ? "private" : "global");
     
     const priceBadge = document.getElementById("privatePriceBadge");
@@ -1894,16 +2382,12 @@ function selectSavePrivacyOption(type) {
         optPrivate.classList.remove("selected");
         btn.innerText = "Save to Global Hub (Free)";
         btn.className = "btn-accent";
-        btn.style.background = "";
-        btn.style.color = "";
     } else {
         optGlobal.classList.remove("selected");
         optPrivate.classList.add("selected");
         if (window.isPro) {
             btn.innerText = "Save Privately (Pro Vault)";
             btn.className = "btn-accent";
-            btn.style.background = "";
-            btn.style.color = "";
         } else {
             btn.innerText = "Unlock Private Vault & Real Code ($89)";
             btn.className = "btn-gold";
@@ -1925,6 +2409,7 @@ async function executeSelectedSaveAction() {
         return;
     }
     activeBot.name = nameInput;
+    activeBot.category = document.getElementById("saveBotCategorySelect").value;
 
     if (selectedSavePrivacy === "private" && !window.isPro) {
         closeModal("saveBotModal");
@@ -1939,13 +2424,17 @@ async function executeSelectedSaveAction() {
 
     try {
         let globalDocId = null;
-
         if (!isPrivate) {
             const globalRef = await window.addDoc(window.collection(window.db, "global_bots"), {
                 name: activeBot.name,
+                category: activeBot.category || "General",
                 inputs: activeBot.inputs || {},
+                strategy_json: activeBot.strategy_json || {},
                 js_code: activeBot.js_code || "",
                 mql5_code: activeBot.mql5_code || "",
+                pine_code: activeBot.pine_code || "",
+                python_code: activeBot.python_code || "",
+                strategy_blueprint: activeBot.strategy_blueprint || null,
                 author_id: user.uid,
                 author_name: user.displayName || user.email.split('@')[0],
                 downloads: 0,
@@ -1956,18 +2445,24 @@ async function executeSelectedSaveAction() {
 
         await window.addDoc(window.collection(window.db, "users", user.uid, "saved_bots"), {
             name: activeBot.name,
+            category: activeBot.category || "General",
             inputs: activeBot.inputs || {},
+            strategy_json: activeBot.strategy_json || {},
             js_code: activeBot.js_code || "",
             mql5_code: activeBot.mql5_code || "",
+            pine_code: activeBot.pine_code || "",
+            python_code: activeBot.python_code || "",
+            strategy_blueprint: activeBot.strategy_blueprint || null,
             is_private: isPrivate,
             global_ref_id: globalDocId,
             created_at: window.serverTimestamp()
         });
 
-        activeBot.isSaved = true; // Mark as successfully saved!
+        activeBot.isSaved = true;
+        updateHudSaveBtnState();
         saveBotToLibrary(activeBot);
         closeModal("saveBotModal");
-        appendMsg(`Strategy <b>${activeBot.name}</b> saved successfully (${isPrivate ? '100% Private Vault' : 'Public Global Hub'}).`, "ai");
+        appendMsg(`Strategy <b>${activeBot.name}</b> saved successfully.`, "ai");
         loadBotLibrary();
     } catch (err) {
         console.error("Save error:", err);
@@ -1975,8 +2470,6 @@ async function executeSelectedSaveAction() {
     } finally {
         btn.disabled = false;
         btn.innerText = "Save to Cloud";
-        btn.style.background = "";
-        btn.style.color = "";
     }
 }
 
@@ -1984,7 +2477,7 @@ function handleEditCurrentBot() {
     if (!activeBot) return;
     openCopilotPane();
     const input = document.getElementById("chatInput");
-    appendMsg(`Editing <b>${activeBot.name}</b>. Describe revisions to modify the algorithm:`, "ai");
+    appendMsg(`Editing <b>${activeBot.name}</b>. Describe revisions:`, "ai");
     input.placeholder = `Describe edits for ${activeBot.name}...`;
     input.focus();
 }
@@ -2010,8 +2503,15 @@ function renderInputsCard() {
 
 function updateInputValue(key, val) {
     if (!activeBot || !activeBot.inputs[key]) return;
-    activeBot.inputs[key].value = parseFloat(val);
-    activeBot.isSaved = false; // Marking modified inputs as unsaved until re-saved
+    const num = parseFloat(val);
+    activeBot.inputs[key].value = num;
+    if (activeBot.strategy_json) {
+        if (key === "lotSize") activeBot.strategy_json.lotSize = num;
+        if (key === "slPips") activeBot.strategy_json.slPips = num;
+        if (key === "tpPips") activeBot.strategy_json.tpPips = num;
+    }
+    activeBot.isSaved = false;
+    updateHudSaveBtnState();
     saveBotToLibrary(activeBot);
 }
 
@@ -2022,58 +2522,138 @@ function applyInputsAndRestart() {
 }
 
 /* =========================================================================
-   9. AI COPILOT ARCHITECT (ACTIVE GEMINI 3.6 FLASH ENDPOINT)
+   9. STRICT CUSTOM STRATEGY SYNTHESIZER (AI MULTI-CODE COMPILER)
    ========================================================================= */
-const ARCHITECT_PROMPT = `You are the AI Strategy Architect for BacktestLab Pro.
-The user wants to configure an algorithmic trading bot.
+function injectStarterPrompt(promptText) {
+    const input = document.getElementById("chatInput");
+    if (!input) return;
+    input.value = promptText;
+    sendChatPrompt();
+}
 
-BUILT-IN API TOOLS AVAILABLE IN JS SANDBOX:
-- api.ema(period)
-- api.sma(period)
-- api.rsi(period)
-- api.rvol(period)
-- api.highest(bars)
-- api.lowest(bars)
-- api.buy(slPips, tpPips, lots)
-- api.sell(slPips, tpPips, lots)
-- api.hasPosition()
-- api.openPositionCount()
-- api.closeAllPositions()
-- api.crossAbove(seriesA, seriesB)
-- api.crossBelow(seriesA, seriesB)
-- api.isReady(period, historyLength)
-- api.evaluateCondition(node, context)
-- 'candle': The current bar object { open, high, low, close, time, volume }
-- 'history': Array of all previous bars up to current candle
-- 'inputs': Object containing user customizable numbers (e.g. inputs.slPips, inputs.tpPips, inputs.lotSize)
-- 'global': Object for storing persistent state across ticks (e.g. global.lastTrackedDay, global.pdh, global.pdl)
+const ARCHITECT_PROMPT = `You are the Lead Quantitative Architect for BacktestLab Pro.
+Convert the user's trading strategy into a pure JSON execution object.
+DO NOT write raw JavaScript execution functions.
 
-RESPONSE REQUIREMENTS:
-1. If conversational query:
-{ "reply": "Response text", "bot": null }
+ALLOWED OPERATORS: ">", "<", "==", "CROSSES_ABOVE", "CROSSES_BELOW"
+ALLOWED LOGIC OPERATORS: "AND", "OR"
 
-2. If strategy logic is specified:
+ALLOWED OPERAND TYPES:
+- PRICE: { "type": "PRICE", "field": "OPEN"|"HIGH"|"LOW"|"CLOSE"|"VOLUME", "shift": 0|1 }
+- STATIC: { "type": "STATIC", "value": number }
+- STATE: { "type": "STATE", "name": "CONSECUTIVE_BARS"|"BARS_SINCE_ENTRY" }
+- INDICATOR: { "type": "INDICATOR", "name": "EMA"|"SMA"|"RSI"|"RVOL"|"ATR"|"BOLLINGER_UPPER"|"BOLLINGER_LOWER"|"MACD_LINE"|"MACD_SIGNAL"|"STOCH_K"|"STOCH_D"|"SUPERTREND"|"ADX"|"VWAP", "period": number, "param2": number, "shift": 0|1, "timeframe": "M5"|"M15"|"H1"|"D1" }
+- LEVEL: { "type": "LEVEL", "name": "PDH"|"PDL" }
+
+RISK & POSITION DEFENSE:
 {
-  "reply": "Clear concise summary of logic",
+  "riskPercent": 1.0,
+  "sl": { "type": "ATR_MULTIPLE", "multiplier": 1.0, "period": 14 },
+  "tp": { "type": "ATR_MULTIPLE", "multiplier": 1.5, "period": 14 },
+  "breakEven": { "enabled": true, "triggerAtRR": 1.0, "offsetPips": 1 },
+  "trailingStop": { "enabled": true, "trailStepPips": 15 }
+}
+
+COMPOUND RULE GROUPS (Nested AND / OR):
+"buyRules": {
+  "logic": "AND",
+  "conditions": [
+    {
+      "logic": "OR",
+      "conditions": [
+        { "left": { "type": "PRICE", "field": "CLOSE", "shift": 1 }, "op": ">", "right": { "type": "INDICATOR", "name": "BOLLINGER_UPPER", "period": 20, "param2": 2 } },
+        { "left": { "type": "PRICE", "field": "CLOSE", "shift": 1 }, "op": ">", "right": { "type": "LEVEL", "name": "PDH" } }
+      ]
+    },
+    { "left": { "type": "INDICATOR", "name": "RSI", "period": 14 }, "op": ">", "right": { "type": "STATIC", "value": 50 } }
+  ]
+}
+
+OUTPUT STRICT JSON ONLY:
+{
+  "reply": "Clear explanation of the strategy rules, indicators, and risk management configured.",
+  "category": "One of: Breakout / Liquidity Sweep, Trend Following & Momentum, Mean Reversion & Scalp, SMC / Order Flow, Multi-Timeframe / Swing",
+  "strategy_blueprint": {
+    "setup": "Formula setup",
+    "long_trigger": "Buy rule",
+    "short_trigger": "Sell rule",
+    "risk_guard": "SL and TP targets"
+  },
   "bot": {
     "name": "Strategy Name",
     "inputs": {
-      "lotSize": { "label": "Trade Lot Size", "value": 0.1, "step": 0.01 },
-      "slPips": { "label": "Stop Loss (Pips)", "value": 25, "step": 1 },
-      "tpPips": { "label": "Take Profit (Pips)", "value": 50, "step": 1 },
-      "riskReward": { "label": "Risk Reward Ratio", "value": 2.0, "step": 0.1 }
+      "lotSize": { "label": "Lot Size", "value": 0.1, "step": 0.01 },
+      "slPips": { "label": "Stop Loss (Pips)", "value": 30, "step": 1 },
+      "tpPips": { "label": "Take Profit (Pips)", "value": 80, "step": 1 }
     },
-    "js_code": "// JS execution code",
-    "mql5_code": "// Full production MetaTrader 5 code here\\n..."
+    "strategy_json": { ... },
+    "mql5_code": "// Production MQL5 EA code\\n...",
+    "pine_code": "//@version=5\\nstrategy(\\"Strategy Name\\", overlay=true)\\n...",
+    "python_code": "# Production MetaTrader5 Python Script\\nimport MetaTrader5 as mt5\\n..."
   }
-}
-Return strict JSON with no markdown formatting.`;
+}`;
 
 function handleChatKeyDown(e) { 
     if (e.key === "Enter" && !e.shiftKey) { 
         e.preventDefault(); 
         sendChatPrompt(); 
     } 
+}
+
+const GEMINI_MODELS = [
+    "gemini-3.5-flash-lite", 
+    "gemini-3.8-flash",      
+    "gemini-2.5-flash"       
+];
+
+const sleep = (ms) => new Promise(res => setTimeout(res, ms));
+
+async function callGeminiDirect(apiKey, payloadBody) {
+    let lastError = null;
+
+    for (const model of GEMINI_MODELS) {
+        const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+
+        for (let attempt = 0; attempt < 2; attempt++) {
+            try {
+                const response = await fetch(endpoint, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payloadBody)
+                });
+
+                const data = await response.json();
+
+                if (data.error) {
+                    const isBusy = data.error.code === 503 || 
+                                   data.error.code === 429 || 
+                                   (data.error.message && data.error.message.toLowerCase().includes("overloaded"));
+
+                    if (isBusy && attempt === 0) {
+                        await sleep(700 + Math.random() * 400);
+                        continue;
+                    }
+                    lastError = new Error(data.error.message);
+                    break;
+                }
+
+                const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+                if (!rawText) {
+                    lastError = new Error("Empty candidate payload received from upstream model.");
+                    break;
+                }
+
+                const cleanJson = rawText.replace(/```(?:json)?/gi, "").replace(/```/g, "").trim();
+                return JSON.parse(cleanJson);
+
+            } catch (err) {
+                lastError = err;
+                if (attempt === 0) await sleep(400 + Math.random() * 200);
+            }
+        }
+    }
+
+    throw lastError || new Error("All Gemini models are congested. Try switching provider to Groq in dropdown.");
 }
 
 async function sendChatPrompt() {
@@ -2083,7 +2663,7 @@ async function sendChatPrompt() {
 
     appendMsg(query, "user");
     input.value = "";
-    input.placeholder = "Enter execution criteria, indicator filters, or risk constraints...";
+    input.placeholder = "Describe entry rules, indicators, and SL/TP...";
 
     const provider = document.getElementById("chatProvider").value;
     const apiKey = localStorage.getItem(`btl_key_${provider}`);
@@ -2099,16 +2679,15 @@ async function sendChatPrompt() {
     btn.disabled = true; 
 
     chatConversationHistory.push({ role: "user", text: query });
-    if (chatConversationHistory.length > 6) {
-        chatConversationHistory = chatConversationHistory.slice(-6);
+    if (chatConversationHistory.length > 8) {
+        chatConversationHistory = chatConversationHistory.slice(-8);
     }
 
     let contextAddition = "";
     if (activeBot) {
-        contextAddition = `\n[ACTIVE BOT: "${activeBot.name}". CURRENT INPUTS: ${JSON.stringify(activeBot.inputs || {})}. CURRENT JS: ${activeBot.js_code}]`;
+        contextAddition = `\n[ACTIVE BOT: "${activeBot.name}". CATEGORY: "${activeBot.category || 'General'}". CURRENT JSON: ${JSON.stringify(activeBot.strategy_json || activeBot.inputs || {})}]`;
     }
 
-    // --- APPEND GEMINI-STYLE LOADING BUBBLE ---
     const stream = document.getElementById("chatStream");
     const loaderEl = document.createElement("div");
     loaderEl.className = "msg-loading";
@@ -2125,48 +2704,23 @@ async function sendChatPrompt() {
         let payload = null;
 
         if (provider === "gemini") {
-            const geminiModels = ["gemini-3.6-flash", "gemini-3.5-flash", "gemini-2.5-flash"];
-            let success = false;
-            let lastErr = null;
+            const contents = chatConversationHistory.map(m => ({
+                role: m.role === "user" ? "user" : "model",
+                parts: [{ text: m.text }]
+            }));
 
-            for (const model of geminiModels) {
-                try {
-                    const contentsPayload = [
-                        { role: "user", parts: [{ text: ARCHITECT_PROMPT + contextAddition }] },
-                        ...chatConversationHistory.map(m => ({ 
-                            role: m.role === "user" ? "user" : "model", 
-                            parts: [{ text: m.text }] 
-                        }))
-                    ];
-
-                    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
-                        method: "POST", 
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ 
-                            contents: contentsPayload, 
-                            generationConfig: { responseMimeType: "application/json" } 
-                        })
-                    });
-
-                    const data = await res.json();
-                    if (data.error) {
-                        lastErr = data.error.message;
-                        continue;
-                    }
-
-                    if (data.candidates && data.candidates[0]?.content?.parts?.[0]?.text) {
-                        payload = JSON.parse(data.candidates[0].content.parts[0].text);
-                        success = true;
-                        break;
-                    }
-                } catch (err) {
-                    lastErr = err.message;
+            const payloadBody = {
+                system_instruction: {
+                    parts: [{ text: ARCHITECT_PROMPT + contextAddition }]
+                },
+                contents: contents,
+                generationConfig: { 
+                    responseMimeType: "application/json",
+                    temperature: 0.15
                 }
-            }
+            };
 
-            if (!success || !payload) {
-                throw new Error(lastErr || "API service busy. Please check your Gemini key or try Groq.");
-            }
+            payload = await callGeminiDirect(apiKey, payloadBody);
 
         } else {
             const endpoint = provider === "openai" ? "https://api.openai.com/v1/chat/completions" : "https://api.groq.com/openai/v1/chat/completions";
@@ -2179,43 +2733,56 @@ async function sendChatPrompt() {
                     response_format: { type: "json_object" },
                     messages: [ 
                         { role: "system", content: ARCHITECT_PROMPT + contextAddition }, 
-                        ...chatConversationHistory.map(m => ({ role: m.role, content: m.text })) 
+                        ...chatConversationHistory.map(m => ({ role: m.role === "model" ? "assistant" : m.role, content: m.text })) 
                     ]
                 })
             });
             const data = await res.json();
             if (data.error) throw new Error(data.error.message);
-            payload = JSON.parse(data.choices[0].message.content);
+            
+            const rawContent = data.choices[0].message.content.replace(/```(?:json)?/gi, "").replace(/```/g, "").trim();
+            payload = JSON.parse(rawContent);
         }
 
-        // --- REMOVE LOADING BUBBLE ---
         const activeLoader = document.getElementById("chatLoaderBubble");
         if (activeLoader) activeLoader.remove();
 
-        chatConversationHistory.push({ role: "assistant", text: payload.reply });
+        chatConversationHistory.push({ role: "model", text: payload.reply });
 
-        if (payload.bot && payload.bot.js_code) {
+        if (payload.bot && (payload.bot.strategy_json || payload.bot.js_code)) {
             let targetBotId = activeBot ? activeBot.id : ("bot-" + Date.now());
             const newBot = { 
                 id: targetBotId, 
-                name: payload.bot.name || (activeBot ? activeBot.name : "Custom Strategy"), 
+                name: payload.bot.name || "Custom Strategy",
+                category: payload.category || "Breakout / Liquidity Sweep",
+                strategy_blueprint: payload.strategy_blueprint || null,
                 inputs: payload.bot.inputs || {
-                    lotSize: { label: "Lot Size", value: 0.1, step: 0.01 },
-                    slPips: { label: "Stop Loss (Pips)", value: 25, step: 1 },
-                    tpPips: { label: "Take Profit (Pips)", value: 50, step: 1 }
+                    lotSize: { label: "Lot Size", value: payload.bot.strategy_json?.lotSize || 0.1, step: 0.01 },
+                    slPips: { label: "Stop Loss (Pips)", value: payload.bot.strategy_json?.slPips || 30, step: 1 },
+                    tpPips: { label: "Take Profit (Pips)", value: payload.bot.strategy_json?.tpPips || 80, step: 1 }
                 },
-                js_code: payload.bot.js_code, 
-                mql5_code: payload.bot.mql5_code,
+                strategy_json: payload.bot.strategy_json || null,
+                js_code: payload.bot.js_code || "", 
+                mql5_code: payload.bot.mql5_code || "",
+                pine_code: payload.bot.pine_code || "",
+                python_code: payload.bot.python_code || "",
                 isSaved: false 
             };
             
-            mountStrategy(newBot);
+            mountStrategy(newBot, false);
 
             appendMsg(`
                 ${payload.reply}
                 <div class="msg-card">
-                    <b>${newBot.name}</b> (Unsaved)<br>
-                    <span style="color: var(--gold);">Compiled & Mounted on Chart. Click <b>Save</b> in the HUD to store it to your library!</span>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <b>${newBot.name}</b>
+                        <span class="badge" style="background: rgba(8,153,129,0.2); color: var(--up); font-size: 8px;">${newBot.category}</span>
+                    </div>
+                    <div style="margin-top: 6px; font-size: 11px; color: #a1a7b5; line-height: 1.45;">
+                        • Strategy compiled and mounted to chart (Replay Paused).<br>
+                        • Multi-language code generated (.mq5, .pine, .py).<br>
+                        • Click <b>Play</b> (or press <b>Space</b>) to run micro-ticks.
+                    </div>
                 </div>
             `, "ai");
         } else { 
@@ -2223,10 +2790,8 @@ async function sendChatPrompt() {
         }
 
     } catch (err) { 
-        // --- REMOVE LOADING BUBBLE ON ERROR ---
         const activeLoader = document.getElementById("chatLoaderBubble");
         if (activeLoader) activeLoader.remove();
-
         appendMsg(`Error: ${err.message}`, "ai"); 
     } finally { 
         btn.disabled = false; 
@@ -2252,7 +2817,7 @@ function clearChatHistory() {
             </div>
             <div>Specify strategy parameters to compile a new model.</div>
         </div>
-        <div class="msg msg-ai">Specify algorithmic conditions, technical indicators, and risk parameters. The compiler will structure execution logic and register editable parameters in the <b>Inputs</b> panel.</div>
+        <div class="msg msg-ai">Specify algorithmic conditions, technical indicators, and risk parameters. The compiler will structure execution logic, register parameters, and display trigger levels on the chart.</div>
     `; 
 }
 
@@ -2283,23 +2848,15 @@ function syncTierUI() {
     const btn = document.getElementById("tierSwitchBtn");
     const lbl = document.getElementById("tierLabel");
     const icon = document.getElementById("tierIconLock");
-    const jsLbl = document.getElementById("btnInspectJsLabel");
-    const mqlLbl = document.getElementById("btnExportMqlLabel");
 
     if (window.isPro) {
         btn.className = "tier-pill tier-pro";
         lbl.innerText = "★ PRO LICENSE ACTIVE ($89)";
         icon.innerHTML = '<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>';
-        
-        if (jsLbl) jsLbl.innerHTML = 'Inspect JS Sandbox';
-        if (mqlLbl) mqlLbl.innerHTML = 'Export MetaTrader 5 EA (.mq5)';
     } else {
         btn.className = "tier-pill tier-free";
         lbl.innerText = "🔒 GET REAL CODE / EXECUTE IN MARKET";
         icon.innerHTML = '<rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>';
-        
-        if (jsLbl) jsLbl.innerHTML = '🔒 Inspect JS Sandbox';
-        if (mqlLbl) mqlLbl.innerHTML = '🔒 Export MetaTrader 5 EA (.mq5)';
     }
 }
 
@@ -2334,73 +2891,74 @@ async function loadBotLibrary() {
     
     const defaultBot = {
         id: "bot-demo-1", 
-        name: "Previous Day High-Low Breakout",
+        name: "BB_RSI_ATR_Breakout",
+        category: "Breakout / Liquidity Sweep",
         isSaved: true,
-        inputs: {
-            lotSize: { label: "Lot Size", value: 0.2, step: 0.01 },
-            slPips: { label: "Stop Loss (Pips)", value: 30, step: 1 },
-            tpPips: { label: "Take Profit (Pips)", value: 60, step: 1 },
-            riskReward: { label: "Risk Reward", value: 2.0, step: 0.1 }
+        strategy_blueprint: {
+            setup: "Bollinger Bands(20, 2), RSI(14), and dynamic ATR(14) risk management.",
+            long_trigger: "Previous candle close is above the Upper Bollinger Band and RSI(14) > 55.",
+            short_trigger: "Previous candle close is below the Lower Bollinger Band and RSI(14) < 45.",
+            risk_guard: "Stop Loss = 1x ATR(14), Take Profit = 1.5x ATR(14), 1% account risk sizing."
         },
-        js_code: `// Multi-Day PDH/PDL Engine (One trade per day on breakout)
-const currentDayId = Math.floor(candle.time / 86400);
-
-if (global.lastTradeDayId !== currentDayId) {
-    global.lastTradeDayId = currentDayId;
-    global.tradedToday = false;
-    
-    if (history.length > 0) {
-        const prevBar = history[history.length - 1];
-        global.pdh = prevBar.high;
-        global.pdl = prevBar.low;
-    }
-}
-
-if (global.pdh && global.pdl && !global.tradedToday && !api.hasPosition()) {
-    if (candle.high >= global.pdh) {
-        api.buy(inputs.slPips, inputs.tpPips, inputs.lotSize);
-        global.tradedToday = true;
-    } else if (candle.low <= global.pdl) {
-        api.sell(inputs.slPips, inputs.tpPips, inputs.lotSize);
-        global.tradedToday = true;
-    }
-}`,
+        inputs: {
+            lotSize: { label: "Lot Size", value: 0.1, step: 0.01 },
+            slPips: { label: "Stop Loss (Pips)", value: 30, step: 1 },
+            tpPips: { label: "Take Profit (Pips)", value: 45, step: 1 }
+        },
+        strategy_json: {
+            session: { enabled: false, start: 0, end: 24 },
+            riskManagement: {
+                riskPercent: 1.0,
+                sl: { type: "ATR_MULTIPLE", multiplier: 1.0, period: 14 },
+                tp: { type: "ATR_MULTIPLE", multiplier: 1.5, period: 14 }
+            },
+            buyRules: [
+                {
+                    left: { type: "PRICE", field: "CLOSE", shift: 1 },
+                    op: ">",
+                    right: { type: "INDICATOR", name: "BOLLINGER_UPPER", period: 20, param2: 2 }
+                },
+                {
+                    left: { type: "INDICATOR", name: "RSI", period: 14, shift: 1 },
+                    op: ">",
+                    right: { type: "STATIC", value: 55 }
+                }
+            ],
+            sellRules: [
+                {
+                    left: { type: "PRICE", field: "CLOSE", shift: 1 },
+                    op: "<",
+                    right: { type: "INDICATOR", name: "BOLLINGER_LOWER", period: 20, param2: 2 }
+                },
+                {
+                    left: { type: "INDICATOR", name: "RSI", period: 14, shift: 1 },
+                    op: "<",
+                    right: { type: "STATIC", value: 45 }
+                }
+            ]
+        },
         mql5_code: `//+------------------------------------------------------------------+
-//|                  Previous Day High-Low Breakout EA               |
+//|                  BB_RSI_ATR_Breakout EA                          |
 //+------------------------------------------------------------------+
 #property strict
-input double InpLotSize = 0.2;
-input int    InpSLPips  = 30;
-input int    InpTPPips  = 60;
-
-datetime lastDayChecked = 0;
-double pdh = 0, pdl = 0;
-
-void OnTick() {
-   MqlDateTime dt;
-   TimeCurrent(dt);
-   datetime todayStart = StringToTime(StringFormat("%04d.%02d.%02d 00:00", dt.year, dt.mon, dt.day));
-   
-   if(todayStart != lastDayChecked) {
-      lastDayChecked = todayStart;
-      MqlRates rates[];
-      ArraySetAsSeries(rates, true);
-      if(CopyRates(_Symbol, PERIOD_D1, 1, 1, rates) > 0) {
-         pdh = rates[0].high;
-         pdl = rates[0].low;
-      }
-   }
-   
-   if(PositionsTotal() == 0 && pdh > 0 && pdl > 0) {
-      double ask = SymbolInfoDouble(_Symbol, SYMBOL_ASK);
-      double bid = SymbolInfoDouble(_Symbol, SYMBOL_BID);
-      if(bid >= pdh) {
-         // Open BUY Order
-      } else if(ask <= pdl) {
-         // Open SELL Order
-      }
-   }
-}`
+input double InpRiskPercent = 1.0;
+input int    InpBBPeriod    = 20;
+input double InpBBDev       = 2.0;
+input int    InpRSI         = 14;
+input int    InpATR         = 14;
+// Live execution rules...`,
+        pine_code: `//@version=5
+strategy("BB_RSI_ATR_Breakout", overlay=true)
+[bbMid, bbUp, bbLow] = ta.bb(close, 20, 2)
+rsiVal = ta.rsi(close, 14)
+atrVal = ta.atr(14)
+if (close[1] > bbUp[1] and rsiVal > 55)
+    strategy.entry("Long", strategy.long)
+if (close[1] < bbLow[1] and rsiVal < 45)
+    strategy.entry("Short", strategy.short)`,
+        python_code: `# BB_RSI_ATR_Breakout MT5 Automation
+import MetaTrader5 as mt5
+# Live trading loop...`
     };
 
     if (!localBots.length) {
@@ -2423,11 +2981,8 @@ function saveBotToLibrary(bot) {
     let list = JSON.parse(localStorage.getItem("btl_bot_library") || "[]"); 
     bot.isSaved = true;
     const idx = list.findIndex(b => b.id === bot.id);
-    if (idx >= 0) {
-        list[idx] = bot;
-    } else {
-        list.unshift(bot);
-    }
+    if (idx >= 0) list[idx] = bot;
+    else list.unshift(bot);
     localStorage.setItem("btl_bot_library", JSON.stringify(list)); 
     loadBotLibrary();
 }
@@ -2454,6 +3009,7 @@ async function removeBot(id, isGlobalItem = false) {
     loadBotLibrary();
 }
 
+// GLOBAL HUB DOWNLOADER
 async function downloadGlobalBotFile(bot) {
     if (!window.isPro) {
         openPlanModal();
@@ -2462,18 +3018,19 @@ async function downloadGlobalBotFile(bot) {
 
     const user = window.currentUser || (window.auth ? window.auth.currentUser : null);
     if (!user) {
-        alert("Please login to verify your license.");
+        alert("Please log in to verify your license.");
         return;
     }
 
     let quota = window.globalDownloadQuota !== undefined ? window.globalDownloadQuota : 5;
+    
     if (quota <= 0) {
-        alert("You have reached your 5 Global Bot Download quota under your plan.");
+        alert("🔒 Quota Reached: You have used your 5 Global Community bot downloads under your lifetime license.\n\nYou can still create and download UNLIMITED personal strategies!");
         return;
     }
 
-    if (!bot.mql5_code) {
-        alert("This community strategy does not contain uncompiled MQL5 source code.");
+    if (!bot.mql5_code && !bot.pine_code && !bot.python_code) {
+        alert("This community strategy does not contain source code exports.");
         return;
     }
 
@@ -2487,18 +3044,23 @@ async function downloadGlobalBotFile(bot) {
         window.globalDownloadQuota = quota - 1;
         document.getElementById("statusIndicator").innerText = `PRO PLAN ($89) · [${window.globalDownloadQuota}/5 DL LEFT] · READY`;
     } catch (e) {
-        console.warn("Quota decrement warning:", e);
+        console.warn("Quota decrement error:", e);
     }
 
-    const blob = new Blob([bot.mql5_code], { type: "text/plain;charset=utf-8" });
+    const fileData = bot.mql5_code || bot.pine_code || bot.python_code;
+    const ext = bot.mql5_code ? "mq5" : (bot.pine_code ? "pine" : "py");
+
+    const blob = new Blob([fileData], { type: "text/plain;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
-    a.href = url;
-    a.download = `${bot.name.replace(/\s+/g, '_')}_global.mq5`;
+    a.href = url; 
+    a.download = `${bot.name.replace(/\s+/g, '_')}_community.${ext}`;
     document.body.appendChild(a);
-    a.click();
+    a.click(); 
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+
+    renderBotCards();
 }
 
 function renderBotCards() {
@@ -2514,25 +3076,34 @@ function renderBotCards() {
         return;
     }
 
+    const quota = window.globalDownloadQuota !== undefined ? window.globalDownloadQuota : (window.isPro ? 5 : 0);
+
     list.forEach(bot => {
         const card = document.createElement("div");
         card.className = `bot-card ${activeBot && activeBot.id === bot.id ? 'active' : ''}`;
         card.draggable = true; 
-        card.ondragstart = (e) => handleBotDragStart(e, bot);
+        card.ondragstart = (e) => handleBotDragStart(e, bot, isGlobal);
         
         let actionButtonsHTML = "";
         if (isGlobal) {
+            const isGlobalLocked = !window.isPro || quota <= 0;
+            const dlBtnLabel = isGlobalLocked 
+                ? (quota <= 0 && window.isPro ? "🔒 Limit (0/5)" : "🔒 Unlock .mq5") 
+                : `Download .mq5 (${quota} Left)`;
+
             actionButtonsHTML = `
                 <div style="display: flex; gap: 4px; align-items: center;">
-                    <button class="btn-outline" onclick='downloadGlobalBotFile(${JSON.stringify(bot).replace(/'/g, "&#39;")})' style="font-size: 9px; padding: 3px 6px; color: var(--gold); border-color: rgba(245,158,11,0.3);">Download .mq5</button>
-                    <button class="btn-accent" onclick='mountStrategy(${JSON.stringify(bot).replace(/'/g, "&#39;")})' style="font-size: 10px; padding: 3px 8px;">Load Replay</button>
+                    <button class="btn-outline" onclick='downloadGlobalBotFile(${JSON.stringify(bot).replace(/'/g, "&#39;")})' style="font-size: 9px; padding: 3px 6px; color: ${isGlobalLocked ? 'var(--text-muted)' : 'var(--gold)'}; border-color: ${isGlobalLocked ? 'var(--border)' : 'rgba(245,158,11,0.3)'};">
+                        ${dlBtnLabel}
+                    </button>
+                    <button class="btn-accent" onclick='mountStrategy(${JSON.stringify(bot).replace(/'/g, "&#39;")}, true)' style="font-size: 10px; padding: 3px 8px;">Load Replay</button>
                 </div>
             `;
         } else {
             actionButtonsHTML = `
                 <div style="display: flex; gap: 4px; align-items: center;">
                     <button onclick="removeBot('${bot.id}', false)" style="color: var(--down); font-size: 10px; padding: 2px 4px;">Delete</button>
-                    <button class="btn-accent" onclick='mountStrategy(${JSON.stringify(bot).replace(/'/g, "&#39;")})' style="font-size: 10px; padding: 3px 8px;">Load Replay</button>
+                    <button class="btn-accent" onclick='mountStrategy(${JSON.stringify(bot).replace(/'/g, "&#39;")}, false)' style="font-size: 10px; padding: 3px 8px;">Load Replay</button>
                 </div>
             `;
         }
@@ -2547,7 +3118,7 @@ function renderBotCards() {
             </div>
             <div class="bot-meta">${isGlobal ? `Author: ${bot.author_name || 'Community Member'}` : (bot.is_private ? '🔒 Private Workspace Strategy' : '🌐 Synchronized Strategy')}</div>
             <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
-                <span style="font-size: 9px; color: ${isGlobal ? 'var(--accent)' : 'var(--text-muted)'}; font-weight: 600;">${isGlobal ? 'COMMUNITY' : 'PERSONAL'}</span>
+                <span style="font-size: 9px; color: ${isGlobal ? 'var(--accent)' : 'var(--text-muted)'}; font-weight: 600;">${bot.category || (isGlobal ? 'COMMUNITY' : 'PERSONAL')}</span>
                 ${actionButtonsHTML}
             </div>
         `;
@@ -2556,8 +3127,105 @@ function renderBotCards() {
 }
 
 /* =========================================================================
-   11. MODAL UTILITIES & CODE ACCESS GATEKEEPER
+   11. MULTI-CODE INSPECTOR & DOWNLOAD HANDLERS
    ========================================================================= */
+function selectExportLanguage(lang) {
+    selectedExportLang = lang;
+    document.getElementById("optCardMq5").classList.toggle("selected", lang === 'mql5');
+    document.getElementById("optCardPine").classList.toggle("selected", lang === 'pine');
+    document.getElementById("optCardPy").classList.toggle("selected", lang === 'python');
+}
+
+function handleDownloadRealCodeModal() {
+    if (!window.isPro) {
+        openPlanModal();
+        return;
+    }
+    if (!activeBot) {
+        alert("Mount or create a strategy first.");
+        return;
+    }
+
+    if (activeBot.is_global_community) {
+        const quota = window.globalDownloadQuota !== undefined ? window.globalDownloadQuota : 5;
+        if (quota <= 0) {
+            alert("🔒 Global Download Quota Reached (0/5)!\n\nThis mounted strategy is from the Global Hub. Your 5 community downloads are exhausted.\n\nYou can still test it visually or download unlimited personal strategies!");
+            return;
+        }
+    }
+
+    document.getElementById("downloadPackageModal").style.display = "flex";
+}
+
+function previewCurrentLanguageCode() {
+    closeModal("downloadPackageModal");
+    openCodeInspector(selectedExportLang);
+}
+
+async function executeChosenExportDownload() {
+    if (!window.isPro) {
+        openPlanModal();
+        return;
+    }
+    if (!activeBot) return;
+
+    const user = window.currentUser || (window.auth ? window.auth.currentUser : null);
+
+    if (activeBot.is_global_community) {
+        let quota = window.globalDownloadQuota !== undefined ? window.globalDownloadQuota : 5;
+        if (quota <= 0) {
+            alert("🔒 Download Limit Exceeded (0/5) for community bots!");
+            closeModal("downloadPackageModal");
+            closeModal("codeModal");
+            return;
+        }
+
+        try {
+            const planDocRef = window.doc(window.db, "users", user.uid, "plan", "active");
+            await window.updateDoc(planDocRef, {
+                global_bot_download_quota: window.increment(-1),
+                global_bots_downloaded: window.arrayUnion(activeBot.id || activeBot.name)
+            });
+            window.globalDownloadQuota = quota - 1;
+            document.getElementById("statusIndicator").innerText = `PRO PLAN ($89) · [${window.globalDownloadQuota}/5 DL LEFT] · READY`;
+            renderBotCards();
+        } catch (e) {
+            console.warn("Quota deduction warning:", e);
+        }
+    }
+
+    let content = "";
+    let ext = "txt";
+
+    if (selectedExportLang === 'mql5') {
+        content = activeBot.mql5_code;
+        ext = "mq5";
+    } else if (selectedExportLang === 'pine') {
+        content = activeBot.pine_code;
+        ext = "pine";
+    } else if (selectedExportLang === 'python') {
+        content = activeBot.python_code;
+        ext = "py";
+    }
+
+    if (!content) {
+        alert("Source code is locked or unavailable for this strategy.");
+        return;
+    }
+
+    const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; 
+    a.download = `${activeBot.name.replace(/\s+/g, '_')}.${ext}`;
+    document.body.appendChild(a);
+    a.click(); 
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    closeModal("downloadPackageModal");
+    closeModal("codeModal");
+}
+
 function handleCodeClick(type) {
     if (!window.isPro) {
         openPlanModal();
@@ -2568,41 +3236,46 @@ function handleCodeClick(type) {
 
 function openCodeInspector(type) {
     if (!activeBot) return alert("Select or synthesize a strategy first.");
+    
+    if (type !== 'json' && activeBot.is_global_community) {
+        const quota = window.globalDownloadQuota !== undefined ? window.globalDownloadQuota : (window.isPro ? 5 : 0);
+        if (!window.isPro || quota <= 0) {
+            alert("🔒 Access Locked: Code inspection is disabled for Global Hub bots once your community quota is exhausted.");
+            return;
+        }
+    }
+
+    currentInspectedCodeType = type;
+    selectedExportLang = type === 'json' ? 'mql5' : type;
+
     const modal = document.getElementById("codeModal");
     const paywall = document.getElementById("freePaywallNotice");
     const codeArea = document.getElementById("codeOutput");
-    const dlBtn = document.getElementById("btnDownloadMql");
+    const dlBtn = document.getElementById("btnDownloadCode");
+    const titleEl = document.getElementById("codeModalTitle");
 
-    if (type === 'js') {
-        paywall.style.display = "none"; 
+    paywall.style.display = "none"; 
+    dlBtn.style.display = "block";
+
+    if (type === 'json') {
+        titleEl.innerText = "Strategy JSON Execution Blueprint";
         dlBtn.style.display = "none";
-        codeArea.textContent = `// Inputs Schema:\n${JSON.stringify(activeBot.inputs || {}, null, 2)}\n\n// Logic Function:\nfunction(candle, history, api, inputs, global) {\n${activeBot.js_code}\n}`;
-    } else {
-        paywall.style.display = "none"; 
-        dlBtn.style.display = "block";
-        codeArea.textContent = activeBot.mql5_code || "// Production MQL5 Source Code Ready";
+        codeArea.textContent = JSON.stringify(activeBot.strategy_json || activeBot.inputs || {}, null, 2);
+    } else if (type === 'mql5') {
+        titleEl.innerText = "MetaTrader 5 Expert Advisor Source (.mq5)";
+        dlBtn.innerText = "Download .mq5";
+        codeArea.textContent = activeBot.mql5_code || "// Code locked or unavailable for this strategy";
+    } else if (type === 'pine') {
+        titleEl.innerText = "TradingView Pine Script Source (.pine)";
+        dlBtn.innerText = "Download .pine";
+        codeArea.textContent = activeBot.pine_code || "//@version=5\n// Code locked or unavailable for this strategy";
+    } else if (type === 'python') {
+        titleEl.innerText = "Python MetaTrader 5 Automation Script (.py)";
+        dlBtn.innerText = "Download .py";
+        codeArea.textContent = activeBot.python_code || "# Code locked or unavailable for this strategy";
     }
-    modal.style.display = "flex";
-}
 
-function downloadMqlSource() {
-    if (!window.isPro) {
-        openPlanModal();
-        return;
-    }
-    if (!activeBot || !activeBot.mql5_code) {
-        alert("Mount or synthesize a strategy first.");
-        return;
-    }
-    const blob = new Blob([activeBot.mql5_code], { type: "text/plain;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url; 
-    a.download = `${activeBot.name.replace(/\s+/g, '_')}.mq5`;
-    document.body.appendChild(a);
-    a.click(); 
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    modal.style.display = "flex";
 }
 
 function copyCodeOutput() { 

@@ -702,7 +702,6 @@
         <div style="font-size:13px; color:#787b86; margin-bottom:24px; line-height:1.4;">Your backtest analytics profile has been synchronized directly with your dashboard.</div>
         
         <div style="display:flex; flex-direction:column; gap:10px;">
-            <!-- Links now carry the review trigger flag -->
             <a href="index.html?trigger_review=true" style="background:#2962ff; color:white; text-decoration:none; padding:11px; border-radius:4px; font-weight:600; font-size:13px; text-align:center; display:block;"> HOME PAGE</a>
             <a href="my-sessions.html?trigger_review=true" style="background:#2a2e39; color:white; text-decoration:none; padding:11px; border-radius:4px; font-weight:600; font-size:13px; text-align:center; display:block;"> MY SESSIONS</a>
             <button onclick="closeSuccessModal()" style="background:transparent; color:#787b86; border:none; padding:5px; cursor:pointer; font-size:11px; text-decoration:underline; margin-top:6px;">Stay on Chart View</button>
@@ -747,17 +746,37 @@
 </div>
 
 <script>
+// --- URL QUERY PARAMETER INTEGRATION ---
+const urlParams = new URLSearchParams(window.location.search);
+if (urlParams.get("symbol")) localStorage.setItem("symbol", urlParams.get("symbol"));
+if (urlParams.get("tf")) localStorage.setItem("tf", urlParams.get("tf"));
+if (urlParams.get("initial")) localStorage.setItem("initial", urlParams.get("initial"));
+if (urlParams.get("from")) localStorage.setItem("from", urlParams.get("from"));
+if (urlParams.get("to")) localStorage.setItem("to", urlParams.get("to"));
+if (urlParams.get("speed")) localStorage.setItem("speed", urlParams.get("speed"));
+
 const INSTRUMENT_SPECS = {
     "XAUUSD": { name: "XAUUSD (Gold)", pipSize: 0.10, contractSize: 100, precision: 2, pipName: "points" },
+    "XAGUSD": { name: "XAGUSD (Silver)", pipSize: 0.01, contractSize: 5000, precision: 3, pipName: "points" },
     "EURUSD": { name: "EURUSD", pipSize: 0.0001, contractSize: 100000, precision: 5, pipName: "pips" },
     "GBPUSD": { name: "GBPUSD", pipSize: 0.0001, contractSize: 100000, precision: 5, pipName: "pips" },
     "USDJPY": { name: "USDJPY", pipSize: 0.01, contractSize: 100000, precision: 3, pipName: "pips" },
-    "BTCUSD": { name: "BTCUSD", pipSize: 1.00, contractSize: 1, precision: 2, pipName: "USD" }
+    "AUDUSD": { name: "AUDUSD", pipSize: 0.0001, contractSize: 100000, precision: 5, pipName: "pips" },
+    "USDCAD": { name: "USDCAD", pipSize: 0.0001, contractSize: 100000, precision: 5, pipName: "pips" },
+    "BTCUSD": { name: "BTCUSD", pipSize: 1.00, contractSize: 1, precision: 2, pipName: "USD" },
+    "ETHUSD": { name: "ETHUSD", pipSize: 0.10, contractSize: 1, precision: 2, pipName: "USD" },
+    "BNBUSDT": { name: "BNBUSDT", pipSize: 0.01, contractSize: 1, precision: 2, pipName: "USDT" },
+    "SOLUSDT": { name: "SOLUSDT", pipSize: 0.01, contractSize: 1, precision: 2, pipName: "USDT" },
+    "DOGEUSDT": { name: "DOGEUSDT", pipSize: 0.00001, contractSize: 1000, precision: 5, pipName: "USDT" },
+    "US30": { name: "US30 (Wall Street)", pipSize: 1.00, contractSize: 1, precision: 1, pipName: "points" },
+    "NASDAQ": { name: "NASDAQ 100", pipSize: 0.25, contractSize: 1, precision: 2, pipName: "points" },
+    "US500": { name: "S&P 500", pipSize: 0.10, contractSize: 10, precision: 2, pipName: "points" }
 };
 
-let symbol = localStorage.getItem("symbol") || "XAUUSD";
-let tf = "h4";
-let speed = parseInt(localStorage.getItem("speed")) || 500;
+let symbol = (urlParams.get("symbol") || localStorage.getItem("symbol") || "XAUUSD").toUpperCase();
+let tf = urlParams.get("tf") || localStorage.getItem("tf") || "h4";
+let speed = parseInt(urlParams.get("speed") || localStorage.getItem("speed")) || 500;
+
 let isPlaying = false;
 let isAutoFollow = true;
 let isFetching = false;
@@ -824,12 +843,44 @@ const series = chart.addCandlestickSeries({
 });
 
 const volumeSeries = chart.addHistogramSeries({
-    color: '#26a69a', priceFormat: { type: 'volume' }, priceScaleId: ''
+    color: '#26a69a', 
+    priceFormat: { type: 'volume' }, 
+    priceScaleId: ''
 });
-volumeSeries.priceScale().applyOptions({ scaleMargins: { top: 0.8, bottom: 0 } });
+volumeSeries.priceScale().applyOptions({ scaleMargins: { top: 0.82, bottom: 0 } });
 
+// --- SMART UNIVERSAL INSTRUMENT RESOLUTION ---
 function getSpec() {
-    return INSTRUMENT_SPECS[symbol] || { name: symbol, pipSize: 0.0001, contractSize: 100000, precision: 4 };
+    if (INSTRUMENT_SPECS[symbol]) return INSTRUMENT_SPECS[symbol];
+    
+    const sym = symbol.toUpperCase();
+    const isCrypto = sym.includes("USDT") || sym.includes("BTC") || sym.includes("ETH") || sym.includes("SOL");
+    const isJpy = sym.includes("JPY");
+    const isIndex = sym.includes("30") || sym.includes("100") || sym.includes("500") || sym.includes("NAS");
+    
+    return {
+        name: sym,
+        pipSize: isIndex ? 1.0 : (isJpy ? 0.01 : (isCrypto ? (sym.includes("DOGE") ? 0.00001 : 0.01) : 0.0001)),
+        contractSize: isCrypto ? 1 : 100000,
+        precision: isIndex ? 2 : (isJpy ? 3 : (isCrypto ? (sym.includes("DOGE") ? 5 : 2) : 5)),
+        pipName: isCrypto ? "USDT" : (isIndex ? "pts" : "pips")
+    };
+}
+
+// --- REALISTIC VOLUME PARSER ---
+function extractVolume(candle) {
+    if (candle.volume !== undefined && candle.volume > 0) return Number(candle.volume);
+    if (candle.tick_volume !== undefined && candle.tick_volume > 0) return Number(candle.tick_volume);
+    if (candle.vol !== undefined && candle.vol > 0) return Number(candle.vol);
+    if (candle.v !== undefined && candle.v > 0) return Number(candle.v);
+
+    // Natural tick-volume synthesis for OTC instruments without exchange volume
+    const spec = getSpec();
+    const range = Math.max(candle.high - candle.low, spec.pipSize);
+    const body = Math.abs(candle.close - candle.open);
+    const activityFactor = Math.floor(((range + body) / spec.pipSize) * 45);
+    const timeVariance = 1 + ((Math.sin(candle.time) + 1) * 0.3);
+    return Math.max(15, Math.floor(activityFactor * timeVariance));
 }
 
 function updateSymbolPrecision() {
@@ -846,6 +897,11 @@ function updateSymbolPrecision() {
     
     const staticBadge = document.getElementById("staticPairText");
     if (staticBadge) staticBadge.innerText = spec.name || symbol;
+
+    document.getElementById("selected-tf-label").innerText = tf.toUpperCase();
+    document.querySelectorAll('#dropdown-tf .dropdown-item').forEach(item => {
+        item.classList.toggle('selected', item.getAttribute('data-val') === tf);
+    });
 }
 
 function setTimeframeLock(isLocked) {
@@ -1349,7 +1405,7 @@ function selectTimeframe(val, label) {
         const lookbackSeconds = TF_CONFIG[tf].initialDays * 86400;
         initialISO = new Date((anchorTs - lookbackSeconds) * 1000).toISOString();
     } else {
-        initialISO = localStorage.getItem("initial") || "2023-01-01T00:00:00.000Z";
+        initialISO = localStorage.getItem("from") || localStorage.getItem("initial") || "2023-01-01T00:00:00.000Z";
     }
 
     window.load(initialISO);
@@ -1602,10 +1658,11 @@ window.next = function() {
 
     updateIndicators(candle);
 
+    const calculatedVol = extractVolume(candle);
     volumeSeries.update({
         time: candle.time,
-        value: candle.volume || 10,
-        color: candle.close >= candle.open ? 'rgba(8,153,129,0.2)' : 'rgba(242,54,69,0.2)'
+        value: calculatedVol,
+        color: candle.close >= candle.open ? 'rgba(8,153,129,0.35)' : 'rgba(242,54,69,0.35)'
     });
 
     const spec = getSpec();
@@ -1673,6 +1730,7 @@ window.fetchNextChunk = function() {
     });
 };
 
+// --- ROBUST DUAL-DATE PRELOADER ENGINE ---
 window.load = function(customInitial = null) {
     if (isFetching) return;
     isFetching = true;
@@ -1683,21 +1741,40 @@ window.load = function(customInitial = null) {
     updateSymbolPrecision();
     document.getElementById("status").innerText = `FETCHING ${symbol} ${tf.toUpperCase()}...`;
     
-    const initialParam = customInitial || localStorage.getItem("initial") || "2023-01-01T00:00:00.000Z";
-    const finalTo = localStorage.getItem("to") || new Date().toISOString();
-    let currentISO = lastReplayTime ? new Date(lastReplayTime * 1000).toISOString() : initialParam;
+    // 1. Resolve Replay Start Point (where Play starts)
+    const rawReplayStart = customInitial || localStorage.getItem("initial") || "2023-01-01T00:00:00.000Z";
+    const replayStartISO = rawReplayStart.includes("T") ? rawReplayStart : new Date(rawReplayStart + "T00:00:00Z").toISOString();
 
-    const url = `https://mehtab13-backtestlab-pro.hf.space/data?symbol=${symbol}&tf=${tf}&initial=${initialParam}&current=${currentISO}&to=${finalTo}`;
+    // 2. Resolve Warmup Starting Point (from where historical context is pulled)
+    let rawWarmup = localStorage.getItem("from");
+    if (!rawWarmup) {
+        const replayTs = new Date(replayStartISO).getTime();
+        const lookbackDays = TF_CONFIG[tf] ? TF_CONFIG[tf].initialDays : 30;
+        rawWarmup = new Date(replayTs - (lookbackDays * 86400 * 1000)).toISOString();
+    }
+    const warmupISO = rawWarmup.includes("T") ? rawWarmup : new Date(rawWarmup + "T00:00:00Z").toISOString();
+
+    // 3. Resolve Session End
+    const rawTo = localStorage.getItem("to") || new Date().toISOString();
+    const toISO = rawTo.includes("T") ? rawTo : new Date(rawTo + "T23:59:59Z").toISOString();
+
+    const currentParam = lastReplayTime 
+        ? new Date(lastReplayTime * 1000).toISOString() 
+        : replayStartISO;
+
+    const url = `https://mehtab13-backtestlab-pro.hf.space/data?symbol=${symbol}&tf=${tf}&initial=${warmupISO}&current=${currentParam}&to=${toISO}`;
+    
     fetch(url)
     .then(r => r.json())
     .then(res => {
         let fetchedHistory = res.history || [];
         let fetchedFuture = res.data || [];
 
+        // Dynamic fallback: If API returned history as part of data array, automatically split it
         if (fetchedHistory.length === 0 && fetchedFuture.length > 0) {
-            const seedCount = Math.min(100, Math.floor(fetchedFuture.length * 0.3));
-            fetchedHistory = fetchedFuture.slice(0, seedCount);
-            fetchedFuture = fetchedFuture.slice(seedCount);
+            const splitPoint = Math.min(100, Math.max(1, Math.floor(fetchedFuture.length * 0.35)));
+            fetchedHistory = fetchedFuture.slice(0, splitPoint);
+            fetchedFuture = fetchedFuture.slice(splitPoint);
         }
 
         window.historyData = fetchedHistory;
@@ -1711,7 +1788,9 @@ window.load = function(customInitial = null) {
         renderIndicatorsLegend();
 
         volumeSeries.setData(historyData.map(d => ({
-            time: d.time, value: d.volume || 10, color: d.close >= d.open ? 'rgba(8,153,129,0.2)' : 'rgba(242,54,69,0.2)'
+            time: d.time, 
+            value: extractVolume(d), 
+            color: d.close >= d.open ? 'rgba(8,153,129,0.35)' : 'rgba(242,54,69,0.35)'
         })));
 
         const spec = getSpec();
@@ -1809,7 +1888,6 @@ window.saveSession = async function() {
 
         const user = window.auth ? window.auth.currentUser : null;
         
-        // Unauthenticated guest: stash with user-chosen name and route to login
         if (!user) {
             const pendingSession = {
                 session_name: sessionName,
@@ -1834,7 +1912,6 @@ window.saveSession = async function() {
             return;
         }
 
-        // Authenticated user: save directly to Firestore
         const sessionData = {
             user_id: user.uid,
             email: user.email,

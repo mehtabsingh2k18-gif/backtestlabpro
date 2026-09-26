@@ -5,9 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5.0">
     <meta name="theme-color" content="#050507">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
     
-    <title>BacktestLab Pro | Insights &amp; Articles</title>
-    
+    <title>Quantitative Strategy Articles, ICT Breakdowns &amp; Backtesting Guides | BacktestLab Pro</title>
+    <meta name="description" content="Explore in-depth algorithmic trading articles, ICT setups, Balanced Price Range (BPR) guides, Asian range liquidity sweeps, and free MetaTrader 5 backtesting tutorials.">
+    <link rel="canonical" href="https://backtestlabpro.com/articles.html">
+
+    <!-- Open Graph Meta -->
+    <meta property="og:locale" content="en_US">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Quantitative Strategy Articles &amp; Backtesting Guides | BacktestLab Pro">
+    <meta property="og:description" content="Master rule-based trading: Previous Day High/Low retests, Balanced Price Ranges, Asian session sweeps, and MQL5 automation guides.">
+    <meta property="og:url" content="https://backtestlabpro.com/articles.html">
+    <meta property="og:site_name" content="BacktestLab Pro">
+
     <!-- Google Analytics Tracking -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-V7SXCF9923"></script>
     <script>
@@ -127,6 +138,9 @@
 
             <!-- Desktop Links -->
             <nav class="hidden lg:flex items-center gap-6 text-xs xl:text-sm font-medium">
+                <a href="session.html" class="text-zinc-300 hover:text-white transition-colors flex items-center gap-1.5">
+                    <i class="fa-solid fa-chart-line text-indigo-400 text-xs"></i> Free Replay
+                </a>
                 <a href="bot_automation.html" class="text-zinc-300 hover:text-white transition-colors flex items-center gap-1.5">
                     <i class="fa-solid fa-code text-indigo-400 text-xs"></i> BYO-AI Builder
                 </a>
@@ -236,16 +250,19 @@
                     <h3 class="font-display font-bold text-xs uppercase tracking-wider text-white border-b border-white/5 pb-3 mb-4 font-mono">Categories</h3>
                     <ul class="space-y-2.5 text-sm text-zinc-400">
                         <li class="flex justify-between items-center cursor-pointer hover:text-indigo-400 transition-colors">
-                            <span>Market Analysis</span><span class="text-xs bg-white/5 px-2.5 py-0.5 rounded-full text-zinc-500 font-mono">12</span>
+                            <span>Price Action &amp; ICT</span><span class="text-xs bg-white/5 px-2.5 py-0.5 rounded-full text-zinc-500 font-mono">6</span>
                         </li>
                         <li class="flex justify-between items-center cursor-pointer hover:text-indigo-400 transition-colors">
-                            <span>Backtesting Guides</span><span class="text-xs bg-white/5 px-2.5 py-0.5 rounded-full text-zinc-500 font-mono">13</span>
+                            <span>Backtesting Guides</span><span class="text-xs bg-white/5 px-2.5 py-0.5 rounded-full text-zinc-500 font-mono">15</span>
+                        </li>
+                        <li class="flex justify-between items-center cursor-pointer hover:text-indigo-400 transition-colors">
+                            <span>Market Analysis</span><span class="text-xs bg-white/5 px-2.5 py-0.5 rounded-full text-zinc-500 font-mono">13</span>
                         </li>
                         <li class="flex justify-between items-center cursor-pointer hover:text-indigo-400 transition-colors">
                             <span>Risk Management</span><span class="text-xs bg-white/5 px-2.5 py-0.5 rounded-full text-zinc-500 font-mono">7</span>
                         </li>
                         <li class="flex justify-between items-center cursor-pointer hover:text-indigo-400 transition-colors">
-                            <span>Crypto Outlook</span><span class="text-xs bg-white/5 px-2.5 py-0.5 rounded-full text-zinc-500 font-mono">16</span>
+                            <span>Bot Automation</span><span class="text-xs bg-white/5 px-2.5 py-0.5 rounded-full text-zinc-500 font-mono">5</span>
                         </li>
                     </ul>
                 </div>
@@ -274,7 +291,7 @@
             <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-xs font-mono">
                 <div class="space-y-2">
                     <span class="text-white font-bold block">Platform</span>
-                    <a href="session.html" class="block hover:text-white">Simulator</a>
+                    <a href="session.html" class="block hover:text-white">Free Simulator</a>
                     <a href="bot_automation.html" class="block hover:text-white">BYO-AI Builder</a>
                 </div>
                 <div class="space-y-2">
@@ -362,6 +379,45 @@
                 url: "articles/free-mt5-bar-replay-simulator.html"
             },
             {
+                id: "art_pdh_pdl_breakout_strategy",
+                isFeatured: false,
+                title: "How to Trade Previous Day High and Low (PDH/PDL) Breakouts Without Getting Faked Out",
+                excerpt: "Master the Previous Day High (PDH) and Low (PDL) breakout strategy on Gold (XAUUSD) and Forex. Learn exact 5-minute entry rules, Relative Volume (RVOL) filters, and how to backtest it free.",
+                category: "Price Action & ICT",
+                tagColor: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20",
+                author: "BacktestLab Quant Team",
+                date: "Today",
+                readTime: "11 min read",
+                icon: "fa-solid fa-chart-simple text-emerald-400",
+                url: "articles/how-to-trade-pdh-pdl-breakouts.html"
+            },
+            {
+                id: "art_balanced_price_range_bpr",
+                isFeatured: false,
+                title: "How to Trade Balanced Price Ranges (BPR): The Complete Mechanical Guide",
+                excerpt: "Discover the institutional order flow mechanics behind Balanced Price Ranges (BPR) and overlapping Fair Value Gaps. Complete 15M/5M entry timing and free tick replay rules.",
+                category: "Price Action & ICT",
+                tagColor: "text-purple-400 bg-purple-500/10 border-purple-500/20",
+                author: "BacktestLab Quant Team",
+                date: "Today",
+                readTime: "12 min read",
+                icon: "fa-solid fa-layer-group text-purple-400",
+                url: "articles/how-to-trade-balanced-price-range-bpr.html"
+            },
+            {
+                id: "art_asian_range_breakout_gold",
+                isFeatured: false,
+                title: "How to Trade Asian Range Liquidity Sweeps on Gold (XAUUSD): Exact London Open Rules",
+                excerpt: "Learn how to profit from false Asian session breakouts on Gold (XAUUSD). Full mechanical rules for the Judas Swing, RVOL confirmation, and free historical bar replay.",
+                category: "Market Analysis",
+                tagColor: "text-amber-400 bg-amber-500/10 border-amber-500/20",
+                author: "BacktestLab Quant Team",
+                date: "Today",
+                readTime: "10 min read",
+                icon: "fa-solid fa-clock-rotate-left text-amber-400",
+                url: "articles/asian-session-range-breakout-gold.html"
+            },
+            {
                 id: "art_backtest_prop_firm",
                 isFeatured: false,
                 title: "How to Backtest a Prop Firm Strategy: Passing Daily Drawdown Rules & Evaluations",
@@ -392,7 +448,7 @@
                 isFeatured: false,
                 title: "TradingView vs MetaTrader 5 vs BacktestLab Pro: The Ultimate Backtesting Comparison",
                 excerpt: "An in-depth benchmark comparing TradingView, MetaTrader 5, and BacktestLab Pro across historical tick depth, intrabar repainting risks, and automated algo bot compilers.",
-                category: "Product Review",
+                category: "Backtesting Guides",
                 tagColor: "text-brand-accent bg-indigo-500/10 border-indigo-500/20",
                 author: "BacktestLab Research Team",
                 date: "Today",

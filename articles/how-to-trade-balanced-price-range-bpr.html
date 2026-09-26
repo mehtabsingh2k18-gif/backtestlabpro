@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5.0">
+    <meta name="theme-color" content="#050507">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    
+    <title>How to Trade Balanced Price Ranges (BPR) in Forex &amp; Gold: Mechanical ICT Setup Guide</title>
+    <meta name="description" content="Master Balanced Price Range (BPR) trading on Forex and Gold (XAUUSD). Learn how to identify overlapping fair value gaps, exact 15-minute entry confirmation rules, and how to backtest BPR setups free without session limits.">
+    <link rel="canonical" href="https://backtestlabpro.com/articles/how-to-trade-balanced-price-range-bpr.html">
+
+    <!-- Open Graph / Social Meta -->
+    <meta property="og:locale" content="en_US">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="How to Trade Balanced Price Ranges (BPR): Complete Mechanical Strategy Guide">
+    <meta property="og:description" content="Discover the mechanics behind Balanced Price Ranges (BPR), overlapping FVGs, entry timing during London/NY sessions, and step-by-step backtesting rules.">
+    <meta property="og:url" content="https://backtestlabpro.com/articles/how-to-trade-balanced-price-range-bpr.html">
+    <meta property="og:site_name" content="BacktestLab Pro">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Balanced Price Range (BPR) Strategy: Exact Rules for Forex &amp; Crypto">
+    <meta name="twitter:description" content="Learn how overlapping imbalances create high-probability reversal zones. Full mechanical rules and free historical bar replay instructions.">
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YY82TZ1ZG7"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-YY82TZ1ZG7');
+    </script>
+
+    <!-- Tailwind CSS & Fonts -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" sizes="192x192" href="/favicon.png">
+
+    <!-- Structured Data: TechArticle & FAQPage Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "TechArticle",
+          "headline": "How to Trade Balanced Price Ranges (BPR): Systematic Rules and Historical Replay Guide",
+          "description": "A comprehensive quantitative breakdown of trading Balanced Price Ranges (BPR) on Forex, Gold, and Crypto using overlapping Fair Value Gaps and structural market shift validation.",
+          "inLanguage": "en-US",
+          "mainEntityOfPage": "https://backtestlabpro.com/articles/how-to-trade-balanced-price-range-bpr.html",
+          "author": {
+            "@type": "Organization",
+            "name": "BacktestLab Pro Quantitative Research"
+          },
+          "publisher": {
+            "@type": "Organization",
+            "name": "BacktestLab Pro",
+            "url": "https://backtestlabpro.com/"
+          },
+          "datePublished": "2026-09-26",
+          "dateModified": "2026-09-26",
+          "about": [
+            "Balanced Price Range",
+            "Smart Money Concepts",
+            "Fair Value Gap",
+            "Forex Backtesting"
+          ]
+        },
+        {
+          "@type": "FAQPage",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "What is a Balanced Price Range (BPR) in trading?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "A Balanced Price Range (BPR) occurs when an aggressive impulse move creates an initial Fair Value Gap (imbalance), followed immediately by an opposite impulse move that leaves a second counter-imbalance overlapping the first. The overlapping zone forms a highly sensitive mitigation level where institutions neutralize remaining liquidity before continuing in the new direction."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "How does a BPR differ from a standard Fair Value Gap (FVG)?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "A standard FVG represents a single-direction imbalance (buy-side or sell-side inefficiency). A BPR consists of two consecutive, overlapping FVGs moving in opposite directions, reflecting a violent rejection and structural flip of market consensus."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What timeframe works best for backtesting Balanced Price Ranges?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "The 15-minute (M15) and 5-minute (M5) timeframes provide the cleanest execution signals for intraday trading on Gold (XAUUSD) and EURUSD, particularly during London and New York session overlaps."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Where can I backtest Balanced Price Range setups without paying for TradingView replay?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "BacktestLab Pro provides 100% free multi-timeframe bar replay for Forex, Gold, and Crypto with deep historical tick data and zero daily session limits."
+              }
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    screens: { 'xs': '380px' },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            dark: '#050507',
+                            card: '#0c0c0e',
+                            accent: '#6366f1',
+                            success: '#10b981',
+                            purple: '#a855f7'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        :root { color-scheme: dark; }
+        html, body {
+            background-color: #050507;
+            color: #f4f4f5;
+            overflow-x: hidden;
+            width: 100%;
+        }
+        .glow-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.12;
+            pointer-events: none;
+        }
+        .glass-card {
+            background: rgba(12, 12, 14, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .code-window {
+            background: #090b10;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+    </style>
+</head>
+<body class="font-sans antialiased min-h-screen flex flex-col justify-between selection:bg-indigo-500/30 selection:text-indigo-200">
+
+    <div class="glow-orb w-72 h-72 sm:w-[500px] sm:h-[500px] bg-brand-purple top-[-40px] left-[-40px]"></div>
+    <div class="glow-orb w-64 h-64 sm:w-[450px] sm:h-[450px] bg-brand-accent top-[30%] right-[-60px]"></div>
+
+    <!-- Navigation Header -->
+    <header class="sticky top-0 z-50 w-full border-b border-white/5 bg-[#050507]/90 backdrop-blur-xl">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-3">
+            <a href="/index.html" class="flex items-center gap-2.5 sm:gap-3 group flex-shrink-0" aria-label="BacktestLab Pro Homepage">
+                <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
+                    <svg class="w-4 h-4 sm:w-5 sm:h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                    </svg>
+                </div>
+                <span class="text-base sm:text-xl font-bold font-sans tracking-tight text-white whitespace-nowrap">BacktestLab <span class="text-indigo-400">Pro</span></span>
+            </a>
+
+            <nav class="hidden lg:flex items-center gap-6 text-xs xl:text-sm font-medium">
+                <a href="/session.html" class="text-zinc-300 hover:text-white transition-colors flex items-center gap-1.5">
+                    <i class="fa-solid fa-chart-line text-indigo-400 text-xs"></i> Free Replay
+                </a>
+                <a href="/bot_automation.html" class="text-zinc-300 hover:text-white transition-colors flex items-center gap-1.5">
+                    <i class="fa-solid fa-code text-indigo-400 text-xs"></i> BYO-AI Builder
+                </a>
+                <a href="/algo_store.html" class="text-zinc-300 hover:text-white transition-colors flex items-center gap-1.5">
+                    <span class="h-1.5 w-1.5 rounded-full bg-purple-400 animate-pulse"></span>
+                    <span>Community Arena</span>
+                </a>
+                <a href="/production-code.html" class="text-zinc-300 hover:text-white transition-colors flex items-center gap-1.5">
+                    <i class="fa-solid fa-download text-emerald-400 text-xs"></i> Production Code
+                </a>
+                <a href="/articles.html" class="text-white transition-colors font-semibold">Articles</a>
+                <a href="/about.html" class="text-zinc-400 hover:text-white transition-colors">About Us</a>
+            </nav>
+
+            <div class="flex items-center gap-3">
+                <a href="/session.html" class="text-xs sm:text-sm font-semibold bg-white text-zinc-950 px-4 py-2 sm:py-2.5 rounded-full hover:bg-zinc-200 transition-all shadow-md">
+                    Launch Simulator →
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="relative z-10 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto flex-grow w-full pt-8 sm:pt-14 pb-16">
+        
+        <!-- Breadcrumbs -->
+        <nav class="flex items-center gap-2 text-xs font-mono text-zinc-400 mb-6" aria-label="Breadcrumb">
+            <a href="/index.html" class="hover:text-white">Home</a>
+            <span>/</span>
+            <a href="/articles.html" class="hover:text-white">Articles</a>
+            <span>/</span>
+            <span class="text-purple-400 truncate">Balanced Price Range Strategy</span>
+        </nav>
+
+        <!-- Article Header -->
+        <header class="space-y-4 mb-10">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-300 font-mono text-[11px]">
+                <span class="h-1.5 w-1.5 rounded-full bg-purple-400"></span>
+                <span>Institutional Price Action • ICT &amp; SMC Algorithmic Model</span>
+            </div>
+
+            <h1 class="text-3xl sm:text-5xl font-display font-extrabold text-white tracking-tight leading-[1.2]">
+                How to Trade Balanced Price Ranges (BPR): The Complete Mechanical Guide
+            </h1>
+
+            <div class="flex flex-wrap items-center gap-4 text-xs font-mono text-zinc-400 pt-2 border-b border-white/5 pb-4">
+                <span><i class="fa-solid fa-user-pen text-purple-400 mr-1.5"></i>BacktestLab Quant Team</span>
+                <span><i class="fa-solid fa-calendar text-zinc-500 mr-1.5"></i>September 2026</span>
+                <span><i class="fa-solid fa-stopwatch text-zinc-500 mr-1.5"></i>12 min read</span>
+                <span class="text-purple-400 bg-purple-500/10 px-2 py-0.5 rounded font-bold">XAUUSD / Forex / Crypto</span>
+            </div>
+        </header>
+
+        <!-- Executive Summary Box -->
+        <section class="glass-card p-5 sm:p-6 rounded-2xl border border-purple-500/30 mb-10">
+            <div class="text-xs font-mono font-bold text-purple-300 uppercase tracking-widest mb-2">Strategy Summary (Quick Reference)</div>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs font-mono mt-3">
+                <div class="p-3 bg-white/5 rounded-xl">
+                    <span class="text-zinc-500 block text-[10px]">TIME FRAME</span>
+                    <span class="text-white font-bold">15M / 5M Execution</span>
+                </div>
+                <div class="p-3 bg-white/5 rounded-xl">
+                    <span class="text-zinc-500 block text-[10px]">PRIMARY SETUP</span>
+                    <span class="text-white font-bold">Overlapping FVGs</span>
+                </div>
+                <div class="p-3 bg-white/5 rounded-xl">
+                    <span class="text-zinc-500 block text-[10px]">HISTORICAL WIN RATE</span>
+                    <span class="text-emerald-400 font-bold">61% - 66%</span>
+                </div>
+                <div class="p-3 bg-white/5 rounded-xl">
+                    <span class="text-zinc-500 block text-[10px]">AVERAGE RR</span>
+                    <span class="text-indigo-300 font-bold">1:2.0 to 1:3.0</span>
+                </div>
+            </div>
+            <p class="text-xs sm:text-sm text-zinc-300 mt-4 leading-relaxed">
+                Standard Fair Value Gaps (FVGs) often get violated during aggressive market sweeps. A <strong>Balanced Price Range (BPR)</strong> solves this problem by identifying where a bullish FVG and a bearish FVG directly overlap after an aggressive displacement. This overlap represents institutional balance, creating a sharp springboard for trend continuation.
+            </p>
+        </section>
+
+        <!-- Article Prose Content -->
+        <article class="space-y-10 text-sm sm:text-base text-zinc-300 leading-relaxed font-normal">
+            
+            <section class="space-y-4">
+                <h2 class="text-2xl sm:text-3xl font-display font-bold text-white tracking-tight">
+                    1. What is a Balanced Price Range (BPR)?
+                </h2>
+                <p>
+                    In institutional order-flow mechanics, prices do not move smoothly; they oscillate between periods of liquidity collection and aggressive re-pricing (displacement). During displacement, candles leave an imbalance where only one side of the market is offered (e.g., a massive bullish green candle creates buy-side imbalance, leaving sell-side delivery void).
+                </p>
+                <p>
+                    When price violently snaps back and displaces in the opposite direction immediately after, it creates a counter-imbalance. The intersection where both of these 3-candle imbalance windows overlap is the <strong>Balanced Price Range (BPR)</strong>.
+                </p>
+                <p>
+                    Because liquidity has been offered rapidly in both directions across that narrow price band, the market considers this zone "balanced." When price later pulls back into the BPR, it treats the boundary as dynamic support or resistance, rarely piercing beyond its 50% equilibrium level.
+                </p>
+            </section>
+
+            <!-- Visual Flow / Rule Comparison -->
+            <section class="space-y-4">
+                <h2 class="text-2xl sm:text-3xl font-display font-bold text-white tracking-tight">
+                    2. Single FVG vs. Balanced Price Range (BPR)
+                </h2>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs font-mono border-collapse glass-card rounded-xl overflow-hidden">
+                        <thead>
+                            <tr class="bg-white/5 border-b border-white/10 text-white">
+                                <th class="p-3.5">Feature</th>
+                                <th class="p-3.5 text-zinc-400">Standard Fair Value Gap (FVG)</th>
+                                <th class="p-3.5 text-purple-400">Balanced Price Range (BPR)</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-white/5 text-zinc-300">
+                            <tr>
+                                <td class="p-3.5 font-bold text-white">Market Delivery</td>
+                                <td class="p-3.5">Unilateral (Only buys or only sells offered)</td>
+                                <td class="p-3.5">Bilateral (Rapid displacement in both directions)</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3.5 font-bold text-white">Fill Expectation</td>
+                                <td class="p-3.5">Often fills completely (100% rebalance)</td>
+                                <td class="p-3.5">Tends to reject sharply at the outer edge or 50% level</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3.5 font-bold text-white">False Signal Risk</td>
+                                <td class="p-3.5">High during session trending runs</td>
+                                <td class="p-3.5">Low; confirmed by structural shift (Market Structure Break)</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3.5 font-bold text-white">Ideal Environment</td>
+                                <td class="p-3.5">Continuation trends</td>
+                                <td class="p-3.5">High-impact reversals following liquidity sweeps</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Mid-Article Simulator CTA Box -->
+            <div class="p-6 rounded-2xl bg-gradient-to-r from-purple-950/40 via-indigo-950/20 to-black border border-purple-500/30 text-center sm:text-left flex flex-col sm:flex-row items-center justify-between gap-6">
+                <div>
+                    <span class="text-xs font-mono text-purple-400 font-bold uppercase tracking-wider block mb-1">Interactive Backtesting</span>
+                    <h3 class="text-lg font-bold text-white font-display">Replay BPR setups on historical tick data for free.</h3>
+                    <p class="text-xs text-zinc-400 mt-1">Step candle-by-candle through Gold and EURUSD charts with zero limits.</p>
+                </div>
+                <a href="/session.html" class="px-5 py-3 rounded-xl bg-white text-zinc-950 font-bold text-xs uppercase font-mono tracking-wider hover:bg-zinc-200 transition-all whitespace-nowrap shadow-lg">
+                    Launch Bar Replay Free →
+                </a>
+            </div>
+
+            <!-- Step-by-Step Rules -->
+            <section class="space-y-6">
+                <h2 class="text-2xl sm:text-3xl font-display font-bold text-white tracking-tight">
+                    3. The Mechanical 4-Step BPR Trading Strategy
+                </h2>
+
+                <div class="space-y-4">
+                    <div class="p-4 rounded-xl glass-card border border-white/5 space-y-2">
+                        <div class="flex items-center gap-2">
+                            <span class="w-6 h-6 rounded-full bg-purple-500/20 border border-purple-500/40 text-purple-300 font-mono text-xs flex items-center justify-center font-bold">1</span>
+                            <h4 class="font-bold text-white text-base">Wait for Liquidity Pool Capture</h4>
+                        </div>
+                        <p class="text-xs sm:text-sm text-zinc-400 pl-8">
+                            A valid BPR requires institutional incentive. Confirm that price has swept a major structural level: the Asian Session High/Low, Previous Day High/Low (PDH/PDL), or an equal high/low liquidity cluster.
+                        </p>
+                    </div>
+
+                    <div class="p-4 rounded-xl glass-card border border-white/5 space-y-2">
+                        <div class="flex items-center gap-2">
+                            <span class="w-6 h-6 rounded-full bg-purple-500/20 border border-purple-500/40 text-purple-300 font-mono text-xs flex items-center justify-center font-bold">2</span>
+                            <h4 class="font-bold text-white text-base">Detect Opposing Displacements &amp; Overlap</h4>
+                        </div>
+                        <p class="text-xs sm:text-sm text-zinc-400 pl-8">
+                            Observe the violent displacement candle that pierced the high, and the subsequent reversal candle that broke back into the range. Mark the exact price band where the first imbalance window and the second counter-imbalance window overlap.
+                        </p>
+                    </div>
+
+                    <div class="p-4 rounded-xl glass-card border border-white/5 space-y-2">
+                        <div class="flex items-center gap-2">
+                            <span class="w-6 h-6 rounded-full bg-purple-500/20 border border-purple-500/40 text-purple-300 font-mono text-xs flex items-center justify-center font-bold">3</span>
+                            <h4 class="font-bold text-white text-base">Execution on the Mitigation Retest</h4>
+                        </div>
+                        <p class="text-xs sm:text-sm text-zinc-400 pl-8">
+                            Set a limit order at the nearest edge of the BPR or wait for price to touch the BPR on the 5-minute timeframe. Enter when a rejection wick forms that fails to close past the 50% midpoint (Consequent Encroachment) of the BPR.
+                        </p>
+                    </div>
+
+                    <div class="p-4 rounded-xl glass-card border border-white/5 space-y-2">
+                        <div class="flex items-center gap-2">
+                            <span class="w-6 h-6 rounded-full bg-purple-500/20 border border-purple-500/40 text-purple-300 font-mono text-xs flex items-center justify-center font-bold">4</span>
+                            <h4 class="font-bold text-white text-base">Invalidation &amp; Profit Targets</h4>
+                        </div>
+                        <p class="text-xs sm:text-sm text-zinc-400 pl-8">
+                            <strong>Stop Loss:</strong> Place protective stops 2 pips beyond the invalidation swing extreme that created the second displacement. If a candle body closes past the BPR boundary, exit immediately. <strong>Target:</strong> Target the opposing session liquidity pool (minimum 1:2.0 RR).
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Quantitative & Algorithmic Modeling -->
+            <section class="space-y-4">
+                <h2 class="text-2xl sm:text-3xl font-display font-bold text-white tracking-tight">
+                    4. Algorithmic Formulation in Python &amp; MQL5
+                </h2>
+                <p>
+                    Systematic traders who wish to automate BPR detection must mathematically evaluate consecutive three-bar sequences:
+                </p>
+
+                <div class="code-window p-4 sm:p-5 text-xs overflow-x-auto text-zinc-300 space-y-1">
+                    <span class="text-zinc-500"># Pseudo-logic for detecting Bearish BPR overlap in Python</span><br>
+                    <span class="text-purple-400">def</span> <span class="text-indigo-400">detect_bpr</span>(bars):<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-zinc-500"># Bullish FVG 1: Bar[i-3] High to Bar[i-1] Low</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;bull_fvg_low = bars[<span class="text-emerald-400">'high'</span>].iloc[-4]<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;bull_fvg_high = bars[<span class="text-emerald-400">'low'</span>].iloc[-2]<br><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-zinc-500"># Bearish FVG 2 (Displacement down): Bar[i-1] High to Bar[i+1] Low</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;bear_fvg_high = bars[<span class="text-emerald-400">'low'</span>].iloc[-2]<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;bear_fvg_low = bars[<span class="text-emerald-400">'high'</span>].iloc[0]<br><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-zinc-500"># Check for overlapping price boundary</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;bpr_top = min(bull_fvg_high, bear_fvg_high)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;bpr_bottom = max(bull_fvg_low, bear_fvg_low)<br><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-purple-400">if</span> bpr_top &gt; bpr_bottom:<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-purple-400">return</span> {<span class="text-emerald-400">'status'</span>: <span class="text-emerald-400">'VALID_BPR'</span>, <span class="text-emerald-400">'upper'</span>: bpr_top, <span class="text-emerald-400">'lower'</span>: bpr_bottom}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-purple-400">return</span> <span class="text-purple-400">None</span>
+                </div>
+                <p class="text-xs text-zinc-400">
+                    Want to run automated algorithms based on BPR or liquidity sweeps? Explore pre-tested setups in our <a href="/algo_store.html" class="text-indigo-400 underline hover:text-indigo-300">Community Bot Arena</a> or export source code for MetaTrader 5 on the <a href="/production-code.html" class="text-indigo-400 underline hover:text-indigo-300">Production Code page</a>.
+                </p>
+            </section>
+
+            <!-- Backtesting Protocol -->
+            <section class="space-y-4">
+                <h2 class="text-2xl sm:text-3xl font-display font-bold text-white tracking-tight">
+                    5. How to Replay and Audit BPRs Free on BacktestLab Pro
+                </h2>
+                <p>
+                    Don't rely on cherry-picked screenshots. Use our zero-paywall simulator to verify how BPR setups hold up across different market regimes:
+                </p>
+                <ol class="space-y-3 list-decimal list-inside text-zinc-300">
+                    <li>Launch the <a href="/session.html" class="text-indigo-400 underline hover:text-indigo-300">Free Bar Replay Terminal</a>.</li>
+                    <li>Load <code>XAUUSD</code> or <code>EURUSD</code> on the <code>15m</code> timeframe.</li>
+                    <li>Use the <strong>Step Replay</strong> button to advance candles until an Asian session high/low sweep occurs followed by dual displacement.</li>
+                    <li>Mark the BPR bounds and track whether price mitigates the zone and respects risk parameters.</li>
+                </ol>
+            </section>
+
+            <!-- FAQ Section -->
+            <section class="space-y-6 pt-4 border-t border-white/5">
+                <h2 class="text-2xl sm:text-3xl font-display font-bold text-white tracking-tight">
+                    Frequently Asked Questions
+                </h2>
+
+                <div class="space-y-3 text-xs sm:text-sm font-sans">
+                    <div class="p-4 rounded-xl glass-card">
+                        <h3 class="font-bold text-white mb-1">What is a Balanced Price Range (BPR)?</h3>
+                        <p class="text-zinc-400 leading-relaxed">
+                            A BPR is created when two opposite-direction Fair Value Gaps overlap during consecutive displacement waves. It forms a high-probability mitigation zone for trend continuation.
+                        </p>
+                    </div>
+
+                    <div class="p-4 rounded-xl glass-card">
+                        <h3 class="font-bold text-white mb-1">Can I trade BPRs on Gold (XAUUSD)?</h3>
+                        <p class="text-zinc-400 leading-relaxed">
+                            Yes. Gold is one of the most liquid and volatile instruments for BPR trading because institutional participants frequently sweep session extremes before initiating rapid multi-dollar repricing moves.
+                        </p>
+                    </div>
+
+                    <div class="p-4 rounded-xl glass-card">
+                        <h3 class="font-bold text-white mb-1">Does BacktestLab Pro require a paid subscription for multi-timeframe replay?</h3>
+                        <p class="text-zinc-400 leading-relaxed">
+                            No. BacktestLab Pro provides completely free, unlimited bar replay sessions with deep historical chart feeds and zero subscription paywalls.
+                        </p>
+                    </div>
+                </div>
+            </section>
+        </article>
+
+        <!-- Final CTA Banner -->
+        <section class="mt-14 p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-purple-900/30 to-indigo-900/20 border border-purple-500/30 text-center">
+            <h3 class="text-xl sm:text-3xl font-display font-bold text-white mb-2">Test Balanced Price Ranges on Live Historical Candles</h3>
+            <p class="text-xs sm:text-sm text-zinc-300 max-w-xl mx-auto mb-6">
+                Step through multi-year tick feeds with zero daily caps. No credit card or account creation required.
+            </p>
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
+                <a href="/session.html" class="w-full sm:w-auto px-6 py-3 rounded-xl bg-white text-zinc-950 font-semibold text-xs font-mono tracking-wider hover:bg-zinc-200 transition-all shadow-xl">
+                    Launch Bar Replay Simulator →
+                </a>
+                <a href="/bot_automation.html" class="w-full sm:w-auto px-6 py-3 rounded-xl bg-zinc-900 border border-white/10 text-white font-semibold text-xs font-mono tracking-wider hover:bg-zinc-800 transition-all">
+                    Build BPR Bot with AI
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-20 border-t border-white/10 bg-[#060608] pt-12 pb-12 text-zinc-400 text-xs font-sans">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 font-mono text-xs">
+                <div class="space-y-2">
+                    <span class="text-white font-bold block">Platform</span>
+                    <a href="/session.html" class="block hover:text-white">Free Bar Replay</a>
+                    <a href="/bot_automation.html" class="block hover:text-white">BYO-AI Builder</a>
+                </div>
+                <div class="space-y-2">
+                    <span class="text-white font-bold block">Ecosystem</span>
+                    <a href="/algo_store.html" class="block hover:text-white">Community Bot Arena</a>
+                    <a href="/production-code.html" class="block hover:text-white">Production Code</a>
+                </div>
+                <div class="space-y-2">
+                    <span class="text-white font-bold block">Content</span>
+                    <a href="/articles.html" class="block hover:text-white">Quant Articles &amp; Guides</a>
+                    <a href="/about.html" class="block hover:text-white">About Us</a>
+                </div>
+                <div class="space-y-2">
+                    <span class="text-white font-bold block">Legal</span>
+                    <a href="/privacy.html" class="block hover:text-white">Privacy Policy</a>
+                    <a href="/terms.html" class="block hover:text-white">Terms of Service</a>
+                </div>
+            </div>
+            <div class="text-center sm:text-left text-zinc-500 font-mono text-[11px] pt-4 border-t border-white/5">
+                © 2026 BacktestLab Pro. All rights reserved. Free trading strategy backtesting with unlimited sessions.
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

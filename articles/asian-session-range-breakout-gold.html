@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5.0">
+    <meta name="theme-color" content="#050507">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    
+    <title>Asian Range Liquidity Sweep Strategy on Gold (XAUUSD): Exact London Open Rules &amp; Free Backtest</title>
+    <meta name="description" content="Learn how to trade the Asian Range Liquidity Sweep strategy on Gold (XAUUSD) and Forex. Step-by-step London Open entry rules, RVOL volume confirmation filters, and free historical bar replay.">
+    <link rel="canonical" href="https://backtestlabpro.com/articles/asian-session-range-breakout-gold.html">
+
+    <!-- Open Graph / Social Meta -->
+    <meta property="og:locale" content="en_US">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Asian Session Range Liquidity Sweep on Gold: Mechanical Trading Rules">
+    <meta property="og:description" content="Discover how to profit from false Asian session breakouts on XAUUSD. Full mechanical rules, London open timing, and free tick replay guide.">
+    <meta property="og:url" content="https://backtestlabpro.com/articles/asian-session-range-breakout-gold.html">
+    <meta property="og:site_name" content="BacktestLab Pro">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Asian Range Breakout &amp; Sweep on Gold (XAUUSD)">
+    <meta name="twitter:description" content="Master Asian session range sweeps during the London open. Quantitative rules, invalidation levels, and free backtesting.">
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YY82TZ1ZG7"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-YY82TZ1ZG7');
+    </script>
+
+    <!-- Tailwind CSS & Fonts -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" sizes="192x192" href="/favicon.png">
+
+    <!-- Structured Data: TechArticle & FAQPage Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "TechArticle",
+          "headline": "Asian Range Liquidity Sweep Strategy on Gold (XAUUSD): Mechanical Rules and Backtesting Guide",
+          "description": "A quantitative and mechanical breakdown of trading Asian session range expansions and liquidity sweeps during the London and New York overlaps on Gold (XAUUSD).",
+          "inLanguage": "en-US",
+          "mainEntityOfPage": "https://backtestlabpro.com/articles/asian-session-range-breakout-gold.html",
+          "author": {
+            "@type": "Organization",
+            "name": "BacktestLab Pro Quantitative Research"
+          },
+          "publisher": {
+            "@type": "Organization",
+            "name": "BacktestLab Pro",
+            "url": "https://backtestlabpro.com/"
+          },
+          "datePublished": "2026-09-26",
+          "dateModified": "2026-09-26",
+          "about": [
+            "Asian Range Breakout",
+            "Gold Trading Strategy",
+            "Liquidity Sweeps",
+            "Forex Backtesting"
+          ]
+        },
+        {
+          "@type": "FAQPage",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "What hours define the Asian Session Range in Forex and Gold trading?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "The Asian Range is conventionally tracked from 00:00 UTC to 07:00 UTC (Tokyo and Sydney trading hours). The high and low created during this window serve as the liquidity boundaries for the upcoming London session."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Why do Asian Range breakouts fail so frequently on Gold?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Asian trading volume is generally lower than European and US market hours. Consequently, the Asian high and low accumulate resting stop-loss orders. When London opens, institutional desks trigger these stops to engineer liquidity before pushing the true directional move in the opposite direction (the Judas Swing)."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "How does Relative Volume (RVOL) help filter Asian sweep fakeouts?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "When price sweeps the Asian high or low on lower volume and quickly wicks back inside the range with an RVOL spike on the reversal candle, it confirms the move was a liquidity grab rather than a sustained macro trend expansion."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Where can I backtest Asian Session strategies for free?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "BacktestLab Pro provides 100% free multi-timeframe bar replay for Gold (XAUUSD) and Forex with unlimited sessions, historical tick feeds, and realistic spread simulation."
+              }
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    screens: { 'xs': '380px' },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            dark: '#050507',
+                            card: '#0c0c0e',
+                            accent: '#6366f1',
+                            success: '#10b981',
+                            purple: '#a855f7'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        :root { color-scheme: dark; }
+        html, body {
+            background-color: #050507;
+            color: #f4f4f5;
+            overflow-x: hidden;
+            width: 100%;
+        }
+        .glow-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.12;
+            pointer-events: none;
+        }
+        .glass-card {
+            background: rgba(12, 12, 14, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .code-window {
+            background: #090b10;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+    </style>
+</head>
+<body class="font-sans antialiased min-h-screen flex flex-col justify-between selection:bg-indigo-500/30 selection:text-indigo-200">
+
+    <div class="glow-orb w-72 h-72 sm:w-[500px] sm:h-[500px] bg-brand-accent top-[-40px] left-[-40px]"></div>
+    <div class="glow-orb w-64 h-64 sm:w-[450px] sm:h-[450px] bg-brand-success top-[28%] right-[-60px]"></div>
+
+    <!-- Navigation Header -->
+    <header class="sticky top-0 z-50 w-full border-b border-white/5 bg-[#050507]/90 backdrop-blur-xl">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-3">
+            <a href="/index.html" class="flex items-center gap-2.5 sm:gap-3 group flex-shrink-0" aria-label="BacktestLab Pro Homepage">
+                <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
+                    <svg class="w-4 h-4 sm:w-5 sm:h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                    </svg>
+                </div>
+                <span class="text-base sm:text-xl font-bold font-sans tracking-tight text-white whitespace-nowrap">BacktestLab <span class="text-indigo-400">Pro</span></span>
+            </a>
+
+            <nav class="hidden lg:flex items-center gap-6 text-xs xl:text-sm font-medium">
+                <a href="/session.html" class="text-zinc-300 hover:text-white transition-colors flex items-center gap-1.5">
+                    <i class="fa-solid fa-chart-line text-indigo-400 text-xs"></i> Free Replay
+                </a>
+                <a href="/bot_automation.html" class="text-zinc-300 hover:text-white transition-colors flex items-center gap-1.5">
+                    <i class="fa-solid fa-code text-indigo-400 text-xs"></i> BYO-AI Builder
+                </a>
+                <a href="/algo_store.html" class="text-zinc-300 hover:text-white transition-colors flex items-center gap-1.5">
+                    <span class="h-1.5 w-1.5 rounded-full bg-purple-400 animate-pulse"></span>
+                    <span>Community Arena</span>
+                </a>
+                <a href="/production-code.html" class="text-zinc-300 hover:text-white transition-colors flex items-center gap-1.5">
+                    <i class="fa-solid fa-download text-emerald-400 text-xs"></i> Production Code
+                </a>
+                <a href="/articles.html" class="text-white transition-colors font-semibold">Articles</a>
+                <a href="/about.html" class="text-zinc-400 hover:text-white transition-colors">About Us</a>
+            </nav>
+
+            <div class="flex items-center gap-3">
+                <a href="/session.html" class="text-xs sm:text-sm font-semibold bg-white text-zinc-950 px-4 py-2 sm:py-2.5 rounded-full hover:bg-zinc-200 transition-all shadow-md">
+                    Launch Simulator →
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="relative z-10 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto flex-grow w-full pt-8 sm:pt-14 pb-16">
+        
+        <!-- Breadcrumbs -->
+        <nav class="flex items-center gap-2 text-xs font-mono text-zinc-400 mb-6" aria-label="Breadcrumb">
+            <a href="/index.html" class="hover:text-white">Home</a>
+            <span>/</span>
+            <a href="/articles.html" class="hover:text-white">Articles</a>
+            <span>/</span>
+            <span class="text-indigo-400 truncate">Asian Range Sweep Strategy</span>
+        </nav>
+
+        <!-- Article Header -->
+        <header class="space-y-4 mb-10">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 font-mono text-[11px]">
+                <span class="h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
+                <span>Session Liquidity Mechanics • 5-Minute Execution Playbook</span>
+            </div>
+
+            <h1 class="text-3xl sm:text-5xl font-display font-extrabold text-white tracking-tight leading-[1.2]">
+                How to Trade Asian Range Liquidity Sweeps on Gold (XAUUSD): Exact London Open Rules
+            </h1>
+
+            <div class="flex flex-wrap items-center gap-4 text-xs font-mono text-zinc-400 pt-2 border-b border-white/5 pb-4">
+                <span><i class="fa-solid fa-user-pen text-indigo-400 mr-1.5"></i>BacktestLab Quant Team</span>
+                <span><i class="fa-solid fa-calendar text-zinc-500 mr-1.5"></i>September 2026</span>
+                <span><i class="fa-solid fa-stopwatch text-zinc-500 mr-1.5"></i>10 min read</span>
+                <span class="text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded font-bold">Gold (XAUUSD)</span>
+            </div>
+        </header>
+
+        <!-- Executive Summary Box -->
+        <section class="glass-card p-5 sm:p-6 rounded-2xl border border-indigo-500/30 mb-10">
+            <div class="text-xs font-mono font-bold text-indigo-300 uppercase tracking-widest mb-2">Strategy Summary (Quick Reference)</div>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs font-mono mt-3">
+                <div class="p-3 bg-white/5 rounded-xl">
+                    <span class="text-zinc-500 block text-[10px]">MONITORED RANGE</span>
+                    <span class="text-white font-bold">00:00 - 07:00 UTC</span>
+                </div>
+                <div class="p-3 bg-white/5 rounded-xl">
+                    <span class="text-zinc-500 block text-[10px]">TRIGGER WINDOW</span>
+                    <span class="text-white font-bold">London Open (07:30 - 09:30 UTC)</span>
+                </div>
+                <div class="p-3 bg-white/5 rounded-xl">
+                    <span class="text-zinc-500 block text-[10px]">EXECUTION TF</span>
+                    <span class="text-emerald-400 font-bold">5-Minute (M5)</span>
+                </div>
+                <div class="p-3 bg-white/5 rounded-xl">
+                    <span class="text-zinc-500 block text-[10px]">TARGET RATIO</span>
+                    <span class="text-indigo-300 font-bold">Opposite Asian Boundary</span>
+                </div>
+            </div>
+            <p class="text-xs sm:text-sm text-zinc-300 mt-4 leading-relaxed">
+                During the Asian session, Gold typically consolidates in a predictable range due to lower market volume. When European market participants enter at the London Open, they routinely push price beyond the Asian High or Asian Low to engineer counterpart liquidity (known as the <strong>Judas Swing</strong>). This setup capitalizes on the failure of that move to capture the true expansion toward the opposite end of the range.
+            </p>
+        </section>
+
+        <!-- Article Prose Content -->
+        <article class="space-y-10 text-sm sm:text-base text-zinc-300 leading-relaxed font-normal">
+            
+            <section class="space-y-4">
+                <h2 class="text-2xl sm:text-3xl font-display font-bold text-white tracking-tight">
+                    1. The Anatomy of an Asian Session Liquidity Trap
+                </h2>
+                <p>
+                    Between 00:00 and 07:00 UTC, the market establishes clear consolidation boundaries. Retail breakout systems often place buy-stop orders above the Asian High and sell-stop orders below the Asian Low.
+                </p>
+                <p>
+                    When London institutional desks begin executing at 07:30–08:00 UTC, they require substantial liquidity to fill large order books without experiencing severe slippage. Triggering retail breakout stops provides this instant liquidity. Price punches through the range extreme, triggers breakout buy orders (or stop losses from shorts), and instantly gets met with heavy institutional limit orders.
+                </p>
+                <p>
+                    Once the liquidity has been collected, the artificial breakout runs out of momentum, forming a clear wick rejection that drags price back into the Asian range.
+                </p>
+            </section>
+
+            <!-- Sweep vs Continuation Comparison -->
+            <section class="space-y-4">
+                <h2 class="text-2xl sm:text-3xl font-display font-bold text-white tracking-tight">
+                    2. Identifying a False Breakout (Judas Swing) vs. a Real Trend Run
+                </h2>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs font-mono border-collapse glass-card rounded-xl overflow-hidden">
+                        <thead>
+                            <tr class="bg-white/5 border-b border-white/10 text-white">
+                                <th class="p-3.5">Behavior</th>
+                                <th class="p-3.5 text-emerald-400">High-Probability Liquidity Sweep</th>
+                                <th class="p-3.5 text-zinc-400">Macro Trend Continuation</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-white/5 text-zinc-300">
+                            <tr>
+                                <td class="p-3.5 font-bold text-white">Depth of Piercing</td>
+                                <td class="p-3.5">Breaches range by 5 to 25 pips on Gold before slowing</td>
+                                <td class="p-3.5">Violently expands 50+ pips past range without pausing</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3.5 font-bold text-white">M5 Candle Body Reaction</td>
+                                <td class="p-3.5">Fails to hold; closes back inside the Asian range within 1-3 bars</td>
+                                <td class="p-3.5">Consecutive full-bodied candle closes outside the boundary</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3.5 font-bold text-white">Volume (RVOL) Behavior</td>
+                                <td class="p-3.5">Initial break volume is weak; volume surges on the reversal bar</td>
+                                <td class="p-3.5">Sustained high volume (RVOL &gt; 2.0) across all breakout bars</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3.5 font-bold text-white">Opposing Target</td>
+                                <td class="p-3.5">The opposite Asian boundary (High to Low or Low to High)</td>
+                                <td class="p-3.5">Higher timeframe weekly or monthly key levels</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Mid-Article Interactive Simulator CTA -->
+            <div class="p-6 rounded-2xl bg-gradient-to-r from-indigo-950/40 via-emerald-950/20 to-black border border-indigo-500/30 text-center sm:text-left flex flex-col sm:flex-row items-center justify-between gap-6">
+                <div>
+                    <span class="text-xs font-mono text-emerald-400 font-bold uppercase tracking-wider block mb-1">Practice Without Risk</span>
+                    <h3 class="text-lg font-bold text-white font-display">Backtest Asian range sweeps on Gold tick data for free.</h3>
+                    <p class="text-xs text-zinc-400 mt-1">Replay London Open candles candle-by-candle with zero daily session caps.</p>
+                </div>
+                <a href="/session.html" class="px-5 py-3 rounded-xl bg-white text-zinc-950 font-bold text-xs uppercase font-mono tracking-wider hover:bg-zinc-200 transition-all whitespace-nowrap shadow-lg">
+                    Launch Bar Replay Free →
+                </a>
+            </div>
+
+            <!-- Step by Step Rules -->
+            <section class="space-y-6">
+                <h2 class="text-2xl sm:text-3xl font-display font-bold text-white tracking-tight">
+                    3. Exact Execution Rules for Trading the London Sweep
+                </h2>
+
+                <div class="space-y-4">
+                    <div class="p-4 rounded-xl glass-card border border-white/5 space-y-2">
+                        <div class="flex items-center gap-2">
+                            <span class="w-6 h-6 rounded-full bg-indigo-500/20 border border-indigo-500/40 text-indigo-300 font-mono text-xs flex items-center justify-center font-bold">1</span>
+                            <h4 class="font-bold text-white text-base">Define the Asian Session Range Box</h4>
+                        </div>
+                        <p class="text-xs sm:text-sm text-zinc-400 pl-8">
+                            At 07:00 UTC, mark the highest wick (Asian High) and lowest wick (Asian Low) printed between 00:00 UTC and 07:00 UTC. Ensure the range is neither extremely compressed nor overextended (ideal range: $8 to $18 on Gold).
+                        </p>
+                    </div>
+
+                    <div class="p-4 rounded-xl glass-card border border-white/5 space-y-2">
+                        <div class="flex items-center gap-2">
+                            <span class="w-6 h-6 rounded-full bg-indigo-500/20 border border-indigo-500/40 text-indigo-300 font-mono text-xs flex items-center justify-center font-bold">2</span>
+                            <h4 class="font-bold text-white text-base">Watch the London Open Liquidity Poke (07:30 - 09:00 UTC)</h4>
+                        </div>
+                        <p class="text-xs sm:text-sm text-zinc-400 pl-8">
+                            Wait for price to push beyond one of the extremes. For example, during a bullish sweep, price pierces the Asian High. Do not enter a long position; observe how the 5-minute candle closes.
+                        </p>
+                    </div>
+
+                    <div class="p-4 rounded-xl glass-card border border-white/5 space-y-2">
+                        <div class="flex items-center gap-2">
+                            <span class="w-6 h-6 rounded-full bg-indigo-500/20 border border-indigo-500/40 text-indigo-300 font-mono text-xs flex items-center justify-center font-bold">3</span>
+                            <h4 class="font-bold text-white text-base">Execution Trigger: Structural Close Back Inside the Range</h4>
+                        </div>
+                        <p class="text-xs sm:text-sm text-zinc-400 pl-8">
+                            Enter when an M5 candle closes decisively back inside the Asian range. This confirms the sweep has failed to find sustained external liquidity. Ensure Relative Volume (RVOL) on the reversal candle is elevated (&gt; 1.4).
+                        </p>
+                    </div>
+
+                    <div class="p-4 rounded-xl glass-card border border-white/5 space-y-2">
+                        <div class="flex items-center gap-2">
+                            <span class="w-6 h-6 rounded-full bg-indigo-500/20 border border-indigo-500/40 text-indigo-300 font-mono text-xs flex items-center justify-center font-bold">4</span>
+                            <h4 class="font-bold text-white text-base">Take-Profit Targets &amp; Stop Loss Placement</h4>
+                        </div>
+                        <p class="text-xs sm:text-sm text-zinc-400 pl-8">
+                            <strong>Stop Loss:</strong> Place 1.5 to 2.5 pips above the highest wick of the sweep. <strong>Take Profit 1:</strong> The 50% equilibrium level of the Asian range. <strong>Take Profit 2:</strong> The opposite Asian extreme (e.g., Asian Low), where counter-stops are now vulnerable.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Algorithmic & Code Formulation -->
+            <section class="space-y-4">
+                <h2 class="text-2xl sm:text-3xl font-display font-bold text-white tracking-tight">
+                    4. Algorithmic Formulation in MQL5 for MetaTrader 5
+                </h2>
+                <p>
+                    Because this strategy relies on rigid time windows and price levels, it translates effectively into algorithmic code. Below is a code snippet defining the session range in an MQL5 Expert Advisor:
+                </p>
+
+                <div class="code-window p-4 sm:p-5 text-xs overflow-x-auto text-zinc-300 space-y-1">
+                    <span class="text-zinc-500">// MQL5 snippet to calculate Asian Session Range</span><br>
+                    <span class="text-purple-400">datetime</span> asian_start = <span class="text-indigo-400">StringToTime</span>(<span class="text-emerald-400">"00:00"</span>);<br>
+                    <span class="text-purple-400">datetime</span> asian_end   = <span class="text-indigo-400">StringToTime</span>(<span class="text-emerald-400">"07:00"</span>);<br><br>
+                    <span class="text-purple-400">MqlRates</span> session_rates[];<br>
+                    <span class="text-indigo-400">CopyRates</span>(_Symbol, <span class="text-purple-400">PERIOD_M5</span>, asian_start, asian_end, session_rates);<br><br>
+                    <span class="text-zinc-400">double</span> asian_high = -1.0;<br>
+                    <span class="text-zinc-400">double</span> asian_low  = 999999.0;<br><br>
+                    <span class="text-purple-400">for</span>(<span class="text-zinc-400">int</span> i = 0; i &lt; <span class="text-indigo-400">ArraySize</span>(session_rates); i++) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-purple-400">if</span>(session_rates[i].high &gt; asian_high) asian_high = session_rates[i].high;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-purple-400">if</span>(session_rates[i].low &lt; asian_low)   asian_low  = session_rates[i].low;<br>
+                    }<br><br>
+                    <span class="text-zinc-500">// Trigger Check: If high breached, but previous M5 bar closed back inside</span><br>
+                    <span class="text-purple-400">if</span>(High[1] &gt; asian_high &amp;&amp; Close[1] &lt; asian_high) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-zinc-500">// Sweep confirmed: Send Sell Limit / Market Sell order</span><br>
+                    }
+                </div>
+                <p class="text-xs text-zinc-400">
+                    Looking to export compiled trading robots? Explore our tested models on the <a href="/algo_store.html" class="text-indigo-400 underline hover:text-indigo-300">Community Bot Arena</a> or export source code via <a href="/production-code.html" class="text-indigo-400 underline hover:text-indigo-300">Production Code</a>.
+                </p>
+            </section>
+
+            <!-- Historical Replay Protocol -->
+            <section class="space-y-4">
+                <h2 class="text-2xl sm:text-3xl font-display font-bold text-white tracking-tight">
+                    5. How to Replay and Audit This Setup on BacktestLab Pro
+                </h2>
+                <p>
+                    Executing this strategy consistently requires recognizing the visual speed of a rejection bar. Test it using our free bar replay engine:
+                </p>
+                <ol class="space-y-3 list-decimal list-inside text-zinc-300">
+                    <li>Open the <a href="/session.html" class="text-indigo-400 underline hover:text-indigo-300">Free Bar Replay Terminal</a>.</li>
+                    <li>Select <code>XAUUSD</code> on the <code>5m</code> timeframe.</li>
+                    <li>Advance candles through the Asian session and draw horizontal lines across the range extreme wicks.</li>
+                    <li>Replay the 07:30–09:00 UTC London Open window to evaluate how cleanly the market rejects and reverses toward the opposite pool.</li>
+                </ol>
+            </section>
+
+            <!-- FAQ Section -->
+            <section class="space-y-6 pt-4 border-t border-white/5">
+                <h2 class="text-2xl sm:text-3xl font-display font-bold text-white tracking-tight">
+                    Frequently Asked Questions
+                </h2>
+
+                <div class="space-y-3 text-xs sm:text-sm font-sans">
+                    <div class="p-4 rounded-xl glass-card">
+                        <h3 class="font-bold text-white mb-1">What is the Judas Swing in Asian range trading?</h3>
+                        <p class="text-zinc-400 leading-relaxed">
+                            The Judas Swing is a deceptive breakout maneuver engineered by institutional market makers during the London Open. It triggers retail breakout orders outside the Asian range before violently reversing in the true direction of the day.
+                        </p>
+                    </div>
+
+                    <div class="p-4 rounded-xl glass-card">
+                        <h3 class="font-bold text-white mb-1">Can this strategy be applied to other currency pairs?</h3>
+                        <p class="text-zinc-400 leading-relaxed">
+                            Yes. In addition to Gold (XAUUSD), the Asian session range sweep performs consistently on EURUSD, GBPUSD, and GBPJPY due to heavy liquidity shifts at the London Open.
+                        </p>
+                    </div>
+
+                    <div class="p-4 rounded-xl glass-card">
+                        <h3 class="font-bold text-white mb-1">Is there a cost to replay historical London Open sessions on BacktestLab Pro?</h3>
+                        <p class="text-zinc-400 leading-relaxed">
+                            No. BacktestLab Pro is 100% free with unlimited candle-by-candle replay, deep historical tick archives, and no session paywalls.
+                        </p>
+                    </div>
+                </div>
+            </section>
+        </article>
+
+        <!-- Final CTA Banner -->
+        <section class="mt-14 p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-indigo-900/30 to-emerald-900/20 border border-indigo-500/30 text-center">
+            <h3 class="text-xl sm:text-3xl font-display font-bold text-white mb-2">Backtest London Open Sweeps Today</h3>
+            <p class="text-xs sm:text-sm text-zinc-300 max-w-xl mx-auto mb-6">
+                Test the Asian Range Sweep strategy on multi-year Gold tick feeds with zero daily caps.
+            </p>
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
+                <a href="/session.html" class="w-full sm:w-auto px-6 py-3 rounded-xl bg-white text-zinc-950 font-semibold text-xs font-mono tracking-wider hover:bg-zinc-200 transition-all shadow-xl">
+                    Launch Bar Replay Simulator →
+                </a>
+                <a href="/bot_automation.html" class="w-full sm:w-auto px-6 py-3 rounded-xl bg-zinc-900 border border-white/10 text-white font-semibold text-xs font-mono tracking-wider hover:bg-zinc-800 transition-all">
+                    Build Strategy with AI
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-20 border-t border-white/10 bg-[#060608] pt-12 pb-12 text-zinc-400 text-xs font-sans">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 font-mono text-xs">
+                <div class="space-y-2">
+                    <span class="text-white font-bold block">Platform</span>
+                    <a href="/session.html" class="block hover:text-white">Free Bar Replay</a>
+                    <a href="/bot_automation.html" class="block hover:text-white">BYO-AI Builder</a>
+                </div>
+                <div class="space-y-2">
+                    <span class="text-white font-bold block">Ecosystem</span>
+                    <a href="/algo_store.html" class="block hover:text-white">Community Bot Arena</a>
+                    <a href="/production-code.html" class="block hover:text-white">Production Code</a>
+                </div>
+                <div class="space-y-2">
+                    <span class="text-white font-bold block">Content</span>
+                    <a href="/articles.html" class="block hover:text-white">Quant Articles &amp; Guides</a>
+                    <a href="/about.html" class="block hover:text-white">About Us</a>
+                </div>
+                <div class="space-y-2">
+                    <span class="text-white font-bold block">Legal</span>
+                    <a href="/privacy.html" class="block hover:text-white">Privacy Policy</a>
+                    <a href="/terms.html" class="block hover:text-white">Terms of Service</a>
+                </div>
+            </div>
+            <div class="text-center sm:text-left text-zinc-500 font-mono text-[11px] pt-4 border-t border-white/5">
+                © 2026 BacktestLab Pro. All rights reserved. Free trading strategy backtesting with unlimited sessions.
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

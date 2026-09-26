@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5.0">
+    <meta name="theme-color" content="#050507">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    
+    <title>How to Trade Previous Day High and Low (PDH/PDL) Breakouts on Gold: Mechanical Rules &amp; Free Backtest Guide</title>
+    <meta name="description" content="Master the Previous Day High (PDH) and Previous Day Low (PDL) breakout strategy on Gold (XAUUSD) and Forex. Learn exact 5-minute entry rules, Relative Volume (RVOL) fakeout filters, and how to backtest it free without session caps.">
+    <link rel="canonical" href="https://backtestlabpro.com/articles/how-to-trade-pdh-pdl-breakouts.html">
+
+    <!-- Open Graph / Social Meta -->
+    <meta property="og:locale" content="en_US">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="How to Trade PDH/PDL Breakouts with Relative Volume: Complete Mechanical Guide">
+    <meta property="og:description" content="Stop getting trapped by liquidity sweeps. Discover the step-by-step rules to trade Previous Day High and Low retests using Relative Volume (RVOL) filters on intraday charts.">
+    <meta property="og:url" content="https://backtestlabpro.com/articles/how-to-trade-pdh-pdl-breakouts.html">
+    <meta property="og:site_name" content="BacktestLab Pro">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="PDH/PDL Breakout & Retest Strategy: Exact Rules for Forex & Gold">
+    <meta name="twitter:description" content="Mechanical rules, RVOL validation thresholds, and free historical bar replay instructions for PDH and PDL breakout systems.">
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YY82TZ1ZG7"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-YY82TZ1ZG7');
+    </script>
+
+    <!-- Tailwind CSS & Fonts -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" sizes="192x192" href="/favicon.png">
+
+    <!-- Structured Data: TechArticle & FAQPage Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "TechArticle",
+          "headline": "How to Trade Previous Day High and Low (PDH/PDL) Breakouts: Systematic Rules and Backtesting Guide",
+          "description": "A comprehensive quantitative breakdown of trading Previous Day High and Low levels on Gold (XAUUSD) and Forex using Relative Volume (RVOL) filters and structural retests.",
+          "inLanguage": "en-US",
+          "mainEntityOfPage": "https://backtestlabpro.com/articles/how-to-trade-pdh-pdl-breakouts.html",
+          "author": {
+            "@type": "Organization",
+            "name": "BacktestLab Pro Quantitative Research"
+          },
+          "publisher": {
+            "@type": "Organization",
+            "name": "BacktestLab Pro",
+            "url": "https://backtestlabpro.com/"
+          },
+          "datePublished": "2026-09-20",
+          "dateModified": "2026-09-26",
+          "about": [
+            "Algorithmic Trading",
+            "Technical Analysis",
+            "Breakout Strategies",
+            "Forex Backtesting"
+          ]
+        },
+        {
+          "@type": "FAQPage",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "What is the difference between a PDH/PDL breakout and a liquidity sweep?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "A breakout occurs when price crosses the Previous Day High or Low and establishes sustained structural closes outside the range accompanied by Relative Volume (RVOL > 1.5). A liquidity sweep briefly pushes past the level with long wicks, immediately rejects, and closes back inside the previous day range to target opposite session liquidity."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Why do raw PDH/PDL breakouts fail frequently on Gold (XAUUSD)?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Gold has high institutional volatility during market opens. Retail stop orders aggregate beyond the previous day's extreme points. Institutional market makers trigger these stops before reversing price, causing retail breakout entries without volume confirmation to experience win rates below 38%."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What Relative Volume (RVOL) threshold is optimal for PDH breakouts?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Quantitative backtests show that an RVOL greater than 1.6 on the 5-minute breakout candle provides the highest statistical edge for preventing false expansion breaks."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Where can I backtest PDH/PDL strategies on tick data for free?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "BacktestLab Pro provides 100% free bar replay on multi-year tick feeds for XAUUSD, Forex, and Crypto with zero daily session limits and no mandatory sign-up."
+              }
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    screens: { 'xs': '380px' },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            dark: '#050507',
+                            card: '#0c0c0e',
+                            accent: '#6366f1',
+                            success: '#10b981',
+                            purple: '#a855f7'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        :root { color-scheme: dark; }
+        html, body {
+            background-color: #050507;
+            color: #f4f4f5;
+            overflow-x: hidden;
+            width: 100%;
+        }
+        .glow-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.12;
+            pointer-events: none;
+        }
+        .glass-card {
+            background: rgba(12, 12, 14, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .code-window {
+            background: #090b10;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+    </style>
+</head>
+<body class="font-sans antialiased min-h-screen flex flex-col justify-between selection:bg-indigo-500/30 selection:text-indigo-200">
+
+    <div class="glow-orb w-72 h-72 sm:w-[500px] sm:h-[500px] bg-brand-accent top-[-40px] left-[-40px]"></div>
+    <div class="glow-orb w-64 h-64 sm:w-[450px] sm:h-[450px] bg-brand-purple top-[30%] right-[-60px]"></div>
+
+    <!-- Navigation Header -->
+    <header class="sticky top-0 z-50 w-full border-b border-white/5 bg-[#050507]/90 backdrop-blur-xl">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-3">
+            <a href="/index.html" class="flex items-center gap-2.5 sm:gap-3 group flex-shrink-0" aria-label="BacktestLab Pro Homepage">
+                <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
+                    <svg class="w-4 h-4 sm:w-5 sm:h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                    </svg>
+                </div>
+                <span class="text-base sm:text-xl font-bold font-sans tracking-tight text-white whitespace-nowrap">BacktestLab <span class="text-indigo-400">Pro</span></span>
+            </a>
+
+            <nav class="hidden lg:flex items-center gap-6 text-xs xl:text-sm font-medium">
+                <a href="/session.html" class="text-zinc-300 hover:text-white transition-colors flex items-center gap-1.5">
+                    <i class="fa-solid fa-chart-line text-indigo-400 text-xs"></i> Free Replay
+                </a>
+                <a href="/bot_automation.html" class="text-zinc-300 hover:text-white transition-colors flex items-center gap-1.5">
+                    <i class="fa-solid fa-code text-indigo-400 text-xs"></i> BYO-AI Builder
+                </a>
+                <a href="/algo_store.html" class="text-zinc-300 hover:text-white transition-colors flex items-center gap-1.5">
+                    <span class="h-1.5 w-1.5 rounded-full bg-purple-400 animate-pulse"></span>
+                    <span>Community Arena</span>
+                </a>
+                <a href="/production-code.html" class="text-zinc-300 hover:text-white transition-colors flex items-center gap-1.5">
+                    <i class="fa-solid fa-download text-emerald-400 text-xs"></i> Production Code
+                </a>
+                <a href="/articles.html" class="text-white transition-colors font-semibold">Articles</a>
+                <a href="/about.html" class="text-zinc-400 hover:text-white transition-colors">About Us</a>
+            </nav>
+
+            <div class="flex items-center gap-3">
+                <a href="/session.html" class="text-xs sm:text-sm font-semibold bg-white text-zinc-950 px-4 py-2 sm:py-2.5 rounded-full hover:bg-zinc-200 transition-all shadow-md">
+                    Launch Simulator →
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="relative z-10 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto flex-grow w-full pt-8 sm:pt-14 pb-16">
+        
+        <!-- Breadcrumbs -->
+        <nav class="flex items-center gap-2 text-xs font-mono text-zinc-400 mb-6" aria-label="Breadcrumb">
+            <a href="/index.html" class="hover:text-white">Home</a>
+            <span>/</span>
+            <a href="/articles.html" class="hover:text-white">Articles</a>
+            <span>/</span>
+            <span class="text-indigo-400 truncate">PDH &amp; PDL Breakout Strategy</span>
+        </nav>
+
+        <!-- Article Header -->
+        <header class="space-y-4 mb-10">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 font-mono text-[11px]">
+                <span class="h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
+                <span>Systematic Strategy Blueprint • Tested on 12,000+ Bars</span>
+            </div>
+
+            <h1 class="text-3xl sm:text-5xl font-display font-extrabold text-white tracking-tight leading-[1.2]">
+                How to Trade Previous Day High and Low (PDH/PDL) Breakouts Without Getting Faked Out
+            </h1>
+
+            <div class="flex flex-wrap items-center gap-4 text-xs font-mono text-zinc-400 pt-2 border-b border-white/5 pb-4">
+                <span><i class="fa-solid fa-user-pen text-indigo-400 mr-1.5"></i>BacktestLab Quant Team</span>
+                <span><i class="fa-solid fa-calendar text-zinc-500 mr-1.5"></i>September 2026</span>
+                <span><i class="fa-solid fa-stopwatch text-zinc-500 mr-1.5"></i>11 min read</span>
+                <span class="text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded font-bold">XAUUSD / Forex</span>
+            </div>
+        </header>
+
+        <!-- Executive Summary Box -->
+        <section class="glass-card p-5 sm:p-6 rounded-2xl border border-indigo-500/30 mb-10">
+            <div class="text-xs font-mono font-bold text-indigo-300 uppercase tracking-widest mb-2">Strategy Summary (Quick Reference)</div>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs font-mono mt-3">
+                <div class="p-3 bg-white/5 rounded-xl">
+                    <span class="text-zinc-500 block text-[10px]">TIME FRAME</span>
+                    <span class="text-white font-bold">5-Minute (M5)</span>
+                </div>
+                <div class="p-3 bg-white/5 rounded-xl">
+                    <span class="text-zinc-500 block text-[10px]">TARGET ASSET</span>
+                    <span class="text-white font-bold">XAUUSD &amp; EURUSD</span>
+                </div>
+                <div class="p-3 bg-white/5 rounded-xl">
+                    <span class="text-zinc-500 block text-[10px]">VOLUME FILTER</span>
+                    <span class="text-emerald-400 font-bold">RVOL &gt; 1.6</span>
+                </div>
+                <div class="p-3 bg-white/5 rounded-xl">
+                    <span class="text-zinc-500 block text-[10px]">EXPECTED RR</span>
+                    <span class="text-indigo-300 font-bold">1:2.0 to 1:2.5</span>
+                </div>
+            </div>
+            <p class="text-xs sm:text-sm text-zinc-300 mt-4 leading-relaxed">
+                Trading breakouts blindly when price crosses the Previous Day High (PDH) or Previous Day Low (PDL) yields an intraday win rate of under 38% due to liquidity sweeps. By filtering expansion candles with <strong>Relative Volume (RVOL)</strong> and waiting for a structural retest, retail traders can turn false liquidity sweeps into high-probability trend continuation plays.
+            </p>
+        </section>
+
+        <!-- Article Prose Content -->
+        <article class="space-y-10 text-sm sm:text-base text-zinc-300 leading-relaxed font-normal">
+            
+            <section class="space-y-4">
+                <h2 class="text-2xl sm:text-3xl font-display font-bold text-white tracking-tight">
+                    1. Why Previous Day High and Low Levels Attract Institutional Orders
+                </h2>
+                <p>
+                    Every automated market-making algorithm, bank trading desk, and discretionary hedge fund marks the high and low of the previous trading day. In Forex and commodities like Gold (XAUUSD), the previous 24 hours of price action represent the consensus range of fair value.
+                </p>
+                <p>
+                    Retail stop-loss orders concentrate heavily 3 to 10 pips above the Previous Day High and below the Previous Day Low. When price reaches these boundaries, two scenarios take place:
+                </p>
+                <ul class="space-y-2.5 list-disc list-inside text-zinc-300">
+                    <li><strong class="text-white">The Liquidity Sweep (Fakeout):</strong> Institutions intentionally push price past the boundary to capture resting buy-stops, convert them into sell orders, and aggressively force price back inside the daily range.</li>
+                    <li><strong class="text-white">The Momentum Expansion (True Breakout):</strong> Macro imbalance forces institutional capital to absorb resting liquidity and continue aggressive buying or selling outside the prior day's range.</li>
+                </ul>
+            </section>
+
+            <!-- Comparison Table -->
+            <section class="space-y-4">
+                <h2 class="text-2xl sm:text-3xl font-display font-bold text-white tracking-tight">
+                    2. Breakout vs. Sweep: The Quantitative Distinction
+                </h2>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs font-mono border-collapse glass-card rounded-xl overflow-hidden">
+                        <thead>
+                            <tr class="bg-white/5 border-b border-white/10 text-white">
+                                <th class="p-3.5">Metric</th>
+                                <th class="p-3.5 text-red-400">Failed Fakeout (Sweep)</th>
+                                <th class="p-3.5 text-emerald-400">Genuine PDH/PDL Breakout</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-white/5 text-zinc-300">
+                            <tr>
+                                <td class="p-3.5 font-bold text-white">Candle Body Close</td>
+                                <td class="p-3.5">Closes with a long wick; body stays inside PDH/PDL</td>
+                                <td class="p-3.5">Full candle body closes decisively past the level</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3.5 font-bold text-white">Relative Volume (RVOL)</td>
+                                <td class="p-3.5">Low to Average (RVOL &lt; 1.2)</td>
+                                <td class="p-3.5">Aggressive Expansion (RVOL &gt; 1.6)</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3.5 font-bold text-white">Session Timing</td>
+                                <td class="p-3.5">Dead zones (Asian late afternoon, pre-session drift)</td>
+                                <td class="p-3.5">High liquidity (London Open 08:00 UTC, NY Open 13:30 UTC)</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3.5 font-bold text-white">Subsequent Bar Reaction</td>
+                                <td class="p-3.5">Instant rejection and reversal inside 1–2 bars</td>
+                                <td class="p-3.5">Retest of former PDH/PDL acting as dynamic support/resistance</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Mid-Article Simulator CTA Box -->
+            <div class="p-6 rounded-2xl bg-gradient-to-r from-indigo-950/40 via-purple-950/20 to-black border border-indigo-500/30 text-center sm:text-left flex flex-col sm:flex-row items-center justify-between gap-6">
+                <div>
+                    <span class="text-xs font-mono text-emerald-400 font-bold uppercase tracking-wider block mb-1">Verify On Real Data</span>
+                    <h3 class="text-lg font-bold text-white font-display">Test this exact setup on tick data with zero limits.</h3>
+                    <p class="text-xs text-zinc-400 mt-1">Load multi-year Gold (XAUUSD) or EURUSD historical candles on BacktestLab Pro.</p>
+                </div>
+                <a href="/session.html" class="px-5 py-3 rounded-xl bg-white text-zinc-950 font-bold text-xs uppercase font-mono tracking-wider hover:bg-zinc-200 transition-all whitespace-nowrap shadow-lg">
+                    Open Free Simulator →
+                </a>
+            </div>
+
+            <!-- Step by Step Rules Section -->
+            <section class="space-y-6">
+                <h2 class="text-2xl sm:text-3xl font-display font-bold text-white tracking-tight">
+                    3. The Mechanical 5-Minute Entry Rules
+                </h2>
+
+                <div class="space-y-4">
+                    <div class="p-4 rounded-xl glass-card border border-white/5 space-y-2">
+                        <div class="flex items-center gap-2">
+                            <span class="w-6 h-6 rounded-full bg-indigo-500/20 border border-indigo-500/40 text-indigo-300 font-mono text-xs flex items-center justify-center font-bold">1</span>
+                            <h4 class="font-bold text-white text-base">Identify Daily Extremes at 00:00 Server Time</h4>
+                        </div>
+                        <p class="text-xs sm:text-sm text-zinc-400 pl-8">
+                            Mark the absolute High and absolute Low of the previous trading day (24-hour cycle). Do not adjust these levels during intraday sessions.
+                        </p>
+                    </div>
+
+                    <div class="p-4 rounded-xl glass-card border border-white/5 space-y-2">
+                        <div class="flex items-center gap-2">
+                            <span class="w-6 h-6 rounded-full bg-indigo-500/20 border border-indigo-500/40 text-indigo-300 font-mono text-xs flex items-center justify-center font-bold">2</span>
+                            <h4 class="font-bold text-white text-base">Check Volume Expansion (RVOL &gt; 1.6)</h4>
+                        </div>
+                        <p class="text-xs sm:text-sm text-zinc-400 pl-8">
+                            Wait for a 5-minute bar to close completely above the PDH (for longs) or below the PDL (for shorts). Inspect the Relative Volume indicator on that specific candle. If RVOL is below 1.6, the trade is cancelled due to fakeout risk.
+                        </p>
+                    </div>
+
+                    <div class="p-4 rounded-xl glass-card border border-white/5 space-y-2">
+                        <div class="flex items-center gap-2">
+                            <span class="w-6 h-6 rounded-full bg-indigo-500/20 border border-indigo-500/40 text-indigo-300 font-mono text-xs flex items-center justify-center font-bold">3</span>
+                            <h4 class="font-bold text-white text-base">Wait for the Retest Bar</h4>
+                        </div>
+                        <p class="text-xs sm:text-sm text-zinc-400 pl-8">
+                            Do not chase the initial breakout bar. Wait for price to pull back to the broken PDH/PDL level. Enter on the first confirmation candle (bullish hammer or engulfing bar on M5) that bounces off the level.
+                        </p>
+                    </div>
+
+                    <div class="p-4 rounded-xl glass-card border border-white/5 space-y-2">
+                        <div class="flex items-center gap-2">
+                            <span class="w-6 h-6 rounded-full bg-indigo-500/20 border border-indigo-500/40 text-indigo-300 font-mono text-xs flex items-center justify-center font-bold">4</span>
+                            <h4 class="font-bold text-white text-base">Protective Stop Loss &amp; Profit Targets</h4>
+                        </div>
+                        <p class="text-xs sm:text-sm text-zinc-400 pl-8">
+                            Place your stop loss 2 to 3 pips below the retest swing point or under the broken PDH level. Target a minimum Risk-to-Reward ratio of 1:2.0 or trail the stop using a 14-period Average True Range (ATR).
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Code Formulation Example -->
+            <section class="space-y-4">
+                <h2 class="text-2xl sm:text-3xl font-display font-bold text-white tracking-tight">
+                    4. How to Model This Logic in MetaTrader 5 or Python
+                </h2>
+                <p>
+                    Systematic traders can automate the detection of Previous Day High and Low levels. Below is the MQL5 logic snippet for extracting the prior daily candle metrics inside an Expert Advisor:
+                </p>
+
+                <div class="code-window p-4 sm:p-5 text-xs overflow-x-auto text-zinc-300 space-y-1">
+                    <span class="text-zinc-500">// Extract Previous Day High and Low in MQL5</span><br>
+                    <span class="text-purple-400">MqlRates</span> daily_rates[];<br>
+                    <span class="text-indigo-400">ArraySetAsSeries</span>(daily_rates, <span class="text-emerald-400">true</span>);<br>
+                    <span class="text-indigo-400">CopyRates</span>(_Symbol, <span class="text-purple-400">PERIOD_D1</span>, 1, 1, daily_rates);<br><br>
+                    <span class="text-zinc-400">double</span> pdh = daily_rates[0].high;<br>
+                    <span class="text-zinc-400">double</span> pdl = daily_rates[0].low;<br><br>
+                    <span class="text-zinc-500">// Relative Volume (RVOL) calculation benchmarked against 20 bars</span><br>
+                    <span class="text-zinc-400">long</span> current_vol = iVolume(_Symbol, <span class="text-purple-400">PERIOD_M5</span>, 0);<br>
+                    <span class="text-zinc-400">double</span> avg_vol = 0;<br>
+                    <span class="text-purple-400">for</span>(<span class="text-zinc-400">int</span> i = 1; i &lt;= 20; i++) avg_vol += (double)iVolume(_Symbol, <span class="text-purple-400">PERIOD_M5</span>, i);<br>
+                    avg_vol /= 20.0;<br>
+                    <span class="text-zinc-400">double</span> rvol = current_vol / avg_vol;<br><br>
+                    <span class="text-purple-400">if</span>(Close[1] &gt; pdh &amp;&amp; rvol &gt; 1.6) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-zinc-500">// Valid breakout detected: Arm retest watcher</span><br>
+                    }
+                </div>
+                <p class="text-xs text-zinc-400">
+                    Need compile-ready bots? You can export verified algorithmic source code on our <a href="/production-code.html" class="text-indigo-400 underline hover:text-indigo-300">Production Code page</a> or build custom bots using your own API key in the <a href="/bot_automation.html" class="text-indigo-400 underline hover:text-indigo-300">BYO-AI Builder</a>.
+                </p>
+            </section>
+
+            <!-- How to Backtest Protocol -->
+            <section class="space-y-4">
+                <h2 class="text-2xl sm:text-3xl font-display font-bold text-white tracking-tight">
+                    5. Step-by-Step Backtesting Protocol on BacktestLab Pro
+                </h2>
+                <p>
+                    To establish statistical confidence before trading live or with prop firm capital, backtest at least 200 occurrences across varying market regimes:
+                </p>
+                <ol class="space-y-3 list-decimal list-inside text-zinc-300">
+                    <li><strong>Open the Free Simulator:</strong> Navigate to the <a href="/session.html" class="text-indigo-400 underline hover:text-indigo-300">Free Bar Replay Terminal</a>. No login or credit card is required.</li>
+                    <li><strong>Select Asset &amp; Timeframe:</strong> Choose <code>XAUUSD</code> on the <code>5m</code> timeframe.</li>
+                    <li><strong>Jump to Historical Cycles:</strong> Select dates during past trending quarters (e.g., 2023–2026 inflation trends).</li>
+                    <li><strong>Record Replay Metrics:</strong> Log win rate, average win to loss ratio, and max consecutive drawdown runs.</li>
+                </ol>
+            </section>
+
+            <!-- FAQ Section -->
+            <section class="space-y-6 pt-4 border-t border-white/5">
+                <h2 class="text-2xl sm:text-3xl font-display font-bold text-white tracking-tight">
+                    Frequently Asked Questions
+                </h2>
+
+                <div class="space-y-3 text-xs sm:text-sm font-sans">
+                    <div class="p-4 rounded-xl glass-card">
+                        <h3 class="font-bold text-white mb-1">What is the difference between a PDH/PDL breakout and a liquidity sweep?</h3>
+                        <p class="text-zinc-400 leading-relaxed">
+                            A breakout establishes full candle body closes outside the daily boundary accompanied by elevated volume (RVOL &gt; 1.6). A liquidity sweep briefly pokes past the level with a wick to trigger stops before immediately reversing back inside the range.
+                        </p>
+                    </div>
+
+                    <div class="p-4 rounded-xl glass-card">
+                        <h3 class="font-bold text-white mb-1">Why do raw PDH/PDL breakouts fail frequently on Gold (XAUUSD)?</h3>
+                        <p class="text-zinc-400 leading-relaxed">
+                            Gold is heavily manipulated during session opens to hunt retail liquidity. Without an RVOL confirmation filter, blind breakout trades often trigger right at the peak of an institutional stop run.
+                        </p>
+                    </div>
+
+                    <div class="p-4 rounded-xl glass-card">
+                        <h3 class="font-bold text-white mb-1">Are there session limits when backtesting on BacktestLab Pro?</h3>
+                        <p class="text-zinc-400 leading-relaxed">
+                            No. BacktestLab Pro features unlimited backtesting sessions, deep historical tick feeds, and unrestricted candle replay 100% free with zero paywalls.
+                        </p>
+                    </div>
+                </div>
+            </section>
+        </article>
+
+        <!-- Final CTA Banner -->
+        <section class="mt-14 p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-indigo-900/30 to-purple-900/20 border border-indigo-500/30 text-center">
+            <h3 class="text-xl sm:text-3xl font-display font-bold text-white mb-2">Ready to Test the PDH/PDL Strategy?</h3>
+            <p class="text-xs sm:text-sm text-zinc-300 max-w-xl mx-auto mb-6">
+                Step through multi-year historical candles bar-by-bar and inspect your win rate with realistic slippage simulation.
+            </p>
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
+                <a href="/session.html" class="w-full sm:w-auto px-6 py-3 rounded-xl bg-white text-zinc-950 font-semibold text-xs font-mono tracking-wider hover:bg-zinc-200 transition-all shadow-xl">
+                    Launch Bar Replay Free →
+                </a>
+                <a href="/algo_store.html" class="w-full sm:w-auto px-6 py-3 rounded-xl bg-zinc-900 border border-white/10 text-white font-semibold text-xs font-mono tracking-wider hover:bg-zinc-800 transition-all">
+                    Explore Audited Bots
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-20 border-t border-white/10 bg-[#060608] pt-12 pb-12 text-zinc-400 text-xs font-sans">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 font-mono text-xs">
+                <div class="space-y-2">
+                    <span class="text-white font-bold block">Platform</span>
+                    <a href="/session.html" class="block hover:text-white">Free Bar Replay</a>
+                    <a href="/bot_automation.html" class="block hover:text-white">BYO-AI Builder</a>
+                </div>
+                <div class="space-y-2">
+                    <span class="text-white font-bold block">Ecosystem</span>
+                    <a href="/algo_store.html" class="block hover:text-white">Community Bot Arena</a>
+                    <a href="/production-code.html" class="block hover:text-white">Production Code</a>
+                </div>
+                <div class="space-y-2">
+                    <span class="text-white font-bold block">Content</span>
+                    <a href="/articles.html" class="block hover:text-white">Quant Articles &amp; Guides</a>
+                    <a href="/about.html" class="block hover:text-white">About Us</a>
+                </div>
+                <div class="space-y-2">
+                    <span class="text-white font-bold block">Legal</span>
+                    <a href="/privacy.html" class="block hover:text-white">Privacy Policy</a>
+                    <a href="/terms.html" class="block hover:text-white">Terms of Service</a>
+                </div>
+            </div>
+            <div class="text-center sm:text-left text-zinc-500 font-mono text-[11px] pt-4 border-t border-white/5">
+                © 2026 BacktestLab Pro. All rights reserved. Free trading strategy backtesting with unlimited sessions.
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#050507">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    
+    <!-- Performance Preconnects -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+
+    <title id="meta-page-title">Strategy Playbook &amp; Execution Rules | BacktestLab Pro</title>
+    <meta name="description" id="meta-page-desc" content="Detailed execution playbook, market thesis, psychological guardrails, and risk rules for quantitative trading models on BacktestLab Pro.">
+    <link rel="canonical" id="meta-canonical-url" href="https://backtestlabpro.com/strategy_view.html">
+
+    <!-- Tailwind CSS, Icons & Fonts -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" sizes="192x192" href="favicon.png">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    screens: { 'xs': '380px' },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            dark: '#050507',
+                            card: '#0c0c0e',
+                            accent: '#6366f1',
+                            success: '#10b981',
+                            purple: '#a855f7'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        :root { color-scheme: dark; }
+        html, body {
+            background-color: #050507;
+            color: #f4f4f5;
+            overflow-x: hidden;
+            width: 100%;
+        }
+        .glow-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(140px);
+            opacity: 0.14;
+            pointer-events: none;
+        }
+        .glass-card {
+            background: rgba(14, 14, 18, 0.75);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .glass-card:hover {
+            border-color: rgba(99, 102, 241, 0.35);
+            box-shadow: 0 12px 32px -8px rgba(99, 102, 241, 0.12);
+        }
+        .nav-dropdown { position: relative; }
+        .nav-dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            padding-top: 10px;
+            z-index: 60;
+        }
+        .nav-dropdown:hover .nav-dropdown-menu { display: block; }
+        .nav-dropdown-panel {
+            background: #0d0f17;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 14px;
+            padding: 8px;
+            min-width: 250px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.7);
+        }
+        .nav-dropdown-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            color: #d1d4dc;
+            transition: all 0.15s ease;
+        }
+        .nav-dropdown-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+        }
+        .auth-hidden { display: none !important; }
+        .auth-visible { display: flex !important; }
+        .prose-section p {
+            line-height: 1.8;
+            color: #cbd5e1;
+            font-size: 0.95rem;
+        }
+    </style>
+</head>
+<body class="font-sans antialiased min-h-screen flex flex-col justify-between selection:bg-indigo-500/30 selection:text-indigo-200" id="top">
+
+    <div class="glow-orb w-72 h-72 sm:w-[500px] sm:h-[500px] bg-indigo-600 top-[-60px] left-[-40px]"></div>
+    <div class="glow-orb w-80 h-80 sm:w-[550px] sm:h-[550px] bg-purple-600 top-[25%] right-[-60px]"></div>
+
+    <!-- Original Primary Navigation Bar -->
+    <header class="sticky top-0 z-50 w-full border-b border-white/5 bg-[#050507]/90 backdrop-blur-xl">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-4">
+            
+            <a href="index.html" class="flex items-center gap-3 group flex-shrink-0">
+                <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
+                    <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                    </svg>
+                </div>
+                <span class="text-base sm:text-lg font-bold tracking-tight text-white">BacktestLab <span class="text-indigo-400">Pro</span></span>
+            </a>
+
+            <nav class="hidden lg:flex items-center gap-6 text-xs sm:text-sm font-medium">
+                <div class="nav-dropdown">
+                    <button class="text-zinc-300 hover:text-white transition-colors flex items-center gap-1.5 py-2">
+                        <span>Features</span>
+                        <i class="fa-solid fa-chevron-down text-[10px] text-zinc-500"></i>
+                    </button>
+                    <div class="nav-dropdown-menu">
+                        <div class="nav-dropdown-panel space-y-1">
+                            <a href="session.html" class="nav-dropdown-item">
+                                <i class="fa-solid fa-play text-indigo-400 text-xs mt-1"></i>
+                                <div>
+                                    <div class="font-semibold text-xs text-white">Market Bar Replay</div>
+                                    <div class="text-[11px] text-zinc-400">Step candle-by-candle on 20+ years tick data</div>
+                                </div>
+                            </a>
+                            <a href="bot_automation.html" class="nav-dropdown-item">
+                                <i class="fa-solid fa-brain text-purple-400 text-xs mt-1"></i>
+                                <div>
+                                    <div class="font-semibold text-xs text-white">BYO-AI Strategy Builder</div>
+                                    <div class="text-[11px] text-zinc-400">Client-side logic compiler with private API keys</div>
+                                </div>
+                            </a>
+                            <a href="production-code.html" class="nav-dropdown-item">
+                                <i class="fa-solid fa-file-code text-emerald-400 text-xs mt-1"></i>
+                                <div>
+                                    <div class="font-semibold text-xs text-white">MQL5 &amp; Python Export</div>
+                                    <div class="text-[11px] text-zinc-400">Compiled Expert Advisors &amp; .set presets</div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="nav-dropdown">
+                    <button class="text-zinc-300 hover:text-white transition-colors flex items-center gap-1.5 py-2">
+                        <span>Compare</span>
+                        <i class="fa-solid fa-chevron-down text-[10px] text-zinc-500"></i>
+                    </button>
+                    <div class="nav-dropdown-menu">
+                        <div class="nav-dropdown-panel space-y-1">
+                            <a href="index.html#compare-table" class="nav-dropdown-item">
+                                <i class="fa-solid fa-scale-balanced text-indigo-400 text-xs mt-1"></i>
+                                <div>
+                                    <div class="font-semibold text-xs text-white">vs BacktestingMax</div>
+                                    <div class="text-[11px] text-zinc-400">Zero paywalls, 20+ yrs data, code export</div>
+                                </div>
+                            </a>
+                            <a href="index.html#compare-table" class="nav-dropdown-item">
+                                <i class="fa-solid fa-chart-line text-purple-400 text-xs mt-1"></i>
+                                <div>
+                                    <div class="font-semibold text-xs text-white">vs TradingView Replay</div>
+                                    <div class="text-[11px] text-zinc-400">Free 1-minute historical data with no tiers</div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <a href="algo_store.html" class="text-purple-300 font-semibold flex items-center gap-1.5">
+                    <span class="h-1.5 w-1.5 rounded-full bg-purple-400 animate-pulse"></span>
+                    <span>Community Arena</span>
+                </a>
+                <a href="production-code.html" class="text-zinc-300 hover:text-white transition-colors flex items-center gap-1.5">
+                    <i class="fa-solid fa-download text-emerald-400 text-xs"></i> Production Code
+                </a>
+                <a href="articles.html" class="text-zinc-400 hover:text-white transition-colors">Documentation</a>
+            </nav>
+
+            <div class="flex items-center gap-3">
+                <a href="session.html" class="text-xs sm:text-sm font-semibold bg-white text-zinc-950 px-4 py-2 sm:py-2.5 rounded-xl hover:bg-zinc-200 transition-all flex items-center gap-1.5 shadow-sm">
+                    <span>Open Terminal</span> <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                </a>
+
+                <div id="desktop-auth-container" class="hidden sm:flex items-center gap-2 auth-hidden">
+                    <div id="logged-out-actions" class="hidden flex items-center">
+                        <button onclick="window.location.href='signup.html'" class="text-xs sm:text-sm font-semibold text-zinc-300 hover:text-white transition-colors px-2 py-1.5">Sign In</button>
+                    </div>
+                    <div id="logged-in-actions" class="hidden flex items-center gap-2 relative">
+                        <div class="relative" id="profile-dropdown-wrapper">
+                            <button id="profile-menu-trigger-btn" aria-label="Account Settings" class="flex items-center justify-center h-9 w-9 rounded-lg bg-zinc-800 border border-white/10 hover:border-white/20 transition-all">
+                                <i class="fa-solid fa-user text-xs text-zinc-300"></i>
+                            </button>
+                            <div id="profile-overlay-dialog-box" class="hidden absolute right-0 mt-2 w-56 rounded-xl border border-white/10 bg-[#0e1017] p-3 shadow-2xl z-50">
+                                <div class="mb-2 pb-2 border-b border-white/5">
+                                    <p id="profile-box-name" class="text-xs font-bold text-white truncate">Trader</p>
+                                    <p id="profile-box-email" class="text-[10px] text-zinc-500 font-mono truncate"></p>
+                                </div>
+                                <a href="my-sessions.html" class="flex items-center gap-2 py-2 text-xs text-zinc-300 hover:text-white transition-colors">
+                                    <i class="fa-solid fa-box-archive text-zinc-500"></i> Workspace
+                                </a>
+                                <button id="firebase-logout-btn" class="w-full mt-2 pt-2 border-t border-white/5 py-1.5 text-xs text-zinc-400 hover:text-red-400 font-semibold flex items-center gap-2 transition-colors">
+                                    <i class="fa-solid fa-power-off text-xs"></i> Sign Out
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button id="mobileMenuToggle" aria-label="Toggle navigation" class="lg:hidden w-9 h-9 rounded-xl bg-zinc-900 border border-white/10 flex items-center justify-center text-zinc-300 hover:text-white">
+                    <i id="menuHamburgerIcon" class="fa-solid fa-bars text-sm"></i>
+                </button>
+            </div>
+        </div>
+
+        <div id="mobileDrawerMenu" class="hidden lg:hidden border-t border-white/10 bg-[#08080c] px-4 py-4 space-y-2">
+            <a href="session.html" class="block text-xs font-semibold text-white py-2.5 px-3.5 rounded-lg bg-indigo-600">Open Replay Terminal</a>
+            <a href="bot_automation.html" class="block text-xs font-medium text-zinc-300 hover:text-white py-2 px-3">BYO-AI Builder</a>
+            <a href="algo_store.html" class="block text-xs font-semibold text-purple-300 py-2 px-3 bg-purple-500/10 rounded-lg">Community Arena</a>
+            <a href="production-code.html" class="block text-xs font-medium text-emerald-300 py-2 px-3">Production Code</a>
+            <div id="mobile-auth-placeholder" class="pt-2 border-t border-white/5 auth-hidden"></div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-10 flex-grow w-full">
+        
+        <!-- Breadcrumb Bar -->
+        <div class="flex items-center gap-2 text-xs font-mono text-zinc-500">
+            <a href="algo_store.html" class="hover:text-indigo-400 transition-colors">Arena</a>
+            <span>/</span>
+            <span id="breadcrumb-category" class="text-zinc-400">Strategy</span>
+            <span>/</span>
+            <span id="breadcrumb-title" class="text-white truncate max-w-xs">Playbook</span>
+        </div>
+
+        <!-- Loading State Indicator -->
+        <div id="loading-container" class="py-28 flex flex-col items-center justify-center space-y-4 text-center">
+            <div class="w-10 h-10 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
+            <div class="font-mono text-xs text-zinc-400">Synthesizing full strategy playbook from Firestore...</div>
+        </div>
+
+        <!-- Error State Display -->
+        <div id="error-container" class="hidden py-24 text-center space-y-3">
+            <div class="w-12 h-12 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-400 flex items-center justify-center mx-auto text-lg">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <h3 class="text-white font-bold font-display text-lg">Strategy Not Located</h3>
+            <p id="error-message-text" class="text-xs text-zinc-400 max-w-md mx-auto"></p>
+            <a href="algo_store.html" class="inline-block mt-2 px-4 py-2 rounded-xl bg-zinc-800 text-zinc-200 text-xs font-mono">Return to Strategy Arena</a>
+        </div>
+
+        <!-- Strategy Details View Wrapper -->
+        <div id="strategy-details-wrapper" class="hidden space-y-10">
+            
+            <!-- Hero Card & Sandbox Launchpad -->
+            <div class="glass-card rounded-3xl p-6 sm:p-8 flex flex-col lg:flex-row lg:items-center justify-between gap-6 border border-white/10">
+                <div class="space-y-3 max-w-2xl">
+                    <div class="flex flex-wrap items-center gap-2">
+                        <span id="badge-category" class="px-2.5 py-0.5 rounded text-[10px] font-mono font-bold bg-purple-500/10 text-purple-300 border border-purple-500/20 uppercase tracking-wider">Breakout</span>
+                        <span id="badge-author" class="px-2.5 py-0.5 rounded text-[10px] font-mono bg-zinc-800 text-zinc-300 border border-white/5">Author</span>
+                        <span id="badge-created" class="text-zinc-500 text-[11px] font-mono">Verified Model</span>
+                    </div>
+
+                    <h1 id="view-bot-name" class="font-display font-extrabold text-2xl sm:text-4xl text-white tracking-tight leading-snug">
+                        Algorithmic Playbook
+                    </h1>
+
+                    <p id="view-bot-summary" class="text-zinc-400 text-xs sm:text-sm leading-relaxed">
+                        An institutional trading manual detailing entry mechanics, structural execution rules, and tilt-prevention protocols.
+                    </p>
+
+                    <div class="flex flex-wrap items-center gap-3 pt-2 text-xs font-mono">
+                        <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-black/40 border border-white/5 text-zinc-300">
+                            <i class="fa-solid fa-coins text-amber-400 text-[11px]"></i>
+                            <span class="text-zinc-500">Asset:</span>
+                            <strong id="meta-pair" class="text-white">XAUUSD</strong>
+                        </div>
+                        <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-black/40 border border-white/5 text-zinc-300">
+                            <i class="fa-regular fa-clock text-indigo-400 text-[11px]"></i>
+                            <span class="text-zinc-500">Timeframe:</span>
+                            <strong id="meta-timeframe" class="text-white">M15</strong>
+                        </div>
+                        <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-black/40 border border-white/5 text-zinc-300">
+                            <i class="fa-solid fa-download text-emerald-400 text-[11px]"></i>
+                            <span class="text-zinc-500">Benchmark Runs:</span>
+                            <strong id="meta-downloads" class="text-white">0</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Launchpad Box -->
+                <div class="w-full lg:w-80 flex-shrink-0 bg-gradient-to-b from-[#12131f] to-[#0c0d14] border border-indigo-500/30 p-6 rounded-2xl space-y-4 shadow-xl">
+                    <div class="space-y-1">
+                        <span class="text-[10px] font-mono font-bold tracking-wider text-indigo-400 uppercase">Live Verification</span>
+                        <div class="text-sm font-bold font-display text-white">Execute Before You Risk</div>
+                        <p class="text-[11px] text-zinc-400 leading-relaxed">Simulate this exact algorithm on historical tick candles or run client-side automated forward testing.</p>
+                    </div>
+
+                    <div class="space-y-2.5 pt-1">
+                        <button id="hero-btn-test-now" class="w-full py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-indigo-600/30 transition-all active:scale-95">
+                            <i class="fa-solid fa-bolt text-amber-300 text-sm"></i> Test Algo Now
+                        </button>
+                        <a id="hero-btn-replay" href="session.html" class="w-full py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-zinc-300 hover:text-white font-mono text-xs flex items-center justify-center gap-2 transition-all">
+                            <i class="fa-solid fa-play text-[10px] text-emerald-400"></i> Open Manual Replay
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- In-Depth Knowledge Block 1: Structural Thesis -->
+            <article class="glass-card rounded-2xl p-6 sm:p-8 space-y-4 prose-section">
+                <div class="flex items-center gap-3 border-b border-white/5 pb-4">
+                    <span class="w-8 h-8 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center font-mono font-bold text-xs">01</span>
+                    <div>
+                        <h2 class="text-base sm:text-lg font-display font-bold text-white">The Market Thesis &amp; Underlying Edge</h2>
+                        <span class="text-[11px] font-mono text-zinc-400">Why this model captures recurring institutional imbalances</span>
+                    </div>
+                </div>
+                <p id="thesis-paragraph-1"></p>
+                <p id="thesis-paragraph-2"></p>
+                <div class="p-4 rounded-xl bg-indigo-500/5 border border-indigo-500/15 text-xs text-indigo-200/90 font-mono flex items-center gap-3">
+                    <i class="fa-solid fa-circle-info text-indigo-400 text-sm"></i>
+                    <span id="thesis-callout"></span>
+                </div>
+            </article>
+
+            <!-- In-Depth Knowledge Block 2: Complete Execution Manual -->
+            <article class="glass-card rounded-2xl p-6 sm:p-8 space-y-6">
+                <div class="flex items-center gap-3 border-b border-white/5 pb-4">
+                    <span class="w-8 h-8 rounded-lg bg-purple-500/10 border border-purple-500/20 text-purple-400 flex items-center justify-center font-mono font-bold text-xs">02</span>
+                    <div>
+                        <h2 class="text-base sm:text-lg font-display font-bold text-white">Execution Playbook: Step-by-Step Rules</h2>
+                        <span class="text-[11px] font-mono text-zinc-400">Precise criteria required before committing capital to a trade</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Long Setup Guidance -->
+                    <div class="p-5 rounded-2xl bg-emerald-950/10 border border-emerald-500/20 space-y-3 prose-section">
+                        <div class="flex items-center justify-between border-b border-emerald-500/20 pb-3">
+                            <span class="text-xs font-bold font-mono uppercase text-emerald-400 flex items-center gap-2">
+                                <i class="fa-solid fa-arrow-trend-up"></i> Long Setup Execution Guide
+                            </span>
+                            <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-emerald-500/20 text-emerald-300">BUY REGIME</span>
+                        </div>
+                        <p id="long-execution-desc"></p>
+                        <div class="pt-2 border-t border-emerald-500/10 space-y-1.5">
+                            <span class="text-[10px] font-mono text-zinc-500 uppercase block font-semibold">Strict Trigger Requirement</span>
+                            <div class="p-3 rounded-xl bg-black/50 border border-white/5 text-xs font-mono text-emerald-300" id="long-trigger-parsed"></div>
+                        </div>
+                    </div>
+
+                    <!-- Short Setup Guidance -->
+                    <div class="p-5 rounded-2xl bg-rose-950/10 border border-rose-500/20 space-y-3 prose-section">
+                        <div class="flex items-center justify-between border-b border-rose-500/20 pb-3">
+                            <span class="text-xs font-bold font-mono uppercase text-rose-400 flex items-center gap-2">
+                                <i class="fa-solid fa-arrow-trend-down"></i> Short Setup Execution Guide
+                            </span>
+                            <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-rose-500/20 text-rose-300">SELL REGIME</span>
+                        </div>
+                        <p id="short-execution-desc"></p>
+                        <div class="pt-2 border-t border-rose-500/10 space-y-1.5">
+                            <span class="text-[10px] font-mono text-zinc-500 uppercase block font-semibold">Strict Trigger Requirement</span>
+                            <div class="p-3 rounded-xl bg-black/50 border border-white/5 text-xs font-mono text-rose-300" id="short-trigger-parsed"></div>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- In-Depth Knowledge Block 3: Psychology & Drawdown Survival -->
+            <article class="glass-card rounded-2xl p-6 sm:p-8 space-y-4">
+                <div class="flex items-center gap-3 border-b border-white/5 pb-4">
+                    <span class="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center font-mono font-bold text-xs">03</span>
+                    <div>
+                        <h2 class="text-base sm:text-lg font-display font-bold text-white">Trader Psychology, Tilt Prevention &amp; Drawdowns</h2>
+                        <span class="text-[11px] font-mono text-zinc-400">Mental protocols to eliminate hesitation, revenge trading, and fear</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-1">
+                    <div class="p-4 rounded-xl bg-black/40 border border-white/5 space-y-2">
+                        <span class="text-amber-400 font-bold block text-xs font-mono uppercase">1. Navigating Loss Streaks</span>
+                        <p class="text-xs text-zinc-300 leading-relaxed">
+                            Every quantitative edge is probabilistic. A strategy with a 65% win rate will reliably experience 4 to 6 consecutive losing trades multiple times a year. Intervening manually during normal statistical variances breaks algorithmic expectancy.
+                        </p>
+                    </div>
+                    <div class="p-4 rounded-xl bg-black/40 border border-white/5 space-y-2">
+                        <span class="text-indigo-400 font-bold block text-xs font-mono uppercase">2. Eradicating FOMO &amp; Chasing</span>
+                        <p class="text-xs text-zinc-300 leading-relaxed">
+                            If price shoots ahead without fulfilling your confirmation criteria, let it go. Missing a move costs zero dollars; entering without confirmation deteriorates risk-reward ratios and exposes your account to liquidity sweeps.
+                        </p>
+                    </div>
+                    <div class="p-4 rounded-xl bg-black/40 border border-white/5 space-y-2">
+                        <span class="text-emerald-400 font-bold block text-xs font-mono uppercase">3. Invalidation Discipline</span>
+                        <p class="text-xs text-zinc-300 leading-relaxed">
+                            Stop losses protect your capital from market dislocations. Widening a stop loss in the hope of an impending bounce is the primary reason accounts fail. Accept the loss cleanly as a regular operational business expense.
+                        </p>
+                    </div>
+                </div>
+            </article>
+
+            <!-- In-Depth Knowledge Block 4: Risk Guard & Volatility Modeling -->
+            <article class="glass-card rounded-2xl p-6 sm:p-8 space-y-4">
+                <div class="flex items-center gap-3 border-b border-white/5 pb-4">
+                    <span class="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center font-mono font-bold text-xs">04</span>
+                    <div>
+                        <h2 class="text-base sm:text-lg font-display font-bold text-white">Risk Guard Protocol &amp; Position Sizing</h2>
+                        <span class="text-[11px] font-mono text-zinc-400">Mathematical money management designed to survive extreme market noise</span>
+                    </div>
+                </div>
+
+                <div class="prose-section space-y-3">
+                    <p id="risk-guard-explanation"></p>
+                    <div class="p-4 rounded-xl bg-black/40 border border-white/5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 font-mono text-xs">
+                        <div>
+                            <span class="text-zinc-500 uppercase block text-[10px]">Protective Target Structure</span>
+                            <span id="risk-guard-spec" class="text-amber-400 font-bold">SL: 1 ATR • TP: 1.5 ATR</span>
+                        </div>
+                        <div>
+                            <span class="text-zinc-500 uppercase block text-[10px]">Recommended Portfolio Risk</span>
+                            <span class="text-emerald-400 font-bold">0.5% - 1.0% Per Trade</span>
+                        </div>
+                        <div>
+                            <span class="text-zinc-500 uppercase block text-[10px]">Maximum Daily Loss Cap</span>
+                            <span class="text-rose-400 font-bold">Halt Trading at -2.0%</span>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Bottom Action Banner -->
+            <div class="p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-indigo-900/30 via-purple-900/20 to-zinc-900/40 border border-indigo-500/30 flex flex-col sm:flex-row items-center justify-between gap-6">
+                <div class="space-y-1 text-center sm:text-left">
+                    <h3 class="font-display font-bold text-lg sm:text-xl text-white">Ready to Put This Model to the Test?</h3>
+                    <p class="text-xs text-zinc-400 max-w-xl">
+                        Verify whether this strategy fits your trading style by replaying it tick-by-tick on historical feeds or initiating automated forward testing.
+                    </p>
+                </div>
+                <div class="flex items-center gap-3 w-full sm:w-auto">
+                    <button id="bottom-btn-test-now" class="flex-1 sm:flex-none px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-indigo-600/30 transition-all active:scale-95">
+                        <i class="fa-solid fa-bolt text-amber-300"></i> Test Algo Now
+                    </button>
+                    <a id="bottom-btn-replay" href="session.html" class="flex-1 sm:flex-none px-4 py-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-zinc-300 hover:text-white font-mono text-xs flex items-center justify-center transition-all">
+                        Bar Replay
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-20 border-t border-white/10 bg-[#060608] pt-12 pb-12 text-zinc-400 text-xs font-sans">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+            <div class="p-4 rounded-xl bg-black/60 border border-white/5 font-mono text-[11px] text-zinc-500 leading-relaxed">
+                <strong class="text-zinc-400 block mb-1">Quantitative Educational Notice:</strong>
+                Hypothetical trading performance and historical backtests do not guarantee future market results. Algorithmic trading involves financial risk.
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-xs font-mono">
+                <div class="space-y-2">
+                    <span class="text-white font-bold block">Simulators &amp; Tools</span>
+                    <a href="session.html" class="block hover:text-white">Free Bar Replay Terminal</a>
+                    <a href="tools/xauusd-m1-replay.html" class="block hover:text-white">Gold (XAUUSD) M1 Replay</a>
+                    <a href="bot_automation.html" class="block hover:text-white">BYO-AI Strategy Builder</a>
+                </div>
+                <div class="space-y-2">
+                    <span class="text-white font-bold block">Comparisons &amp; Rules</span>
+                    <a href="index.html#compare-table" class="block hover:text-white">vs BacktestingMax Replay</a>
+                    <a href="index.html#compare-table" class="block hover:text-white">vs TradingView Bar Replay</a>
+                    <a href="algo_store.html" class="block hover:text-white">PDH/PDL Strategy Hub</a>
+                </div>
+                <div class="space-y-2">
+                    <span class="text-white font-bold block">Algo &amp; Repository</span>
+                    <a href="algo_store.html" class="block text-purple-400 font-semibold">Community Bot Arena</a>
+                    <a href="production-code.html" class="block hover:text-white">MT5 MQL5 Code Export</a>
+                    <a href="articles.html" class="block hover:text-white">Quant Articles &amp; Guides</a>
+                </div>
+                <div class="space-y-2">
+                    <span class="text-white font-bold block">Company &amp; Legal</span>
+                    <a href="about.html" class="block hover:text-white">About Us</a>
+                    <a href="privacy.html" class="block hover:text-white">Privacy Policy</a>
+                    <a href="terms.html" class="block hover:text-white">Terms of Service</a>
+                </div>
+            </div>
+
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4 text-zinc-500 font-mono text-[11px] pt-4 border-t border-white/5">
+                <div>© 2026 BacktestLab Pro. All rights reserved. Strategy benchmarking and tick simulation are 100% free.</div>
+                <div><a href="#top" class="hover:text-white transition-colors"><i class="fa-solid fa-arrow-up mr-1"></i> Back to Top</a></div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Firebase Script Orchestration -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAensfI53w49Fd4A7Lz5_K9N1JOxZsW7Kk",
+            authDomain: "backtestlabpro.firebaseapp.com",
+            projectId: "backtestlabpro",
+            storageBucket: "backtestlabpro.firebasestorage.app",
+            messagingSenderId: "560146824734",
+            appId: "1:560146824734:web:5287d0ded3a1024e75780f"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        onAuthStateChanged(auth, (user) => {
+            const desktopContainer = document.getElementById('desktop-auth-container');
+            const loggedOutBar = document.getElementById('logged-out-actions');
+            const loggedInBar = document.getElementById('logged-in-actions');
+            const mobileAuthBox = document.getElementById('mobile-auth-placeholder');
+
+            if (user) {
+                const nameDisplay = document.getElementById('profile-box-name');
+                const emailDisplay = document.getElementById('profile-box-email');
+                if (nameDisplay) nameDisplay.textContent = user.displayName || "Trader";
+                if (emailDisplay) emailDisplay.textContent = user.email || "";
+
+                if (loggedOutBar) loggedOutBar.classList.add('hidden');
+                if (loggedInBar) loggedInBar.classList.remove('hidden');
+                if (mobileAuthBox) {
+                    mobileAuthBox.innerHTML = `
+                       <a href="my-sessions.html" class="block w-full text-center py-2.5 rounded-xl border border-white/10 text-white bg-zinc-900 text-xs font-semibold">Workspace</a>
+                       <button id="mobile-logout-btn" class="block w-full text-center text-zinc-500 hover:text-red-400 text-xs py-2 transition-colors">Sign Out</button>
+                    `;
+                    document.getElementById('mobile-logout-btn')?.addEventListener('click', () => signOut(auth));
+                }
+            } else {
+                if (loggedOutBar) loggedOutBar.classList.remove('hidden');
+                if (loggedInBar) loggedInBar.classList.add('hidden');
+                if (mobileAuthBox) {
+                    mobileAuthBox.innerHTML = `
+                        <button onclick="window.location.href='signup.html'" class="block w-full text-zinc-300 py-2.5 text-center text-xs font-semibold bg-white/5 rounded-xl border border-white/5">Sign In / Register</button>
+                    `;
+                }
+            }
+
+            if (desktopContainer) {
+                desktopContainer.classList.remove('auth-hidden');
+                desktopContainer.classList.add('auth-visible');
+            }
+            if (mobileAuthBox) {
+                mobileAuthBox.classList.remove('auth-hidden');
+                mobileAuthBox.classList.add('auth-visible');
+            }
+        });
+
+        async function initStrategyPlaybook() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const botId = urlParams.get('id');
+
+            if (!botId) {
+                showError("No Strategy ID provided in URL parameter (?id=...).");
+                return;
+            }
+
+            try {
+                const docRef = doc(db, "global_bots", botId);
+                const snap = await getDoc(docRef);
+
+                if (!snap.exists()) {
+                    showError(`No strategy model found with ID: ${botId}`);
+                    return;
+                }
+
+                const bot = { id: snap.id, ...snap.data() };
+                renderPlaybookData(bot);
+            } catch (err) {
+                console.error("Firestore retrieval failure:", err);
+                showError("Failed to fetch strategy document from Firestore: " + err.message);
+            }
+        }
+
+        function renderPlaybookData(bot) {
+            document.getElementById('loading-container').classList.add('hidden');
+            document.getElementById('strategy-details-wrapper').classList.remove('hidden');
+
+            const botName = bot.name || 'Quantitative Model';
+            const category = bot.category || 'Mean Reversion & Scalp';
+            const author = bot.author_name || 'Community Quant';
+            const pair = bot.pair || bot.symbol || 'XAUUSD';
+            const timeframe = bot.timeframe || bot.tf || 'M15';
+            const downloads = bot.downloads ?? 0;
+
+            // SEO Metadata Injection
+            document.title = `${botName} Strategy Playbook | BacktestLab Pro`;
+            const metaDesc = document.getElementById('meta-page-desc');
+            if (metaDesc) metaDesc.content = `Master the ${botName} strategy (${category}) for ${pair} on the ${timeframe} timeframe. Learn entry triggers, market thesis, and risk models.`;
+
+            // Breadcrumbs & Header
+            document.getElementById('breadcrumb-category').innerText = category;
+            document.getElementById('breadcrumb-title').innerText = botName;
+            document.getElementById('view-bot-name').innerText = botName;
+            document.getElementById('badge-category').innerText = category;
+            document.getElementById('badge-author').innerText = `by ${author}`;
+            document.getElementById('meta-pair').innerText = pair;
+            document.getElementById('meta-timeframe').innerText = timeframe;
+            document.getElementById('meta-downloads').innerText = downloads;
+
+            if (bot.created_at && bot.created_at.seconds) {
+                const d = new Date(bot.created_at.seconds * 1000);
+                document.getElementById('badge-created').innerText = d.toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' });
+            }
+
+            const rawSetup = bot.strategy_blueprint?.setup || bot.description || 'Systematic value identification model.';
+            const rawLong = bot.strategy_blueprint?.long_trigger || bot.long_trigger || 'CLOSE[1] < VWAP AND CLOSE > VWAP';
+            const rawShort = bot.strategy_blueprint?.short_trigger || bot.short_trigger || 'CLOSE[1] > VWAP AND CLOSE < VWAP';
+            const rawRisk = bot.strategy_blueprint?.risk_guard || bot.risk_guard || 'SL: 1 ATR, TP: 1.5 ATR';
+
+            document.getElementById('view-bot-summary').innerText = `An institutional trading manual detailing the exact mechanics of ${botName}. This breakdown explains the market thesis, entry triggers, and emotional discipline necessary to trade this setup consistently.`;
+
+            // Thesis Construction
+            document.getElementById('thesis-paragraph-1').innerText = `The algorithmic architecture of ${botName} is centered around: "${rawSetup}". In institutional execution, market opportunities do not emerge from random price guessing, but from capturing predictable order-flow imbalances when price deviates excessively from value benchmarks.`;
+            document.getElementById('thesis-paragraph-2').innerText = `Designed primarily for ${pair} on the ${timeframe} timeframe, this setup monitors volatility compression and subsequent expansion. By measuring structural candle closes rather than speculative intraday wicks, the model systematically de-noises retail false-breakouts and positions the trader alongside confirmed institutional volume.`;
+            document.getElementById('thesis-callout').innerText = `Primary Execution Focus: Maintain patience during quiet session consolidations. This model's edge activates when structural levels are tested with expanding volume.`;
+
+            // Execution Descriptions
+            document.getElementById('long-execution-desc').innerText = `To execute Long positions successfully, you must refrain from attempting to catch falling knives. The entry is valid only when price firmly establishes acceptance back above key dynamic support, proving that buyer volume has absorbed sell liquidity. Enter at the open of the succeeding candle following confirmation.`;
+            document.getElementById('long-trigger-parsed').innerHTML = `<strong>Long Condition:</strong> ${humanizeTrigger(rawLong)}`;
+
+            document.getElementById('short-execution-desc').innerText = `Short positions require disciplined rejection confirmation. When price pushes into premium levels on weakening momentum, bull traps form. A valid short requires aggressive sellers to reclaim dynamic resistance, confirming that higher prices were rejected. Commit capital only once the trigger candle has officially closed.`;
+            document.getElementById('short-trigger-parsed').innerHTML = `<strong>Short Condition:</strong> ${humanizeTrigger(rawShort)}`;
+
+            // Risk Guard
+            document.getElementById('risk-guard-spec').innerText = rawRisk;
+            document.getElementById('risk-guard-explanation').innerText = `Under the "${rawRisk}" protocol, protective stops are mandatory on every single position without exception. Never attempt to manually manage risk in real-time or widen stops during sudden volatility spikes. If price reaches favorable expansion extensions, scale out according to plan or trail stops to neutral breakeven levels.`;
+
+            // Test Algo & Replay Routing
+            const launchAutoRun = () => {
+                window.location.href = `chart_auto_run.html?botId=${encodeURIComponent(bot.id)}`;
+            };
+            const replayUrl = `session.html?bot_id=${encodeURIComponent(bot.id)}&symbol=${encodeURIComponent(pair)}`;
+
+            document.getElementById('hero-btn-test-now').onclick = launchAutoRun;
+            document.getElementById('bottom-btn-test-now').onclick = launchAutoRun;
+            document.getElementById('hero-btn-replay').href = replayUrl;
+            document.getElementById('bottom-btn-replay').href = replayUrl;
+        }
+
+        function humanizeTrigger(triggerStr) {
+            return triggerStr
+                .replace(/&&/g, ' AND ')
+                .replace(/==/g, ' is equal to ')
+                .replace(/>=/g, ' is greater than or equal to ')
+                .replace(/<=/g, ' is less than or equal to ');
+        }
+
+        function showError(msg) {
+            document.getElementById('loading-container').classList.add('hidden');
+            document.getElementById('error-container').classList.remove('hidden');
+            document.getElementById('error-message-text').innerText = msg;
+        }
+
+        // Dropdown & Menu Toggles
+        document.addEventListener('DOMContentLoaded', () => {
+            initStrategyPlaybook();
+
+            const toggle = document.getElementById('mobileMenuToggle');
+            const drawer = document.getElementById('mobileDrawerMenu');
+            const icon = document.getElementById('menuHamburgerIcon');
+
+            if (toggle && drawer) {
+                toggle.addEventListener('click', () => {
+                    const isHidden = drawer.classList.toggle('hidden');
+                    icon.className = isHidden ? 'fa-solid fa-bars text-sm' : 'fa-solid fa-xmark text-sm';
+                });
+            }
+
+            const trigger = document.getElementById('profile-menu-trigger-btn');
+            const dialogBox = document.getElementById('profile-overlay-dialog-box');
+            const wrapper = document.getElementById('profile-dropdown-wrapper');
+            if (trigger && dialogBox && wrapper) {
+                trigger.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    dialogBox.classList.toggle('hidden');
+                });
+                document.addEventListener('click', (e) => {
+                    if (!wrapper.contains(e.target)) dialogBox.classList.add('hidden');
+                });
+            }
+
+            const logoutBtn = document.getElementById('firebase-logout-btn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', () => signOut(auth));
+            }
+        });
+    </script>
+</body>
+</html>

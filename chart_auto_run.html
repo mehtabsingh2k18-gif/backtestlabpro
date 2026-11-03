@@ -94,6 +94,22 @@
             background: var(--up-bg); color: var(--up); border: 1px solid rgba(8, 153, 129, 0.4); 
         }
 
+        .credit-pill {
+            cursor: pointer; font-size: 10px; padding: 4px 10px; border-radius: 4px;
+            font-weight: 700; display: inline-flex; align-items: center; gap: 5px;
+            background: rgba(41, 98, 255, 0.12); color: #82aaff;
+            border: 1px solid rgba(41, 98, 255, 0.35); transition: 0.15s ease;
+        }
+        .credit-pill:hover {
+            background: rgba(41, 98, 255, 0.24); color: #fff; border-color: var(--accent);
+        }
+        .credit-pill.byoa-active {
+            background: var(--up-bg); color: var(--up); border-color: rgba(8, 153, 129, 0.4);
+        }
+        .credit-pill.exhausted {
+            background: rgba(245, 158, 11, 0.15); color: var(--gold); border-color: rgba(245, 158, 11, 0.4);
+        }
+
         .btn-group {
             display: inline-flex; background: var(--bg-elevated); border-radius: 4px;
             padding: 2px; border: 1px solid var(--border); gap: 2px; flex-shrink: 0;
@@ -203,7 +219,7 @@
         }
 
         .guide-box {
-            background: rgba(41, 98, 255, 0.08); border: 1px solid rgba(41, 98, 255, 0.25);
+            background: rgba(8, 153, 129, 0.08); border: 1px solid rgba(8, 153, 129, 0.3);
             border-radius: 6px; padding: 10px; font-size: 11px; line-height: 1.45;
             display: flex; flex-direction: column; gap: 6px;
         }
@@ -386,6 +402,34 @@
         }
         .vault-link:hover { text-decoration: underline; }
 
+        /* ONBOARDING & ACTIVATION MODAL STYLES */
+        .onboarding-banner {
+            background: linear-gradient(135deg, rgba(8, 153, 129, 0.16), rgba(41, 98, 255, 0.14));
+            border: 1px solid rgba(8, 153, 129, 0.45);
+            border-radius: 6px; padding: 14px; text-align: center;
+        }
+        .step-timeline {
+            display: flex; flex-direction: column; gap: 8px; margin: 4px 0;
+        }
+        .step-card {
+            background: var(--bg-base); border: 1px solid var(--border);
+            border-radius: 6px; padding: 10px 12px; display: flex;
+            align-items: center; justify-content: space-between; gap: 10px;
+        }
+        .step-num {
+            width: 22px; height: 22px; border-radius: 50%;
+            background: var(--accent-glow); color: #82aaff; border: 1px solid rgba(41,98,255,0.4);
+            font-size: 11px; font-weight: 800; display: flex; align-items: center;
+            justify-content: center; flex-shrink: 0;
+        }
+        .free-forever-pill {
+            display: inline-flex; align-items: center; gap: 4px;
+            background: var(--up-bg); color: var(--up);
+            border: 1px solid rgba(8, 153, 129, 0.4);
+            font-size: 10px; font-weight: 800; padding: 3px 8px;
+            border-radius: 12px; letter-spacing: 0.3px;
+        }
+
         .app-preloader { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #0b0e14; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 999999; transition: opacity 0.4s ease, visibility 0.4s ease; }
         .app-preloader.fade-out { opacity: 0; visibility: hidden; pointer-events: none; }
         .loader-logo-container { display: flex; flex-direction: column; align-items: center; gap: 20px; animation: brandPulse 1.2s ease-in-out infinite; }
@@ -479,7 +523,12 @@
         <span id="tierLabel">🔒 GET REAL CODE / EXECUTE IN MARKET</span>
     </div>
 
-    <button class="btn-outline" onclick="openKeyVault()" title="Configure Client API Keys">
+    <!-- LIVE AI STATUS PILL -->
+    <div class="credit-pill" id="aiCreditPill" onclick="openKeyVault()" title="Unlimited Free AI Bot Creation">
+        <span id="aiCreditPillText">⚡ Free AI Ready</span>
+    </div>
+
+    <button class="btn-outline" onclick="openKeyVault()" title="Activate Unlimited Free AI">
         <svg class="icon" viewBox="0 0 24 24"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1 2 0l.43-.25a2 2 0 0 1 1-1.73V4a2 2 0 0 0 2-2z"/><circle cx="12" cy="12" r="3"/></svg>
         <span>Keys</span>
     </button>
@@ -540,16 +589,18 @@
         </div>
 
         <div class="chat-stream" id="chatStream">
-            <div class="guide-box">
-                <div class="guide-title">
-                    <svg class="icon" style="stroke: var(--accent);" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-                    <span>Connect Your AI API Key</span>
+            <div class="guide-box" id="copilotModeBanner">
+                <div class="guide-title" id="copilotBannerTitle">
+                    <svg class="icon" style="stroke: var(--up);" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                    <span>100% Free AI Strategy Builder Ready</span>
                 </div>
-                <div>To synthesize strategies, enter your provider key in the <a href="javascript:void(0)" class="guide-link" onclick="openKeyVault()">Keys Vault</a>. Gemini and Groq offer direct developer keys.</div>
+                <div id="copilotBannerDesc">
+                    Type your strategy below or click a starter chip—everything works out-of-the-box for free! Want unlimited personal speed forever? <a href="javascript:void(0)" class="guide-link" onclick="openKeyVault()">Do the 45-sec free setup ($0) ↗</a>
+                </div>
             </div>
 
             <div class="msg msg-ai">
-                Tell me your trading setup, indicators, and risk targets. I will construct the execution rules and mount the strategy directly onto your chart.
+                Tell me your trading setup, indicators, and risk targets (or click a starter chip below). I will construct the execution rules and mount the strategy directly onto your chart.
             </div>
         </div>
 
@@ -569,14 +620,14 @@
                 </button>
             </div>
 
-            <select id="chatProvider" style="width: 100%; background: #080a0f; border: 1px solid var(--border); font-size: 11px; padding: 5px 8px; color: var(--text); border-radius: 4px;">
-                <option value="gemini">Google Gemini Auto (High-Throughput)</option>
-                <option value="groq">Groq Llama-3.3 70B (Fast & Free)</option>
-                <option value="openai">OpenAI GPT-4o-mini</option>
+            <select id="chatProvider" onchange="updateCreditStatusUI()" style="width: 100%; background: #080a0f; border: 1px solid var(--border); font-size: 11px; padding: 5px 8px; color: var(--text); border-radius: 4px;">
+                <option value="gemini">Google Gemini Auto (Free Instant Mode + BYOA)</option>
+                <option value="groq">Groq Llama-3.3 70B (Fast Free Key BYOA)</option>
+                <option value="openai">OpenAI GPT-4o-mini (BYOA)</option>
             </select>
             <textarea id="chatInput" class="chat-textarea" placeholder="Describe entry rules, indicators, and SL/TP..." onkeydown="handleChatKeyDown(event)"></textarea>
             <div style="display: flex; justify-content: space-between; align-items: center;">
-                <a href="javascript:void(0)" class="guide-link" onclick="openKeyVault()" style="font-size: 10px;">Get Free API Keys ↗</a>
+                <a href="javascript:void(0)" class="guide-link" id="chatBottomQuotaLink" onclick="openKeyVault()" style="font-size: 10px;">⚡ 100% Free Mode · Unlock Unlimited in 45s ($0) ↗</a>
                 <button id="btnSendChat" class="btn-accent" onclick="sendChatPrompt()">
                     <span>Send</span>
                     <svg class="icon" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
@@ -1025,65 +1076,95 @@
     </div>
 </div>
 
-<!-- KEY VAULT MODAL -->
+<!-- 45-SECOND FREE UNLIMITED AI ACTIVATION MODAL -->
 <div class="modal-overlay" id="keyVaultModal">
-    <div class="modal-window" style="width: 500px;">
+    <div class="modal-window" style="width: 520px;">
         <div class="modal-bar">
-            <span>API Key Storage & Provider Setup</span>
+            <span>⚡ Activate Unlimited Free Bot Building (Takes 45 Seconds)</span>
             <button onclick="closeModal('keyVaultModal')">
                 <svg class="icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
             </button>
         </div>
         <div class="modal-body">
-            <div class="guide-box">
-                <div class="guide-title">
-                    <svg class="icon" style="stroke: var(--up);" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-                    <span>100% Private & Direct Local Storage</span>
+            <!-- Zero-Cost Reassurance Banner -->
+            <div class="onboarding-banner" id="vaultModalBanner">
+                <div class="free-forever-pill" style="margin-bottom: 6px;">
+                    ✓ $0 COST FOREVER · NO CREDIT CARD · NO CODING
                 </div>
-                <div>Your keys are saved directly into your browser's private localStorage and never to any remote server.</div>
+                <div style="font-size: 15px; font-weight: 800; color: #fff;" id="vaultModalBannerTitle">
+                    Unlock Unlimited AI Bots in 3 Clicks
+                </div>
+                <div style="font-size: 11px; color: var(--text); margin-top: 4px; line-height: 1.45;" id="vaultModalBannerDesc">
+                    BacktestLab Pro is <b>100% free</b> to construct and test strategies. To give you dedicated personal processing speed with zero server queues, connect your personal Google AI key once below—it stays saved forever!
+                </div>
             </div>
 
-            <!-- Google Gemini -->
-            <div class="vault-input-group">
-                <div class="vault-label-row">
-                    <span>Google Gemini API Key</span>
-                    <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener noreferrer" class="vault-link">
-                        <span>Get Free Key (Google AI Studio)</span>
-                        <svg class="icon" style="width: 10px; height: 10px;" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            <!-- 3 Simple Visual Steps -->
+            <div class="step-timeline">
+                <div class="step-card">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <div class="step-num">1</div>
+                        <div>
+                            <div style="font-size: 12px; font-weight: 700; color: #fff;">Open Google's Free Key Page</div>
+                            <div style="font-size: 10px; color: var(--text-muted);">Sign in with your normal Google/Gmail account (100% free, no billing).</div>
+                        </div>
+                    </div>
+                    <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener noreferrer" class="btn-accent" style="text-decoration: none; font-size: 11px; padding: 6px 10px; flex-shrink: 0;">
+                        Open Google AI ↗
                     </a>
                 </div>
-                <input type="password" id="keyGemini" class="chat-textarea" style="height: 34px; margin-top: 2px;" placeholder="AIzaSy...">
-                <span style="font-size: 10px; color: var(--text-muted);">Sign in with Google → Click 'Create API key' → Paste here.</span>
-            </div>
 
-            <!-- Groq Cloud -->
-            <div class="vault-input-group">
-                <div class="vault-label-row">
-                    <span>Groq Cloud API Key (Ultra-Fast)</span>
-                    <a href="https://console.groq.com/keys" target="_blank" rel="noopener noreferrer" class="vault-link">
-                        <span>Get Free Key (Groq Console)</span>
-                        <svg class="icon" style="width: 10px; height: 10px;" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-                    </a>
+                <div class="step-card">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <div class="step-num">2</div>
+                        <div>
+                            <div style="font-size: 12px; font-weight: 700; color: #fff;">Click "Create API Key" & Copy It</div>
+                            <div style="font-size: 10px; color: var(--text-muted);">Takes 1 click. Copy the code that starts with <code style="color: var(--up);">AIzaSy...</code></div>
+                        </div>
+                    </div>
+                    <span class="badge" style="background: rgba(255,255,255,0.06); color: var(--text-muted);">10 Sec</span>
                 </div>
-                <input type="password" id="keyGroq" class="chat-textarea" style="height: 34px; margin-top: 2px;" placeholder="gsk_...">
-                <span style="font-size: 10px; color: var(--text-muted);">Free & provides lightning-fast code generation using Llama-3.3 70B.</span>
-            </div>
 
-            <!-- OpenAI -->
-            <div class="vault-input-group">
-                <div class="vault-label-row">
-                    <span>OpenAI API Key (Optional)</span>
-                    <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener noreferrer" class="vault-link">
-                        <span>Get Key (OpenAI Platform)</span>
-                        <svg class="icon" style="width: 10px; height: 10px;" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-                    </a>
+                <div class="step-card" style="flex-direction: column; align-items: stretch; border-color: rgba(41, 98, 255, 0.45); background: rgba(41, 98, 255, 0.05);">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <div class="step-num" style="background: var(--accent); color: #fff;">3</div>
+                        <div>
+                            <div style="font-size: 12px; font-weight: 700; color: #fff;">Paste It Here & You're Done Forever!</div>
+                            <div style="font-size: 10px; color: var(--text-muted);">Stored privately in your browser. You will never have to repeat this.</div>
+                        </div>
+                    </div>
+                    <input type="password" id="keyGemini" class="chat-textarea" style="height: 36px; margin-top: 6px; font-family: monospace; border-color: var(--accent);" placeholder="Paste your free Google key here (starts with AIzaSy...)">
                 </div>
-                <input type="password" id="keyOpenAI" class="chat-textarea" style="height: 34px; margin-top: 2px;" placeholder="sk-...">
-                <span style="font-size: 10px; color: var(--text-muted);">Requires an active account balance with OpenAI.</span>
             </div>
 
-            <div style="display: flex; justify-content: flex-end; margin-top: 4px;">
-                <button class="btn-accent" onclick="saveKeyVault()">Save API Keys</button>
+            <!-- Optional Alternative Providers -->
+            <details style="background: var(--bg-base); border: 1px solid var(--border); border-radius: 6px; padding: 8px 10px; font-size: 11px;">
+                <summary style="cursor: pointer; color: var(--text-muted); font-weight: 600; outline: none;">
+                    Optional: Have a free Groq or OpenAI key instead? Click here
+                </summary>
+                <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 10px;">
+                    <div>
+                        <div class="vault-label-row">
+                            <span>Groq Cloud Key (100% Free & Ultra-Fast)</span>
+                            <a href="https://console.groq.com/keys" target="_blank" rel="noopener noreferrer" class="vault-link">Get Free Groq Key ↗</a>
+                        </div>
+                        <input type="password" id="keyGroq" class="chat-textarea" style="height: 32px; margin-top: 4px;" placeholder="gsk_...">
+                    </div>
+                    <div>
+                        <div class="vault-label-row">
+                            <span>OpenAI Key (Optional)</span>
+                            <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener noreferrer" class="vault-link">OpenAI Platform ↗</a>
+                        </div>
+                        <input type="password" id="keyOpenAI" class="chat-textarea" style="height: 32px; margin-top: 4px;" placeholder="sk-...">
+                    </div>
+                </div>
+            </details>
+
+            <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 4px;">
+                <button class="btn-outline" onclick="closeModal('keyVaultModal')">Maybe Later</button>
+                <button class="btn-accent" style="padding: 8px 18px; font-weight: 700;" onclick="saveKeyVault()">
+                    ⚡ Activate Unlimited Free Bots
+                </button>
             </div>
         </div>
     </div>
@@ -1092,7 +1173,7 @@
 <!-- FIREBASE MODULE INTEGRATION -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, getDoc, updateDoc, deleteDoc, doc, serverTimestamp, query, limit, arrayUnion, increment } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFirestore, collection, addDoc, getDocs, getDoc, setDoc, updateDoc, deleteDoc, doc, serverTimestamp, query, limit, arrayUnion, increment } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 const firebaseConfig = {
@@ -1114,6 +1195,7 @@ window.collection = collection;
 window.addDoc = addDoc;
 window.getDocs = getDocs;
 window.getDoc = getDoc;
+window.setDoc = setDoc;
 window.updateDoc = updateDoc;
 window.deleteDoc = deleteDoc;
 window.doc = doc;
@@ -1147,6 +1229,18 @@ onAuthStateChanged(auth, async (user) => {
                 localStorage.setItem("btl_is_pro", "false");
                 syncTierUI();
             }
+
+            // Sync Free Starter Usage from Firestore so usage survives cache resets
+            const trialDocRef = doc(db, "users", user.uid, "usage", "ai_trial");
+            const trialSnap = await getDoc(trialDocRef);
+            if (trialSnap.exists()) {
+                const cloudUsed = trialSnap.data().free_ai_used || 0;
+                const localUsed = parseInt(localStorage.getItem("btl_free_trial_used") || "0", 10);
+                const maxUsed = Math.max(cloudUsed, localUsed);
+                localStorage.setItem("btl_free_trial_used", maxUsed.toString());
+            }
+            if (window.updateCreditStatusUI) window.updateCreditStatusUI();
+
         } catch (e) {
             console.error("Entitlements check exception:", e);
         }
@@ -1157,6 +1251,7 @@ onAuthStateChanged(auth, async (user) => {
         window.isPro = false;
         localStorage.setItem("btl_is_pro", "false");
         syncTierUI();
+        if (window.updateCreditStatusUI) window.updateCreditStatusUI();
     }
 });
 </script>
@@ -1164,6 +1259,131 @@ onAuthStateChanged(auth, async (user) => {
 <script>
 if (typeof window.global === "undefined") window.global = window;
 if (typeof window.globalThis === "undefined") window.globalThis = window;
+
+/* =========================================================================
+   0. ZERO-FRICTION TRIAL + BYO-API ROUTER CONFIG
+   ========================================================================= */
+const DEFAULT_MANAGED_GEMINI_KEY = "AIzaSyBJo9UOPlyX8qPzjjQBVsPqn25YvIsC5kg";
+const FREE_TRIAL_LIMIT = 5;
+
+function getFreeCreditsUsed() {
+    return parseInt(localStorage.getItem("btl_free_trial_used") || "0", 10);
+}
+
+function getFreeCreditsRemaining() {
+    return Math.max(0, FREE_TRIAL_LIMIT - getFreeCreditsUsed());
+}
+
+async function incrementFreeCreditsUsed() {
+    const nextUsed = getFreeCreditsUsed() + 1;
+    localStorage.setItem("btl_free_trial_used", nextUsed.toString());
+    updateCreditStatusUI();
+
+    const user = window.currentUser || (window.auth ? window.auth.currentUser : null);
+    if (user && window.db && window.setDoc && window.doc) {
+        try {
+            const trialDocRef = window.doc(window.db, "users", user.uid, "usage", "ai_trial");
+            await window.setDoc(trialDocRef, {
+                free_ai_used: nextUsed,
+                updated_at: window.serverTimestamp ? window.serverTimestamp() : new Date().toISOString()
+            }, { merge: true });
+        } catch (e) {
+            console.warn("Cloud trial quota sync skipped:", e);
+        }
+    }
+}
+
+function resolveAiExecutionRoute() {
+    const selectedProvider = document.getElementById("chatProvider") ? document.getElementById("chatProvider").value : "gemini";
+    const userKeyForSelected = (localStorage.getItem(`btl_key_${selectedProvider}`) || "").trim();
+
+    // 1. If user entered their own personal key -> Unlimited BYOA Mode
+    if (userKeyForSelected) {
+        return {
+            mode: "BYOA",
+            provider: selectedProvider,
+            apiKey: userKeyForSelected,
+            remainingFree: getFreeCreditsRemaining()
+        };
+    }
+
+    // 2. Check if user configured any other provider key
+    for (const p of ["gemini", "groq", "openai"]) {
+        const altKey = (localStorage.getItem(`btl_key_${p}`) || "").trim();
+        if (altKey) {
+            return {
+                mode: "BYOA",
+                provider: p,
+                apiKey: altKey,
+                remainingFree: getFreeCreditsRemaining()
+            };
+        }
+    }
+
+    // 3. Fallback to Free Managed Trial Key
+    const remaining = getFreeCreditsRemaining();
+    if (remaining > 0 && DEFAULT_MANAGED_GEMINI_KEY) {
+        return {
+            mode: "MANAGED_TRIAL",
+            provider: "gemini",
+            apiKey: DEFAULT_MANAGED_GEMINI_KEY,
+            remainingFree: remaining
+        };
+    }
+
+    // 4. Trial completed & No BYOA Key
+    return {
+        mode: "EXHAUSTED",
+        provider: selectedProvider,
+        apiKey: null,
+        remainingFree: 0
+    };
+}
+
+function updateCreditStatusUI() {
+    const route = resolveAiExecutionRoute();
+    const topPill = document.getElementById("aiCreditPill");
+    const topPillTxt = document.getElementById("aiCreditPillText");
+    const bottomLink = document.getElementById("chatBottomQuotaLink");
+    const bannerBox = document.getElementById("copilotModeBanner");
+    const bannerTitle = document.getElementById("copilotBannerTitle");
+    const bannerDesc = document.getElementById("copilotBannerDesc");
+
+    if (!topPill || !topPillTxt) return;
+
+    if (route.mode === "BYOA") {
+        topPill.className = "credit-pill byoa-active";
+        topPillTxt.innerText = `✓ Unlimited Free AI Active`;
+        if (bottomLink) bottomLink.innerText = `✓ Unlimited Mode Active (${route.provider.toUpperCase()}) ↗`;
+        if (bannerBox && bannerTitle && bannerDesc) {
+            bannerBox.style.borderColor = "rgba(8, 153, 129, 0.4)";
+            bannerBox.style.background = "rgba(8, 153, 129, 0.08)";
+            bannerTitle.innerHTML = `<svg class="icon" style="stroke: var(--up);" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>Unlimited Free AI Activated Forever!</span>`;
+            bannerDesc.innerHTML = `Your connection is active. Build, edit, and test <b>unlimited</b> strategies with zero fees.`;
+        }
+    } else if (route.mode === "MANAGED_TRIAL") {
+        topPill.className = "credit-pill";
+        topPillTxt.innerText = `⚡ Free AI Ready`;
+        if (bottomLink) bottomLink.innerText = `⚡ 100% Free Mode · Unlock Unlimited in 45s ($0) ↗`;
+        if (bannerBox && bannerTitle && bannerDesc) {
+            bannerBox.style.borderColor = "rgba(8, 153, 129, 0.35)";
+            bannerBox.style.background = "rgba(8, 153, 129, 0.06)";
+            bannerTitle.innerHTML = `<svg class="icon" style="stroke: var(--up);" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>100% Free AI Strategy Builder Ready</span>`;
+            bannerDesc.innerHTML = `Type your strategy below or click a starter chip—everything works out-of-the-box for free! Want unlimited personal speed forever? <a href="javascript:void(0)" class="guide-link" onclick="openKeyVault()">Do the 45-sec free setup ($0) ↗</a>`;
+        }
+    } else {
+        topPill.className = "credit-pill exhausted";
+        topPillTxt.innerText = `⚡ 45s Free Unlimited Setup`;
+        if (bottomLink) bottomLink.innerText = `⚡ Click for 45-Sec Free Unlimited Setup ($0 Forever) ↗`;
+        if (bannerBox && bannerTitle && bannerDesc) {
+            bannerBox.style.borderColor = "rgba(41, 98, 255, 0.45)";
+            bannerBox.style.background = "rgba(41, 98, 255, 0.1)";
+            bannerTitle.innerHTML = `<svg class="icon" style="stroke: #82aaff;" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>Switch to Unlimited Free Mode (Takes 45 Sec)</span>`;
+            bannerDesc.innerHTML = `Keep building unlimited bots for <b>$0 forever</b>! <a href="javascript:void(0)" class="guide-link" onclick="openKeyVault(true)">Click here for the 3-click Google AI setup</a> (100% free, no credit card, done once forever).`;
+        }
+    }
+}
+window.updateCreditStatusUI = updateCreditStatusUI;
 
 /* =========================================================================
    1. GLOBAL STATE & MICRO-TICK ENGINE CONFIG
@@ -1295,9 +1515,25 @@ document.addEventListener("DOMContentLoaded", () => {
     const speedSelect = document.getElementById("speedSelect");
     if (speedSelect) speedSelect.value = replaySpeedMs.toString();
 
+    // Instant validation on the key input field
+    const gemInput = document.getElementById("keyGemini");
+    if (gemInput) {
+        gemInput.addEventListener("input", (e) => {
+            const val = e.target.value.trim();
+            if (val.startsWith("AIzaSy") && val.length === 39) {
+                e.target.style.borderColor = "#089981";
+                e.target.style.background = "rgba(8, 153, 129, 0.08)";
+            } else {
+                e.target.style.borderColor = "var(--accent)";
+                e.target.style.background = "var(--bg-base)";
+            }
+        });
+    }
+
     initChart();
     setupDragAndDrop();
     syncTierUI();
+    updateCreditStatusUI();
     loadSessionDataset();
 });
 
@@ -2102,13 +2338,6 @@ function sanitizeAndCompileJs(codeStr) {
 }
 
 function mountStrategy(bot, isFromGlobal = false) {
-    const user = window.currentUser || (window.auth ? window.auth.currentUser : null);
-    if (!user) {
-        alert("Please log in first to attach bots to the chart!");
-        window.location.href = "login.html?redirect=chart_auto_run.html";
-        return;
-    }
-
     if (activeBot && activeBot.isSaved === false && activeBot.id !== bot.id) {
         if (!confirm("⚠️ WARNING: Your current active bot is UNSAVED! Proceed?")) return;
     }
@@ -2119,8 +2348,9 @@ function mountStrategy(bot, isFromGlobal = false) {
         window.TradingEngine.resetState();
     }
 
+    const user = window.currentUser || (window.auth ? window.auth.currentUser : null);
     activeBot = JSON.parse(JSON.stringify(bot));
-    activeBot.is_global_community = isFromGlobal || (bot.author_id && bot.author_id !== user.uid);
+    activeBot.is_global_community = isFromGlobal || (bot.author_id && (!user || bot.author_id !== user.uid));
 
     const quota = window.globalDownloadQuota !== undefined ? window.globalDownloadQuota : (window.isPro ? 5 : 0);
     if (activeBot.is_global_community && (!window.isPro || quota <= 0)) {
@@ -2327,7 +2557,7 @@ function openSaveBotModal() {
     if (!activeBot) return;
     const user = window.currentUser || (window.auth ? window.auth.currentUser : null);
     if (!user) {
-        alert("Please log in or sign up to save strategies to your account.");
+        alert("Please log in or sign up to save strategies to your cloud account.");
         window.location.href = "login.html?redirect=chart_auto_run.html";
         return;
     }
@@ -2503,7 +2733,7 @@ function applyInputsAndRestart() {
 }
 
 /* =========================================================================
-   9. UNIVERSAL DYNAMIC PRODUCTION TRANSPILER (VERIFIED 100% RELIABILITY)
+   9. UNIVERSAL DYNAMIC PRODUCTION TRANSPILER
    ========================================================================= */
 const ProductionTranspiler = {
     extractIndicators: function(rules) {
@@ -2530,7 +2760,6 @@ const ProductionTranspiler = {
     transpileCondition: function(node, lang = 'mql5') {
         if (!node) return "true";
         if (node.logic && Array.isArray(node.conditions)) {
-            // FIX: Enforce python boolean keywords
             const op = node.logic === "OR" 
                 ? (lang === 'python' ? " or " : " || ") 
                 : (lang === 'python' ? " and " : " && ");
@@ -2851,7 +3080,6 @@ if (strategy.position_size == 0)
             }
         });
 
-        // Transpile using lang='python' to strictly emit 'and' / 'or'
         const buyConditionStr = this.transpileCondition(json.buyRules, 'python');
         const sellConditionStr = this.transpileCondition(json.sellRules, 'python');
 
@@ -3027,6 +3255,9 @@ const ARCHITECT_PROMPT = `You are the Lead Quantitative Architect for BacktestLa
 Convert the user's trading strategy into a pure JSON execution object.
 DO NOT write raw JavaScript execution functions.
 
+CRITICAL CONVERSATIONAL RULE:
+If the user is just greeting you (e.g., "hi", "hello"), asking general questions, or has NOT specified any trading strategy rules or indicator conditions yet, DO NOT invent a "Blank Strategy". Instead, respond helpfully in "reply" and set "bot": null, "category": null, and "strategy_blueprint": null. Only return a non-null "bot" object when the user actually requests a strategy creation or revision.
+
 ====================================================================
 ALLOWED OPERATORS & OPERANDS FOR "strategy_json":
 ====================================================================
@@ -3068,8 +3299,8 @@ COMPOUND RULE GROUPS (Nested AND / OR):
 OUTPUT STRICT JSON ONLY:
 ====================================================================
 {
-  "reply": "Clear explanation of the strategy rules, indicators, and risk management configured.",
-  "category": "One of: Breakout / Liquidity Sweep, Trend Following & Momentum, Mean Reversion & Scalp, SMC / Order Flow, Multi-Timeframe / Swing",
+  "reply": "Clear explanation of the strategy rules, indicators, and risk management configured (or friendly answer if no strategy was requested).",
+  "category": "One of: Breakout / Liquidity Sweep, Trend Following & Momentum, Mean Reversion & Scalp, SMC / Order Flow, Multi-Timeframe / Swing (or null if no bot)",
   "strategy_blueprint": {
     "setup": "Formula setup",
     "long_trigger": "Buy rule",
@@ -3094,19 +3325,56 @@ function handleChatKeyDown(e) {
     } 
 }
 
-const GEMINI_MODELS = [
-    "gemini-3.5-flash-lite", 
-    "gemini-3.8-flash",      
-    "gemini-2.5-flash"       
+// Valid and active models for Google Generative AI v1beta
+/* =========================================================================
+   PERMANENT DYNAMIC MODEL DISCOVERY & CALLER
+   ========================================================================= */
+const DEFAULT_FALLBACK_MODELS = [
+    "gemini-3.8-flash",
+    "gemini-3.5-flash-lite",
+    "gemini-2.5-flash"
 ];
 
-const sleep = (ms) => new Promise(res => setTimeout(res, ms));
+// 1. Fetch currently available models directly from Google's API registry
+async function getActiveGeminiModels(apiKey) {
+    const cached = sessionStorage.getItem("btl_active_gemini_models");
+    if (cached) {
+        try { return JSON.parse(cached); } catch(e){}
+    }
 
+    try {
+        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${encodeURIComponent(apiKey)}`);
+        if (!res.ok) throw new Error("ListModels failed");
+        const data = await res.json();
+        
+        if (data.models && Array.isArray(data.models)) {
+            // Filter models that support content generation and sort newest first
+            const valid = data.models
+                .filter(m => m.supportedGenerationMethods && m.supportedGenerationMethods.includes("generateContent"))
+                .map(m => m.name.replace("models/", ""))
+                .filter(name => name.includes("flash") && !name.includes("preview") && !name.includes("thinking"));
+
+            if (valid.length > 0) {
+                // Ensure 3.8-flash is prioritized if available
+                valid.sort((a, b) => b.localeCompare(a, undefined, { numeric: true }));
+                sessionStorage.setItem("btl_active_gemini_models", JSON.stringify(valid));
+                return valid;
+            }
+        }
+    } catch (e) {
+        console.warn("Dynamic model lookup failed, falling back to priority list:", e);
+    }
+
+    return DEFAULT_FALLBACK_MODELS;
+}
+
+// 2. Self-healing caller that iterates live models and handles invalid keys
 async function callGeminiDirect(apiKey, payloadBody) {
+    const candidateModels = await getActiveGeminiModels(apiKey);
     let lastError = null;
 
-    for (const model of GEMINI_MODELS) {
-        const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+    for (const model of candidateModels) {
+        const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(apiKey)}`;
 
         for (let attempt = 0; attempt < 2; attempt++) {
             try {
@@ -3119,21 +3387,33 @@ async function callGeminiDirect(apiKey, payloadBody) {
                 const data = await response.json();
 
                 if (data.error) {
-                    const isBusy = data.error.code === 503 || 
-                                   data.error.code === 429 || 
-                                   (data.error.message && data.error.message.toLowerCase().includes("overloaded"));
+                    const msg = data.error.message || "";
+                    
+                    // Immediately halt if the API key itself is bad (don't burn retries)
+                    if (data.error.code === 400 && (msg.toLowerCase().includes("api key not valid") || msg.toLowerCase().includes("api_key_invalid"))) {
+                        throw new Error("Invalid Google API key. Please check your key at aistudio.google.com/apikey");
+                    }
 
+                    // If model is retired or not found, break inner loop to try next model
+                    if (data.error.code === 404 || msg.toLowerCase().includes("no longer available") || msg.toLowerCase().includes("not found")) {
+                        lastError = new Error(msg);
+                        break; 
+                    }
+
+                    // If rate limited or server overloaded, short backoff and retry
+                    const isBusy = data.error.code === 503 || data.error.code === 429 || msg.toLowerCase().includes("overloaded");
                     if (isBusy && attempt === 0) {
-                        await sleep(700 + Math.random() * 400);
+                        await new Promise(r => setTimeout(r, 800));
                         continue;
                     }
-                    lastError = new Error(data.error.message);
+
+                    lastError = new Error(msg);
                     break;
                 }
 
                 const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text;
                 if (!rawText) {
-                    lastError = new Error("Empty candidate payload received from upstream model.");
+                    lastError = new Error("Empty candidate payload received from model.");
                     break;
                 }
 
@@ -3142,32 +3422,40 @@ async function callGeminiDirect(apiKey, payloadBody) {
 
             } catch (err) {
                 lastError = err;
-                if (attempt === 0) await sleep(400 + Math.random() * 200);
+                if (err.message.includes("Invalid Google API key")) throw err;
+                if (attempt === 0) await new Promise(r => setTimeout(r, 400));
             }
         }
     }
 
-    throw lastError || new Error("All Gemini models are congested. Try switching provider to Groq in dropdown.");
+    throw lastError || new Error("All Gemini models are congested. Switch provider to Groq in the dropdown.");
 }
+
 
 async function sendChatPrompt() {
     const input = document.getElementById("chatInput");
     const query = input.value.trim();
     if (!query) return;
 
+    const route = resolveAiExecutionRoute();
+
+    if (route.mode === "EXHAUSTED" || !route.apiKey) {
+        appendMsg(query, "user");
+        input.value = "";
+        appendMsg(`
+            ⚡ <b>Unlock Unlimited Free Bot Building (Takes 45 Seconds — $0 Cost!)</b><br>
+            You've used your 5 instant starter generations! You <b>don't need to pay anything</b> to keep building unlimited bots. <a href="javascript:void(0)" class="guide-link" onclick="openKeyVault(true)">Click here to do the 3-step free Google setup</a> in under 45 seconds and build unlimited bots forever!
+        `, "ai");
+        openKeyVault(true);
+        return;
+    }
+
     appendMsg(query, "user");
     input.value = "";
     input.placeholder = "Describe entry rules, indicators, and SL/TP...";
 
-    const provider = document.getElementById("chatProvider").value;
-    const apiKey = localStorage.getItem(`btl_key_${provider}`);
-    if (!apiKey) { 
-        appendMsg(`
-            ⚠️ <b>API Key Missing for ${provider.toUpperCase()}</b><br>
-            Please set your API key in the <a href="javascript:void(0)" class="guide-link" onclick="openKeyVault()">Keys Vault</a> to continue.
-        `, "ai"); 
-        return; 
-    }
+    const provider = route.provider;
+    const apiKey = route.apiKey;
 
     const btn = document.getElementById("btnSendChat"); 
     btn.disabled = true; 
@@ -3227,7 +3515,7 @@ async function sendChatPrompt() {
                     response_format: { type: "json_object" },
                     messages: [ 
                         { role: "system", content: ARCHITECT_PROMPT + contextAddition }, 
-                        ...chatConversationHistory.map(m => ({ role: m.role === "model" ? "assistant" : m.role, content: m.text })) 
+                        ...chatConversationHistory.map(m => ({ role: m.role === "model" ? "assistant" : m.text ? m.role : "user", content: m.text })) 
                     ]
                 })
             });
@@ -3243,7 +3531,26 @@ async function sendChatPrompt() {
 
         chatConversationHistory.push({ role: "model", text: payload.reply });
 
-        if (payload.bot && (payload.bot.strategy_json || payload.bot.js_code)) {
+        // Verify the AI actually built a real strategy (not a blank greeting response)
+        const sJson = payload.bot?.strategy_json;
+        const hasBuyOrSellRules = sJson && (
+            (Array.isArray(sJson.buyRules) && sJson.buyRules.length > 0) ||
+            (sJson.buyRules?.conditions && sJson.buyRules.conditions.length > 0) ||
+            (Array.isArray(sJson.sellRules) && sJson.sellRules.length > 0) ||
+            (sJson.sellRules?.conditions && sJson.sellRules.conditions.length > 0)
+        );
+        const hasValidBot = payload.bot && 
+                            payload.bot.name && 
+                            !payload.bot.name.toLowerCase().includes("blank") && 
+                            (hasBuyOrSellRules || payload.bot.js_code);
+
+        if (hasValidBot) {
+            // ONLY decrement starter trial credits when a real bot is constructed
+            if (route.mode === "MANAGED_TRIAL") {
+                await incrementFreeCreditsUsed();
+            }
+            const remainingAfter = getFreeCreditsRemaining();
+
             let targetBotId = activeBot ? activeBot.id : ("bot-" + Date.now());
             const newBot = { 
                 id: targetBotId, 
@@ -3260,13 +3567,16 @@ async function sendChatPrompt() {
                 isSaved: false 
             };
 
-            // Assemble code deterministically with indicator calculations & syntax guards
             newBot.mql5_code = ProductionTranspiler.buildMQL5(newBot);
             newBot.pine_code = ProductionTranspiler.buildPine(newBot);
             newBot.python_code = ProductionTranspiler.buildPython(newBot);
             
             mountStrategy(newBot, false);
             saveBotToLibrary(newBot);
+
+            const creditFooter = (route.mode === "MANAGED_TRIAL" && remainingAfter <= 1)
+                ? `<div style="margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--border); font-size: 10px; color: #82aaff;">💡 <b>100% Free Forever Tip:</b> Want unlimited bot generations after your starter pack? <a href="javascript:void(0)" class="guide-link" onclick="openKeyVault()">Do our 45-second free setup ($0 cost, no card) ↗</a></div>`
+                : "";
 
             appendMsg(`
                 ${payload.reply}
@@ -3279,16 +3589,21 @@ async function sendChatPrompt() {
                         • Strategy mounted to chart (Press <b>Play</b> or <b>Spacebar</b> to run backtest).<br>
                         • <span style="color: var(--up); font-weight: 700;">✓ MQL5, Pine Script v5, and Python exports compiled & broker-ready.</span>
                     </div>
+                    ${creditFooter}
                 </div>
             `, "ai");
         } else { 
+            // Normal conversational reply (no credit deducted, no blank bot mounted)
             appendMsg(payload.reply, "ai"); 
         }
 
     } catch (err) { 
         const activeLoader = document.getElementById("chatLoaderBubble");
         if (activeLoader) activeLoader.remove();
-        appendMsg(`Error: ${err.message}`, "ai"); 
+        appendMsg(`
+            ⚠️ <b>AI Synthesis Error:</b> ${err.message}<br>
+            <span style="font-size: 11px; color: var(--text-muted);">Tip: You can activate unlimited personal generations for free in 45 seconds via the <a href="javascript:void(0)" class="guide-link" onclick="openKeyVault()">Keys Activation Page</a>.</span>
+        `, "ai"); 
     } finally { 
         btn.disabled = false; 
     }
@@ -3306,15 +3621,16 @@ function appendMsg(html, role) {
 function clearChatHistory() { 
     chatConversationHistory = []; 
     document.getElementById("chatStream").innerHTML = `
-        <div class="guide-box">
-            <div class="guide-title">
+        <div class="guide-box" id="copilotModeBanner">
+            <div class="guide-title" id="copilotBannerTitle">
                 <svg class="icon" style="stroke: var(--up);" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
                 <span>Session Memory Cleared</span>
             </div>
-            <div>Specify strategy parameters to compile a new model.</div>
+            <div id="copilotBannerDesc">Specify strategy parameters to compile a new model.</div>
         </div>
         <div class="msg msg-ai">Specify algorithmic conditions, technical indicators, and risk parameters. The compiler will structure execution logic, register parameters, and display trigger levels on the chart.</div>
-    `; 
+    `;
+    updateCreditStatusUI();
 }
 
 /* =========================================================================
@@ -3697,7 +4013,7 @@ async function executeChosenExportDownload() {
 }
 
 function handleCodeClick(type) {
-    if (!window.isPro) {
+    if (!window.isPro && type !== 'json') {
         openPlanModal();
         return;
     }
@@ -3760,10 +4076,22 @@ function copyCodeOutput() {
     alert("Code copied to clipboard."); 
 }
 
-function openKeyVault() { 
+function openKeyVault(isQuotaTriggered = false) { 
     document.getElementById("keyGemini").value = localStorage.getItem("btl_key_gemini") || "";
     document.getElementById("keyOpenAI").value = localStorage.getItem("btl_key_openai") || "";
     document.getElementById("keyGroq").value = localStorage.getItem("btl_key_groq") || "";
+
+    const bannerTitle = document.getElementById("vaultModalBannerTitle");
+    const bannerDesc = document.getElementById("vaultModalBannerDesc");
+
+    if (isQuotaTriggered && bannerTitle && bannerDesc) {
+        bannerTitle.innerText = "🎉 Starter Bots Complete! Unlock Unlimited Free Speed in 45s";
+        bannerDesc.innerHTML = "You've finished your 5 instant starter bots. You <b>do NOT need to buy anything</b> to keep building—just paste a free Google AI key below in 3 clicks. It costs <b>$0 forever</b>, requires no card, and stays active permanently.";
+    } else if (bannerTitle && bannerDesc) {
+        bannerTitle.innerText = "Unlock Unlimited AI Bots in 3 Clicks";
+        bannerDesc.innerHTML = "BacktestLab Pro is <b>100% free</b> to construct and test strategies. To give you dedicated personal processing speed with zero server queues, connect your personal Google AI key once below—it stays saved forever!";
+    }
+
     document.getElementById("keyVaultModal").style.display = "flex"; 
 }
 
@@ -3772,11 +4100,25 @@ function closeModal(id) {
 }
 
 function saveKeyVault() {
-    localStorage.setItem("btl_key_gemini", document.getElementById("keyGemini").value.trim());
-    localStorage.setItem("btl_key_openai", document.getElementById("keyOpenAI").value.trim());
-    localStorage.setItem("btl_key_groq", document.getElementById("keyGroq").value.trim());
+    const gemKey = document.getElementById("keyGemini").value.trim();
+    const oaiKey = document.getElementById("keyOpenAI").value.trim();
+    const grqKey = document.getElementById("keyGroq").value.trim();
+
+    localStorage.setItem("btl_key_gemini", gemKey);
+    localStorage.setItem("btl_key_openai", oaiKey);
+    localStorage.setItem("btl_key_groq", grqKey);
+
+    if (grqKey && !gemKey) {
+        document.getElementById("chatProvider").value = "groq";
+    } else if (oaiKey && !gemKey && !grqKey) {
+        document.getElementById("chatProvider").value = "openai";
+    } else if (gemKey) {
+        document.getElementById("chatProvider").value = "gemini";
+    }
+
+    updateCreditStatusUI();
     closeModal("keyVaultModal"); 
-    alert("API keys saved successfully!");
+    appendMsg("✓ <b>Unlimited Free AI Activated!</b> You can now build, test, and revise unlimited strategies with zero limits.", "ai");
 }
 </script>
 </body>

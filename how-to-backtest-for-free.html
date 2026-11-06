@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5.0">
+    <meta name="theme-color" content="#050507">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    
+    <!-- Primary Metadata: Targeting Educational Cluster 2 Queries -->
+    <title>How to Backtest Trading Strategies for Free: Complete Step-by-Step Guide</title>
+    <meta name="description" content="Learn how to backtest trading strategies for free without expensive software. Step-by-step tutorial on candle-by-candle bar replay, win-rate calculation, and risk modeling.">
+    <link rel="canonical" href="https://backtestlabpro.com/how-to-backtest-for-free.html">
+
+    <!-- Open Graph & Social Cards -->
+    <meta property="og:locale" content="en_US">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="How to Backtest Trading Strategies for Free (Step-by-Step)">
+    <meta property="og:description" content="Complete guide on how to backtest forex, gold, and crypto trading strategies for free using online market replay with zero sign-up or subscription fees.">
+    <meta property="og:url" content="https://backtestlabpro.com/how-to-backtest-for-free.html">
+    <meta property="og:site_name" content="BacktestLab Pro">
+    <meta property="og:image" content="https://backtestlabpro.com/favicon.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="How to Backtest Trading Strategies for Free: Step-by-Step Guide">
+    <meta name="twitter:description" content="Learn how to test trading setups candle-by-candle with free market replay. No paid subscriptions, downloads, or credit cards required.">
+
+    <!-- Google Tag Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YY82TZ1ZG7"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-YY82TZ1ZG7');
+      gtag('config', 'G-V7SXCF9923');
+    </script>
+
+    <!-- Tailwind CSS, Fonts & Icons -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" sizes="192x192" href="favicon.png">
+
+    <!-- Structured Data: HowTo & FAQPage Schema for Featured Snippets -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "HowTo",
+          "name": "How to Backtest Trading Strategies for Free",
+          "description": "A comprehensive step-by-step tutorial on how to backtest forex and gold trading strategies online using free candle-by-candle bar replay simulators.",
+          "step": [
+            {
+              "@type": "HowToStep",
+              "position": 1,
+              "name": "Select Market & Historical Window",
+              "text": "Choose your trading asset such as Gold (XAUUSD) or major Forex pairs and select a multi-year historical timeframe."
+            },
+            {
+              "@type": "HowToStep",
+              "position": 2,
+              "name": "Step Candle-by-Candle with Bar Replay",
+              "text": "Advance past market data bar-by-bar to eliminate lookahead bias and verify real entry and exit conditions."
+            },
+            {
+              "@type": "HowToStep",
+              "position": 3,
+              "name": "Simulate Order Execution with Spread Buffers",
+              "text": "Set visual Stop Loss and Take Profit levels while modeling broker bid-ask spread and slippage friction."
+            },
+            {
+              "@type": "HowToStep",
+              "position": 4,
+              "name": "Calculate Expectancy, Win Rate, and Drawdown",
+              "text": "Audit performance metrics across a sample size of at least 50 to 100 historical trades to verify mathematical edge."
+            }
+          ]
+        },
+        {
+          "@type": "FAQPage",
+          "@id": "https://backtestlabpro.com/how-to-backtest-for-free.html#faq",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "How can I backtest trading strategies online for free without paying for TradingView?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "You can backtest online for free using BacktestLab Pro. Unlike TradingView, which locks 1-minute and 5-minute bar replay behind paid subscriptions, BacktestLab Pro provides completely free intraday candle replay across all timeframes directly in your web browser with no sign-up or credit card required."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "How many trades should I backtest to confirm a strategy is profitable?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "A reliable statistical sample size requires backtesting at least 50 to 100 consecutive trades across diverse market conditions (trending, ranging, and high-volatility news sessions) to verify that your win rate, profit factor, and maximum drawdown are statistically sound."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What is the difference between automated backtesting and manual bar replay?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Automated backtesting uses algorithms to evaluate rules instantly across historical data, which is faster but can suffer from curve-fitting. Manual bar replay allows discretionary traders to step through candles one at a time to train trade execution, pattern recognition, and emotional discipline in real-time simulations."
+              }
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    screens: { 'xs': '380px' },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            dark: '#050507',
+                            card: '#0c0c0e',
+                            accent: '#6366f1',
+                            success: '#10b981',
+                            purple: '#a855f7'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        :root { color-scheme: dark; }
+        html, body {
+            background-color: #050507;
+            color: #f4f4f5;
+            overflow-x: hidden;
+            width: 100%;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .glow-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(90px);
+            opacity: 0.12;
+            pointer-events: none;
+        }
+        @media (min-width: 768px) {
+            .glow-orb { filter: blur(140px); opacity: 0.16; }
+        }
+        .glass-card {
+            background: rgba(12, 12, 14, 0.72);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .glass-card:hover {
+            border-color: rgba(99, 102, 241, 0.35);
+            box-shadow: 0 0 30px rgba(99, 102, 241, 0.08);
+        }
+        a:focus-visible, button:focus-visible {
+            outline: 2px solid #818cf8;
+            outline-offset: 2px;
+        }
+        .nav-dropdown { position: relative; }
+        .nav-dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            padding-top: 10px;
+            z-index: 60;
+        }
+        .nav-dropdown:hover .nav-dropdown-menu,
+        .nav-dropdown:focus-within .nav-dropdown-menu { display: block; }
+        .nav-dropdown-panel {
+            background: #0d0f17;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 14px;
+            padding: 8px;
+            min-width: 250px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.7);
+        }
+        .nav-dropdown-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            color: #d1d4dc;
+            transition: all 0.15s ease;
+        }
+        .nav-dropdown-item:hover, .nav-dropdown-item:focus {
+            background: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+        }
+        .btn-workspace {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #161821;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #d1d4dc;
+            padding: 7px 16px;
+            border-radius: 9999px;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        .btn-avatar-badge {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            background: #12151e;
+            border: 1px solid rgba(168, 85, 247, 0.5);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            cursor: pointer;
+        }
+        .user-dropdown-menu {
+            display: none;
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            background: #11141c;
+            border: 1px solid #282d3b;
+            border-radius: 12px;
+            padding: 8px;
+            min-width: 190px;
+            box-shadow: 0 16px 40px rgba(0,0,0,0.6);
+            z-index: 100;
+        }
+    </style>
+</head>
+<body class="font-sans antialiased min-h-screen flex flex-col justify-between selection:bg-indigo-500/30 selection:text-indigo-200" id="top">
+
+    <!-- Ambient Gradient Background Elements -->
+    <div class="glow-orb w-64 h-64 sm:w-[450px] sm:h-[450px] bg-brand-accent top-[-40px] left-[-40px]" aria-hidden="true"></div>
+    <div class="glow-orb w-72 h-72 sm:w-[500px] sm:h-[500px] bg-brand-purple top-[25%] right-[-60px]" aria-hidden="true"></div>
+    <div class="glow-orb w-64 h-64 sm:w-[450px] sm:h-[450px] bg-brand-success bottom-[15%] left-[-60px]" aria-hidden="true"></div>
+
+    <!-- Navigation Header (Synchronized with index.html) -->
+    <header class="sticky top-0 z-50 w-full border-b border-white/5 bg-[#050507]/90 backdrop-blur-xl" role="banner">
+        <div class="max-w-7xl mx-auto px-3 xs:px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-3">
+            
+            <a href="index.html" class="flex items-center gap-2.5 sm:gap-3 group flex-shrink-0" aria-label="BacktestLab Pro Homepage">
+                <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
+                    <svg class="w-4 h-4 sm:w-5 sm:h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                    </svg>
+                </div>
+                <span class="text-base sm:text-xl font-bold font-sans tracking-tight text-white whitespace-nowrap">BacktestLab <span class="text-indigo-400">Pro</span></span>
+            </a>
+
+            <!-- Desktop Navigation -->
+            <nav class="hidden lg:flex items-center gap-5 text-xs xl:text-sm font-medium" aria-label="Main Navigation">
+                <div class="nav-dropdown">
+                    <button type="button" aria-haspopup="true" aria-expanded="false" class="text-zinc-300 hover:text-white transition-colors flex items-center gap-1.5 py-2">
+                        <span>Platform Modules</span>
+                        <i class="fa-solid fa-chevron-down text-[10px] text-zinc-500" aria-hidden="true"></i>
+                    </button>
+                    <div class="nav-dropdown-menu">
+                        <div class="nav-dropdown-panel space-y-1">
+                            <a href="session.html" class="nav-dropdown-item">
+                                <i class="fa-solid fa-play text-indigo-400 text-xs mt-1" aria-hidden="true"></i>
+                                <div>
+                                    <div class="font-semibold text-xs text-white">Session Builder (Replay)</div>
+                                    <div class="text-[11px] text-zinc-400">Interactive candle stepping and order simulation</div>
+                                </div>
+                            </a>
+                            <a href="bot_automation.html" class="nav-dropdown-item">
+                                <i class="fa-solid fa-robot text-purple-400 text-xs mt-1" aria-hidden="true"></i>
+                                <div>
+                                    <div class="font-semibold text-xs text-white">AI MQL5 Builder</div>
+                                    <div class="text-[11px] text-zinc-400">Convert trading rules into MT5 EA and Python code</div>
+                                </div>
+                            </a>
+                            <a href="algo_store.html" class="nav-dropdown-item">
+                                <i class="fa-solid fa-store text-emerald-400 text-xs mt-1" aria-hidden="true"></i>
+                                <div>
+                                    <div class="font-semibold text-xs text-white">Algo Store</div>
+                                    <div class="text-[11px] text-zinc-400">Curated community strategies and verified models</div>
+                                </div>
+                            </a>
+                            <a href="production-code.html" class="nav-dropdown-item">
+                                <i class="fa-solid fa-file-code text-cyan-400 text-xs mt-1" aria-hidden="true"></i>
+                                <div>
+                                    <div class="font-semibold text-xs text-white">Code Export</div>
+                                    <div class="text-[11px] text-zinc-400">MetaTrader 5 and Python algorithmic scripts</div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="nav-dropdown">
+                    <button type="button" aria-haspopup="true" aria-expanded="false" class="text-zinc-300 hover:text-white transition-colors flex items-center gap-1.5 py-2">
+                        <span>Compare</span>
+                        <i class="fa-solid fa-chevron-down text-[10px] text-zinc-500" aria-hidden="true"></i>
+                    </button>
+                    <div class="nav-dropdown-menu">
+                        <div class="nav-dropdown-panel space-y-1">
+                            <a href="index.html#compare-table" class="nav-dropdown-item">
+                                <i class="fa-solid fa-scale-balanced text-indigo-400 text-xs mt-1" aria-hidden="true"></i>
+                                <div>
+                                    <div class="font-semibold text-xs text-white">vs BacktestingMax</div>
+                                    <div class="text-[11px] text-zinc-400">Comparison of free replay sessions &amp; exports</div>
+                                </div>
+                            </a>
+                            <a href="index.html#compare-table" class="nav-dropdown-item">
+                                <i class="fa-solid fa-chart-line text-purple-400 text-xs mt-1" aria-hidden="true"></i>
+                                <div>
+                                    <div class="font-semibold text-xs text-white">vs TradingView Bar Replay</div>
+                                    <div class="text-[11px] text-zinc-400">Browser intraday replay without subscription tiers</div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <a href="algo_store.html" class="text-zinc-300 hover:text-white transition-colors flex items-center gap-1.5">
+                    <span class="h-1.5 w-1.5 rounded-full bg-purple-400 animate-pulse" aria-hidden="true"></span>
+                    <span>Algo Store</span>
+                </a>
+                <a href="articles.html" class="text-zinc-400 hover:text-white transition-colors">Documentation</a>
+                <a href="about.html" class="text-zinc-400 hover:text-white transition-colors">About</a>
+            </nav>
+
+            <div class="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+                <div id="navGuestControls" class="flex items-center gap-2 sm:gap-3">
+                    <a href="login.html" class="text-xs sm:text-sm font-medium text-zinc-300 hover:text-white px-3 py-2 rounded-lg hover:bg-white/5 transition-colors">
+                        Sign In
+                    </a>
+                    <a href="session.html" class="text-xs sm:text-sm font-semibold bg-white text-zinc-950 px-3.5 xs:px-4 sm:px-5 py-2 sm:py-2.5 rounded-full hover:bg-zinc-200 transition-all flex items-center gap-1.5 shadow-md">
+                        <span>Launch Simulator →</span>
+                    </a>
+                </div>
+
+                <div id="navUserControls" class="hidden items-center gap-2.5">
+                    <a href="session.html" class="text-xs sm:text-sm font-semibold bg-white text-zinc-950 px-4 py-2 sm:py-2.5 rounded-full hover:bg-zinc-200 transition-all flex items-center gap-1.5 shadow-md">
+                        <span>Launch Simulator →</span>
+                    </a>
+                    <a href="my-sessions.html" class="btn-workspace">
+                        <i class="fa-solid fa-folder text-indigo-400" aria-hidden="true"></i>
+                        <span>Workspace</span>
+                    </a>
+                    <div class="relative">
+                        <button onclick="toggleUserDropdown()" id="userAvatarBtn" aria-label="Open user profile menu" aria-haspopup="true" class="btn-avatar-badge">
+                            <i class="fa-solid fa-user text-xs" aria-hidden="true"></i>
+                        </button>
+                        <div id="userDropdown" class="user-dropdown-menu">
+                            <div class="px-3 py-2 border-b border-white/5 text-[11px] font-mono text-zinc-400 truncate" id="userEmailDisplay">trader@domain.com</div>
+                            <a href="my-sessions.html" class="flex items-center gap-2 px-3 py-2 text-xs text-zinc-300 hover:text-white hover:bg-white/5 rounded-lg mt-1 transition-colors">
+                                <i class="fa-solid fa-folder text-indigo-400 text-[11px]" aria-hidden="true"></i> My Sessions
+                            </a>
+                            <button onclick="handleUserSignOut()" class="w-full text-left flex items-center gap-2 px-3 py-2 text-xs text-red-400 hover:bg-red-500/10 rounded-lg transition-colors mt-0.5">
+                                <i class="fa-solid fa-arrow-right-from-bracket text-[11px]" aria-hidden="true"></i> Sign Out
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <button id="mobileMenuToggle" aria-label="Toggle navigation menu" aria-expanded="false" class="lg:hidden w-8 h-8 xs:w-9 xs:h-9 rounded-xl bg-zinc-900 border border-white/10 flex items-center justify-center text-zinc-300 hover:text-white ml-1">
+                    <i id="menuHamburgerIcon" class="fa-solid fa-bars text-xs xs:text-sm" aria-hidden="true"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Drawer Menu -->
+        <div id="mobileDrawerMenu" class="hidden lg:hidden border-t border-white/10 bg-[#08080c]/98 backdrop-blur-2xl px-4 py-4 space-y-2 shadow-2xl">
+            <a href="session.html" class="block text-xs font-semibold text-white py-2.5 px-3.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 transition-colors">
+                <i class="fa-solid fa-play text-xs mr-2" aria-hidden="true"></i> Open Session Builder (Replay)
+            </a>
+            <a href="session.html" class="block text-xs font-medium text-zinc-300 hover:text-white py-2 px-3 rounded-lg hover:bg-white/5">
+                <i class="fa-solid fa-chart-line text-indigo-400 mr-2" aria-hidden="true"></i> Online Trading Simulator
+            </a>
+            <a href="bot_automation.html" class="block text-xs font-medium text-zinc-300 hover:text-white py-2 px-3 rounded-lg hover:bg-white/5">
+                <i class="fa-solid fa-robot text-purple-400 mr-2" aria-hidden="true"></i> Bot Automation
+            </a>
+            <a href="algo_store.html" class="block text-xs font-medium text-purple-300 py-2 px-3 rounded-lg bg-purple-500/10 border border-purple-500/20">
+                <i class="fa-solid fa-store text-purple-400 mr-2" aria-hidden="true"></i> Algo Store
+            </a>
+            <a href="production-code.html" class="block text-xs font-medium text-zinc-300 hover:text-white py-2 px-3 rounded-lg hover:bg-white/5">
+                <i class="fa-solid fa-file-code text-cyan-400 mr-2" aria-hidden="true"></i> Production Code Export
+            </a>
+            <a href="index.html#compare-table" class="block text-xs font-medium text-zinc-300 hover:text-white py-2 px-3 rounded-lg hover:bg-white/5">
+                <i class="fa-solid fa-scale-balanced text-zinc-400 mr-2" aria-hidden="true"></i> Compare Backtesting Platforms
+            </a>
+            <a href="articles.html" class="block text-xs font-medium text-zinc-300 hover:text-white py-2 px-3 rounded-lg hover:bg-white/5">
+                <i class="fa-solid fa-newspaper text-zinc-400 mr-2" aria-hidden="true"></i> Strategy Guides &amp; Documentation
+            </a>
+            <a href="about.html" class="block text-xs font-medium text-zinc-300 hover:text-white py-2 px-3 rounded-lg hover:bg-white/5">
+                <i class="fa-solid fa-circle-info text-zinc-400 mr-2" aria-hidden="true"></i> About BacktestLab Pro
+            </a>
+        </div>
+    </header>
+
+    <main class="relative z-10 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto space-y-14 sm:space-y-20 flex-grow w-full pt-10 sm:pt-14 pb-20">
+        
+        <!-- Breadcrumbs -->
+        <nav class="flex items-center gap-2 text-xs font-mono text-zinc-500" aria-label="Breadcrumb">
+            <a href="index.html" class="hover:text-white transition-colors">Home</a>
+            <span>/</span>
+            <span class="text-indigo-400">How to Backtest for Free</span>
+        </nav>
+
+        <!-- Header: Targeting "How to Backtest for Free" -->
+        <header class="space-y-4">
+            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 font-mono text-xs">
+                <span class="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span>Beginner to Pro Guide • Zero Software Fees • Web-Based</span>
+            </div>
+
+            <h1 class="font-display font-extrabold text-3xl sm:text-5xl text-white tracking-tight leading-[1.2]">
+                How to Backtest Trading Strategies for Free: Complete Practical Guide
+            </h1>
+
+            <p class="text-zinc-400 text-sm sm:text-base leading-relaxed">
+                Backtesting is the only objective way to prove whether a trading setup has an actual statistical edge before risking real capital. Learn how to backtest forex and gold strategies step-by-step using free online bar replay software—without paying for expensive charting subscriptions.
+            </p>
+        </header>
+
+        <!-- Quick Summary Box (Featured Snippet Optimization) -->
+        <section class="glass-card p-5 sm:p-6 rounded-2xl border border-indigo-500/30 space-y-3">
+            <h2 class="text-xs font-mono font-bold text-indigo-400 uppercase tracking-widest">At-A-Glance: How to Backtest for Free</h2>
+            <p class="text-xs sm:text-sm text-zinc-200 leading-relaxed">
+                To backtest a trading strategy for free:
+                <strong>1.</strong> Launch our <a href="session.html" class="text-indigo-400 underline font-semibold">free bar replay simulator</a> without logging in.
+                <strong>2.</strong> Select your instrument (e.g., Gold XAUUSD or EURUSD) and candle timeframe (1M to 1D)[cite: 3].
+                <strong>3.</strong> Hide future price action by jumping back in time.
+                <strong>4.</strong> Step forward candle-by-candle to identify your setup rules (e.g., Asian sweeps or <a href="articles/how-to-trade-balanced-price-range-bpr.html" class="text-purple-400 underline">BPR mitigations</a>).
+                <strong>5.</strong> Log simulated entry, Stop Loss, and Take Profit outcomes across a minimum of 50 to 100 sample trades to audit win rate and maximum drawdown.
+            </p>
+        </section>
+
+        <!-- Step-by-Step Educational Breakdown -->
+        <article class="space-y-10 text-sm sm:text-base text-zinc-300 leading-relaxed">
+            
+            <!-- Step 1 -->
+            <section class="space-y-3">
+                <div class="flex items-center gap-3">
+                    <span class="w-8 h-8 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 font-mono font-bold text-sm flex items-center justify-center">01</span>
+                    <h2 class="text-xl sm:text-2xl font-display font-bold text-white">Define Clear, Unambiguous Strategy Rules</h2>
+                </div>
+                <p>
+                    A strategy cannot be effectively backtested if the entry and exit criteria are vague. Before stepping through a single candle, formulate exact rules:
+                </p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1 font-mono text-xs">
+                    <div class="p-4 rounded-xl bg-black/40 border border-white/5 space-y-1">
+                        <span class="text-emerald-400 font-bold block">Entry Triggers</span>
+                        <p class="text-zinc-400 text-[11px]">Example: Price sweeps the Asian session low during the London open with Relative Volume (RVOL) &gt; 1.5.</p>
+                    </div>
+                    <div class="p-4 rounded-xl bg-black/40 border border-white/5 space-y-1">
+                        <span class="text-indigo-400 font-bold block">Risk &amp; Exit Targets</span>
+                        <p class="text-zinc-400 text-[11px]">Example: Stop loss placed 2 pips below the sweep low; take profit set strictly at a 1:2.5 Risk-to-Reward ratio.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Step 2 -->
+            <section class="space-y-3">
+                <div class="flex items-center gap-3">
+                    <span class="w-8 h-8 rounded-xl bg-purple-500/10 border border-purple-500/20 text-purple-400 font-mono font-bold text-sm flex items-center justify-center">02</span>
+                    <h2 class="text-xl sm:text-2xl font-display font-bold text-white">Load Historical Charts in a Bar Replay Simulator</h2>
+                </div>
+                <p>
+                    Static chart analysis creates heavy lookahead bias because the human eye naturally seeks out successful setups while ignoring failed signals. 
+                    Using our <a href="free-bar-replay-simulator.html" class="text-purple-400 underline">free bar replay simulator</a>, you can cut off future price action and reveal candles sequentially one-by-one, mirroring the exact psychological pressure of real market conditions.
+                </p>
+            </section>
+
+            <!-- Mid-Article Action CTA -->
+            <div class="p-6 rounded-2xl bg-gradient-to-r from-indigo-950/40 via-purple-950/20 to-black border border-indigo-500/30 flex flex-col sm:flex-row items-center justify-between gap-5 text-center sm:text-left">
+                <div>
+                    <span class="text-xs font-mono font-bold text-emerald-400 uppercase tracking-widest block mb-1">Instant Access</span>
+                    <h3 class="text-lg font-bold text-white font-display">Ready to test your strategy right now?</h3>
+                    <p class="text-xs text-zinc-400">Zero software installation, zero credit card, and zero email sign-up required.</p>
+                </div>
+                <a href="session.html" class="px-6 py-3 rounded-xl bg-white text-zinc-950 font-bold text-xs uppercase font-mono tracking-wider hover:bg-zinc-200 transition-all shadow-lg whitespace-nowrap">
+                    Open Free Simulator →
+                </a>
+            </div>
+
+            <!-- Step 3 -->
+            <section class="space-y-3">
+                <div class="flex items-center gap-3">
+                    <span class="w-8 h-8 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 font-mono font-bold text-sm flex items-center justify-center">03</span>
+                    <h2 class="text-xl sm:text-2xl font-display font-bold text-white">Incorporate Real-World Spread &amp; Slippage Friction</h2>
+                </div>
+                <p>
+                    Many manual backtests fail in live trading because traders record trades at idealized prices without accounting for broker transaction friction. 
+                    Always incorporate a realistic spread buffer (e.g., 1.5 to 2.5 pips on Gold or 0.8 pips on EURUSD) and 1 pip of adverse slippage on market orders to ensure your backtested expectancy remains positive in live execution.
+                </p>
+            </section>
+
+            <!-- Step 4 -->
+            <section class="space-y-3">
+                <div class="flex items-center gap-3">
+                    <span class="w-8 h-8 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 font-mono font-bold text-sm flex items-center justify-center">04</span>
+                    <h2 class="text-xl sm:text-2xl font-display font-bold text-white">Track the 3 Core Quantitative Metrics</h2>
+                </div>
+                <p>
+                    Do not focus solely on total profit. A professional trading system is evaluated by three core mathematical metrics:
+                </p>
+                <ul class="space-y-2.5 text-xs sm:text-sm font-mono text-zinc-300">
+                    <li class="flex items-start gap-2.5">
+                        <i class="fa-solid fa-check text-emerald-400 mt-1"></i>
+                        <span><strong>Win Rate:</strong> Percentage of profitable trades ($\text{Wins} / \text{Total Trades}$). Aim for at least 40% to 65% depending on your average reward ratio.</span>
+                    </li>
+                    <li class="flex items-start gap-2.5">
+                        <i class="fa-solid fa-check text-indigo-400 mt-1"></i>
+                        <span><strong>Profit Factor:</strong> Gross Profits divided by Gross Losses. A robust strategy typically maintains a Profit Factor above 1.5.</span>
+                    </li>
+                    <li class="flex items-start gap-2.5">
+                        <i class="fa-solid fa-check text-purple-400 mt-1"></i>
+                        <span><strong>Maximum Drawdown:</strong> The deepest peak-to-trough decline in your simulated equity curve, ensuring you do not violate prop firm or risk boundaries.</span>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- FAQ Section -->
+            <section class="space-y-4 pt-6 border-t border-white/5">
+                <h2 class="text-2xl font-display font-bold text-white">Frequently Asked Questions</h2>
+                
+                <div class="space-y-3 text-xs sm:text-sm">
+                    <div class="p-4 sm:p-5 rounded-2xl glass-card">
+                        <h3 class="font-bold text-white mb-1">How can I backtest trading strategies online for free without paying for TradingView?</h3>
+                        <p class="text-zinc-400 leading-relaxed">You can backtest online for free using BacktestLab Pro. Unlike TradingView, which locks 1-minute and 5-minute bar replay behind paid subscriptions, BacktestLab Pro provides completely free intraday candle replay across all timeframes directly in your web browser with no sign-up or credit card required.</p>
+                    </div>
+
+                    <div class="p-4 sm:p-5 rounded-2xl glass-card">
+                        <h3 class="font-bold text-white mb-1">How many trades should I backtest to confirm a strategy is profitable?</h3>
+                        <p class="text-zinc-400 leading-relaxed">A reliable statistical sample size requires backtesting at least 50 to 100 consecutive trades across diverse market conditions (trending, ranging, and high-volatility news sessions) to verify that your win rate, profit factor, and maximum drawdown are statistically sound.</p>
+                    </div>
+
+                    <div class="p-4 sm:p-5 rounded-2xl glass-card">
+                        <h3 class="font-bold text-white mb-1">What is the difference between automated backtesting and manual bar replay?</h3>
+                        <p class="text-zinc-400 leading-relaxed">Automated backtesting uses algorithms to evaluate rules instantly across historical data, which is faster but can suffer from curve-fitting. Manual bar replay allows discretionary traders to step through candles one at a time to train trade execution, pattern recognition, and emotional discipline in real-time simulations.</p>
+                    </div>
+                </div>
+            </section>
+        </article>
+
+        <!-- Final CTA Banner -->
+        <section class="p-8 sm:p-12 rounded-3xl bg-gradient-to-br from-indigo-900/30 via-purple-900/20 to-black border border-indigo-500/30 text-center space-y-4">
+            <h3 class="text-2xl sm:text-3xl font-display font-bold text-white">Start Your Free Backtest Session Now</h3>
+            <p class="text-xs sm:text-sm text-zinc-400 max-w-lg mx-auto">
+                Step through multi-year historical bars on Gold and Forex pairs. Zero fees, zero time limits, and no account creation.
+            </p>
+            <div class="pt-2">
+                <a href="session.html" class="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-white text-zinc-950 font-bold text-xs uppercase font-mono tracking-wider hover:bg-zinc-200 transition-all shadow-xl active:scale-95">
+                    Launch Free Bar Replay →
+                </a>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Global Footer -->
+    <footer class="mt-20 border-t border-white/10 bg-[#060608] pt-12 pb-12 text-zinc-400 text-xs font-sans" role="contentinfo">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+            <div class="p-4 sm:p-5 rounded-2xl bg-black/60 border border-white/5 font-mono text-[11px] text-zinc-500 leading-relaxed space-y-2">
+                <div class="text-zinc-400 font-bold"><i class="fa-solid fa-triangle-exclamation text-amber-400 mr-1.5"></i> Quantitative Risk Disclaimer</div>
+                <p>BacktestLab Pro provides strategy backtesting software and historical data simulation for research and educational purposes only. Past simulated performance does not guarantee future financial returns. All live trading carries substantial financial risk.</p>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-xs font-mono">
+                <div class="space-y-2">
+                    <span class="text-white font-bold block uppercase tracking-wider text-[11px]">Replay &amp; Simulators</span>
+                    <a href="session.html" class="block hover:text-white">Session Builder (Bar Replay)</a>
+                    <a href="free-bar-replay-simulator.html" class="block hover:text-white">Free Replay Simulator</a>
+                    <a href="session.html" class="block hover:text-white">Gold (XAUUSD) Replay Engine</a>
+                    <a href="bot_automation.html" class="block hover:text-white">AI MQL5 EA Builder</a>
+                </div>
+                <div class="space-y-2">
+                    <span class="text-white font-bold block uppercase tracking-wider text-[11px]">Comparisons &amp; Concepts</span>
+                    <a href="index.html#compare-table" class="block hover:text-white">vs BacktestingMax Replay</a>
+                    <a href="index.html#compare-table" class="block hover:text-white">vs TradingView Bar Replay</a>
+                    <a href="articles/how-to-trade-balanced-price-range-bpr.html" class="block text-purple-400 font-semibold hover:text-purple-300">BPR Strategy Guide &amp; Backtest</a>
+                    <a href="articles/asian-session-range-breakout-gold.html" class="block hover:text-white">Asian Range Sweep Mechanics</a>
+                </div>
+                <div class="space-y-2">
+                    <span class="text-white font-bold block uppercase tracking-wider text-[11px]">Code &amp; Modules</span>
+                    <a href="production-code.html" class="block hover:text-white">MetaTrader 5 Expert Advisors</a>
+                    <a href="production-code.html" class="block hover:text-white">Python Backtest Scripts</a>
+                    <a href="algo_store.html" class="block hover:text-white">Algo Store Strategies</a>
+                    <a href="articles.html" class="block hover:text-white">Articles &amp; Documentation</a>
+                </div>
+                <div class="space-y-2">
+                    <span class="text-white font-bold block uppercase tracking-wider text-[11px]">Company &amp; Legal</span>
+                    <a href="about.html" class="block hover:text-white">About BacktestLab Pro</a>
+                    <a href="privacy.html" class="block hover:text-white">Privacy Policy</a>
+                    <a href="terms.html" class="block hover:text-white">Terms of Service</a>
+                    <a href="login.html" class="block hover:text-white">Sign In / Register</a>
+                </div>
+            </div>
+
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4 text-zinc-500 font-mono text-[11px] pt-4 border-t border-white/5">
+                <div>© 2026 BacktestLab Pro. All rights reserved. Free backtesting forever with no sign up or credit card required.</div>
+                <div class="flex gap-4">
+                    <a href="#top" class="hover:text-white"><i class="fa-solid fa-arrow-up mr-1"></i> Back to Top</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Firebase Auth & Navbar Sync -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getFirestore } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAensfI53w49Fd4A7Lz5_K9N1JOxZsW7Kk",
+            authDomain: "backtestlabpro.firebaseapp.com",
+            projectId: "backtestlabpro",
+            storageBucket: "backtestlabpro.firebasestorage.app",
+            messagingSenderId: "560146824734",
+            appId: "1:560146824734:web:5287d0ded3a1024e75780f",
+            measurementId: "G-YY82TZ1ZG7"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        onAuthStateChanged(auth, async (user) => {
+            const guestControls = document.getElementById("navGuestControls");
+            const userControls = document.getElementById("navUserControls");
+            const emailDisplay = document.getElementById("userEmailDisplay");
+
+            if (user) {
+                if (guestControls) guestControls.classList.add("hidden");
+                if (userControls) {
+                    userControls.classList.remove("hidden");
+                    userControls.classList.add("flex");
+                }
+                if (emailDisplay) emailDisplay.innerText = user.email;
+            } else {
+                if (guestControls) guestControls.classList.remove("hidden");
+                if (userControls) {
+                    userControls.classList.add("hidden");
+                    userControls.classList.remove("flex");
+                }
+            }
+        });
+
+        window.toggleUserDropdown = function() {
+            const menu = document.getElementById("userDropdown");
+            if (menu) {
+                menu.style.display = menu.style.display === "block" ? "none" : "block";
+            }
+        };
+
+        window.handleUserSignOut = async function() {
+            try {
+                await signOut(auth);
+                localStorage.removeItem("user_uid");
+                localStorage.removeItem("user_email");
+                window.location.reload();
+            } catch(e) {
+                console.error("Sign out error:", e);
+            }
+        };
+
+        document.addEventListener('click', (e) => {
+            const avatar = document.getElementById("userAvatarBtn");
+            const dropdown = document.getElementById("userDropdown");
+            if (avatar && dropdown && !avatar.contains(e.target) && !dropdown.contains(e.target)) {
+                dropdown.style.display = "none";
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggle = document.getElementById('mobileMenuToggle');
+            const drawer = document.getElementById('mobileDrawerMenu');
+            const icon = document.getElementById('menuHamburgerIcon');
+
+            if (toggle && drawer && icon) {
+                toggle.addEventListener('click', () => {
+                    const isHidden = drawer.classList.toggle('hidden');
+                    toggle.setAttribute('aria-expanded', !isHidden);
+                    icon.className = isHidden ? 'fa-solid fa-bars text-xs xs:text-sm' : 'fa-solid fa-xmark text-xs xs:text-sm';
+                });
+            }
+        });
+    </script>
+</body>
+</html>

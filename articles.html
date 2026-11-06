@@ -7,34 +7,78 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
     
-    <title>Quantitative Strategy Articles, ICT Breakdowns &amp; Backtesting Guides | BacktestLab Pro</title>
-    <meta name="description" content="Explore in-depth algorithmic trading articles, ICT setups, Balanced Price Range (BPR) guides, Asian range liquidity sweeps, and free MetaTrader 5 backtesting tutorials.">
+    <!-- Primary Metadata: Targeted at High-Intent Forex & Backtesting Searches -->
+    <title>Forex Trading Strategy Guides, BPR Backtesting &amp; Algorithmic Tutorials | BacktestLab Pro</title>
+    <meta name="description" content="Master rule-based trading: Balanced Price Range (BPR) backtesting, Asian range liquidity sweeps on Gold (XAUUSD), PDH/PDL breakouts, and free MT5 Expert Advisor tutorials.">
     <link rel="canonical" href="https://backtestlabpro.com/articles.html">
 
-    <!-- Open Graph Meta -->
+    <!-- Open Graph & Social Cards -->
     <meta property="og:locale" content="en_US">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Quantitative Strategy Articles &amp; Backtesting Guides | BacktestLab Pro">
-    <meta property="og:description" content="Master rule-based trading: Previous Day High/Low retests, Balanced Price Ranges, Asian session sweeps, and MQL5 automation guides.">
+    <meta property="og:title" content="Forex Trading Strategy Guides &amp; BPR Backtest Tutorials | BacktestLab Pro">
+    <meta property="og:description" content="In-depth quantitative and SMC trading guides: Balanced Price Ranges (BPR), Asian session sweeps, MT5 strategy testing, and free bar replay tutorials.">
     <meta property="og:url" content="https://backtestlabpro.com/articles.html">
     <meta property="og:site_name" content="BacktestLab Pro">
+    <meta property="og:image" content="https://backtestlabpro.com/favicon.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Forex Strategy Guides &amp; BPR Backtest Tutorials | BacktestLab Pro">
+    <meta name="twitter:description" content="Step-by-step price action and quantitative strategy backtesting guides with free historical market replay.">
 
     <!-- Google Analytics Tracking -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-V7SXCF9923"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YY82TZ1ZG7"></script>
     <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-V7SXCF9923');
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-YY82TZ1ZG7');
+      gtag('config', 'G-V7SXCF9923');
     </script>
 
-    <!-- Tailwind Framework & Font / Icon Integrations -->
+    <!-- Tailwind Framework & Font Integrations -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
     <link rel="icon" type="image/png" sizes="192x192" href="favicon.png">
+
+    <!-- Structured Data: CollectionPage & BreadcrumbList -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "CollectionPage",
+          "@id": "https://backtestlabpro.com/articles.html#collection",
+          "url": "https://backtestlabpro.com/articles.html",
+          "name": "Quantitative Forex Strategy Guides & Backtesting Tutorials",
+          "description": "Comprehensive library of mechanical price action setups, Balanced Price Range (BPR) guides, Asian liquidity sweep strategies, and free MT5 backtesting walkthroughs.",
+          "publisher": {
+            "@type": "Organization",
+            "name": "BacktestLab Pro",
+            "url": "https://backtestlabpro.com/"
+          }
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://backtestlabpro.com/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Articles & Guides",
+              "item": "https://backtestlabpro.com/articles.html"
+            }
+          ]
+        }
+      ]
+    }
+    </script>
     
     <script>
         tailwind.config = {
@@ -61,11 +105,13 @@
     </script>
 
     <style>
+        :root { color-scheme: dark; }
         body {
             background-color: #050507;
             color: #f4f4f5;
             overflow-x: hidden;
             width: 100%;
+            -webkit-tap-highlight-color: transparent;
         }
         
         .glow-orb {
@@ -86,24 +132,93 @@
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.06);
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .glass-card:hover {
             border-color: rgba(99, 102, 241, 0.3);
             box-shadow: 0 0 40px rgba(99, 102, 241, 0.08);
         }
 
-        .auth-hidden {
-            opacity: 0 !important;
-            pointer-events: none !important;
-            visibility: hidden !important;
-            display: none !important;
+        /* Focus outline improvements for accessibility */
+        a:focus-visible, button:focus-visible {
+            outline: 2px solid #818cf8;
+            outline-offset: 2px;
         }
-        .auth-visible {
-            opacity: 1 !important;
-            pointer-events: auto !important;
-            visibility: visible !important;
-            display: flex !important;
-            transition: opacity 0.2s ease-in-out;
+
+        .nav-dropdown {
+            position: relative;
+        }
+        .nav-dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            padding-top: 10px;
+            z-index: 60;
+        }
+        .nav-dropdown:hover .nav-dropdown-menu,
+        .nav-dropdown:focus-within .nav-dropdown-menu {
+            display: block;
+        }
+        .nav-dropdown-panel {
+            background: #0d0f17;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 14px;
+            padding: 8px;
+            min-width: 250px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.7);
+        }
+        .nav-dropdown-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            color: #d1d4dc;
+            transition: all 0.15s ease;
+        }
+        .nav-dropdown-item:hover, .nav-dropdown-item:focus {
+            background: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+        }
+
+        .btn-workspace {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #161821;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #d1d4dc;
+            padding: 7px 16px;
+            border-radius: 9999px;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        .btn-avatar-badge {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            background: #12151e;
+            border: 1px solid rgba(168, 85, 247, 0.5);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            cursor: pointer;
+        }
+        .user-dropdown-menu {
+            display: none;
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            background: #11141c;
+            border: 1px solid #282d3b;
+            border-radius: 12px;
+            padding: 8px;
+            min-width: 190px;
+            box-shadow: 0 16px 40px rgba(0,0,0,0.6);
+            z-index: 100;
         }
         
         .line-clamp-2 {
@@ -120,111 +235,184 @@
     <div class="glow-orb w-[300px] h-[300px] md:w-[600px] md:h-[600px] bg-brand-accent top-[-100px] left-[-100px]"></div>
     <div class="glow-orb w-[350px] h-[350px] md:w-[700px] md:h-[700px] bg-brand-purple top-[20%] right-[-150px]"></div>
 
-    <!-- NAVBAR -->
-    <header class="sticky top-0 z-50 w-full border-b border-white/5 bg-[#050507]/90 backdrop-blur-xl">
+    <!-- NAVBAR (Exact Match to index.html) -->
+    <header class="sticky top-0 z-50 w-full border-b border-white/5 bg-[#050507]/90 backdrop-blur-xl" role="banner">
         <div class="max-w-7xl mx-auto px-3 xs:px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-3">
             
-            <!-- Brand Logo -->
-            <a href="index.html" class="flex items-center gap-2.5 sm:gap-3 group flex-shrink-0" title="BacktestLab Pro Homepage">
-                <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20 flex-shrink-0">
-                    <svg class="w-4 h-4 sm:w-5 sm:h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <a href="index.html" class="flex items-center gap-2.5 sm:gap-3 group flex-shrink-0" aria-label="BacktestLab Pro Homepage">
+                <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
+                    <svg class="w-4 h-4 sm:w-5 sm:h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                         <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
                     </svg>
                 </div>
-                <span class="text-base sm:text-xl font-bold font-sans tracking-tight text-white whitespace-nowrap">
-                    BacktestLab <span class="text-indigo-400">Pro</span>
-                </span>
+                <span class="text-base sm:text-xl font-bold font-sans tracking-tight text-white whitespace-nowrap">BacktestLab <span class="text-indigo-400">Pro</span></span>
             </a>
 
-            <!-- Desktop Links -->
-            <nav class="hidden lg:flex items-center gap-6 text-xs xl:text-sm font-medium">
-                <a href="session.html" class="text-zinc-300 hover:text-white transition-colors flex items-center gap-1.5">
-                    <i class="fa-solid fa-chart-line text-indigo-400 text-xs"></i> Free Replay
-                </a>
-                <a href="bot_automation.html" class="text-zinc-300 hover:text-white transition-colors flex items-center gap-1.5">
-                    <i class="fa-solid fa-code text-indigo-400 text-xs"></i> BYO-AI Builder
-                </a>
-                <a href="algo_store.html" class="text-zinc-300 hover:text-white transition-colors flex items-center gap-1.5">
-                    <span class="h-1.5 w-1.5 rounded-full bg-purple-400 animate-pulse"></span>
-                    <span>Community Arena</span>
-                </a>
-                <a href="production-code.html" class="text-zinc-300 hover:text-white transition-colors flex items-center gap-1.5">
-                    <i class="fa-solid fa-download text-emerald-400 text-xs"></i> Production Code
-                </a>
-                <a href="articles.html" class="text-white font-semibold transition-colors">Articles</a>
-                <a href="about.html" class="text-zinc-400 hover:text-white transition-colors">About Us</a>
-            </nav>
-
-            <!-- Actions & Authentication Controls -->
-            <div class="flex items-center gap-2 sm:gap-3 flex-shrink-0">
-                <a href="session.html" class="text-xs sm:text-sm font-semibold bg-white text-zinc-950 px-3.5 xs:px-4 sm:px-5 py-2 sm:py-2.5 rounded-full hover:bg-zinc-200 transition-all flex items-center gap-1.5 shadow-md">
-                    <span>Open Free Simulator</span> <i class="fa-solid fa-arrow-right text-[10px]"></i>
-                </a>
-
-                <!-- Desktop Auth -->
-                <div id="desktop-auth-container" class="hidden sm:flex items-center gap-2 auth-hidden">
-                    <div id="logged-out-actions" class="hidden flex items-center">
-                        <button onclick="triggerAuthFlow()" class="text-xs sm:text-sm font-semibold text-zinc-400 hover:text-white transition-colors px-2 py-1.5">Sign In</button>
-                    </div>
-                    <div id="logged-in-actions" class="hidden flex items-center gap-2 relative">
-                        <a href="my-sessions.html" class="text-xs font-semibold text-zinc-300 hover:text-white border border-white/10 px-3 py-1.5 rounded-full bg-[#0d0d11] transition-all flex items-center gap-1.5">
-                            <i class="fa-solid fa-folder text-indigo-400 text-xs"></i> Workspace
-                        </a>
-                        <div class="relative" id="profile-dropdown-wrapper">
-                            <button id="profile-menu-trigger-btn" aria-label="Open Profile Menu" class="flex items-center justify-center h-8 w-8 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 p-[1px]">
-                                <div class="h-full w-full bg-[#050507] rounded-[7px] flex items-center justify-center text-zinc-300">
-                                    <i class="fa-solid fa-user text-xs"></i>
+            <!-- Desktop Navigation -->
+            <nav class="hidden lg:flex items-center gap-5 text-xs xl:text-sm font-medium" aria-label="Main Navigation">
+                
+                <!-- Platform Hub Dropdown -->
+                <div class="nav-dropdown">
+                    <button type="button" aria-haspopup="true" aria-expanded="false" class="text-zinc-300 hover:text-white transition-colors flex items-center gap-1.5 py-2">
+                        <span>Platform Modules</span>
+                        <i class="fa-solid fa-chevron-down text-[10px] text-zinc-500" aria-hidden="true"></i>
+                    </button>
+                    <div class="nav-dropdown-menu">
+                        <div class="nav-dropdown-panel space-y-1">
+                            <a href="session.html" class="nav-dropdown-item">
+                                <i class="fa-solid fa-play text-indigo-400 text-xs mt-1" aria-hidden="true"></i>
+                                <div>
+                                    <div class="font-semibold text-xs text-white">Session Builder (Replay)</div>
+                                    <div class="text-[11px] text-zinc-400">Interactive candle stepping and order simulation</div>
                                 </div>
-                            </button>
-                            <div id="profile-overlay-dialog-box" class="hidden absolute right-0 mt-2 w-56 rounded-xl border border-white/10 bg-[#0c0c0e]/95 backdrop-blur-xl p-3 shadow-2xl z-50">
-                                <div class="mb-2 pb-2 border-b border-white/5">
-                                    <p id="profile-box-name" class="text-xs font-bold text-white truncate">Trader</p>
-                                    <p id="profile-box-email" class="text-[10px] text-zinc-500 font-mono truncate">sandbox@backtestlabpro.com</p>
+                            </a>
+                            <a href="bot_automation.html" class="nav-dropdown-item">
+                                <i class="fa-solid fa-robot text-purple-400 text-xs mt-1" aria-hidden="true"></i>
+                                <div>
+                                    <div class="font-semibold text-xs text-white">Bot Automation</div>
+                                    <div class="text-[11px] text-zinc-400">Quantitative rules and algorithmic testing</div>
                                 </div>
-                                <button id="firebase-logout-btn" class="w-full py-1.5 text-xs text-zinc-400 hover:text-red-400 font-semibold flex items-center justify-center gap-1.5">
-                                    <i class="fa-solid fa-power-off text-xs"></i> Sign Out
-                                </button>
-                            </div>
+                            </a>
+                            <a href="algo_store.html" class="nav-dropdown-item">
+                                <i class="fa-solid fa-store text-emerald-400 text-xs mt-1" aria-hidden="true"></i>
+                                <div>
+                                    <div class="font-semibold text-xs text-white">Algo Store</div>
+                                    <div class="text-[11px] text-zinc-400">Curated community strategies and verified models</div>
+                                </div>
+                            </a>
+                            <a href="production-code.html" class="nav-dropdown-item">
+                                <i class="fa-solid fa-file-code text-cyan-400 text-xs mt-1" aria-hidden="true"></i>
+                                <div>
+                                    <div class="font-semibold text-xs text-white">Code Export</div>
+                                    <div class="text-[11px] text-zinc-400">MetaTrader 5 and Python algorithmic scripts</div>
+                                </div>
+                            </a>
                         </div>
                     </div>
                 </div>
 
-                <!-- Mobile Hamburger Toggle -->
-                <button id="mobileMenuBtn" aria-label="Toggle Navigation" class="lg:hidden w-8 h-8 xs:w-9 xs:h-9 rounded-xl bg-zinc-900 border border-white/10 flex items-center justify-center text-zinc-300 hover:text-white">
-                    <i id="menuIcon" class="fa-solid fa-bars text-xs xs:text-sm"></i>
+                <!-- Compare Dropdown -->
+                <div class="nav-dropdown">
+                    <button type="button" aria-haspopup="true" aria-expanded="false" class="text-zinc-300 hover:text-white transition-colors flex items-center gap-1.5 py-2">
+                        <span>Compare</span>
+                        <i class="fa-solid fa-chevron-down text-[10px] text-zinc-500" aria-hidden="true"></i>
+                    </button>
+                    <div class="nav-dropdown-menu">
+                        <div class="nav-dropdown-panel space-y-1">
+                            <a href="index.html#compare-table" class="nav-dropdown-item">
+                                <i class="fa-solid fa-scale-balanced text-indigo-400 text-xs mt-1" aria-hidden="true"></i>
+                                <div>
+                                    <div class="font-semibold text-xs text-white">vs BacktestingMax</div>
+                                    <div class="text-[11px] text-zinc-400">Comparison of free replay sessions &amp; exports</div>
+                                </div>
+                            </a>
+                            <a href="index.html#compare-table" class="nav-dropdown-item">
+                                <i class="fa-solid fa-chart-line text-purple-400 text-xs mt-1" aria-hidden="true"></i>
+                                <div>
+                                    <div class="font-semibold text-xs text-white">vs TradingView Bar Replay</div>
+                                    <div class="text-[11px] text-zinc-400">Browser intraday replay without subscription tiers</div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <a href="algo_store.html" class="text-zinc-300 hover:text-white transition-colors flex items-center gap-1.5">
+                    <span class="h-1.5 w-1.5 rounded-full bg-purple-400 animate-pulse" aria-hidden="true"></span>
+                    <span>Algo Store</span>
+                </a>
+                <a href="articles.html" class="text-white font-semibold transition-colors">Documentation</a>
+                <a href="about.html" class="text-zinc-400 hover:text-white transition-colors">About</a>
+            </nav>
+
+            <div class="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+                <div id="navGuestControls" class="flex items-center gap-2 sm:gap-3">
+                    <a href="login.html" class="text-xs sm:text-sm font-medium text-zinc-300 hover:text-white px-3 py-2 rounded-lg hover:bg-white/5 transition-colors">
+                        Sign In
+                    </a>
+                    <a href="session.html" class="text-xs sm:text-sm font-semibold bg-white text-zinc-950 px-3.5 xs:px-4 sm:px-5 py-2 sm:py-2.5 rounded-full hover:bg-zinc-200 transition-all flex items-center gap-1.5 shadow-md">
+                        <span>Launch Simulator →</span>
+                    </a>
+                </div>
+
+                <div id="navUserControls" class="hidden items-center gap-2.5">
+                    <a href="session.html" class="text-xs sm:text-sm font-semibold bg-white text-zinc-950 px-4 py-2 sm:py-2.5 rounded-full hover:bg-zinc-200 transition-all flex items-center gap-1.5 shadow-md">
+                        <span>Launch Simulator →</span>
+                    </a>
+                    <a href="my-sessions.html" class="btn-workspace">
+                        <i class="fa-solid fa-folder text-indigo-400" aria-hidden="true"></i>
+                        <span>Workspace</span>
+                    </a>
+                    <div class="relative">
+                        <button onclick="toggleUserDropdown()" id="userAvatarBtn" aria-label="Open user profile menu" aria-haspopup="true" class="btn-avatar-badge">
+                            <i class="fa-solid fa-user text-xs" aria-hidden="true"></i>
+                        </button>
+                        <div id="userDropdown" class="user-dropdown-menu">
+                            <div class="px-3 py-2 border-b border-white/5 text-[11px] font-mono text-zinc-400 truncate" id="userEmailDisplay">trader@domain.com</div>
+                            <a href="my-sessions.html" class="flex items-center gap-2 px-3 py-2 text-xs text-zinc-300 hover:text-white hover:bg-white/5 rounded-lg mt-1 transition-colors">
+                                <i class="fa-solid fa-folder text-indigo-400 text-[11px]" aria-hidden="true"></i> My Sessions
+                            </a>
+                            <button onclick="handleUserSignOut()" class="w-full text-left flex items-center gap-2 px-3 py-2 text-xs text-red-400 hover:bg-red-500/10 rounded-lg transition-colors mt-0.5">
+                                <i class="fa-solid fa-arrow-right-from-bracket text-[11px]" aria-hidden="true"></i> Sign Out
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <button id="mobileMenuToggle" aria-label="Toggle navigation menu" aria-expanded="false" class="lg:hidden w-8 h-8 xs:w-9 xs:h-9 rounded-xl bg-zinc-900 border border-white/10 flex items-center justify-center text-zinc-300 hover:text-white ml-1">
+                    <i id="menuHamburgerIcon" class="fa-solid fa-bars text-xs xs:text-sm" aria-hidden="true"></i>
                 </button>
             </div>
         </div>
 
         <!-- Mobile Drawer Navigation -->
-        <div id="mobileMenu" class="hidden lg:hidden border-t border-white/10 bg-[#08080c]/98 backdrop-blur-2xl px-4 py-4 space-y-2.5 shadow-2xl">
-            <a href="session.html" class="block text-xs xs:text-sm font-semibold text-white py-2.5 px-3.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 transition-colors">
-                <i class="fa-solid fa-play text-xs mr-2"></i> Open Free Simulator
+        <div id="mobileDrawerMenu" class="hidden lg:hidden border-t border-white/10 bg-[#08080c]/98 backdrop-blur-2xl px-4 py-4 space-y-2 shadow-2xl">
+            <a href="session.html" class="block text-xs font-semibold text-white py-2.5 px-3.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 transition-colors">
+                <i class="fa-solid fa-play text-xs mr-2" aria-hidden="true"></i> Open Session Builder (Replay)
             </a>
-            <a href="bot_automation.html" class="block text-xs xs:text-sm font-medium text-zinc-300 hover:text-white py-2 px-3 rounded-lg hover:bg-white/5">
-                <i class="fa-solid fa-code text-indigo-400 mr-2"></i> BYO-AI Builder
+            <a href="session.html" class="block text-xs font-medium text-zinc-300 hover:text-white py-2 px-3 rounded-lg hover:bg-white/5">
+                <i class="fa-solid fa-chart-line text-indigo-400 mr-2" aria-hidden="true"></i> Online Trading Simulator
             </a>
-            <a href="algo_store.html" class="block text-xs xs:text-sm font-medium text-purple-300 py-2 px-3 rounded-lg hover:bg-white/5">
-                <i class="fa-solid fa-robot text-purple-400 mr-2"></i> Community Arena
+            <a href="bot_automation.html" class="block text-xs font-medium text-zinc-300 hover:text-white py-2 px-3 rounded-lg hover:bg-white/5">
+                <i class="fa-solid fa-robot text-purple-400 mr-2" aria-hidden="true"></i> Bot Automation
             </a>
-            <a href="production-code.html" class="block text-xs xs:text-sm font-medium text-emerald-300 py-2 px-3 rounded-lg hover:bg-white/5">
-                <i class="fa-solid fa-download text-emerald-400 mr-2"></i> Production Code
+            <a href="algo_store.html" class="block text-xs font-medium text-purple-300 py-2 px-3 rounded-lg bg-purple-500/10 border border-purple-500/20">
+                <i class="fa-solid fa-store text-purple-400 mr-2" aria-hidden="true"></i> Algo Store
             </a>
-            <a href="articles.html" class="block text-xs xs:text-sm font-semibold text-indigo-300 py-2 px-3 rounded-lg bg-indigo-500/10 border border-indigo-500/20">
-                <i class="fa-solid fa-newspaper text-indigo-400 mr-2"></i> Articles
+            <a href="production-code.html" class="block text-xs font-medium text-zinc-300 hover:text-white py-2 px-3 rounded-lg hover:bg-white/5">
+                <i class="fa-solid fa-file-code text-cyan-400 mr-2" aria-hidden="true"></i> Production Code Export
             </a>
-            <a href="about.html" class="block text-xs xs:text-sm font-medium text-zinc-300 hover:text-white py-2 px-3 rounded-lg hover:bg-white/5">
-                <i class="fa-solid fa-circle-info text-zinc-400 mr-2"></i> About Us
+            <a href="index.html#compare-table" class="block text-xs font-medium text-zinc-300 hover:text-white py-2 px-3 rounded-lg hover:bg-white/5">
+                <i class="fa-solid fa-scale-balanced text-zinc-400 mr-2" aria-hidden="true"></i> Compare Backtesting Platforms
             </a>
-            <div id="mobile-auth-placeholder" class="pt-2 border-t border-white/5 auth-hidden"></div>
+            <a href="articles.html" class="block text-xs font-semibold text-indigo-300 py-2 px-3 rounded-lg bg-indigo-500/10 border border-indigo-500/20">
+                <i class="fa-solid fa-newspaper text-indigo-400 mr-2" aria-hidden="true"></i> Strategy Guides &amp; Documentation
+            </a>
+            <a href="about.html" class="block text-xs font-medium text-zinc-300 hover:text-white py-2 px-3 rounded-lg hover:bg-white/5">
+                <i class="fa-solid fa-circle-info text-zinc-400 mr-2" aria-hidden="true"></i> About BacktestLab Pro
+            </a>
         </div>
     </header>
 
-    <!-- Content Workspace Container Layout -->
+    <!-- Main Content Layout -->
     <main class="relative z-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto my-8 sm:my-12 space-y-12 flex-grow w-full">
         
-        <!-- Top Featured Spotlight Frame -->
-        <section class="p-6 md:p-10 rounded-2xl border border-white/5 bg-gradient-to-b from-brand-card to-brand-dark/40 relative overflow-hidden flex flex-col md:flex-row items-center gap-8" id="hero-block">
+        <!-- Header Banner / SEO H1 Framing -->
+        <div class="text-center max-w-3xl mx-auto space-y-3">
+            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 font-mono text-xs">
+                <span class="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span>Forex Backtesting Guides &bull; Price Action Models &bull; MQL5 Tutorials</span>
+            </div>
+            <h1 class="font-display font-extrabold text-3xl sm:text-5xl text-white tracking-tight">
+                Quantitative Strategy Guides &amp; Backtesting Tutorials
+            </h1>
+            <p class="text-zinc-400 text-sm sm:text-base leading-relaxed">
+                Step-by-step mechanical trading blueprints. Learn how to identify Balanced Price Ranges (BPR), execute Asian session sweeps, and backtest setups free in your browser.
+            </p>
+        </div>
+
+        <!-- Top Featured Spotlight Frame (Spotlight on BPR for Google Rank 1) -->
+        <section class="p-6 md:p-10 rounded-3xl border border-purple-500/30 bg-gradient-to-b from-[#0e0c18] to-brand-card/70 relative overflow-hidden flex flex-col md:flex-row items-center gap-8 shadow-2xl" id="hero-block">
             <!-- Loaded Programmatically via array index maps -->
         </section>
 
@@ -233,9 +421,12 @@
             
             <!-- Primary Column Feed Stream (8 Cols) -->
             <div class="lg:col-span-8 space-y-6">
-                <h2 class="font-display font-bold text-2xl text-white flex items-center gap-3">
-                    <i class="fa-solid fa-newspaper text-indigo-400"></i> Recent Strategy Insights
-                </h2>
+                <div class="flex items-center justify-between border-b border-white/5 pb-3">
+                    <h2 class="font-display font-bold text-xl sm:text-2xl text-white flex items-center gap-2.5">
+                        <i class="fa-solid fa-chart-line text-indigo-400"></i> Mechanical Trading Strategies &amp; Replay Guides
+                    </h2>
+                    <span class="text-xs font-mono text-zinc-500">17 Documented Guides</span>
+                </div>
                 
                 <div class="space-y-4" id="articles-wrapper">
                     <!-- Populated dynamically via Script mapping modules -->
@@ -247,32 +438,49 @@
                 
                 <!-- Category Filtering Tree Widget -->
                 <div class="p-6 rounded-2xl glass-card">
-                    <h3 class="font-display font-bold text-xs uppercase tracking-wider text-white border-b border-white/5 pb-3 mb-4 font-mono">Categories</h3>
-                    <ul class="space-y-2.5 text-sm text-zinc-400">
-                        <li class="flex justify-between items-center cursor-pointer hover:text-indigo-400 transition-colors">
-                            <span>Price Action &amp; ICT</span><span class="text-xs bg-white/5 px-2.5 py-0.5 rounded-full text-zinc-500 font-mono">6</span>
+                    <h3 class="font-display font-bold text-xs uppercase tracking-wider text-white border-b border-white/5 pb-3 mb-4 font-mono">Strategy Topics</h3>
+                    <ul class="space-y-2.5 text-xs sm:text-sm font-mono text-zinc-400">
+                        <li class="flex justify-between items-center py-1 cursor-pointer hover:text-purple-400 transition-colors">
+                            <span class="flex items-center gap-2"><i class="fa-solid fa-layer-group text-purple-400 text-xs"></i> BPR &amp; ICT Setups</span>
+                            <span class="text-xs bg-white/5 px-2.5 py-0.5 rounded-full text-zinc-400">6</span>
                         </li>
-                        <li class="flex justify-between items-center cursor-pointer hover:text-indigo-400 transition-colors">
-                            <span>Backtesting Guides</span><span class="text-xs bg-white/5 px-2.5 py-0.5 rounded-full text-zinc-500 font-mono">15</span>
+                        <li class="flex justify-between items-center py-1 cursor-pointer hover:text-indigo-400 transition-colors">
+                            <span class="flex items-center gap-2"><i class="fa-solid fa-play text-indigo-400 text-xs"></i> Free Replay Simulators</span>
+                            <span class="text-xs bg-white/5 px-2.5 py-0.5 rounded-full text-zinc-400">15</span>
                         </li>
-                        <li class="flex justify-between items-center cursor-pointer hover:text-indigo-400 transition-colors">
-                            <span>Market Analysis</span><span class="text-xs bg-white/5 px-2.5 py-0.5 rounded-full text-zinc-500 font-mono">13</span>
+                        <li class="flex justify-between items-center py-1 cursor-pointer hover:text-emerald-400 transition-colors">
+                            <span class="flex items-center gap-2"><i class="fa-solid fa-gem text-emerald-400 text-xs"></i> Gold (XAUUSD) Strategies</span>
+                            <span class="text-xs bg-white/5 px-2.5 py-0.5 rounded-full text-zinc-400">8</span>
                         </li>
-                        <li class="flex justify-between items-center cursor-pointer hover:text-indigo-400 transition-colors">
-                            <span>Risk Management</span><span class="text-xs bg-white/5 px-2.5 py-0.5 rounded-full text-zinc-500 font-mono">7</span>
+                        <li class="flex justify-between items-center py-1 cursor-pointer hover:text-amber-400 transition-colors">
+                            <span class="flex items-center gap-2"><i class="fa-solid fa-shield-halved text-amber-400 text-xs"></i> Risk &amp; Drawdown Math</span>
+                            <span class="text-xs bg-white/5 px-2.5 py-0.5 rounded-full text-zinc-400">7</span>
                         </li>
-                        <li class="flex justify-between items-center cursor-pointer hover:text-indigo-400 transition-colors">
-                            <span>Bot Automation</span><span class="text-xs bg-white/5 px-2.5 py-0.5 rounded-full text-zinc-500 font-mono">5</span>
+                        <li class="flex justify-between items-center py-1 cursor-pointer hover:text-cyan-400 transition-colors">
+                            <span class="flex items-center gap-2"><i class="fa-solid fa-robot text-cyan-400 text-xs"></i> MQL5 &amp; Python Bots</span>
+                            <span class="text-xs bg-white/5 px-2.5 py-0.5 rounded-full text-zinc-400">5</span>
                         </li>
                     </ul>
                 </div>
 
+                <!-- Callout Sandbox Widget -->
+                <div class="p-6 rounded-2xl glass-card border border-indigo-500/20 space-y-3">
+                    <span class="text-[10px] font-mono font-bold text-emerald-400 uppercase tracking-widest bg-emerald-500/10 px-2 py-0.5 rounded">Live Simulation Tool</span>
+                    <h4 class="text-sm font-bold text-white font-display">Backtest Strategies with Free Bar Replay</h4>
+                    <p class="text-xs text-zinc-400 leading-relaxed">
+                        Don't trade blind. Step candle-by-candle through 1-minute to daily historical charts on Gold and Forex pairs without paying for subscriptions.
+                    </p>
+                    <a href="session.html" class="block w-full text-center py-2.5 px-3 rounded-xl bg-white text-zinc-950 font-bold text-xs hover:bg-zinc-200 transition-all shadow-md">
+                        Launch Free Simulator →
+                    </a>
+                </div>
+
                 <!-- Live Notification Platform Note -->
-                <div class="p-6 rounded-2xl border border-dashed border-white/10 bg-transparent flex gap-4 items-start">
-                    <i class="fa-solid fa-square-rss text-indigo-400 text-xl mt-0.5"></i>
+                <div class="p-5 rounded-2xl border border-dashed border-white/10 bg-transparent flex gap-3.5 items-start">
+                    <i class="fa-solid fa-square-rss text-indigo-400 text-lg mt-0.5"></i>
                     <div>
-                        <h4 class="text-sm font-bold text-white mb-1">Automated Stream Logs</h4>
-                        <p class="text-xs text-zinc-500 leading-relaxed">New algorithmic breakdowns, performance models, and historical slice data logs deploy cleanly at market close daily.</p>
+                        <h4 class="text-xs font-bold text-white mb-0.5">Continuous Alpha Releases</h4>
+                        <p class="text-[11px] text-zinc-400 leading-relaxed">All strategy guides include exact entry formulas, Consequent Encroachment (CE) rules, and verifiable backtest parameters.</p>
                     </div>
                 </div>
 
@@ -280,49 +488,59 @@
         </div>
     </main>
 
-    <!-- Unified Global Footer Component -->
-    <footer class="mt-20 border-t border-white/10 bg-[#060608] pt-12 pb-12 text-zinc-400 text-xs font-sans">
+    <!-- Global Footer (Exact Match to index.html) -->
+    <footer class="mt-20 border-t border-white/10 bg-[#060608] pt-12 pb-12 text-zinc-400 text-xs font-sans" role="contentinfo">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
             <div class="p-4 sm:p-5 rounded-2xl bg-black/60 border border-white/5 font-mono text-[11px] text-zinc-500 leading-relaxed space-y-2">
-                <div class="text-zinc-400 font-bold"><i class="fa-solid fa-triangle-exclamation text-amber-400 mr-1.5"></i> Quantitative Risk Disclaimer</div>
-                <p>BacktestLab Pro provides quantitative strategy backtesting software and historical data simulation for research and educational purposes only. Past simulated performance does not guarantee future financial returns. All live algorithmic trading carries substantial capital risk.</p>
+                <div class="text-zinc-400 font-bold"><i class="fa-solid fa-triangle-exclamation text-amber-400 mr-1.5" aria-hidden="true"></i> Quantitative Risk Disclaimer</div>
+                <p>BacktestLab Pro provides strategy backtesting software and historical data simulation for research and educational purposes only. Past simulated performance does not guarantee future financial returns. All live trading carries substantial financial risk.</p>
             </div>
 
+            <!-- Hub-and-Spoke Link Mesh -->
             <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-xs font-mono">
                 <div class="space-y-2">
-                    <span class="text-white font-bold block">Platform</span>
-                    <a href="session.html" class="block hover:text-white">Free Simulator</a>
-                    <a href="bot_automation.html" class="block hover:text-white">BYO-AI Builder</a>
+                    <span class="text-white font-bold block uppercase tracking-wider text-[11px]">Replay &amp; Simulators</span>
+                    <a href="session.html" class="block hover:text-white">Session Builder (Bar Replay)</a>
+                    <a href="session.html" class="block hover:text-white">Gold (XAUUSD) Replay Engine</a>
+                    <a href="session.html" class="block hover:text-white">Forex Bar Replay Simulator</a>
+                    <a href="bot_automation.html" class="block hover:text-white">Bot Automation &amp; AI Logic</a>
                 </div>
                 <div class="space-y-2">
-                    <span class="text-white font-bold block">Ecosystem</span>
-                    <a href="algo_store.html" class="block hover:text-white">Community Arena</a>
-                    <a href="production-code.html" class="block hover:text-white">Production Code</a>
+                    <span class="text-white font-bold block uppercase tracking-wider text-[11px]">Comparisons &amp; Concepts</span>
+                    <a href="index.html#compare-table" class="block hover:text-white">vs BacktestingMax Replay</a>
+                    <a href="index.html#compare-table" class="block hover:text-white">vs TradingView Bar Replay</a>
+                    <a href="articles/how-to-trade-balanced-price-range-bpr.html" class="block text-purple-400 font-semibold hover:text-purple-300">Balanced Price Range (BPR)</a>
+                    <a href="articles/asian-session-range-breakout-gold.html" class="block hover:text-white">Asian Range Sweep Mechanics</a>
                 </div>
                 <div class="space-y-2">
-                    <span class="text-white font-bold block">Content</span>
-                    <a href="articles.html" class="block text-indigo-400 font-semibold">Articles &amp; Guides</a>
-                    <a href="about.html" class="block hover:text-white">About Us</a>
+                    <span class="text-white font-bold block uppercase tracking-wider text-[11px]">Code &amp; Modules</span>
+                    <a href="production-code.html" class="block hover:text-white">MetaTrader 5 Expert Advisors</a>
+                    <a href="production-code.html" class="block hover:text-white">Python Backtest Scripts</a>
+                    <a href="algo_store.html" class="block hover:text-white">Algo Store Strategies</a>
+                    <a href="articles.html" class="block text-white font-semibold">Articles &amp; Documentation</a>
                 </div>
                 <div class="space-y-2">
-                    <span class="text-white font-bold block">Legal</span>
+                    <span class="text-white font-bold block uppercase tracking-wider text-[11px]">Company &amp; Legal</span>
+                    <a href="about.html" class="block hover:text-white">About BacktestLab Pro</a>
                     <a href="privacy.html" class="block hover:text-white">Privacy Policy</a>
                     <a href="terms.html" class="block hover:text-white">Terms of Service</a>
+                    <a href="login.html" class="block hover:text-white">Sign In / Register</a>
                 </div>
             </div>
 
             <div class="flex flex-col sm:flex-row items-center justify-between gap-4 text-zinc-500 font-mono text-[11px] pt-4 border-t border-white/5">
-                <div>© 2026 BacktestLab Pro. All rights reserved. Platform research is free forever.</div>
+                <div>© 2026 BacktestLab Pro. All rights reserved. Free online trading backtesting and market replay platform.</div>
                 <div class="flex gap-4">
-                    <a href="#top" class="hover:text-white"><i class="fa-solid fa-arrow-up mr-1"></i> Back to Top</a>
+                    <a href="#top" class="hover:text-white"><i class="fa-solid fa-arrow-up mr-1" aria-hidden="true"></i> Back to Top</a>
                 </div>
             </div>
         </div>
     </footer>
 
-    <!-- Firebase System Pipeline Implementations -->
+    <!-- Firebase Auth & Navbar Session Sync (Exact Match to index.html) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getFirestore } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
         const firebaseConfig = {
@@ -331,43 +549,81 @@
             projectId: "backtestlabpro",
             storageBucket: "backtestlabpro.firebasestorage.app",
             messagingSenderId: "560146824734",
-            appId: "1:560146824734:web:5287d0ded3a1024e75780f"
+            appId: "1:560146824734:web:5287d0ded3a1024e75780f",
+            measurementId: "G-YY82TZ1ZG7"
         };
 
         const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
         const auth = getAuth(app);
 
-        window.firebaseAuthInstance = auth;
-        window.firebaseSignOutAction = signOut;
+        onAuthStateChanged(auth, async (user) => {
+            const guestControls = document.getElementById("navGuestControls");
+            const userControls = document.getElementById("navUserControls");
+            const emailDisplay = document.getElementById("userEmailDisplay");
 
-        onAuthStateChanged(auth, (user) => {
             if (user) {
-                const nameDisplay = document.getElementById('profile-box-name');
-                const emailDisplay = document.getElementById('profile-box-email');
-                if (nameDisplay) nameDisplay.textContent = user.displayName || "Trader Pro";
-                if (emailDisplay) emailDisplay.textContent = user.email || "";
-                window.updateAuthViewUI(true);
+                if (guestControls) guestControls.classList.add("hidden");
+                if (userControls) {
+                    userControls.classList.remove("hidden");
+                    userControls.classList.add("flex");
+                }
+                if (emailDisplay) emailDisplay.innerText = user.email;
             } else {
-                window.updateAuthViewUI(false);
+                if (guestControls) guestControls.classList.remove("hidden");
+                if (userControls) {
+                    userControls.classList.add("hidden");
+                    userControls.classList.remove("flex");
+                }
             }
         });
 
-        document.getElementById('firebase-logout-btn')?.addEventListener('click', () => {
-            signOut(auth).then(() => {
-                document.getElementById('profile-overlay-dialog-box').classList.add('hidden');
+        window.toggleUserDropdown = function() {
+            const menu = document.getElementById("userDropdown");
+            if (menu) {
+                menu.style.display = menu.style.display === "block" ? "none" : "block";
+            }
+        };
+
+        window.handleUserSignOut = async function() {
+            try {
+                await signOut(auth);
+                localStorage.removeItem("user_uid");
+                localStorage.removeItem("user_email");
                 window.location.reload();
-            }).catch((error) => console.error('Sign out error: ', error));
+            } catch(e) {
+                console.error("Sign out error:", e);
+            }
+        };
+
+        document.addEventListener('click', (e) => {
+            const avatar = document.getElementById("userAvatarBtn");
+            const dropdown = document.getElementById("userDropdown");
+            if (avatar && dropdown && !avatar.contains(e.target) && !dropdown.contains(e.target)) {
+                dropdown.style.display = "none";
+            }
         });
     </script>
 
-    <!-- Global Layout Core Logic & Interface Handlers -->
+    <!-- Global Layout Core Logic & Article Database -->
     <script>
-        let currentAuthStatusGlobal = false;
-
         const articlesDatabase = [
             {
-                id: "art_mt5_guide_2026",
+                id: "art_balanced_price_range_bpr",
                 isFeatured: true,
+                title: "Balanced Price Range (BPR) Trading Strategy: How to Trade & Backtest BPR in Forex",
+                excerpt: "Discover how overlapping Fair Value Gaps create high-probability institutional mitigation zones. Learn the Consequent Encroachment (50%) rule, Bullish vs Bearish setups, and step-by-step backtesting with free bar replay.",
+                category: "Price Action & ICT",
+                tagColor: "text-purple-400 bg-purple-500/10 border-purple-500/20",
+                author: "BacktestLab Quant Team",
+                date: "Updated Today",
+                readTime: "11 min read",
+                icon: "fa-solid fa-layer-group text-purple-400",
+                url: "articles/how-to-trade-balanced-price-range-bpr.html"
+            },
+            {
+                id: "art_mt5_guide_2026",
+                isFeatured: false,
                 title: "The Ultimate Guide to Free MetaTrader 5 Backtesting & Bar Replay",
                 excerpt: "Master algorithmic trading and MQL5 development with BacktestLab Pro's free browser-based bar replay simulator. Test Gold XAUUSD strategies, avoid subscription paywalls, and export production-ready code.",
                 category: "Backtesting Guides",
@@ -390,19 +646,6 @@
                 readTime: "11 min read",
                 icon: "fa-solid fa-chart-simple text-emerald-400",
                 url: "articles/how-to-trade-pdh-pdl-breakouts.html"
-            },
-            {
-                id: "art_balanced_price_range_bpr",
-                isFeatured: false,
-                title: "How to Trade Balanced Price Ranges (BPR): The Complete Mechanical Guide",
-                excerpt: "Discover the institutional order flow mechanics behind Balanced Price Ranges (BPR) and overlapping Fair Value Gaps. Complete 15M/5M entry timing and free tick replay rules.",
-                category: "Price Action & ICT",
-                tagColor: "text-purple-400 bg-purple-500/10 border-purple-500/20",
-                author: "BacktestLab Quant Team",
-                date: "Today",
-                readTime: "12 min read",
-                icon: "fa-solid fa-layer-group text-purple-400",
-                url: "articles/how-to-trade-balanced-price-range-bpr.html"
             },
             {
                 id: "art_asian_range_breakout_gold",
@@ -503,7 +746,7 @@
                 category: "Backtesting Guides",
                 tagColor: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20",
                 author: "BacktestLab Research Team",
-                date: "August 2026",
+                date: "Today",
                 readTime: "18 min read",
                 icon: "fa-solid fa-microchip text-emerald-400",
                 url: "articles/Walk-Forward-Optimization-in-Algorithmic-Backtesting-Complete-Guide.html"
@@ -568,7 +811,7 @@
                 category: "Crypto Outlook",
                 tagColor: "text-indigo-400 bg-indigo-500/10 border-indigo-500/20",
                 author: "Alex Rivers",
-                date: "June 2026",
+                date: "Today",
                 readTime: "4 min read",
                 icon: "fa-brands fa-bitcoin text-indigo-400",
                 url: "articles/crypto-lifecycle-volatility.html"
@@ -581,7 +824,7 @@
                 category: "Backtesting Guides",
                 tagColor: "text-purple-400 bg-purple-500/10 border-purple-500/20",
                 author: "M. Kovac",
-                date: "June 2026",
+                date: "Today",
                 readTime: "9 min read",
                 icon: "fa-solid fa-rotate-left text-purple-400",
                 url: "articles/web-trading-replay-ui.html"
@@ -590,83 +833,29 @@
 
         window.addEventListener('DOMContentLoaded', () => {
             setupMobileMenuLogic();
-            setupProfileDropdownToggle();
             renderArticleHub();
         });
 
-        window.triggerAuthFlow = function() { window.location.href = "login.html"; };
-
         function setupMobileMenuLogic() {
-            const menuBtn = document.getElementById('mobileMenuBtn');
-            const mobileMenu = document.getElementById('mobileMenu');
-            const menuIcon = document.getElementById('menuIcon');
+            const toggle = document.getElementById('mobileMenuToggle');
+            const drawer = document.getElementById('mobileDrawerMenu');
+            const icon = document.getElementById('menuHamburgerIcon');
 
-            if (menuBtn && mobileMenu && menuIcon) {
-                menuBtn.addEventListener('click', (e) => {
+            if (toggle && drawer && icon) {
+                toggle.addEventListener('click', (e) => {
                     e.stopPropagation();
-                    const isHidden = mobileMenu.classList.toggle('hidden');
-                    menuIcon.className = isHidden ? 'fa-solid fa-bars text-xs xs:text-sm' : 'fa-solid fa-xmark text-xs xs:text-sm';
+                    const isHidden = drawer.classList.toggle('hidden');
+                    toggle.setAttribute('aria-expanded', !isHidden);
+                    icon.className = isHidden ? 'fa-solid fa-bars text-xs xs:text-sm' : 'fa-solid fa-xmark text-xs xs:text-sm';
                 });
 
                 document.addEventListener('click', (e) => {
-                    if (!mobileMenu.contains(e.target) && !menuBtn.contains(e.target)) {
-                        mobileMenu.classList.add('hidden');
-                        menuIcon.className = 'fa-solid fa-bars text-xs xs:text-sm';
+                    if (!drawer.contains(e.target) && !toggle.contains(e.target)) {
+                        drawer.classList.add('hidden');
+                        toggle.setAttribute('aria-expanded', 'false');
+                        icon.className = 'fa-solid fa-bars text-xs xs:text-sm';
                     }
                 });
-
-                mobileMenu.querySelectorAll('a').forEach(link => {
-                    link.addEventListener('click', () => {
-                        mobileMenu.classList.add('hidden');
-                        menuIcon.className = 'fa-solid fa-bars text-xs xs:text-sm';
-                    });
-                });
-            }
-        }
-
-        function setupProfileDropdownToggle() {
-            const trigger = document.getElementById('profile-menu-trigger-btn');
-            const dialogBox = document.getElementById('profile-overlay-dialog-box');
-            const wrapper = document.getElementById('profile-dropdown-wrapper');
-
-            if (trigger && dialogBox && wrapper) {
-                trigger.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    dialogBox.classList.toggle('hidden');
-                });
-                document.addEventListener('click', (e) => {
-                    if (!wrapper.contains(e.target)) dialogBox.classList.add('hidden');
-                });
-            }
-        }
-
-        window.updateAuthViewUI = function(isLoggedIn) {
-            currentAuthStatusGlobal = isLoggedIn;
-            const desktopContainer = document.getElementById('desktop-auth-container');
-            const loggedOutBar = document.getElementById('logged-out-actions');
-            const loggedInBar = document.getElementById('logged-in-actions');
-            const mobileAuthBox = document.getElementById('mobile-auth-placeholder');
-
-            if (loggedOutBar) loggedOutBar.classList.toggle('hidden', isLoggedIn);
-            if (loggedInBar) loggedInBar.classList.toggle('hidden', !isLoggedIn);
-
-            if (mobileAuthBox) {
-                if (isLoggedIn) {
-                    mobileAuthBox.innerHTML = `
-                        <a href="my-sessions.html" class="block w-full text-center py-2 rounded-lg bg-zinc-900 border border-white/10 text-white text-xs font-semibold mb-2">My Workspace</a>
-                        <button onclick="window.firebaseSignOutAction(window.firebaseAuthInstance)" class="block w-full text-center text-zinc-500 hover:text-red-400 text-xs py-1 transition-colors">Sign Out</button>
-                    `;
-                } else {
-                    mobileAuthBox.innerHTML = `
-                        <button onclick="triggerAuthFlow()" class="block w-full text-zinc-300 py-2.5 text-center text-xs font-semibold bg-white/5 rounded-lg border border-white/5">Sign In / Register</button>
-                    `;
-                }
-                mobileAuthBox.classList.remove('auth-hidden');
-            }
-
-            if (desktopContainer) {
-                desktopContainer.classList.remove('auth-hidden');
-                desktopContainer.classList.add('auth-visible');
             }
         }
 
@@ -682,50 +871,55 @@
                 if(art.isFeatured) {
                     heroBlock.innerHTML = `
                         <div class="flex-1 space-y-4">
-                            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-xs text-indigo-400 font-medium font-mono">
-                                <span class="h-1.5 w-1.5 rounded-full bg-indigo-400 animate-pulse"></span> Featured Breakdown
+                            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/30 text-xs text-purple-300 font-medium font-mono">
+                                <span class="h-1.5 w-1.5 rounded-full bg-purple-400 animate-pulse"></span> Featured Strategy Breakdown
                             </div>
                             <a href="${art.url}" class="block group">
-                                <h1 class="font-display font-bold text-2xl md:text-4xl text-white tracking-tight leading-tight group-hover:text-indigo-400 transition-colors duration-200">${art.title}</h1>
+                                <h2 class="font-display font-bold text-2xl md:text-4xl text-white tracking-tight leading-tight group-hover:text-purple-300 transition-colors duration-200">${art.title}</h2>
                             </a>
-                            <p class="text-zinc-400 text-sm md:text-base leading-relaxed">${art.excerpt}</p>
+                            <p class="text-zinc-300 text-sm md:text-base leading-relaxed">${art.excerpt}</p>
                             
                             <div class="flex flex-wrap items-center justify-between gap-4 pt-2">
                                 <div class="flex items-center gap-3">
-                                    <div class="h-10 w-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400">
-                                        <i class="fa-solid fa-user-shield text-sm"></i>
+                                    <div class="h-10 w-10 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400">
+                                        <i class="fa-solid fa-layer-group text-sm"></i>
                                     </div>
-                                    <div class="text-xs">
-                                        <h4 class="font-bold text-white">${art.author}</h4>
-                                        <p class="text-zinc-500 mt-0.5 font-mono">${art.date} &bull; ${art.readTime}</p>
+                                    <div class="text-xs font-mono">
+                                        <h3 class="font-bold text-white">${art.author}</h3>
+                                        <p class="text-zinc-500 mt-0.5">${art.date} &bull; ${art.readTime}</p>
                                     </div>
                                 </div>
-                                <a href="${art.url}" class="text-xs font-semibold text-white bg-white/5 hover:bg-indigo-600 border border-white/10 hover:border-indigo-500 px-4 py-2.5 rounded-xl transition-all duration-200 flex items-center gap-2">
-                                    Read Article <i class="fa-solid fa-arrow-right text-[10px]"></i>
-                                </a>
+                                <div class="flex items-center gap-2">
+                                    <a href="${art.url}" class="text-xs font-semibold text-white bg-purple-600 hover:bg-purple-500 px-4 py-2.5 rounded-xl transition-all duration-200 flex items-center gap-2 shadow-lg">
+                                        Read BPR Strategy Guide <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                                    </a>
+                                </div>
                             </div>
                         </div>
-                        <a href="${art.url}" class="w-full md:w-64 h-44 bg-brand-dark rounded-xl border border-white/5 flex flex-col justify-center items-center text-center p-4 gap-2 flex-shrink-0 hover:border-white/20 transition-colors group">
-                            <i class="${art.icon} text-4xl transition-transform group-hover:scale-110 duration-200"></i>
-                            <span class="text-[10px] font-mono tracking-widest text-zinc-500 uppercase mt-1">Quant Core</span>
+                        <a href="${art.url}" class="w-full md:w-64 h-48 bg-[#090b10] rounded-2xl border border-purple-500/20 flex flex-col justify-center items-center text-center p-5 gap-2.5 flex-shrink-0 hover:border-purple-500/50 transition-colors group">
+                            <div class="w-14 h-14 rounded-2xl bg-purple-500/10 border border-purple-500/30 flex items-center justify-center text-purple-400 text-2xl group-hover:scale-110 transition-transform">
+                                <i class="${art.icon}"></i>
+                            </div>
+                            <span class="text-xs font-mono font-bold tracking-widest text-purple-300 uppercase mt-1">BPR Setup Model</span>
+                            <span class="text-[11px] font-mono text-zinc-500">M15 / M5 Execution</span>
                         </a>
                     `;
                 } else {
                     const card = document.createElement('a');
                     card.href = art.url;
-                    card.className = 'group p-5 rounded-2xl glass-card transition-all hover:border-white/20 flex flex-col md:flex-row gap-6 items-start md:items-center cursor-pointer block';
+                    card.className = 'group p-5 rounded-2xl glass-card transition-all hover:border-white/20 flex flex-col md:flex-row gap-5 items-start md:items-center cursor-pointer block';
                     card.innerHTML = `
-                        <div class="h-24 w-full md:w-32 rounded-xl bg-zinc-950 flex items-center justify-center text-3xl border border-white/5 flex-shrink-0 group-hover:bg-zinc-900 transition-colors">
+                        <div class="h-20 w-full md:w-24 rounded-xl bg-zinc-950 flex items-center justify-center text-2xl border border-white/5 flex-shrink-0 group-hover:bg-zinc-900 transition-colors">
                             <i class="${art.icon} transition-transform group-hover:scale-105 duration-200"></i>
                         </div>
-                        <div class="space-y-2 flex-1 w-full">
+                        <div class="space-y-1.5 flex-1 w-full">
                             <div class="flex items-center justify-between gap-4">
                                 <span class="text-[10px] font-semibold tracking-wider uppercase border px-2.5 py-0.5 rounded-md font-mono ${art.tagColor}">${art.category}</span>
                                 <span class="text-xs text-zinc-500 font-mono">${art.date}</span>
                             </div>
-                            <h3 class="font-display font-bold text-lg text-white group-hover:text-indigo-400 transition-colors duration-200">${art.title}</h3>
+                            <h3 class="font-display font-bold text-base sm:text-lg text-white group-hover:text-indigo-400 transition-colors duration-200">${art.title}</h3>
                             <p class="text-zinc-400 text-xs sm:text-sm line-clamp-2 leading-relaxed">${art.excerpt}</p>
-                            <div class="flex justify-between items-center pt-2 text-xs text-zinc-500">
+                            <div class="flex justify-between items-center pt-1.5 text-xs text-zinc-500">
                                 <span>By <b class="text-zinc-400">${art.author}</b></span>
                                 <span class="flex items-center gap-1 group-hover:text-white transition-colors font-mono">${art.readTime} <i class="fa-solid fa-chevron-right text-[9px] ml-0.5 transform group-hover:translate-x-0.5 transition-transform"></i></span>
                             </div>

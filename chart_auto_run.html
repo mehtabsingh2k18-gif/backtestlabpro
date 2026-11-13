@@ -701,7 +701,13 @@
                 <button class="btn-gold" id="btnUnifiedDownload" style="width: 100%; justify-content: center; font-weight: 700;" onclick="handleDownloadRealCodeModal()">
                     <span>⚡ Download Real Market Code</span>
                 </button>
+            <!-- NEW HIDDEN ADMIN BUTTON FOR 1-CLICK SEO PUBLISHING -->
+    <button id="adminPublishBtn" onclick="publishVerifiedReportAndCard()" style="display: none; background: var(--up); color: #fff; font-weight: 700; border: 1px solid rgba(8, 153, 129, 0.5); padding: 5px 12px; border-radius: 4px; font-size: 11px; cursor: pointer; margin-left: auto;">
+        ⚡ Publish SEO Report & Card
+    </button>
+
             </div>
+
         </div>
 
         <div class="dock-content" id="inputsView" style="display: none;">
@@ -1205,9 +1211,20 @@ window.limit = limit;
 window.arrayUnion = arrayUnion;
 window.increment = increment;
 
+
 onAuthStateChanged(auth, async (user) => {
     window.currentUser = user;
     if (user) {
+        
+        // --- ADMIN PUBLISH BUTTON ---
+        const ADMIN_EMAILS = ["backtestlabpro@gmail.com", "singjmehtab@gmail.com"];
+        if (ADMIN_EMAILS.includes((user.email || "").toLowerCase())) { 
+            document.getElementById("adminPublishBtn").style.display = "inline-flex";
+        } else {
+            document.getElementById("adminPublishBtn").style.display = "none";
+        }
+        // ----------------------------------------
+        
         try {
             const planDocRef = doc(db, "users", user.uid, "plan", "active");
             const planSnap = await getDoc(planDocRef);
@@ -1535,6 +1552,36 @@ document.addEventListener("DOMContentLoaded", () => {
     syncTierUI();
     updateCreditStatusUI();
     loadSessionDataset();
+
+    // Auto-mount Verified Lab Model (?labModelId=) or Community Bot (?botId=) from URL
+    setTimeout(async () => {
+        const params = new URLSearchParams(window.location.search);
+        const labModelId = params.get("labModelId");
+        const botId = params.get("botId");
+
+        if (labModelId && window.db && window.doc && window.getDoc) {
+            try {
+                const snap = await window.getDoc(window.doc(window.db, "verified_lab_models", labModelId));
+                if (snap.exists()) {
+                    const labBot = { id: snap.id, ...snap.data(), isSaved: true, is_lab_verified: true };
+                    mountStrategy(labBot, false);
+                    document.getElementById("statusIndicator").innerText = "LAB MODEL PRE-ATTACHED · PRESS PLAY TO VERIFY";
+                }
+            } catch (e) {
+                console.error("Failed to pre-attach lab model:", e);
+            }
+        } else if (botId && window.db && window.doc && window.getDoc) {
+            try {
+                const snap = await window.getDoc(window.doc(window.db, "global_bots", botId));
+                if (snap.exists()) {
+                    const commBot = { id: snap.id, ...snap.data(), isSaved: true };
+                    mountStrategy(commBot, true);
+                }
+            } catch (e) {
+                console.error("Failed to pre-attach community bot:", e);
+            }
+        }
+    }, 650);
 });
 
 function initChart() {
@@ -2063,7 +2110,7 @@ function checkAllPositionsSLTP(currentPrice, currentTime) {
             const netPnl = grossPnl - totalCommission;
 
             account.balance += netPnl;
-            account.closedTrades.push({ id: p.id, type: p.type, pnl: netPnl, exitPrice, time: currentTime });
+            account.closedTrades.push({ id: p.id, type: p.type, pnl: netPnl, entryPrice: p.entry, exitPrice, openTime: p.time, time: currentTime });
 
             if (p.lines && candleSeries) {
                 p.lines.forEach(l => {
@@ -2634,8 +2681,33 @@ async function executeSelectedSaveAction() {
     btn.innerText = "Saving...";
 
     try {
+        const ADMIN_EMAILS = ["backtestlabpro@gmail.com", "singjmehtab@gmail.com"];
+        const isOfficialDev = ADMIN_EMAILS.includes((user.email || "").toLowerCase());
+
         let globalDocId = null;
-        if (!isPrivate) {
+        if (isOfficialDev) {
+            // Store official owner bots in isolated 'verified_lab_models' collection (never global_bots)
+            const labRef = await window.addDoc(window.collection(window.db, "verified_lab_models"), {
+                name: activeBot.name,
+                category: activeBot.category || "General",
+                inputs: activeBot.inputs || {},
+                strategy_json: activeBot.strategy_json || {},
+                js_code: activeBot.js_code || "",
+                mql5_code: activeBot.mql5_code || "",
+                pine_code: activeBot.pine_code || "",
+                python_code: activeBot.python_code || "",
+                strategy_blueprint: activeBot.strategy_blueprint || null,
+                author_id: user.uid,
+                author_name: "BacktestLab Pro",
+                is_lab_verified: true,
+                pair: symbol,
+                timeframe: tf,
+                downloads: 0,
+                created_at: window.serverTimestamp()
+            });
+            globalDocId = labRef.id;
+            activeBot.lab_ref_id = labRef.id;
+        } else if (!isPrivate) {
             const globalRef = await window.addDoc(window.collection(window.db, "global_bots"), {
                 name: activeBot.name,
                 category: activeBot.category || "General",
@@ -4119,6 +4191,478 @@ function saveKeyVault() {
     updateCreditStatusUI();
     closeModal("keyVaultModal"); 
     appendMsg("✓ <b>Unlimited Free AI Activated!</b> You can now build, test, and revise unlimited strategies with zero limits.", "ai");
+}
+/* =========================================================================
+   13. FOUNDER'S PROGRAMMATIC SEO & MT5-GRADE REPORT COMPILER (ADMIN ONLY)
+   ========================================================================= */
+async function publishVerifiedReportAndCard() {
+    if (!activeBot) return alert("No active strategy mounted.");
+    if (account.closedTrades.length === 0) return alert("Run a backtest session first to generate trade data.");
+    if (!window.currentUser) return alert("Authentication required.");
+
+    const btn = document.getElementById("adminPublishBtn");
+    btn.innerText = "Compiling MT5 Audit...";
+    btn.disabled = true;
+
+    try {
+        const closed = account.closedTrades;
+        const initialDeposit = 10000.00;
+        const totalTrades = closed.length;
+
+        const winTrades = closed.filter(t => t.pnl > 0);
+        const lossTrades = closed.filter(t => t.pnl <= 0);
+        const longTrades = closed.filter(t => t.type === 'BUY');
+        const shortTrades = closed.filter(t => t.type === 'SELL');
+        const longWins = longTrades.filter(t => t.pnl > 0);
+        const shortWins = shortTrades.filter(t => t.pnl > 0);
+
+        const grossProfit = winTrades.reduce((acc, t) => acc + t.pnl, 0);
+        const grossLoss = lossTrades.reduce((acc, t) => acc + t.pnl, 0);
+        const absGrossLoss = Math.abs(grossLoss);
+        const totalNetProfit = grossProfit + grossLoss;
+        const finalBalance = initialDeposit + totalNetProfit;
+
+        const winRate = totalTrades ? ((winTrades.length / totalTrades) * 100).toFixed(2) : "0.00";
+        const longWinPct = longTrades.length ? ((longWins.length / longTrades.length) * 100).toFixed(2) : "0.00";
+        const shortWinPct = shortTrades.length ? ((shortWins.length / shortTrades.length) * 100).toFixed(2) : "0.00";
+
+        const profitFactor = absGrossLoss > 0 ? (grossProfit / absGrossLoss).toFixed(2) : (grossProfit > 0 ? "99.99" : "0.00");
+        const expectedPayoff = totalTrades > 0 ? (totalNetProfit / totalTrades).toFixed(2) : "0.00";
+
+        const largestProfit = winTrades.length ? Math.max(...winTrades.map(t => t.pnl)) : 0;
+        const largestLoss = lossTrades.length ? Math.min(...lossTrades.map(t => t.pnl)) : 0;
+        const avgProfit = winTrades.length ? (grossProfit / winTrades.length) : 0;
+        const avgLoss = lossTrades.length ? (grossLoss / lossTrades.length) : 0;
+
+        let peak = initialDeposit;
+        let maxDrawdownUSD = 0;
+        let maxDrawdownPct = 0;
+        let currentBalance = initialDeposit;
+
+        let curWinStreak = 0, curWinSum = 0, maxWinStreak = 0, maxWinSum = 0;
+        let curLossStreak = 0, curLossSum = 0, maxLossStreak = 0, maxLossSum = 0;
+        const returnsArr = [];
+
+        closed.forEach(t => {
+            const prevBal = currentBalance;
+            returnsArr.push(prevBal > 0 ? (t.pnl / prevBal) : 0);
+            currentBalance += t.pnl;
+
+            if (currentBalance > peak) peak = currentBalance;
+            const ddUsd = peak - currentBalance;
+            const ddPct = peak > 0 ? (ddUsd / peak) * 100 : 0;
+            if (ddUsd > maxDrawdownUSD) maxDrawdownUSD = ddUsd;
+            if (ddPct > maxDrawdownPct) maxDrawdownPct = ddPct;
+
+            if (t.pnl > 0) {
+                curWinStreak++;
+                curWinSum += t.pnl;
+                if (curWinStreak > maxWinStreak || (curWinStreak === maxWinStreak && curWinSum > maxWinSum)) {
+                    maxWinStreak = curWinStreak;
+                    maxWinSum = curWinSum;
+                }
+                curLossStreak = 0;
+                curLossSum = 0;
+            } else {
+                curLossStreak++;
+                curLossSum += t.pnl;
+                if (curLossStreak > maxLossStreak || (curLossStreak === maxLossStreak && curLossSum < maxLossSum)) {
+                    maxLossStreak = curLossStreak;
+                    maxLossSum = curLossSum;
+                }
+                curWinStreak = 0;
+                curWinSum = 0;
+            }
+        });
+
+        const recoveryFactor = maxDrawdownUSD > 0 ? (totalNetProfit / maxDrawdownUSD).toFixed(2) : "0.00";
+        const meanRet = returnsArr.length ? returnsArr.reduce((a, b) => a + b, 0) / returnsArr.length : 0;
+        const stdRet = returnsArr.length > 1
+            ? Math.sqrt(returnsArr.reduce((a, b) => a + Math.pow(b - meanRet, 2), 0) / (returnsArr.length - 1))
+            : 0;
+        const sharpeRatio = stdRet > 0 ? ((meanRet / stdRet) * Math.sqrt(returnsArr.length)).toFixed(2) : "0.00";
+
+        const netPct = ((totalNetProfit / initialDeposit) * 100).toFixed(2);
+        const sign = totalNetProfit >= 0 ? "+" : "-";
+        const absNetPct = Math.abs(parseFloat(netPct)).toFixed(2);
+
+        const startTs = currentCandles.length > 0 ? currentCandles[0].time : closed[0].time;
+        const endTs = closed[closed.length - 1].time;
+        const startDateStr = new Date(startTs * 1000).toISOString().split("T")[0];
+        const endDateStr = new Date(endTs * 1000).toISOString().split("T")[0];
+        const totalDays = Math.max(1, Math.round((endTs - startTs) / 86400));
+        const spanLabel = totalDays >= 330
+            ? `${(totalDays / 365).toFixed(1)}-Year`
+            : (totalDays >= 45 ? `${Math.round(totalDays / 30)}-Month` : `${totalDays}-Day`);
+
+        const monthlyData = {};
+        closed.forEach(t => {
+            const m = new Date(t.time * 1000).toLocaleString('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' });
+            if (!monthlyData[m]) monthlyData[m] = { trades: 0, wins: 0, pnl: 0, peak: initialDeposit, current: initialDeposit, maxDdPct: 0 };
+            monthlyData[m].trades++;
+            if (t.pnl > 0) monthlyData[m].wins++;
+            monthlyData[m].pnl += t.pnl;
+            monthlyData[m].current += t.pnl;
+            if (monthlyData[m].current > monthlyData[m].peak) monthlyData[m].peak = monthlyData[m].current;
+            const mDd = monthlyData[m].peak > 0 ? ((monthlyData[m].peak - monthlyData[m].current) / monthlyData[m].peak) * 100 : 0;
+            if (mDd > monthlyData[m].maxDdPct) monthlyData[m].maxDdPct = mDd;
+        });
+
+        let monthRowsHTML = "";
+        for (const [m, data] of Object.entries(monthlyData)) {
+            const wr = ((data.wins / data.trades) * 100).toFixed(1);
+            const mPct = ((data.pnl / initialDeposit) * 100).toFixed(2);
+            const mColor = data.pnl >= 0 ? 'text-emerald-400' : 'text-rose-400';
+            const mSign = data.pnl >= 0 ? '+' : '-';
+            monthRowsHTML += '<tr>' +
+                '<td class="p-3 font-semibold text-white">' + m + '</td>' +
+                '<td class="p-3">' + data.trades + '</td>' +
+                '<td class="p-3">' + wr + '%</td>' +
+                '<td class="p-3 text-amber-400">-' + data.maxDdPct.toFixed(2) + '%</td>' +
+                '<td class="p-3 ' + mColor + ' font-bold">' + mSign + Math.abs(parseFloat(mPct)).toFixed(2) + '% (' + mSign + '$' + Math.abs(data.pnl).toFixed(2) + ')</td>' +
+            '</tr>\n';
+        }
+
+        let sampleRowsHTML = "";
+        closed.slice(-10).reverse().forEach(t => {
+            const dt = new Date(t.time * 1000).toISOString().replace("T", " ").substring(0, 16);
+            const sideColor = t.type === 'BUY' ? 'text-emerald-400' : 'text-rose-400';
+            const pnlColor = t.pnl >= 0 ? 'text-emerald-400' : 'text-rose-400';
+            const pnlSign = t.pnl >= 0 ? '+' : '-';
+            const entryVal = t.entryPrice ? t.entryPrice.toFixed(2) : (t.exitPrice - (t.pnl / 100)).toFixed(2);
+            sampleRowsHTML += '<tr>' +
+                '<td class="p-3 text-zinc-400">#' + t.id + '</td>' +
+                '<td class="p-3">' + dt + '</td>' +
+                '<td class="p-3 ' + sideColor + ' font-bold">' + t.type + '</td>' +
+                '<td class="p-3">' + entryVal + '</td>' +
+                '<td class="p-3">' + t.exitPrice.toFixed(2) + '</td>' +
+                '<td class="p-3 ' + pnlColor + ' font-bold">' + pnlSign + '$' + Math.abs(t.pnl).toFixed(2) + '</td>' +
+            '</tr>\n';
+        });
+
+        const categoryName = activeBot.category || "Algorithmic Model";
+        const bp = activeBot.strategy_blueprint || {};
+        const setupText = bp.setup || `Evaluates ${symbol} ${tf.toUpperCase()} closed bar structures using automated quantitative state rules and deterministic risk guards.`;
+        const longText = bp.long_trigger || `Triggers a BUY market order when bullish confirmation criteria align on bar close.`;
+        const shortText = bp.short_trigger || `Triggers a SELL market order when bearish confirmation criteria align on bar close.`;
+        const riskText = bp.risk_guard || `Enforces fixed stop-loss and take-profit boundaries with simulated spread, slippage, and $7/lot round-turn commission.`;
+
+        let principleExplanation = "";
+        const catLower = categoryName.toLowerCase();
+        if (catLower.includes("mean reversion") || catLower.includes("vwap") || catLower.includes("scalp")) {
+            principleExplanation = `This strategy operates on the <strong>Statistical Mean Reversion</strong> principle. It assumes that extreme short-term price deviations away from volume-weighted equilibrium (VWAP) or volatility bands represent temporary liquidity imbalances that will revert toward the mean.`;
+        } else if (catLower.includes("breakout") || catLower.includes("liquidity") || catLower.includes("sweep")) {
+            principleExplanation = `This strategy operates on the <strong>Liquidity Sweep & Volatility Expansion</strong> principle. It targets institutional stop-runs beyond key session or daily highs/lows, entering once order flow confirms either a structural breakout or a false-breakout reclaim.`;
+        } else if (catLower.includes("trend") || catLower.includes("momentum")) {
+            principleExplanation = `This strategy operates on the <strong>Directional Momentum & Trend Continuation</strong> principle. Rather than fading price extremes, it aligns entries with higher-timeframe order flow and sustained volume expansion to capture asymmetric trend legs.`;
+        } else {
+            principleExplanation = `This strategy operates on a <strong>Deterministic Rule-Based State Machine</strong> principle, executing predefined price-action and indicator thresholds without discretionary human intervention.`;
+        }
+
+        let verdictBadge = "";
+        let verdictHeadline = "";
+        let futureAdviceHTML = "";
+
+        if (totalNetProfit > 0 && parseFloat(profitFactor) >= 1.25) {
+            verdictBadge = `<span class="px-2.5 py-1 rounded bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 font-mono text-[10px] font-bold uppercase">STATISTICAL EDGE VERIFIED</span>`;
+            verdictHeadline = `Positive Expectancy (+${absNetPct}% Net Return | PF ${profitFactor})`;
+            futureAdviceHTML = `<p><strong>Current Audit Assessment:</strong> Across <strong>${totalTrades} trades</strong> (${startDateStr} to ${endDateStr}), this model demonstrated a positive mathematical expectancy of <strong>$${expectedPayoff} per trade</strong> after surviving pessimistic intra-bar execution, spread, and commission friction.</p><p><strong>Future Deployment & Risk Guidance:</strong> While historical performance is positive, forward live markets experience regime shifts. Before deploying on live capital: (1) verify that the <strong>-${maxDrawdownPct.toFixed(2)}% maximum drawdown</strong> fits within your prop-firm or personal risk tolerance, (2) avoid running during tier-1 macro news spikes (NFP/FOMC) when spreads widen beyond modeled levels, and (3) forward-test on a demo account for at least 30 live trades to confirm execution parity.</p>`;
+        } else if (totalNetProfit >= -(initialDeposit * 0.03) && parseFloat(profitFactor) >= 0.90) {
+            verdictBadge = `<span class="px-2.5 py-1 rounded bg-amber-500/15 text-amber-300 border border-amber-500/30 font-mono text-[10px] font-bold uppercase">BREAKEVEN / REGIME-SENSITIVE</span>`;
+            verdictHeadline = `Near-Breakeven Performance (${sign}${absNetPct}% | PF ${profitFactor})`;
+            futureAdviceHTML = `<p><strong>Current Audit Assessment:</strong> Over this ${spanLabel.toLowerCase()} window (${startDateStr} to ${endDateStr}), the raw unoptimized rules generated a near-breakeven result (<strong>${sign}$${Math.abs(totalNetProfit).toFixed(2)}</strong>). The core entry logic captures valid moves, but transaction costs and choppy sessions offset gross gains.</p><p><strong>Future Optimization & Research Guidance:</strong> Do <strong>not</strong> deploy this baseline configuration live as-is. Its future viability depends on adding a higher-timeframe regime filter (such as an H1/H4 200 EMA trend filter or an ADX volatility threshold) and restricting trading to high-liquidity London/New York overlap hours. Use the simulator link above to test wider Take-Profit multiples.</p>`;
+        } else {
+            verdictBadge = `<span class="px-2.5 py-1 rounded bg-rose-500/15 text-rose-300 border border-rose-500/30 font-mono text-[10px] font-bold uppercase">NEGATIVE EXPECTANCY — DO NOT TRADE LIVE</span>`;
+            verdictHeadline = `Negative Expectancy Audit (${sign}${absNetPct}% | PF ${profitFactor})`;
+            futureAdviceHTML = `<p><strong>Current Audit Assessment:</strong> Under realistic spread, slippage, and pessimistic intra-bar execution rules, this strategy lost <strong>-$${Math.abs(totalNetProfit).toFixed(2)} (${sign}${absNetPct}%)</strong> across <strong>${totalTrades} trades</strong> with a peak-to-trough drawdown of <strong>-${maxDrawdownPct.toFixed(2)}%</strong>. Popular retail rules frequently fail when exposed to real execution friction or strong directional trends.</p><p><strong>Future Research Guidance:</strong> <strong>We advise against deploying this strategy on a live account in its current form.</strong> Notice the asymmetry between Long (${longWinPct}% win rate across ${longTrades.length} trades) and Short (${shortWinPct}% win rate across ${shortTrades.length} trades) performance. To salvage this concept for future research, open the strategy in the BacktestLab simulator, invert or disable counter-trend entries, and widen the Stop Loss relative to current ATR volatility.</p>`;
+        }
+
+        let inputsListHTML = "";
+        if (activeBot.inputs) {
+            for (const [k, cfg] of Object.entries(activeBot.inputs)) {
+                inputsListHTML += `<div class="flex justify-between py-1.5 border-b border-white/5 text-xs font-mono"><span class="text-zinc-400">${cfg.label || k}</span><span class="text-white font-bold">${cfg.value}</span></div>`;
+            }
+        }
+
+        const slug = activeBot.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+        const fullReportSlug = `${slug}-${symbol.toLowerCase()}-${tf}`;
+
+        if (window.db && window.doc && window.setDoc) {
+            const targetId = activeBot.lab_ref_id || fullReportSlug;
+            const labRef = window.doc(window.db, "verified_lab_models", targetId);
+            const statsPayload = {
+                pnl: `${sign}${absNetPct}%`,
+                win_rate: `${winRate}%`,
+                max_drawdown: `-${maxDrawdownPct.toFixed(1)}%`,
+                profit_factor: profitFactor,
+                total_trades: totalTrades,
+                span_label: spanLabel,
+                date_range: `${startDateStr} to ${endDateStr}`
+            };
+
+            await window.setDoc(labRef, {
+                name: activeBot.name,
+                category: categoryName,
+                inputs: activeBot.inputs || {},
+                strategy_json: activeBot.strategy_json || {},
+                js_code: activeBot.js_code || "",
+                mql5_code: activeBot.mql5_code || "",
+                pine_code: activeBot.pine_code || "",
+                python_code: activeBot.python_code || "",
+                strategy_blueprint: activeBot.strategy_blueprint || null,
+                is_lab_verified: true,
+                report_slug: fullReportSlug,
+                author_name: "BacktestLab Pro",
+                author_id: window.currentUser.uid,
+                pair: symbol,
+                timeframe: tf,
+                updated_at: window.serverTimestamp ? window.serverTimestamp() : new Date(),
+                stats: statsPayload
+            }, { merge: true });
+
+            activeBot.lab_ref_id = targetId;
+        }
+
+        // Split tags safely so HTML parser never terminates early
+        const S_OPEN = '<' + 'script';
+        const S_CLOSE = '<' + '/script>';
+        const B_CLOSE = '<' + '/body>';
+        const H_CLOSE = '<' + '/html>';
+
+        const htmlTemplate = `<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#050507">
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+    <title>${symbol} ${activeBot.name} Backtest Report (${spanLabel} Data &amp; Win Rate) | BacktestLab Pro</title>
+    <meta name="description" content="Empirical ${spanLabel.toLowerCase()} quantitative backtest audit for ${symbol} ${activeBot.name} (${tf.toUpperCase()}). ${totalTrades} trades tested (${startDateStr} to ${endDateStr}): ${winRate}% win rate, ${profitFactor} profit factor, ${sign}${absNetPct}% net return.">
+    <link rel="canonical" href="https://backtestlabpro.com/reports/${fullReportSlug}.html">
+    ${S_OPEN} type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Dataset",
+          "name": "${symbol} ${activeBot.name} Quantitative Backtest Dataset",
+          "description": "Historical simulation audit for ${activeBot.name} on ${symbol} ${tf.toUpperCase()} from ${startDateStr} to ${endDateStr} across ${totalTrades} closed trades.",
+          "creator": { "@type": "Organization", "name": "BacktestLab Pro", "url": "https://backtestlabpro.com/" },
+          "temporalCoverage": "${startDateStr}/${endDateStr}",
+          "variableMeasured": ["Net Return", "Win Rate", "Profit Factor", "Maximum Drawdown", "Sharpe Ratio", "Expected Payoff"]
+        },
+        {
+          "@type": "FAQPage",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "Is the ${activeBot.name} strategy profitable on ${symbol} ${tf.toUpperCase()}?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Across ${totalTrades} trades from ${startDateStr} to ${endDateStr}, ${activeBot.name} on ${symbol} ${tf.toUpperCase()} produced a ${sign}${absNetPct}% net return (${sign}$${Math.abs(totalNetProfit).toFixed(2)}) with a ${winRate}% win rate, ${profitFactor} profit factor, and -${maxDrawdownPct.toFixed(2)}% maximum drawdown."
+              }
+            }
+          ]
+        }
+      ]
+    }
+    ${S_CLOSE}
+    ${S_OPEN} src="https://cdn.tailwindcss.com">${S_CLOSE}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        body { background-color: #050507; color: #f4f4f5; font-family: 'Plus Jakarta Sans', sans-serif; }
+        .font-display { font-family: 'Space Grotesk', sans-serif; }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+        .glass-panel { background: rgba(14, 14, 18, 0.85); border: 1px solid rgba(255, 255, 255, 0.08); }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col justify-between" id="top">
+    <header class="sticky top-0 z-50 border-b border-white/5 bg-[#050507]/90 backdrop-blur-xl">
+        <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+            <a href="../index.html" class="flex items-center gap-2.5 font-bold text-white">
+                <span class="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-xs"><i class="fa-solid fa-wave-square"></i></span>
+                <span>BacktestLab <span class="text-indigo-400">Pro</span></span>
+            </a>
+            <div class="flex items-center gap-4 text-xs font-mono">
+                <a href="../algo_store.html" class="text-zinc-400 hover:text-white">← All Lab Reports</a>
+                <a href="../session.html" class="bg-white text-zinc-950 font-bold px-3.5 py-2 rounded-lg hover:bg-zinc-200">Open Simulator</a>
+            </div>
+        </div>
+    </header>
+    <main class="max-w-5xl mx-auto px-4 py-10 space-y-10 flex-grow w-full">
+        <div class="space-y-4 border-b border-white/10 pb-8">
+            <div class="flex flex-wrap items-center gap-2 text-xs font-mono">
+                <a href="../algo_store.html" class="text-indigo-400 hover:underline">Quant Lab Reports</a>
+                <span class="text-zinc-600">/</span>
+                <span class="text-zinc-400">${symbol} • ${tf.toUpperCase()} • ${startDateStr} to ${endDateStr} (${spanLabel} Audit)</span>
+                <span class="ml-auto px-2.5 py-0.5 rounded bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 text-[10px] font-bold">✓ VERIFIED LAB AUDIT</span>
+            </div>
+            <h1 class="font-display font-bold text-3xl sm:text-4xl text-white leading-tight">${symbol} ${activeBot.name}: Quantitative Backtest Report &amp; Strategy Audit</h1>
+            <p class="text-zinc-300 text-sm sm:text-base leading-relaxed bg-white/[0.02] p-4 rounded-xl border border-white/5">
+                Over a <strong>${spanLabel.toLowerCase()} historical simulation</strong> on <strong>${symbol} (${tf.toUpperCase()})</strong> from <strong>${startDateStr}</strong> to <strong>${endDateStr}</strong>, the <strong>${activeBot.name}</strong> algorithm executed <strong>${totalTrades} closed trades</strong>, generating a <strong class="${totalNetProfit >= 0 ? 'text-emerald-400' : 'text-rose-400'}">${sign}${absNetPct}% net return (${sign}$${Math.abs(totalNetProfit).toFixed(2)})</strong> with a <strong>${winRate}% win rate</strong>, <strong>${profitFactor} profit factor</strong>, and <strong>-${maxDrawdownPct.toFixed(2)}% maximum balance drawdown</strong>.
+            </p>
+            <div class="flex flex-wrap items-center gap-3 pt-2">
+                <a href="../chart_auto_run.html?labModelId=${activeBot.lab_ref_id || fullReportSlug}&symbol=${symbol}&tf=${tf}&initial=${startDateStr}T00:00:00.000Z&to=${endDateStr}T23:59:59.000Z" class="px-5 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs flex items-center gap-2 shadow-lg shadow-indigo-600/20">
+                    <i class="fa-solid fa-play text-amber-300"></i>
+                    <span>Verify &amp; Replay All ${totalTrades} Trades on Chart (Free)</span>
+                </a>
+                <a href="../algo_store.html" class="px-4 py-3 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-white/10 text-zinc-200 font-mono text-xs flex items-center gap-2">
+                    <i class="fa-solid fa-layer-group text-indigo-400"></i>
+                    <span>Compare Other Lab Models</span>
+                </a>
+            </div>
+        </div>
+        <section class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 font-mono">
+            <div class="glass-panel p-4 rounded-xl"><span class="text-[10px] text-zinc-500 uppercase block">Net Return</span><strong class="text-xl ${totalNetProfit >= 0 ? 'text-emerald-400' : 'text-rose-400'} font-bold">${sign}${absNetPct}%</strong></div>
+            <div class="glass-panel p-4 rounded-xl"><span class="text-[10px] text-zinc-500 uppercase block">Win Rate</span><strong class="text-xl text-white font-bold">${winRate}%</strong></div>
+            <div class="glass-panel p-4 rounded-xl"><span class="text-[10px] text-zinc-500 uppercase block">Profit Factor</span><strong class="text-xl text-indigo-400 font-bold">${profitFactor}</strong></div>
+            <div class="glass-panel p-4 rounded-xl"><span class="text-[10px] text-zinc-500 uppercase block">Max Drawdown</span><strong class="text-xl text-rose-400 font-bold">-${maxDrawdownPct.toFixed(2)}%</strong></div>
+            <div class="glass-panel p-4 rounded-xl"><span class="text-[10px] text-zinc-500 uppercase block">Expected Payoff</span><strong class="text-xl ${parseFloat(expectedPayoff) >= 0 ? 'text-emerald-400' : 'text-rose-400'} font-bold">${parseFloat(expectedPayoff) >= 0 ? '+' : '-'}$${Math.abs(parseFloat(expectedPayoff)).toFixed(2)}</strong></div>
+            <div class="glass-panel p-4 rounded-xl"><span class="text-[10px] text-zinc-500 uppercase block">Sharpe Ratio</span><strong class="text-xl text-amber-400 font-bold">${sharpeRatio}</strong></div>
+        </section>
+        <section class="glass-panel p-6 sm:p-8 rounded-2xl space-y-5">
+            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-4">
+                <h2 class="font-display font-bold text-xl sm:text-2xl text-white">1. Core Strategy Principle &amp; Execution Mechanics</h2>
+                <span class="px-2.5 py-1 rounded bg-indigo-500/15 text-indigo-300 border border-indigo-500/30 font-mono text-[10px] font-bold uppercase">${categoryName}</span>
+            </div>
+            <p class="text-xs sm:text-sm text-zinc-300 leading-relaxed">${principleExplanation}</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                <div class="p-4 rounded-xl bg-black/50 border border-white/5 space-y-1.5"><span class="font-mono font-bold text-amber-400 uppercase block text-[11px]">Market Setup &amp; Regime Filter</span><p class="text-zinc-300 leading-relaxed">${setupText}</p></div>
+                <div class="p-4 rounded-xl bg-black/50 border border-white/5 space-y-1.5"><span class="font-mono font-bold text-indigo-400 uppercase block text-[11px]">Risk &amp; Friction Protocol</span><p class="text-zinc-300 leading-relaxed">${riskText}</p></div>
+                <div class="p-4 rounded-xl bg-black/50 border border-emerald-500/20 space-y-1.5"><span class="font-mono font-bold text-emerald-400 uppercase block text-[11px]">Long (Buy) Execution Trigger</span><p class="text-zinc-300 leading-relaxed">${longText}</p></div>
+                <div class="p-4 rounded-xl bg-black/50 border border-rose-500/20 space-y-1.5"><span class="font-mono font-bold text-rose-400 uppercase block text-[11px]">Short (Sell) Execution Trigger</span><p class="text-zinc-300 leading-relaxed">${shortText}</p></div>
+            </div>
+        </section>
+        <section class="glass-panel p-6 sm:p-8 rounded-2xl space-y-4 border-l-4 ${totalNetProfit >= 0 && parseFloat(profitFactor) >= 1.25 ? 'border-l-emerald-500' : (totalNetProfit >= -(initialDeposit * 0.03) ? 'border-l-amber-500' : 'border-l-rose-500')}">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+                <h2 class="font-display font-bold text-xl text-white">2. BacktestLab Verdict &amp; Future Strategy Outlook</h2>
+                ${verdictBadge}
+            </div>
+            <div class="text-sm font-mono font-bold text-white">${verdictHeadline}</div>
+            <div class="space-y-3 text-xs sm:text-sm text-zinc-300 leading-relaxed">${futureAdviceHTML}</div>
+        </section>
+        <section class="glass-panel p-6 sm:p-8 rounded-2xl space-y-5">
+            <div class="border-b border-white/10 pb-3 flex flex-wrap items-center justify-between gap-2">
+                <h2 class="font-display font-bold text-xl text-white">3. Complete Quantitative Strategy Tester Report</h2>
+                <span class="text-[11px] font-mono text-zinc-400">Model: M1 Intra-Bar Pessimistic Execution • $7/Lot Comm + Spread</span>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 font-mono text-xs">
+                <div class="space-y-2 bg-black/40 p-4 rounded-xl border border-white/5">
+                    <div class="text-[10px] font-bold text-indigo-400 uppercase tracking-wider mb-2">Environment &amp; Inputs</div>
+                    <div class="flex justify-between py-1 border-b border-white/5"><span class="text-zinc-400">Symbol / Period</span><span class="text-white font-bold">${symbol} (${tf.toUpperCase()})</span></div>
+                    <div class="flex justify-between py-1 border-b border-white/5"><span class="text-zinc-400">Test Window</span><span class="text-white">${startDateStr} → ${endDateStr}</span></div>
+                    <div class="flex justify-between py-1 border-b border-white/5"><span class="text-zinc-400">Initial Deposit</span><span class="text-white">$10,000.00</span></div>
+                    <div class="flex justify-between py-1 border-b border-white/5"><span class="text-zinc-400">Final Balance</span><span class="text-white font-bold">$${finalBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span></div>
+                    ${inputsListHTML}
+                </div>
+                <div class="space-y-2 bg-black/40 p-4 rounded-xl border border-white/5">
+                    <div class="text-[10px] font-bold text-emerald-400 uppercase tracking-wider mb-2">Profit &amp; Drawdown Matrix</div>
+                    <div class="flex justify-between py-1 border-b border-white/5"><span class="text-zinc-400">Total Net Profit</span><span class="${totalNetProfit >= 0 ? 'text-emerald-400' : 'text-rose-400'} font-bold">${sign}$${Math.abs(totalNetProfit).toFixed(2)}</span></div>
+                    <div class="flex justify-between py-1 border-b border-white/5"><span class="text-zinc-400">Gross Profit</span><span class="text-emerald-400">+$${grossProfit.toFixed(2)}</span></div>
+                    <div class="flex justify-between py-1 border-b border-white/5"><span class="text-zinc-400">Gross Loss</span><span class="text-rose-400">-$${absGrossLoss.toFixed(2)}</span></div>
+                    <div class="flex justify-between py-1 border-b border-white/5"><span class="text-zinc-400">Max Drawdown</span><span class="text-rose-400">-$${maxDrawdownUSD.toFixed(2)} (${maxDrawdownPct.toFixed(2)}%)</span></div>
+                    <div class="flex justify-between py-1 border-b border-white/5"><span class="text-zinc-400">Profit Factor</span><span class="text-white font-bold">${profitFactor}</span></div>
+                    <div class="flex justify-between py-1 border-b border-white/5"><span class="text-zinc-400">Recovery Factor</span><span class="text-white">${recoveryFactor}</span></div>
+                    <div class="flex justify-between py-1"><span class="text-zinc-400">Expected Payoff</span><span class="text-white">$${expectedPayoff}</span></div>
+                </div>
+                <div class="space-y-2 bg-black/40 p-4 rounded-xl border border-white/5">
+                    <div class="text-[10px] font-bold text-amber-400 uppercase tracking-wider mb-2">Trade Distribution &amp; Streaks</div>
+                    <div class="flex justify-between py-1 border-b border-white/5"><span class="text-zinc-400">Total Closed Trades</span><span class="text-white font-bold">${totalTrades}</span></div>
+                    <div class="flex justify-between py-1 border-b border-white/5"><span class="text-zinc-400">Longs (Won %)</span><span class="text-white">${longTrades.length} (${longWinPct}%)</span></div>
+                    <div class="flex justify-between py-1 border-b border-white/5"><span class="text-zinc-400">Shorts (Won %)</span><span class="text-white">${shortTrades.length} (${shortWinPct}%)</span></div>
+                    <div class="flex justify-between py-1 border-b border-white/5"><span class="text-zinc-400">Largest Win / Loss</span><span class="text-white">+$${largestProfit.toFixed(2)} / -$${Math.abs(largestLoss).toFixed(2)}</span></div>
+                    <div class="flex justify-between py-1 border-b border-white/5"><span class="text-zinc-400">Average Win / Loss</span><span class="text-white">+$${avgProfit.toFixed(2)} / -$${Math.abs(avgLoss).toFixed(2)}</span></div>
+                    <div class="flex justify-between py-1 border-b border-white/5"><span class="text-zinc-400">Max Consec. Wins</span><span class="text-emerald-400">${maxWinStreak} (+$${maxWinSum.toFixed(2)})</span></div>
+                    <div class="flex justify-between py-1"><span class="text-zinc-400">Max Consec. Losses</span><span class="text-rose-400">${maxLossStreak} (-$${Math.abs(maxLossSum).toFixed(2)})</span></div>
+                </div>
+            </div>
+        </section>
+        <section class="glass-panel p-6 rounded-2xl space-y-4">
+            <h2 class="font-display font-bold text-xl text-white">4. Month-by-Month PnL Breakdown</h2>
+            <div class="overflow-x-auto rounded-xl border border-white/10">
+                <table class="w-full text-left font-mono text-xs">
+                    <thead class="bg-white/5 text-zinc-300"><tr><th class="p-3">Month</th><th class="p-3">Trades</th><th class="p-3">Win Rate</th><th class="p-3">Max DD</th><th class="p-3">Net Return</th></tr></thead>
+                    <tbody class="divide-y divide-white/5 text-zinc-300">${monthRowsHTML}</tbody>
+                </table>
+            </div>
+        </section>
+        <section class="glass-panel p-6 rounded-2xl space-y-4">
+            <div class="flex items-center justify-between">
+                <h2 class="font-display font-bold text-xl text-white">5. Executed Trade Log Sample</h2>
+                <span class="text-[11px] font-mono text-zinc-400">Showing last ${Math.min(10, totalTrades)} of ${totalTrades} verified trades</span>
+            </div>
+            <div class="overflow-x-auto rounded-xl border border-white/10">
+                <table class="w-full text-left font-mono text-xs">
+                    <thead class="bg-white/5 text-zinc-300"><tr><th class="p-3">Ticket</th><th class="p-3">Close Time (GMT)</th><th class="p-3">Side</th><th class="p-3">Entry</th><th class="p-3">Exit</th><th class="p-3">Net Result (USD)</th></tr></thead>
+                    <tbody class="divide-y divide-white/5 text-zinc-300">${sampleRowsHTML}</tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+    <footer class="mt-16 border-t border-white/10 bg-[#060608] pt-12 pb-12 text-zinc-400 text-xs font-sans" role="contentinfo">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+            <div class="p-4 rounded-xl bg-black/60 border border-white/5 font-mono text-[11px] text-zinc-500 leading-relaxed">
+                <strong class="text-amber-400 flex items-center gap-1.5 mb-1"><i class="fa-solid fa-triangle-exclamation"></i> Quantitative Risk Disclaimer</strong>
+                BacktestLab Pro provides strategy backtesting software and historical data simulation for research and educational purposes only. Past simulated performance does not guarantee future financial returns. All live trading carries substantial financial risk.
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-xs font-mono">
+                <div class="space-y-2.5">
+                    <span class="text-white font-bold uppercase tracking-wider block text-[11px]">REPLAY &amp; SIMULATORS</span>
+                    <a href="../session.html" class="block hover:text-white transition-colors">Session Builder (Bar Replay)</a>
+                    <a href="../tools/xauusd-m1-replay.html" class="block hover:text-white transition-colors">Gold (XAUUSD) Replay Engine</a>
+                    <a href="../session.html" class="block hover:text-white transition-colors">Forex Bar Replay Simulator</a>
+                    <a href="../bot_automation.html" class="block hover:text-white transition-colors">AI MQL5 EA Builder</a>
+                </div>
+                <div class="space-y-2.5">
+                    <span class="text-white font-bold uppercase tracking-wider block text-[11px]">COMPARISONS &amp; CONCEPTS</span>
+                    <a href="../index.html#compare-table" class="block hover:text-white transition-colors">vs BacktestingMax Replay</a>
+                    <a href="../index.html#compare-table" class="block hover:text-white transition-colors">vs TradingView Bar Replay</a>
+                    <a href="../articles/balanced-price-range-bpr-trading.html" class="block text-purple-400 font-semibold hover:text-purple-300 transition-colors">BPR Strategy Guide &amp; Backtest</a>
+                    <a href="../articles/asian-session-range-breakout-gold.html" class="block hover:text-white transition-colors">Asian Range Sweep Mechanics</a>
+                </div>
+                <div class="space-y-2.5">
+                    <span class="text-white font-bold uppercase tracking-wider block text-[11px]">CODE &amp; MODULES</span>
+                    <a href="../production-code.html" class="block hover:text-white transition-colors">MetaTrader 5 Expert Advisors</a>
+                    <a href="../production-code.html" class="block hover:text-white transition-colors">Python Backtest Scripts</a>
+                    <a href="../algo_store.html" class="block hover:text-white transition-colors">Algo Store Strategies</a>
+                    <a href="../articles.html" class="block hover:text-white transition-colors">Articles &amp; Documentation</a>
+                </div>
+                <div class="space-y-2.5">
+                    <span class="text-white font-bold uppercase tracking-wider block text-[11px]">COMPANY &amp; LEGAL</span>
+                    <a href="../about.html" class="block hover:text-white transition-colors">About BacktestLab Pro</a>
+                    <a href="../privacy.html" class="block hover:text-white transition-colors">Privacy Policy</a>
+                    <a href="../terms.html" class="block hover:text-white transition-colors">Terms of Service</a>
+                    <a href="../signup.html" class="block hover:text-white transition-colors">Sign In / Register</a>
+                </div>
+            </div>
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4 text-zinc-500 font-mono text-[11px] pt-6 border-t border-white/5">
+                <div>© 2026 BacktestLab Pro. All rights reserved. Free backtesting forever with no sign up or credit card required.</div>
+                <div><a href="#top" class="hover:text-white transition-colors"><i class="fa-solid fa-arrow-up mr-1"></i> Back to Top</a></div>
+            </div>
+        </div>
+    </footer>
+${B_CLOSE}
+${H_CLOSE}`;
+
+        const blob = new Blob([htmlTemplate], { type: "text/html;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `${fullReportSlug}.html`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+
+        alert(`✓ MT5-Grade SEO Report (${fullReportSlug}.html) downloaded!\n✓ Verified Lab Model PnL Card synced to algo_store.html.`);
+    } catch (err) {
+        console.error("Publishing error:", err);
+        alert("Publishing failed: " + err.message);
+    } finally {
+        btn.innerText = "⚡ Publish SEO Report & Card";
+        btn.disabled = false;
+    }
 }
 </script>
 </body>

@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#050507">
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+    <title>XAUUSD NY Session Opening Range Breakout (ORB) Backtest Report (6-Month Data &amp; Win Rate) | BacktestLab Pro</title>
+    <meta name="description" content="Empirical 6-month quantitative backtest audit for XAUUSD NY Session Opening Range Breakout (ORB) (M15). 292 trades tested (2025-06-29 to 2025-12-26): 29.11% win rate, 1.01 profit factor, +0.94% net return.">
+    <link rel="canonical" href="https://backtestlabpro.com/reports/ny-session-opening-range-breakout-orb-xauusd-m15.html">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Dataset",
+          "name": "XAUUSD NY Session Opening Range Breakout (ORB) Quantitative Backtest Dataset",
+          "description": "Historical simulation audit for NY Session Opening Range Breakout (ORB) on XAUUSD M15 from 2025-06-29 to 2025-12-26 across 292 closed trades.",
+          "creator": { "@type": "Organization", "name": "BacktestLab Pro", "url": "https://backtestlabpro.com/" },
+          "temporalCoverage": "2025-06-29/2025-12-26",
+          "variableMeasured": ["Net Return", "Win Rate", "Profit Factor", "Maximum Drawdown", "Sharpe Ratio", "Expected Payoff"]
+        },
+        {
+          "@type": "FAQPage",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "Is the NY Session Opening Range Breakout (ORB) strategy profitable on XAUUSD M15?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Across 292 trades from 2025-06-29 to 2025-12-26, NY Session Opening Range Breakout (ORB) on XAUUSD M15 produced a +0.94% net return (+$93.60) with a 29.11% win rate, 1.01 profit factor, and -6.06% maximum drawdown."
+              }
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        body { background-color: #050507; color: #f4f4f5; font-family: 'Plus Jakarta Sans', sans-serif; }
+        .font-display { font-family: 'Space Grotesk', sans-serif; }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+        .glass-panel { background: rgba(14, 14, 18, 0.85); border: 1px solid rgba(255, 255, 255, 0.08); }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col justify-between" id="top">
+    <header class="sticky top-0 z-50 border-b border-white/5 bg-[#050507]/90 backdrop-blur-xl">
+        <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+            <a href="../index.html" class="flex items-center gap-2.5 font-bold text-white">
+                <span class="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-xs"><i class="fa-solid fa-wave-square"></i></span>
+                <span>BacktestLab <span class="text-indigo-400">Pro</span></span>
+            </a>
+            <div class="flex items-center gap-4 text-xs font-mono">
+                <a href="../algo_store.html" class="text-zinc-400 hover:text-white">← All Lab Reports</a>
+                <a href="../session.html" class="bg-white text-zinc-950 font-bold px-3.5 py-2 rounded-lg hover:bg-zinc-200">Open Simulator</a>
+            </div>
+        </div>
+    </header>
+    <main class="max-w-5xl mx-auto px-4 py-10 space-y-10 flex-grow w-full">
+        <div class="space-y-4 border-b border-white/10 pb-8">
+            <div class="flex flex-wrap items-center gap-2 text-xs font-mono">
+                <a href="../algo_store.html" class="text-indigo-400 hover:underline">Quant Lab Reports</a>
+                <span class="text-zinc-600">/</span>
+                <span class="text-zinc-400">XAUUSD • M15 • 2025-06-29 to 2025-12-26 (6-Month Audit)</span>
+                <span class="ml-auto px-2.5 py-0.5 rounded bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 text-[10px] font-bold">✓ VERIFIED LAB AUDIT</span>
+            </div>
+            <h1 class="font-display font-bold text-3xl sm:text-4xl text-white leading-tight">XAUUSD NY Session Opening Range Breakout (ORB): Quantitative Backtest Report &amp; Strategy Audit</h1>
+            <p class="text-zinc-300 text-sm sm:text-base leading-relaxed bg-white/[0.02] p-4 rounded-xl border border-white/5">
+                Over a <strong>6-month historical simulation</strong> on <strong>XAUUSD (M15)</strong> from <strong>2025-06-29</strong> to <strong>2025-12-26</strong>, the <strong>NY Session Opening Range Breakout (ORB)</strong> algorithm executed <strong>292 closed trades</strong>, generating a <strong class="text-emerald-400">+0.94% net return (+$93.60)</strong> with a <strong>29.11% win rate</strong>, <strong>1.01 profit factor</strong>, and <strong>-6.06% maximum balance drawdown</strong>.
+            </p>
+            <div class="flex flex-wrap items-center gap-3 pt-2">
+                <a href="../chart_auto_run.html?labModelId=ny-session-opening-range-breakout-orb-xauusd-m15&symbol=XAUUSD&tf=m15&initial=2025-06-29T00:00:00.000Z&to=2025-12-26T23:59:59.000Z" class="px-5 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs flex items-center gap-2 shadow-lg shadow-indigo-600/20">
+                    <i class="fa-solid fa-play text-amber-300"></i>
+                    <span>Verify &amp; Replay All 292 Trades on Chart (Free)</span>
+                </a>
+                <a href="../algo_store.html" class="px-4 py-3 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-white/10 text-zinc-200 font-mono text-xs flex items-center gap-2">
+                    <i class="fa-solid fa-layer-group text-indigo-400"></i>
+                    <span>Compare Other Lab Models</span>
+                </a>
+            </div>
+        </div>
+        <section class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 font-mono">
+            <div class="glass-panel p-4 rounded-xl"><span class="text-[10px] text-zinc-500 uppercase block">Net Return</span><strong class="text-xl text-emerald-400 font-bold">+0.94%</strong></div>
+            <div class="glass-panel p-4 rounded-xl"><span class="text-[10px] text-zinc-500 uppercase block">Win Rate</span><strong class="text-xl text-white font-bold">29.11%</strong></div>
+            <div class="glass-panel p-4 rounded-xl"><span class="text-[10px] text-zinc-500 uppercase block">Profit Factor</span><strong class="text-xl text-indigo-400 font-bold">1.01</strong></div>
+            <div class="glass-panel p-4 rounded-xl"><span class="text-[10px] text-zinc-500 uppercase block">Max Drawdown</span><strong class="text-xl text-rose-400 font-bold">-6.06%</strong></div>
+            <div class="glass-panel p-4 rounded-xl"><span class="text-[10px] text-zinc-500 uppercase block">Expected Payoff</span><strong class="text-xl text-emerald-400 font-bold">+$0.32</strong></div>
+            <div class="glass-panel p-4 rounded-xl"><span class="text-[10px] text-zinc-500 uppercase block">Sharpe Ratio</span><strong class="text-xl text-amber-400 font-bold">0.15</strong></div>
+        </section>
+        <section class="glass-panel p-6 sm:p-8 rounded-2xl space-y-5">
+            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-4">
+                <h2 class="font-display font-bold text-xl sm:text-2xl text-white">1. Core Strategy Principle &amp; Execution Mechanics</h2>
+                <span class="px-2.5 py-1 rounded bg-indigo-500/15 text-indigo-300 border border-indigo-500/30 font-mono text-[10px] font-bold uppercase">Breakout / Liquidity Sweep</span>
+            </div>
+            <p class="text-xs sm:text-sm text-zinc-300 leading-relaxed">This strategy operates on the <strong>Liquidity Sweep & Volatility Expansion</strong> principle. It targets institutional stop-runs beyond key session or daily highs/lows, entering once order flow confirms either a structural breakout or a false-breakout reclaim.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                <div class="p-4 rounded-xl bg-black/50 border border-white/5 space-y-1.5"><span class="font-mono font-bold text-amber-400 uppercase block text-[11px]">Market Setup &amp; Regime Filter</span><p class="text-zinc-300 leading-relaxed">First 30 minutes NY session opening range (13:30-14:00 UTC) width filtered by 14-period ATR</p></div>
+                <div class="p-4 rounded-xl bg-black/50 border border-white/5 space-y-1.5"><span class="font-mono font-bold text-indigo-400 uppercase block text-[11px]">Risk &amp; Friction Protocol</span><p class="text-zinc-300 leading-relaxed">Stop-Loss at opposite range bound, Take-Profit at 2.0 RR</p></div>
+                <div class="p-4 rounded-xl bg-black/50 border border-emerald-500/20 space-y-1.5"><span class="font-mono font-bold text-emerald-400 uppercase block text-[11px]">Long (Buy) Execution Trigger</span><p class="text-zinc-300 leading-relaxed">Price crosses above the upper range level + 2 pips offset</p></div>
+                <div class="p-4 rounded-xl bg-black/50 border border-rose-500/20 space-y-1.5"><span class="font-mono font-bold text-rose-400 uppercase block text-[11px]">Short (Sell) Execution Trigger</span><p class="text-zinc-300 leading-relaxed">Price crosses below the lower range level - 2 pips offset</p></div>
+            </div>
+        </section>
+        <section class="glass-panel p-6 sm:p-8 rounded-2xl space-y-4 border-l-4 border-l-amber-500">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+                <h2 class="font-display font-bold text-xl text-white">2. BacktestLab Verdict &amp; Future Strategy Outlook</h2>
+                <span class="px-2.5 py-1 rounded bg-amber-500/15 text-amber-300 border border-amber-500/30 font-mono text-[10px] font-bold uppercase">BREAKEVEN / REGIME-SENSITIVE</span>
+            </div>
+            <div class="text-sm font-mono font-bold text-white">Near-Breakeven Performance (+0.94% | PF 1.01)</div>
+            <div class="space-y-3 text-xs sm:text-sm text-zinc-300 leading-relaxed"><p><strong>Current Audit Assessment:</strong> Over this 6-month window (2025-06-29 to 2025-12-26), the raw unoptimized rules generated a near-breakeven result (<strong>+$93.60</strong>). The core entry logic captures valid moves, but transaction costs and choppy sessions offset gross gains.</p><p><strong>Future Optimization & Research Guidance:</strong> Do <strong>not</strong> deploy this baseline configuration live as-is. Its future viability depends on adding a higher-timeframe regime filter (such as an H1/H4 200 EMA trend filter or an ADX volatility threshold) and restricting trading to high-liquidity London/New York overlap hours. Use the simulator link above to test wider Take-Profit multiples.</p></div>
+        </section>
+        <section class="glass-panel p-6 sm:p-8 rounded-2xl space-y-5">
+            <div class="border-b border-white/10 pb-3 flex flex-wrap items-center justify-between gap-2">
+                <h2 class="font-display font-bold text-xl text-white">3. Complete Quantitative Strategy Tester Report</h2>
+                <span class="text-[11px] font-mono text-zinc-400">Model: M1 Intra-Bar Pessimistic Execution • $7/Lot Comm + Spread</span>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 font-mono text-xs">
+                <div class="space-y-2 bg-black/40 p-4 rounded-xl border border-white/5">
+                    <div class="text-[10px] font-bold text-indigo-400 uppercase tracking-wider mb-2">Environment &amp; Inputs</div>
+                    <div class="flex justify-between py-1 border-b border-white/5"><span class="text-zinc-400">Symbol / Period</span><span class="text-white font-bold">XAUUSD (M15)</span></div>
+                    <div class="flex justify-between py-1 border-b border-white/5"><span class="text-zinc-400">Test Window</span><span class="text-white">2025-06-29 → 2025-12-26</span></div>
+                    <div class="flex justify-between py-1 border-b border-white/5"><span class="text-zinc-400">Initial Deposit</span><span class="text-white">$10,000.00</span></div>
+                    <div class="flex justify-between py-1 border-b border-white/5"><span class="text-zinc-400">Final Balance</span><span class="text-white font-bold">$10,093.60</span></div>
+                    <div class="flex justify-between py-1.5 border-b border-white/5 text-xs font-mono"><span class="text-zinc-400">Lot Size</span><span class="text-white font-bold">0.1</span></div><div class="flex justify-between py-1.5 border-b border-white/5 text-xs font-mono"><span class="text-zinc-400">Risk Percent</span><span class="text-white font-bold">1</span></div><div class="flex justify-between py-1.5 border-b border-white/5 text-xs font-mono"><span class="text-zinc-400">ATR Period</span><span class="text-white font-bold">14</span></div>
+                </div>
+                <div class="space-y-2 bg-black/40 p-4 rounded-xl border border-white/5">
+                    <div class="text-[10px] font-bold text-emerald-400 uppercase tracking-wider mb-2">Profit &amp; Drawdown Matrix</div>
+                    <div class="flex justify-between py-1 border-b border-white/5"><span class="text-zinc-400">Total Net Profit</span><span class="text-emerald-400 font-bold">+$93.60</span></div>
+                    <div class="flex justify-between py-1 border-b border-white/5"><span class="text-zinc-400">Gross Profit</span><span class="text-emerald-400">+$6655.50</span></div>
+                    <div class="flex justify-between py-1 border-b border-white/5"><span class="text-zinc-400">Gross Loss</span><span class="text-rose-400">-$6561.90</span></div>
+                    <div class="flex justify-between py-1 border-b border-white/5"><span class="text-zinc-400">Max Drawdown</span><span class="text-rose-400">-$606.40 (6.06%)</span></div>
+                    <div class="flex justify-between py-1 border-b border-white/5"><span class="text-zinc-400">Profit Factor</span><span class="text-white font-bold">1.01</span></div>
+                    <div class="flex justify-between py-1 border-b border-white/5"><span class="text-zinc-400">Recovery Factor</span><span class="text-white">0.15</span></div>
+                    <div class="flex justify-between py-1"><span class="text-zinc-400">Expected Payoff</span><span class="text-white">$0.32</span></div>
+                </div>
+                <div class="space-y-2 bg-black/40 p-4 rounded-xl border border-white/5">
+                    <div class="text-[10px] font-bold text-amber-400 uppercase tracking-wider mb-2">Trade Distribution &amp; Streaks</div>
+                    <div class="flex justify-between py-1 border-b border-white/5"><span class="text-zinc-400">Total Closed Trades</span><span class="text-white font-bold">292</span></div>
+                    <div class="flex justify-between py-1 border-b border-white/5"><span class="text-zinc-400">Longs (Won %)</span><span class="text-white">187 (31.02%)</span></div>
+                    <div class="flex justify-between py-1 border-b border-white/5"><span class="text-zinc-400">Shorts (Won %)</span><span class="text-white">105 (25.71%)</span></div>
+                    <div class="flex justify-between py-1 border-b border-white/5"><span class="text-zinc-400">Largest Win / Loss</span><span class="text-white">+$78.30 / -$31.70</span></div>
+                    <div class="flex justify-between py-1 border-b border-white/5"><span class="text-zinc-400">Average Win / Loss</span><span class="text-white">+$78.30 / -$31.70</span></div>
+                    <div class="flex justify-between py-1 border-b border-white/5"><span class="text-zinc-400">Max Consec. Wins</span><span class="text-emerald-400">4 (+$313.20)</span></div>
+                    <div class="flex justify-between py-1"><span class="text-zinc-400">Max Consec. Losses</span><span class="text-rose-400">11 (-$348.70)</span></div>
+                </div>
+            </div>
+        </section>
+        <section class="glass-panel p-6 rounded-2xl space-y-4">
+            <h2 class="font-display font-bold text-xl text-white">4. Month-by-Month PnL Breakdown</h2>
+            <div class="overflow-x-auto rounded-xl border border-white/10">
+                <table class="w-full text-left font-mono text-xs">
+                    <thead class="bg-white/5 text-zinc-300"><tr><th class="p-3">Month</th><th class="p-3">Trades</th><th class="p-3">Win Rate</th><th class="p-3">Max DD</th><th class="p-3">Net Return</th></tr></thead>
+                    <tbody class="divide-y divide-white/5 text-zinc-300"><tr><td class="p-3 font-semibold text-white">July 2025</td><td class="p-3">45</td><td class="p-3">24.4%</td><td class="p-3 text-amber-400">-4.16%</td><td class="p-3 text-rose-400 font-bold">-2.16% (-$216.50)</td></tr>
+<tr><td class="p-3 font-semibold text-white">August 2025</td><td class="p-3">49</td><td class="p-3">24.5%</td><td class="p-3 text-amber-400">-4.04%</td><td class="p-3 text-rose-400 font-bold">-2.33% (-$233.30)</td></tr>
+<tr><td class="p-3 font-semibold text-white">September 2025</td><td class="p-3">50</td><td class="p-3">40.0%</td><td class="p-3 text-amber-400">-2.32%</td><td class="p-3 text-emerald-400 font-bold">+6.15% (+$615.00)</td></tr>
+<tr><td class="p-3 font-semibold text-white">October 2025</td><td class="p-3">57</td><td class="p-3">29.8%</td><td class="p-3 text-amber-400">-3.67%</td><td class="p-3 text-emerald-400 font-bold">+0.63% (+$63.10)</td></tr>
+<tr><td class="p-3 font-semibold text-white">November 2025</td><td class="p-3">42</td><td class="p-3">28.6%</td><td class="p-3 text-amber-400">-2.55%</td><td class="p-3 text-rose-400 font-bold">-0.11% (-$11.40)</td></tr>
+<tr><td class="p-3 font-semibold text-white">December 2025</td><td class="p-3">49</td><td class="p-3">26.5%</td><td class="p-3 text-amber-400">-4.42%</td><td class="p-3 text-rose-400 font-bold">-1.23% (-$123.30)</td></tr>
+</tbody>
+                </table>
+            </div>
+        </section>
+        <section class="glass-panel p-6 rounded-2xl space-y-4">
+            <div class="flex items-center justify-between">
+                <h2 class="font-display font-bold text-xl text-white">5. Executed Trade Log Sample</h2>
+                <span class="text-[11px] font-mono text-zinc-400">Showing last 10 of 292 verified trades</span>
+            </div>
+            <div class="overflow-x-auto rounded-xl border border-white/10">
+                <table class="w-full text-left font-mono text-xs">
+                    <thead class="bg-white/5 text-zinc-300"><tr><th class="p-3">Ticket</th><th class="p-3">Close Time (GMT)</th><th class="p-3">Side</th><th class="p-3">Entry</th><th class="p-3">Exit</th><th class="p-3">Net Result (USD)</th></tr></thead>
+                    <tbody class="divide-y divide-white/5 text-zinc-300"><tr><td class="p-3 text-zinc-400">#292</td><td class="p-3">2025-12-26 14:45</td><td class="p-3 text-emerald-400 font-bold">BUY</td><td class="p-3">4532.72</td><td class="p-3">4529.61</td><td class="p-3 text-rose-400 font-bold">-$31.70</td></tr>
+<tr><td class="p-3 text-zinc-400">#291</td><td class="p-3">2025-12-26 13:45</td><td class="p-3 text-emerald-400 font-bold">BUY</td><td class="p-3">4533.48</td><td class="p-3">4530.38</td><td class="p-3 text-rose-400 font-bold">-$31.70</td></tr>
+<tr><td class="p-3 text-zinc-400">#290</td><td class="p-3">2025-12-26 10:00</td><td class="p-3 text-emerald-400 font-bold">BUY</td><td class="p-3">4533.06</td><td class="p-3">4540.96</td><td class="p-3 text-emerald-400 font-bold">+$78.30</td></tr>
+<tr><td class="p-3 text-zinc-400">#289</td><td class="p-3">2025-12-25 21:30</td><td class="p-3 text-emerald-400 font-bold">BUY</td><td class="p-3">4508.49</td><td class="p-3">4505.39</td><td class="p-3 text-rose-400 font-bold">-$31.70</td></tr>
+<tr><td class="p-3 text-zinc-400">#288</td><td class="p-3">2025-12-25 19:15</td><td class="p-3 text-emerald-400 font-bold">BUY</td><td class="p-3">4502.94</td><td class="p-3">4510.84</td><td class="p-3 text-emerald-400 font-bold">+$78.30</td></tr>
+<tr><td class="p-3 text-zinc-400">#287</td><td class="p-3">2025-12-23 23:15</td><td class="p-3 text-emerald-400 font-bold">BUY</td><td class="p-3">4500.02</td><td class="p-3">4496.92</td><td class="p-3 text-rose-400 font-bold">-$31.70</td></tr>
+<tr><td class="p-3 text-zinc-400">#286</td><td class="p-3">2025-12-23 18:15</td><td class="p-3 text-emerald-400 font-bold">BUY</td><td class="p-3">4505.26</td><td class="p-3">4502.15</td><td class="p-3 text-rose-400 font-bold">-$31.70</td></tr>
+<tr><td class="p-3 text-zinc-400">#285</td><td class="p-3">2025-12-23 15:30</td><td class="p-3 text-emerald-400 font-bold">BUY</td><td class="p-3">4497.53</td><td class="p-3">4494.43</td><td class="p-3 text-rose-400 font-bold">-$31.70</td></tr>
+<tr><td class="p-3 text-zinc-400">#284</td><td class="p-3">2025-12-22 01:15</td><td class="p-3 text-emerald-400 font-bold">BUY</td><td class="p-3">4408.19</td><td class="p-3">4416.09</td><td class="p-3 text-emerald-400 font-bold">+$78.30</td></tr>
+<tr><td class="p-3 text-zinc-400">#283</td><td class="p-3">2025-12-21 19:30</td><td class="p-3 text-emerald-400 font-bold">BUY</td><td class="p-3">4359.38</td><td class="p-3">4367.27</td><td class="p-3 text-emerald-400 font-bold">+$78.30</td></tr>
+</tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+    <footer class="mt-16 border-t border-white/10 bg-[#060608] pt-12 pb-12 text-zinc-400 text-xs font-sans" role="contentinfo">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+            <div class="p-4 rounded-xl bg-black/60 border border-white/5 font-mono text-[11px] text-zinc-500 leading-relaxed">
+                <strong class="text-amber-400 flex items-center gap-1.5 mb-1"><i class="fa-solid fa-triangle-exclamation"></i> Quantitative Risk Disclaimer</strong>
+                BacktestLab Pro provides strategy backtesting software and historical data simulation for research and educational purposes only. Past simulated performance does not guarantee future financial returns. All live trading carries substantial financial risk.
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-xs font-mono">
+                <div class="space-y-2.5">
+                    <span class="text-white font-bold uppercase tracking-wider block text-[11px]">REPLAY &amp; SIMULATORS</span>
+                    <a href="../session.html" class="block hover:text-white transition-colors">Session Builder (Bar Replay)</a>
+                    <a href="../tools/xauusd-m1-replay.html" class="block hover:text-white transition-colors">Gold (XAUUSD) Replay Engine</a>
+                    <a href="../session.html" class="block hover:text-white transition-colors">Forex Bar Replay Simulator</a>
+                    <a href="../bot_automation.html" class="block hover:text-white transition-colors">AI MQL5 EA Builder</a>
+                </div>
+                <div class="space-y-2.5">
+                    <span class="text-white font-bold uppercase tracking-wider block text-[11px]">COMPARISONS &amp; CONCEPTS</span>
+                    <a href="../index.html#compare-table" class="block hover:text-white transition-colors">vs BacktestingMax Replay</a>
+                    <a href="../index.html#compare-table" class="block hover:text-white transition-colors">vs TradingView Bar Replay</a>
+                    <a href="../articles/balanced-price-range-bpr-trading.html" class="block text-purple-400 font-semibold hover:text-purple-300 transition-colors">BPR Strategy Guide &amp; Backtest</a>
+                    <a href="../articles/asian-session-range-breakout-gold.html" class="block hover:text-white transition-colors">Asian Range Sweep Mechanics</a>
+                </div>
+                <div class="space-y-2.5">
+                    <span class="text-white font-bold uppercase tracking-wider block text-[11px]">CODE &amp; MODULES</span>
+                    <a href="../production-code.html" class="block hover:text-white transition-colors">MetaTrader 5 Expert Advisors</a>
+                    <a href="../production-code.html" class="block hover:text-white transition-colors">Python Backtest Scripts</a>
+                    <a href="../algo_store.html" class="block hover:text-white transition-colors">Algo Store Strategies</a>
+                    <a href="../articles.html" class="block hover:text-white transition-colors">Articles &amp; Documentation</a>
+                </div>
+                <div class="space-y-2.5">
+                    <span class="text-white font-bold uppercase tracking-wider block text-[11px]">COMPANY &amp; LEGAL</span>
+                    <a href="../about.html" class="block hover:text-white transition-colors">About BacktestLab Pro</a>
+                    <a href="../privacy.html" class="block hover:text-white transition-colors">Privacy Policy</a>
+                    <a href="../terms.html" class="block hover:text-white transition-colors">Terms of Service</a>
+                    <a href="../signup.html" class="block hover:text-white transition-colors">Sign In / Register</a>
+                </div>
+            </div>
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4 text-zinc-500 font-mono text-[11px] pt-6 border-t border-white/5">
+                <div>© 2026 BacktestLab Pro. All rights reserved. Free backtesting forever with no sign up or credit card required.</div>
+                <div><a href="#top" class="hover:text-white transition-colors"><i class="fa-solid fa-arrow-up mr-1"></i> Back to Top</a></div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
